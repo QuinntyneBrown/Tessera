@@ -1,0 +1,63 @@
+@page "/payments"
+@using Tessera.Web.Models
+@inject ApiClient ApiClient
+
+<h1>Process Payment</h1>
+
+<div class="card" style="max-width: 480px;">
+    <div class="card-body">
+        <h5 class="card-title">Payment Details</h5>
+        <div class="mb-3">
+            <label class="form-label">Booking ID</label>
+            <input class="form-control" @bind="bookingId" placeholder="Booking ID" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Amount (USD)</label>
+            <input type="number" class="form-control" @bind="amount" min="0.01" step="0.01" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Card Token (test)</label>
+            <input class="form-control" @bind="paymentToken" placeholder="tok_test_xxxx" />
+        </div>
+        <button class="btn btn-success" @onclick="HandlePayment">Pay Now</button>
+    </div>
+</div>
+
+@if (payment != null)
+{
+    <div class="alert alert-success mt-3">
+        <strong>Payment @payment.Status!</strong> Amount: @payment.Amount.ToString("C") (@payment.Currency)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">@errorMessage</div>
+}
+
+@code {
+    private string bookingId = string.Empty;
+    private decimal amount = 0;
+    private string paymentToken = string.Empty;
+    private PaymentModel? payment;
+    private string errorMessage = string.Empty;
+    private Guid tenantId = Guid.Empty;
+
+    private async Task HandlePayment()
+    {
+        errorMessage = string.Empty;
+        if (!Guid.TryParse(bookingId, out var bookingGuid))
+        {
+            errorMessage = "Invalid Booking ID.";
+            return;
+        }
+        try
+        {
+            payment = await ApiClient.ProcessPaymentAsync(tenantId, bookingGuid, amount, paymentToken);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

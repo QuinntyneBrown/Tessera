@@ -1,0 +1,93 @@
+@page "/studios"
+@using Tessera.Web.Models
+@inject ApiClient ApiClient
+@inject NavigationManager Navigation
+
+<h1>Studios</h1>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (studios == null || !studios.Any())
+{
+    <p>No studios found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var studio in studios)
+            {
+                <tr>
+                    <td>@studio.Name</td>
+                    <td>@studio.City</td>
+                    <td>@studio.Address</td>
+                    <td>@(studio.PhoneNumber ?? "—")</td>
+                    <td>@(studio.IsActive ? "Active" : "Inactive")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3 class="mt-4">Add New Studio</h3>
+<EditForm Model="newStudio" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText class="form-control" @bind-Value="newStudio.Name" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <InputText class="form-control" @bind-Value="newStudio.Description" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Address</label>
+        <InputText class="form-control" @bind-Value="newStudio.Address" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">City</label>
+        <InputText class="form-control" @bind-Value="newStudio.City" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <InputText class="form-control" @bind-Value="newStudio.PhoneNumber" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <InputText class="form-control" @bind-Value="newStudio.Email" />
+    </div>
+    <button type="submit" class="btn btn-primary">Add Studio</button>
+</EditForm>
+
+@code {
+    private List<StudioModel> studios = [];
+    private StudioModel newStudio = new();
+    private bool isLoading = true;
+    private Guid tenantId = Guid.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (tenantId != Guid.Empty)
+            studios = await ApiClient.GetStudiosAsync(tenantId);
+        isLoading = false;
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (tenantId == Guid.Empty) return;
+        var created = await ApiClient.CreateStudioAsync(tenantId, newStudio);
+        if (created != null) studios.Add(created);
+        newStudio = new();
+    }
+}
