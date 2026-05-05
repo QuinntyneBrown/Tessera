@@ -11,7 +11,6 @@ public class CreateStudioCommandHandler(IStudioRepository studioRepository, IUni
     public async Task<StudioDto> Handle(CreateStudioCommand request, CancellationToken cancellationToken)
     {
         var studio = Studio.Create(request.TenantId, request.Name, request.Address, request.City);
-        studio.Update(request.Name, request.Description, request.Address, request.City, request.PhoneNumber, request.Email);
         studioRepository.Add(studio);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

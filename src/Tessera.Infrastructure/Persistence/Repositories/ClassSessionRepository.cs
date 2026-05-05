@@ -10,8 +10,11 @@ public class ClassSessionRepository(TesseraDbContext context) : Repository<Class
         => await Context.ClassSessions.Where(s => s.TenantId == tenantId).ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<ClassSession>> GetUpcomingByTenantIdAsync(Guid tenantId, CancellationToken cancellationToken = default)
-        => await Context.ClassSessions
-            .Where(s => s.TenantId == tenantId && s.ScheduledAt > DateTime.UtcNow && s.Status == SessionStatus.Scheduled)
+    {
+        var now = DateTime.UtcNow;
+        return await Context.ClassSessions
+            .Where(s => s.TenantId == tenantId && s.ScheduledAt > now && s.Status == SessionStatus.Scheduled)
             .OrderBy(s => s.ScheduledAt)
             .ToListAsync(cancellationToken);
+    }
 }
