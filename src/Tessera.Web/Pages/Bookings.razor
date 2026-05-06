@@ -1,0 +1,58 @@
+@page "/bookings"
+@using Tessera.Web.Models
+@inject ApiClient ApiClient
+
+<h1>Book a Class</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">New Booking</h5>
+        <div class="mb-3">
+            <label class="form-label">Session ID</label>
+            <input class="form-control" @bind="classSessionId" placeholder="Enter Class Session ID" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Participant ID</label>
+            <input class="form-control" @bind="participantId" placeholder="Enter Participant ID" />
+        </div>
+        <button class="btn btn-primary" @onclick="HandleBook">Book Now</button>
+    </div>
+</div>
+
+@if (booking != null)
+{
+    <div class="alert alert-success mt-3">
+        <strong>Booking Confirmed!</strong> Booking ID: @booking.Id | Status: @booking.Status
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">@errorMessage</div>
+}
+
+@code {
+    private string classSessionId = string.Empty;
+    private string participantId = string.Empty;
+    private BookingModel? booking;
+    private string errorMessage = string.Empty;
+    private Guid tenantId = Guid.Empty;
+
+    private async Task HandleBook()
+    {
+        errorMessage = string.Empty;
+        if (!Guid.TryParse(classSessionId, out var sessionGuid) || !Guid.TryParse(participantId, out var participantGuid))
+        {
+            errorMessage = "Invalid IDs provided.";
+            return;
+        }
+        try
+        {
+            booking = await ApiClient.CreateBookingAsync(tenantId, sessionGuid, participantGuid);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

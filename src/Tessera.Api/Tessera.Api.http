@@ -1,0 +1,6 @@
+@Tessera.Api_HostAddress = http://localhost:5104
+
+GET {{Tessera.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

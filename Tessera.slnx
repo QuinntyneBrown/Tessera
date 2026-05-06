@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Tessera.Api/Tessera.Api.csproj" />
+    <Project Path="src/Tessera.Application/Tessera.Application.csproj" />
+    <Project Path="src/Tessera.Domain/Tessera.Domain.csproj" />
+    <Project Path="src/Tessera.Infrastructure/Tessera.Infrastructure.csproj" />
+    <Project Path="src/Tessera.Web/Tessera.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Tessera.Application.Tests/Tessera.Application.Tests.csproj" />
+    <Project Path="tests/Tessera.Domain.Tests/Tessera.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
