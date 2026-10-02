@@ -123,8 +123,8 @@ export class ScormPlayer {
   private save(activity: Activity, values: Record<string, string>): void {
     this.scoStates[activity.id] = { values };
     this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, {
-      onAcknowledged: (revision) => {
-        this.saveStatus.set('Progress saved');
+      onAcknowledged: (revision, upToDate) => {
+        this.saveStatus.set(upToDate ? 'Progress saved' : 'Saving progress');
         if (this.error()?.category === 'persistence') this.error.set(null);
         this.event.emit({ kind: 'save', status: 'saved', revision });
       },

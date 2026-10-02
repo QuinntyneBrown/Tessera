@@ -16,5 +16,6 @@
 </ol>
 <section aria-label="Host controls">
   <button type="button" (click)="gate.acknowledge()">Acknowledge pending save</button>
+  <button type="button" (click)="gate.acknowledgeStale()">Acknowledge pending save as stale</button>
   <button type="button" (click)="gate.fail()">Fail pending save</button>
 </section>

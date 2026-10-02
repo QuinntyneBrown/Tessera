@@ -66,3 +66,69 @@ test('keeps the state, announces the failure and retries the latest values', asy
   await player.expectSaveStatus('Progress saved');
   await player.expectNoErrorMessage();
 });
+
+// L2-013 AC1 (newer values are never labelled saved by an older acknowledgement)
+test('queues newer values behind an in-flight save and saves them next', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12', save: 'manual' });
+  await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 1'],
+    ['LMSCommit', ''],
+  ]);
+  await player.expectHostSaveCount(1);
+
+  await player.runScoCalls([
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 2'],
+    ['LMSCommit', ''],
+  ]);
+  await player.expectNoSecondSaveWhileOneIsInFlight();
+
+  await player.acknowledgePendingSave();
+  await player.expectHostSaved({ 'cmi.core.lesson_location': 'page 2' });
+  await player.expectHostSaveCount(2);
+  await player.expectSaveStatus('Saving progress');
+
+  await player.acknowledgePendingSave();
+  await player.expectSaveStatus('Progress saved');
+});
+
+// L2-013 AC3 (retry submits the latest values, not the failed copy)
+test('retries with the newest values after a failed save', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12', save: 'manual' });
+  await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 1'],
+    ['LMSCommit', ''],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 2'],
+    ['LMSCommit', ''],
+  ]);
+
+  await player.failPendingSave();
+  await player.expectErrorMessage(/progress was not saved/i);
+  await player.expectHostSaveCount(1);
+
+  await player.retry();
+  await player.expectHostSaved({ 'cmi.core.lesson_location': 'page 2' });
+  await player.acknowledgePendingSave();
+
+  await player.expectSaveStatus('Progress saved');
+  await player.expectNoErrorMessage();
+});
+
+// L2-013 AC1
+test('does not report saved when the host acknowledges an older revision', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12', save: 'manual' });
+  await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 1'],
+    ['LMSCommit', ''],
+  ]);
+
+  await player.acknowledgePendingSaveAsStale();
+
+  await player.expectErrorMessage(/progress was not saved/i);
+  await player.expectSaveStatus('Progress not saved');
+});

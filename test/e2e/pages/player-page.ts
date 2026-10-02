@@ -135,6 +135,12 @@ export class PlayerPage {
     }).toPass();
   }
 
+  /** Gives the player time to (wrongly) send a second save, then checks the host still has only one. */
+  async expectNoSecondSaveWhileOneIsInFlight(): Promise<void> {
+    await this.page.waitForTimeout(500);
+    await expect(this.hostSaves).toHaveCount(1);
+  }
+
   async expectHostSaveCount(count: number): Promise<void> {
     await expect(this.hostSaves).toHaveCount(count);
   }
@@ -144,7 +150,11 @@ export class PlayerPage {
   }
 
   async acknowledgePendingSave(): Promise<void> {
-    await this.page.getByRole('button', { name: 'Acknowledge pending save' }).click();
+    await this.page.getByRole('button', { name: 'Acknowledge pending save', exact: true }).click();
+  }
+
+  async acknowledgePendingSaveAsStale(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Acknowledge pending save as stale' }).click();
   }
 
   async failPendingSave(): Promise<void> {

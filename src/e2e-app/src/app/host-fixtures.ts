@@ -29,6 +29,13 @@ export class SaveGate {
     next?.resolve({ revision: next.submission.revision });
   }
 
+  /** Acknowledges the pending save with a revision older than the one submitted. */
+  acknowledgeStale(): void {
+    const next = this.waiting.shift();
+    this.pending.set(this.waiting.length);
+    next?.resolve({ revision: next.submission.revision - 1 });
+  }
+
   fail(): void {
     const next = this.waiting.shift();
     this.pending.set(this.waiting.length);
