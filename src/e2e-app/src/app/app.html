@@ -1,1 +1,11 @@
-<main id="app-main"></main>
+<tsr-scorm-player
+  [source]="fixture.source"
+  [attempt]="fixture.attempt"
+  [host]="fixture.host"
+  (event)="onEvent($event)"
+/>
+<ol aria-label="Host events">
+  @for (event of events(); track $index) {
+    <li>{{ event }}</li>
+  }
+</ol>

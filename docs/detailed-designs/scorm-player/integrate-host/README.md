@@ -28,7 +28,7 @@ The host checks authorization on every delivery, read, and save request. The com
 
 Changing `source` or `attempt` initiates the same flush and unsaved-state workflow as an explicit exit. The component prevents replacement until pending changes are retained or the learner explicitly accepts loss. Callbacks remain bound to the old immutable context until that workflow finishes.
 
-The Angular version range, component selector, event naming, host endpoint routes, snapshot migration policy, and authorization mechanism are `<TO SUPPLY>`. These choices precede public API publication.
+Decided for the first implementation: Angular 22 (standalone, signals, zoneless), selector `tsr-scorm-player`, inputs `source`, `attempt`, `host` and `limits`, and one `event` output carrying the `PlayerEvent` union. `IntegrationGuard` is `checkIntegration` in `src/scorm-player/integration-guard.ts`; it reports `attempt-missing`, `source-missing`, `host-missing` and `host-incomplete`. Host endpoint routes, snapshot migration policy, and the authorization mechanism remain `<TO SUPPLY>`. These choices precede public API publication.
 
 Each production slice follows the source Given-When-Then criteria. A Chromium Playwright consumer test imports the package through its public API. Its `PlayerPage` owns selectors and interactions. Missing-input and unauthorized-context cases run red before production implementation.
 

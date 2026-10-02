@@ -1,11 +1,17 @@
 import { Component, signal } from '@angular/core';
+import { PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
+import { hostFixtureFor } from './host-fixtures';
 
 @Component({
-  imports: [],
+  imports: [ScormPlayer],
   selector: 'tsr-root',
-  styleUrl: './app.scss',
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('e2e-app');
+  protected readonly fixture = hostFixtureFor(new URLSearchParams(location.search));
+  protected readonly events = signal<string[]>([]);
+
+  protected onEvent(event: PlayerEvent): void {
+    this.events.update((events) => [...events, JSON.stringify(event)]);
+  }
 }
