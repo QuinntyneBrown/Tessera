@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Navigate permitted course activities
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "NavigationController", "Browser controller", "Routes learner and SCO navigation requests")
+  Component(p1, "SequencingEngine", "Edition-specific domain logic", "Evaluates permitted actions and rollup")
+  Component(p2, "ActivityLauncher", "Browser coordinator", "Retires old session and launches decision")
+}
+Rel(p0, p1, "Requests decision from validated state")
+Rel(p0, p2, "Executes permitted decision")
+@enduml

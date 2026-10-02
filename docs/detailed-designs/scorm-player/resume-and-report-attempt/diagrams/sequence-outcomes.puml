@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour - Derive and publish outcomes
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "RuntimeBridge / host RuntimeSession" as bridge
+  participant "OutcomeCalculator" as core
+  participant "HostIntegration" as host
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+  participant "SCO / asset" as sco
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+
+sco -> wrapper : Report valid status or score
+wrapper -> bridge : Ordered runtime operation
+bridge -> bridge : Validate and apply (L2-016)
+bridge -> core : Accepted values
+core -> core : Derive edition outcome (L2-012)
+alt Insufficient overall completion data
+  core --> shell : Unknown or in-progress; no percentage
+else Known edition outcome
+  core --> shell : Provisional status, completion, success and score
+end
+wrapper -> bridge : Commit after prior operations
+bridge -> host : PersistenceCoordinator.submit(snapshot); saveState(context, submission, signal)
+host -> api : Persist authorized SCO and course state
+api --> host : Acknowledged revision
+host --> shell : SaveAck through PersistenceCoordinator
+shell --> actor : PlayerEvent outcome, once per acknowledged revision
+shell --> actor : Announce saved status and known outcome
+@enduml

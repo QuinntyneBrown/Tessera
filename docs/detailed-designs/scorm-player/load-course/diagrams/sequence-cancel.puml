@@ -1,0 +1,39 @@
+@startuml
+title UML sequence behaviour - Cancel or retry loading
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "CourseLoader" as core
+end box
+box "Backend - Host course delivery infrastructure" #FFF4E5
+  participant "Course delivery service" as delivery
+end box
+
+actor -> shell : Cancel loading
+shell -> core : Abort the load signal (L2-019)
+core -> core : Terminate worker; release buffers
+core --> shell : Cancelled; no launch descriptor
+shell --> actor : Accept another source
+opt Retry after loading failure
+  actor -> shell : Retry manifest
+  shell -> core : Start a new load (L2-003)
+  core -> delivery : Fetch manifest under validated root
+  delivery --> core : Resource or actionable loading error
+  core --> shell : Ready or error; no false completion
+  shell --> actor : Present result
+end
+@enduml

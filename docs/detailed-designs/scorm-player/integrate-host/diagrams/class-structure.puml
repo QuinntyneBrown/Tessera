@@ -1,0 +1,46 @@
+@startuml
+title Class structure - Integrate the host LMS
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class ScormPlayer {
+  +inputs: PlayerInputs
+  +events: PlayerEvent
+  +requestExit(): Promise<void>
+}
+class PlayerInputs {
+  +source: CourseSource
+  +attempt: AttemptContext
+  +host: HostIntegration
+  +limits: PackageLimits
+}
+class AttemptContext {
+  +attemptKey: string
+  +courseKey: string
+  +courseRevision: string
+}
+interface HostIntegration {
+  +loadAttempt(context: AttemptContext, signal: AbortSignal): Promise<AttemptSnapshot | null>
+  +saveState(context: AttemptContext, state: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
+  +prepareDelivery(context: AttemptContext, course: ValidatedCourse, signal: AbortSignal): Promise<DeliveryDescriptor>
+}
+ScormPlayer "1" *-- "1" PlayerInputs : owns configured inputs
+PlayerInputs "1" *-- "1" AttemptContext : binds identity
+PlayerInputs --> HostIntegration : delegates I/O
+@enduml

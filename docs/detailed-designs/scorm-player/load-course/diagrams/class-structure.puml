@@ -1,0 +1,54 @@
+@startuml
+title Class structure - Load and validate a course
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class CourseLoader {
+  +load(source: CourseSource, limits: PackageLimits, signal: AbortSignal): Promise<ValidatedCourse>
+}
+class PackageWorker {
+  +expandedBytes: number
+  +extract(file: File, limits: PackageLimits): ValidatedCourse
+  +terminate(): void
+}
+class ManifestParser {
+  +parse(xml: string, root: URL): ValidatedCourse
+}
+class ResourceResolver {
+  +root: URL
+  +resolve(reference: string): URL
+}
+class PackageLimits {
+  +archiveBytes: number
+  +expandedBytes: number
+  +entryCount: number
+}
+class ValidatedCourse {
+  +edition: ScormEdition
+  +title: string
+  +activities: Activity[]
+  +files: Map<string, Blob> | null
+}
+CourseLoader --> PackageWorker : archive processing
+CourseLoader --> ManifestParser : extracted manifest
+PackageWorker ..> PackageLimits : enforces limits
+PackageWorker --> ManifestParser : parses
+ManifestParser --> ResourceResolver : confines references
+ManifestParser ..> ValidatedCourse : produces
+@enduml

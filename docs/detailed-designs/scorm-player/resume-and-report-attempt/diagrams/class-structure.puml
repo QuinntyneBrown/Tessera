@@ -1,0 +1,50 @@
+@startuml
+title Class structure - Resume an attempt and report outcomes
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class AttemptRestorer {
+  +restore(context: AttemptContext, course: ValidatedCourse, snapshot: AttemptSnapshot | null): RestoredAttempt
+}
+class AttemptSnapshot {
+  +schemaVersion: number
+  +context: AttemptContext
+  +edition: ScormEdition
+  +scoStates: Map<string, ScoSnapshot>
+  +sequencing: SequencingState
+}
+class ScoSnapshot {
+  +values: Map<string, string>
+}
+class OutcomeCalculator {
+  +derive(edition: ScormEdition, state: AttemptSnapshot, rollup: RollupResult): CourseOutcome
+}
+class CourseOutcome {
+  +status: string | unknown
+  +completion: string | unknown
+  +success: string | unknown
+  +score: Score | unknown
+  +progress: number | unknown
+}
+AttemptRestorer ..> AttemptSnapshot : validates and restores
+AttemptSnapshot "1" *-- "*" ScoSnapshot : per SCO
+AttemptSnapshot "1" *-- "1" SequencingState : owns course state
+OutcomeCalculator ..> AttemptSnapshot : reads accepted data
+OutcomeCalculator ..> CourseOutcome : produces
+@enduml

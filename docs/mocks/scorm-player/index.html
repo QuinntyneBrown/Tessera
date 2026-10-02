@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SCORM player mock · Tessera</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        font-synthesis: none;
+        --ink: #18312e;
+        --muted: #536763;
+        --line: #d8e2df;
+        --surface: #fff;
+        --canvas: #f4f7f5;
+        --accent: #126454;
+        --accent-dark: #084b3e;
+        --accent-soft: #e4f2ec;
+        --focus: #b35c14;
+        --error: #8a1c12;
+        --error-soft: #fdecea;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--canvas); color: var(--ink); font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
+      button { font: inherit; cursor: pointer; }
+      button:focus-visible, a:focus-visible, [tabindex="-1"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+      [hidden] { display: none !important; }
+      .skip-link { position: absolute; z-index: 10; left: 1rem; top: -5rem; padding: .65rem 1rem; background: var(--ink); color: white; }
+      .skip-link:focus { top: 1rem; }
+      .topbar { min-height: 64px; display: flex; align-items: center; gap: .7rem; padding: 1rem 1.5rem; background: var(--surface); border-bottom: 1px solid var(--line); font-weight: 750; }
+      .shell { max-width: 1440px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+      .mock-states { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin: 0 0 1.5rem; border: 1px dashed #aabeb5; border-radius: 8px; padding: .75rem 1rem; color: var(--muted); font-size: .85rem; }
+      .mock-states legend { padding: 0 .3rem; font-weight: 700; }
+      .course-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 1rem 2rem; margin-bottom: 1.5rem; }
+      h1 { margin: 0; font-size: clamp(1.65rem, 3vw, 2.25rem); line-height: 1.15; letter-spacing: -.04em; }
+      .course-status { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: .5rem 0 0; color: var(--muted); font-size: .9rem; }
+      .course-status dt { display: inline; font-weight: 700; color: var(--ink); }
+      .course-status dd { display: inline; margin: 0 0 0 .3rem; }
+      .notice { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1.5rem; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: .9rem 1rem; background: var(--surface); }
+      .notice.error { border-left-color: var(--error); background: var(--error-soft); color: var(--error); }
+      .notice h2 { margin: 0; font-size: 1rem; }
+      .notice p { margin: .15rem 0 0; }
+      .layout { display: grid; grid-template-columns: minmax(250px, 290px) minmax(0, 1fr); align-items: start; gap: 1.5rem; }
+      .sidebar, .player { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+      .sidebar-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; padding: 1.25rem 1.25rem .7rem; }
+      .sidebar-head h2 { margin: 0; font-size: 1rem; }
+      .outline-toggle { display: none; }
+      .outline { list-style: none; margin: 0; padding: .5rem; }
+      .outline li + li { margin-top: .2rem; }
+      .lesson-link { display: flex; width: 100%; align-items: flex-start; gap: .75rem; border: 0; border-radius: 8px; padding: .8rem .75rem; background: transparent; color: var(--ink); text-align: left; }
+      .lesson-link:hover:not([aria-disabled="true"]) { background: #f2f6f3; }
+      .lesson-link[aria-current="step"] { background: var(--accent-soft); color: var(--accent-dark); }
+      .lesson-link[aria-disabled="true"] { cursor: not-allowed; color: var(--muted); }
+      .lesson-number { display: grid; flex: 0 0 auto; place-items: center; min-width: 1.7em; min-height: 1.7em; border: 1px solid #8fa9a0; border-radius: 50%; font-size: .75rem; font-weight: 750; }
+      .lesson-link[data-complete="true"] .lesson-number { border-color: var(--accent); background: var(--accent); color: white; }
+      .lesson-title { display: block; font-size: .91rem; font-weight: 700; line-height: 1.25; }
+      .lesson-detail { display: block; margin-top: .2rem; color: var(--muted); font-size: .76rem; }
+      .player-bar { border-bottom: 1px solid var(--line); padding: .9rem 1.5rem; }
+      .player-bar p { margin: 0; color: var(--muted); font-size: .8rem; }
+      .player-bar h2 { margin: 0; font-size: 1.15rem; }
+      iframe { display: block; width: 100%; height: 460px; border: 0; }
+      .player-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .8rem; border-top: 1px solid var(--line); padding: 1.2rem 1.5rem; }
+      .reason { flex: 1 1 100%; margin: 0; color: var(--muted); font-size: .85rem; text-align: right; }
+      .button { min-height: 44px; border: 1px solid #7f978d; border-radius: 7px; padding: .55rem 1rem; background: white; color: var(--ink); font-size: .87rem; font-weight: 750; }
+      .button:hover:not([aria-disabled="true"]) { background: #f1f6f3; }
+      .button[aria-disabled="true"] { border-color: var(--line); color: var(--muted); cursor: not-allowed; }
+      .button.primary:not([aria-disabled="true"]) { border-color: var(--accent); background: var(--accent); color: white; }
+      .button.primary:hover:not([aria-disabled="true"]) { background: var(--accent-dark); }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+      @media (max-width: 760px) {
+        .shell { padding: 1.3rem 1rem 2rem; }
+        .layout { grid-template-columns: 1fr; gap: 1rem; }
+        .sidebar-head { padding: .9rem 1rem; }
+        .outline-toggle { display: inline-block; min-height: 44px; }
+        .player-bar, .player-actions { padding: .8rem 1rem; }
+        .reason { text-align: left; }
+      }
+      @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s ease; } }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#activity-heading">Skip to current activity</a>
+    <header class="topbar">Host LMS</header>
+
+    <main class="shell">
+      <fieldset class="mock-states">
+        <legend>Mock states (design reference only)</legend>
+        <button class="button" type="button" id="mock-loading">Show loading</button>
+        <button class="button" type="button" id="mock-save-fail">Fail next save</button>
+        <button class="button" type="button" id="load-again">LMS supplies course</button>
+      </fieldset>
+
+      <div class="course-head">
+        <div>
+          <h1>Better conversations at work</h1>
+          <dl class="course-status">
+            <div><dt>Completion:</dt><dd id="completion">Unknown</dd></div>
+            <div><dt>Save status:</dt><dd id="save-status">Saved</dd></div>
+          </dl>
+        </div>
+        <button class="button" type="button" id="exit">Exit course</button>
+      </div>
+
+      <section class="notice" id="loading" aria-labelledby="loading-heading" hidden>
+        <div><h2 id="loading-heading" tabindex="-1">Loading course</h2><p>Checking the course package…</p></div>
+        <button class="button" type="button" id="cancel-load">Cancel</button>
+      </section>
+
+      <section class="notice" id="idle" aria-labelledby="idle-heading" hidden>
+        <div><h2 id="idle-heading" tabindex="-1">No course loaded</h2><p>Loading was cancelled. Waiting for the LMS to supply a course.</p></div>
+      </section>
+
+      <section class="notice error" id="save-error" role="alert" hidden>
+        <div><h2>Progress not saved</h2><p>Your latest progress is kept on this page. Try saving again.</p></div>
+        <button class="button" type="button" id="retry-save">Retry save</button>
+      </section>
+
+      <section class="notice error" id="exit-warning" aria-labelledby="exit-heading" hidden>
+        <div><h2 id="exit-heading" tabindex="-1">Your progress is not saved</h2><p>Retry saving before you leave, or exit and lose unsaved progress.</p></div>
+        <div>
+          <button class="button primary" type="button" id="exit-retry">Retry save</button>
+          <button class="button" type="button" id="exit-anyway">Exit without saving</button>
+        </div>
+      </section>
+
+      <div class="layout" id="player-layout">
+        <nav class="sidebar" aria-labelledby="outline-heading">
+          <div class="sidebar-head">
+            <h2 id="outline-heading">Course outline</h2>
+            <button class="button outline-toggle" id="outline-toggle" type="button" aria-controls="outline" aria-expanded="false">Show outline</button>
+          </div>
+          <ol class="outline" id="outline"></ol>
+        </nav>
+
+        <section class="player" aria-labelledby="activity-heading">
+          <div class="player-bar">
+            <p id="lesson-position">Activity 1 of 4</p>
+            <h2 id="activity-heading" tabindex="-1">Start with listening</h2>
+          </div>
+          <iframe id="content-frame" sandbox="allow-scripts" title="Course content: Start with listening"></iframe>
+          <div class="player-actions">
+            <button class="button" id="previous" type="button">← Previous</button>
+            <button class="button primary" id="next" type="button">Next →</button>
+            <p class="reason" id="nav-reason" hidden></p>
+          </div>
+        </section>
+      </div>
+
+      <div class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></div>
+    </main>
+
+    <script>
+      // Each activity stands in for a SCO. Completion comes only from the content frame,
+      // never from player chrome. Activity 4 shows a sequencing rule that blocks choice.
+      const activities = [
+        { title: 'Start with listening', body: 'Before offering a solution, give the other person time to finish their thought.' },
+        { title: 'Ask better questions', body: 'Questions that begin with “what” or “how” invite more detail than a yes or no.' },
+        { title: 'Give useful feedback', body: 'Start with a concrete example, explain its effect, then agree on a next step.' },
+        { title: 'Put it into practice', body: 'Plan your next conversation: listen, ask, and agree on a next step.', requires: 2 },
+      ];
+      const completed = new Set();
+      const $ = (id) => document.getElementById(id);
+      const outline = $('outline');
+      const toggle = $('outline-toggle');
+      const frame = $('content-frame');
+      const compact = () => window.matchMedia('(max-width: 760px)').matches;
+      let current = 0;
+      let failNextSave = false;
+
+      const blockedReason = (i) => {
+        const r = activities[i].requires;
+        return r !== undefined && !completed.has(r) ? `Locked until “${activities[r].title}” is complete.` : '';
+      };
+
+      // A closing region never strands focus on <body>.
+      function closeRegion(id) {
+        const region = $(id);
+        const hadFocus = region.contains(document.activeElement);
+        region.hidden = true;
+        if (hadFocus) $('activity-heading').focus();
+      }
+
+      function announce(text) { $('announcement').textContent = text; }
+
+      function renderOutline() {
+        outline.innerHTML = '';
+        activities.forEach((a, i) => {
+          const reason = blockedReason(i);
+          const done = completed.has(i);
+          const li = document.createElement('li');
+          li.innerHTML = `<button type="button" class="lesson-link" data-complete="${done}">
+            <span class="lesson-number" aria-hidden="true">${done ? '✓' : i + 1}</span>
+            <span><span class="lesson-title" id="title-${i}">${a.title}</span>
+            <span class="lesson-detail" id="detail-${i}">${reason || (done ? 'Complete' : i === current ? 'Current activity' : 'Not complete')}</span></span></button>`;
+          const button = li.firstElementChild;
+          button.setAttribute('aria-labelledby', `title-${i}`);
+          button.setAttribute('aria-describedby', `detail-${i}`);
+          if (i === current) button.setAttribute('aria-current', 'step');
+          if (reason) button.setAttribute('aria-disabled', 'true');
+          button.addEventListener('click', () => goTo(i, true));
+          outline.append(li);
+        });
+      }
+
+      // aria-disabled keeps the control focusable so its reason stays reachable.
+      function setNav(button, enabled) {
+        button.toggleAttribute('aria-disabled', !enabled);
+        if (enabled) button.removeAttribute('aria-describedby');
+        else { button.setAttribute('aria-disabled', 'true'); button.setAttribute('aria-describedby', 'nav-reason'); }
+      }
+
+      function render() {
+        renderOutline();
+        const a = activities[current];
+        $('lesson-position').textContent = `Activity ${current + 1} of ${activities.length}`;
+        $('activity-heading').textContent = a.title;
+        frame.title = `Course content: ${a.title}`;
+        const nextReason = current < activities.length - 1 ? blockedReason(current + 1) : 'This is the last activity.';
+        const reasons = [];
+        if (current === 0) reasons.push('Previous is unavailable: this is the first activity.');
+        if (nextReason) reasons.push(`Next is unavailable: ${nextReason}`);
+        setNav($('previous'), current > 0);
+        setNav($('next'), !nextReason);
+        $('nav-reason').textContent = reasons.join(' ');
+        $('nav-reason').hidden = !reasons.length;
+        // Stands in for course rollup: complete only when every activity reports complete.
+        $('completion').textContent = completed.size === activities.length ? 'Complete' : 'Unknown';
+      }
+
+      function loadContent() {
+        const a = activities[current];
+        frame.srcdoc = `<!doctype html><html lang="en"><body style="font:16px/1.5 system-ui,sans-serif;color:#18312e;padding:1.5rem 2rem;margin:0">
+          <p>${a.body}</p>
+          <p><button type="button" style="font:inherit;min-height:44px;padding:.5rem 1rem">I've finished this lesson</button></p>
+          <script>document.querySelector('button').onclick = () => parent.postMessage({ kind: 'completed' }, '*');<\/script></body></html>`;
+      }
+
+      function goTo(i, fromOutline) {
+        if (i < 0 || i >= activities.length || blockedReason(i)) return;
+        if (i !== current) { current = i; loadContent(); }
+        if (fromOutline && compact()) setOutline(false);
+        render();
+        $('activity-heading').focus();
+      }
+
+      function save() {
+        if (failNextSave) {
+          failNextSave = false;
+          $('save-status').textContent = 'Not saved';
+          $('save-error').hidden = false;
+          // Re-insert the alert text so a repeated failure is announced again by role="alert".
+          const message = $('save-error').firstElementChild;
+          message.remove();
+          setTimeout(() => $('save-error').prepend(message), 50);
+          return false;
+        }
+        $('save-status').textContent = 'Saved';
+        closeRegion('save-error');
+        return true;
+      }
+
+      // The mock trusts only its own content frame, as the bridge design requires.
+      window.addEventListener('message', (event) => {
+        if (event.source !== frame.contentWindow || event.data?.kind !== 'completed') return;
+        completed.add(current);
+        render();
+        announce(`${activities[current].title} complete.`);
+        save();
+      });
+
+      function setOutline(open) {
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.textContent = open ? 'Hide outline' : 'Show outline';
+        outline.hidden = compact() && !open;
+        if (outline.hidden && outline.contains(document.activeElement)) toggle.focus();
+      }
+
+      toggle.addEventListener('click', () => setOutline(toggle.getAttribute('aria-expanded') !== 'true'));
+      window.addEventListener('resize', () => setOutline(toggle.getAttribute('aria-expanded') === 'true'));
+      $('previous').addEventListener('click', () => goTo(current - 1));
+      $('next').addEventListener('click', () => goTo(current + 1));
+      $('retry-save').addEventListener('click', () => { if (save()) announce('Progress saved.'); });
+      $('exit').addEventListener('click', () => {
+        if ($('save-status').textContent === 'Saved') { announce('Course exited.'); return; }
+        $('exit-warning').hidden = false;
+        $('exit-heading').focus();
+      });
+      $('exit-retry').addEventListener('click', () => {
+        if (save()) { closeRegion('exit-warning'); announce('Progress saved. Course exited.'); }
+      });
+      $('exit-anyway').addEventListener('click', () => { closeRegion('exit-warning'); announce('Course exited without saving.'); });
+      $('mock-save-fail').addEventListener('click', () => { failNextSave = true; announce('The next save will fail.'); });
+      $('mock-loading').addEventListener('click', () => {
+        $('player-layout').hidden = true;
+        $('loading').hidden = false;
+        $('loading-heading').focus();
+      });
+      $('cancel-load').addEventListener('click', () => {
+        $('loading').hidden = true;
+        $('idle').hidden = false;
+        $('idle-heading').focus();
+      });
+      $('load-again').addEventListener('click', () => {
+        $('idle').hidden = true;
+        $('player-layout').hidden = false;
+        $('activity-heading').focus();
+      });
+
+      setOutline(false);
+      loadContent();
+      render();
+    </script>
+  </body>
+</html>

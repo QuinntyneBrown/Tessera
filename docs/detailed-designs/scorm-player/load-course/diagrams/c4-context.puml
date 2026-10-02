@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Load and validate a course
+
+Person(learner, "Learner", "Uses course activities and player controls")
+System(lms, "Host LMS with Tessera", "Load and validate a course")
+System_Ext(courses, "Course delivery", "Serves isolated SCORM course content")
+Rel(learner, lms, "Uses load and validate a course", "Browser")
+Rel(lms, courses, "Requests authorized course delivery", "HTTPS")
+@enduml

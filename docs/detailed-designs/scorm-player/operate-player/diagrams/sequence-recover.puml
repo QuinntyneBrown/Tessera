@@ -1,0 +1,56 @@
+@startuml
+title UML sequence behaviour - Present categorized failure and retry
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "CourseLoader / ActivityLauncher / PersistenceCoordinator" as core
+  participant "HostIntegration" as host
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+box "Backend - Host course delivery infrastructure" #FFF4E5
+  participant "Course delivery service" as delivery
+end box
+
+core --> shell : PlayerError(category, code, text, correlationToken)
+shell -> shell : Publish actionable message (L2-020)
+shell --> actor : PlayerEvent error (category, code, correlationToken)
+shell --> actor : Announce failure and available action (L2-017)
+actor -> shell : Activate Retry by keyboard
+shell -> core : Retry the workflow named by the error category
+alt Loading failure, manifest or package code
+  core -> delivery : Restart manifest load
+  delivery --> core : Manifest or loading error
+else Loading failure, activity launch code
+  core -> delivery : ActivityLauncher.launch(activity) rechecks the launch resource
+  delivery --> core : Resource or loading error
+else Persistence failure
+  core -> host : PersistenceCoordinator.retry(); saveState(context, submission, signal)
+  host -> api : Authorized revision save
+  api --> host : Save result
+  host --> core : Matching acknowledgement or failure
+else Detected runtime failure
+  core -> wrapper : Flush failed session; relaunch current activity
+  wrapper --> core : Relaunched with retained state, or runtime error
+end
+core --> shell : Recovered state or actionable failure
+shell --> actor : Announce result without exposing learner data
+@enduml

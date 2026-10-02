@@ -1,0 +1,39 @@
+@startuml
+title UML sequence behaviour - Use controls and retain state during reflow
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "ActivityLauncher" as core
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+end box
+
+actor -> shell : Focus and expand outline by keyboard
+shell -> shell : Update aria-expanded and associated region (L2-017)
+actor -> shell : Choose permitted activity
+shell -> core : Request validated launch
+core -> wrapper : Prepare and start selected SCO
+wrapper --> core : Activity ready
+core --> shell : Current activity and permitted controls
+shell -> shell : Focus stable heading; no live-region repeat
+shell --> actor : Named content frame follows in tab order
+actor -> shell : Resize viewport or collapse outline
+shell -> shell : Reflow chrome without recreating iframe (L2-018)
+shell -> shell : Return focus to toggle if outline hides focus
+shell --> actor : Operable controls; active SCO and dirty state retained
+@enduml

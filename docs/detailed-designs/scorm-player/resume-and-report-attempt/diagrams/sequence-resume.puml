@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Restore the bound attempt
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "AttemptRestorer / OutcomeCalculator" as core
+  participant "HostIntegration" as host
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+
+actor -> shell : Reopen authorized attempt
+shell -> host : loadAttempt(context, signal)
+host -> api : Authorize and read bound course revision
+api --> host : Snapshot or null (new attempt)
+host --> core : Host load result
+core -> core : Validate context, edition and schema (L2-011)
+alt Snapshot mismatch or unsupported schema
+  core --> shell : Integration error; refuse restore
+  shell --> actor : Explain state mismatch
+else null: new attempt
+  core -> core : Create edition defaults without old state
+  core --> shell : Initial permitted activity
+else Valid saved attempt
+  core -> core : Restore per-SCO data and sequencing state
+  core -> core : Check saved activity under current rules
+  core --> shell : RestoredAttempt with permitted activity
+  shell -> shell : ActivityLauncher sends the SCO's ScoSnapshot through CourseWrapper.prepare()
+end
+shell --> actor : Present current position and known outcomes
+@enduml

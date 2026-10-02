@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Resume an attempt and report outcomes
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "AttemptRestorer", "Browser coordinator", "Validates snapshot binding and restores selected SCO")
+  Component(p1, "OutcomeCalculator", "Edition-specific domain logic", "Derives explicit known and unknown outcomes")
+  Component(p2, "SequencingEngine", "Edition-specific rules", "Determines permitted resume activity and course rollup")
+}
+Rel(p0, p2, "Checks saved activity availability")
+Rel(p0, p1, "Derives restored outcomes")
+Rel(p2, p1, "Supplies course rollup")
+@enduml

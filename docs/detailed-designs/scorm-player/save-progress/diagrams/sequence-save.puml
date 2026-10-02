@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Save a revision without losing newer writes
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "RuntimeBridge / host RuntimeSession" as bridge
+  participant "PersistenceCoordinator" as core
+  participant "HostIntegration" as host
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+
+bridge -> core : submit(host-validated snapshot) on commit, termination, or flush (L2-010)
+core -> core : Capture host-validated immutable snapshot
+core -> host : saveState(context, submission, signal)
+host -> api : Authorize attempt; save idempotent revision
+opt New valid values arrive while save is pending
+  bridge -> core : submit(newer host-validated snapshot)
+  core -> core : Retain latest snapshot; keep dirty (L2-013)
+end
+api --> host : Durable SaveAck(revision)
+host --> core : Matching acknowledged revision
+core -> core : Advance acknowledged revision; deduplicate event
+core --> shell : Publish acknowledged outcome once (L2-013)
+shell --> actor : Announce saved or still-pending status
+opt A newer retained revision exists
+  core -> host : Submit latest snapshot next
+  host -> api : Save newer revision
+  api --> host : Save result
+  host --> core : Revision-specific result
+end
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+title Class structure - Launch an isolated activity
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class ActivityLauncher {
+  +current: Activity
+  +launch(activity: Activity): Promise<void>
+  +retireCurrent(): Promise<void>
+}
+class DeliveryDescriptor {
+  +courseRoot: URL
+  +wrapperUrl: URL
+  +bridgeProtocolVersion: number
+}
+class RuntimeBridge {
+  +binding: SessionBinding
+  +receive(event: MessageEvent): void
+  +flush(): Promise<void>
+  +revoke(): void
+}
+class SessionBinding {
+  +wrapper: WindowProxy
+  +scoId: string
+  +context: AttemptContext
+}
+class CourseWrapper {
+  +api: Scorm12Api | Scorm2004Api
+  +prepare(state: ScoSnapshot): void
+  +start(resource: URL): void
+}
+ActivityLauncher --> DeliveryDescriptor : approved delivery
+ActivityLauncher "1" *-- "0..1" RuntimeBridge : owns active bridge
+RuntimeBridge "1" *-- "1" SessionBinding : owns binding
+RuntimeBridge ..> CourseWrapper : cross-origin protocol
+CourseWrapper "1" *-- "0..1" Scorm12Api : exposes API
+CourseWrapper "1" *-- "0..1" Scorm2004Api : exposes API_1484_11
+Scorm12Api --> RuntimeSession : fixed session reference
+Scorm2004Api --> RuntimeSession : fixed session reference
+@enduml

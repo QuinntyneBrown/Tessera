@@ -1,0 +1,40 @@
+@startuml
+title UML sequence behaviour - Validate configuration before loading
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "IntegrationGuard" as core
+  participant "HostIntegration" as host
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+
+actor -> shell : Supply PlayerInputs
+shell -> core : Validate required inputs (L2-021)
+alt Missing attempt or callback
+  core --> shell : Integration error (L2-014)
+  shell --> actor : Announce configuration problem; refuse launch
+else Valid inputs
+  core --> shell : Immutable authorized context binding
+  shell -> host : loadAttempt(context, signal)
+  host -> api : Authorize attempt and load state (L2-014)
+  api --> host : AttemptSnapshot or null (new attempt)
+  host --> shell : Typed state result
+  shell --> actor : Begin course loading
+end
+@enduml

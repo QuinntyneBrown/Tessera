@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Launch an isolated activity
+
+Person(learner, "Learner", "Uses course activities and player controls")
+System(lms, "Host LMS with Tessera", "Launch an isolated activity")
+System_Ext(courses, "Course delivery", "Serves isolated SCORM course content")
+Rel(learner, lms, "Uses launch an isolated activity", "Browser")
+Rel(lms, courses, "Requests authorized course delivery", "HTTPS")
+@enduml

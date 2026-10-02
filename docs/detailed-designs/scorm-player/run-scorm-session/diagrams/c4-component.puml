@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Run edition-specific SCORM sessions
+
+Container_Boundary(isolated, "Isolated course browser runtime") {
+  Component(p0, "Scorm12Api / Scorm2004Api", "Synchronous JavaScript adapters", "Expose the detected edition's eight methods")
+  Component(p1, "RuntimeSession / DataModel", "Edition runtime", "Own lifecycle and validate operations")
+  Component(p2, "EditionRules", "Edition-specific definitions", "Define data model and protocol errors")
+}
+Container(host, "LMS application with Tessera", "Angular in browser", "Independently validates runtime operations; retains authoritative attempt state")
+Rel(p1, host, "Submits ordered operations for host validation", "postMessage")
+Rel(p0, p1, "Delegates synchronous calls")
+Rel(p1, p2, "Applies identified edition's rules")
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Navigate permitted course activities
+
+Person(learner, "Learner", "Uses course activities and player controls")
+System(lms, "Host LMS with Tessera", "Navigate permitted course activities")
+System_Ext(courses, "Course delivery", "Serves isolated SCORM course content")
+Rel(learner, lms, "Uses navigate permitted course activities", "Browser")
+Rel(lms, courses, "Requests authorized course delivery", "HTTPS")
+@enduml

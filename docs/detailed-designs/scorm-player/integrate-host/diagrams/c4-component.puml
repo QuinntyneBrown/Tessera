@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Integrate the host LMS
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "ScormPlayer", "Angular component", "Owns host inputs and publishes player events")
+  Component(p1, "IntegrationGuard", "Input validation", "Refuses incomplete integration before loading")
+  Component(p2, "HostIntegration", "Callback interface", "Delegates storage and isolated delivery to the host")
+}
+Rel(p0, p1, "Validates PlayerInputs")
+Rel(p0, p2, "Loads, saves, and prepares delivery")
+@enduml

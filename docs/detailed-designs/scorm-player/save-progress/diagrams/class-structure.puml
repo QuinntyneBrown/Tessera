@@ -1,0 +1,49 @@
+@startuml
+title Class structure - Save progress and retry failures
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class PersistenceCoordinator {
+  +state: SaveState
+  +submit(snapshot: AttemptSnapshot): void
+  +retry(): Promise<void>
+  +drain(): Promise<void>
+}
+class SaveSubmission {
+  +snapshot: AttemptSnapshot
+  +revision: number
+}
+class SaveAck {
+  +revision: number
+}
+class SaveState {
+  +latestRevision: number
+  +acknowledgedRevision: number
+  +latestSnapshot: AttemptSnapshot
+  +inFlight: SaveSubmission
+  +failure: PlayerError
+}
+interface HostIntegration {
+  +saveState(context: AttemptContext, state: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
+}
+PersistenceCoordinator "1" *-- "1" SaveState : owns save lifecycle
+SaveState "1" *-- "0..1" SaveSubmission : in flight
+PersistenceCoordinator --> HostIntegration : delegates persistence
+HostIntegration ..> SaveAck : returns after durability
+@enduml

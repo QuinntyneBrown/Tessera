@@ -1,0 +1,53 @@
+@startuml
+title UML sequence behaviour - Load either supported source
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "CourseLoader" as core
+  participant "HostIntegration" as host
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+box "Backend - Host course delivery infrastructure" #FFF4E5
+  participant "Course delivery service" as delivery
+end box
+
+actor -> shell : Supply source
+shell --> actor : Render shell and loading status (L2-019)
+shell -> core : load(source, limits, signal)
+alt ZIP input
+  core -> core : Check archive bytes; extract in worker (L2-002)
+  core -> core : Count actual expanded bytes and entries
+else Extracted input
+  core -> delivery : Fetch manifest under configured CORS policy (L2-001)
+  delivery --> core : Manifest XML or fetch error (L2-003)
+end
+core -> core : Detect edition; parse structure (L2-001)
+core -> core : Confine and validate resource paths (L2-016)
+alt Invalid source or exceeded limit
+  core --> shell : Typed loading failure; no executable content
+  shell --> actor : Name cause and offer retry
+else Validated source
+  core --> shell : ValidatedCourse
+  shell -> host : prepareDelivery(context, course, signal)
+  host -> api : Authorize delivery for this attempt
+  api --> host : Isolated delivery descriptor
+  host --> shell : Prepared course root
+  shell --> actor : Show course title and available activities
+end
+@enduml

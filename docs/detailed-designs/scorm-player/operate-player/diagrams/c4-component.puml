@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Operate the player accessibly and recover from errors
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "ScormPlayer / PlayerViewState", "Angular view", "Renders semantic controls and stable course frame")
+  Component(p1, "StatusAnnouncer", "Browser accessibility", "Announces SCO-driven activity, outcome and save changes")
+}
+Rel(p0, p1, "Publishes each new status or failure once")
+@enduml

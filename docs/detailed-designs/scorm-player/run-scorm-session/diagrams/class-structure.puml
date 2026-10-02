@@ -1,0 +1,63 @@
+@startuml
+title Class structure - Run edition-specific SCORM sessions
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+enum SessionState {
+  NotInitialized
+  Initialized
+  Terminated
+}
+interface EditionRules {
+  +edition: ScormEdition
+  +validateCall(method: string, argument: string, state: SessionState): ValidationResult
+  +validateValue(element: string, value: string): ValidationResult
+  +errorString(code: string): string
+}
+class RuntimeSession {
+  +state: SessionState
+  +lastError: string
+  +initialize(argument: string): string
+  +getValue(element: string): string
+  +setValue(element: string, value: string): string
+  +commit(argument: string): string
+  +terminate(argument: string): string
+}
+class DataModel {
+  +values: Map<string, string>
+  +read(element: string): string
+  +write(element: string, value: string): ValidationResult
+}
+class Scorm12Api {
+  +session: RuntimeSession
+  +LMSInitialize(argument: string): string
+  +LMSFinish(argument: string): string
+}
+class Scorm2004Api {
+  +session: RuntimeSession
+  +Initialize(argument: string): string
+  +Terminate(argument: string): string
+}
+RuntimeSession "1" *-- "1" DataModel : owns valid state
+RuntimeSession --> SessionState : lifecycle
+RuntimeSession --> EditionRules : exact edition
+DataModel --> EditionRules : element validation
+Scorm12Api --> RuntimeSession : fixed session reference
+Scorm2004Api --> RuntimeSession : fixed session reference
+@enduml

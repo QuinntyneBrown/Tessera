@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Load and validate a course
+
+Person(learner, "Learner", "Operates the player")
+System_Boundary(lms, "Host LMS integration") {
+  Container(frontend, "LMS application with Tessera", "Angular in browser", "Load and validate a course")
+  Container(api, "Host LMS API", "Host-defined backend", "Authorizes delivery and stores bound attempt state")
+}
+Container(course, "Isolated course wrapper and SCO", "Browser frames on distinct origin", "Exposes synchronous runtime API for one SCO")
+Container(delivery, "Course delivery service", "Host-defined HTTPS service", "Serves wrapper, manifests and validated resources")
+Rel(learner, frontend, "Uses player controls")
+Rel(frontend, api, "Host callbacks authorize and persist", "HTTPS")
+Rel(frontend, course, "Constrained session protocol", "postMessage; exact origins")
+Rel(course, delivery, "Loads wrapper and resources", "HTTPS")
+Rel(api, delivery, "Prepares authorized delivery")
+@enduml

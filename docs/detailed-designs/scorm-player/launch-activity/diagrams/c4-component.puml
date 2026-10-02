@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Launch an isolated activity
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "ActivityLauncher", "Browser coordinator", "Waits for preflight and runtime readiness")
+  Component(p1, "RuntimeBridge", "Message validator", "Binds ordered messages to the active session")
+}
+Container_Boundary(isolated, "Isolated course browser context") {
+  Component(p2, "CourseWrapper", "Browser wrapper", "Installs local synchronous API before SCO execution")
+}
+Rel(p0, p1, "Creates and retires SessionBinding")
+Rel(p1, p2, "Exchanges constrained session messages")
+@enduml

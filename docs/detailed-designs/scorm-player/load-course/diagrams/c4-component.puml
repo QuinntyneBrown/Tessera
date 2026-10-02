@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Load and validate a course
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "CourseLoader", "Browser coordinator", "Fetches, cancels, and produces ValidatedCourse")
+  Component(p1, "PackageWorker", "Web Worker", "Extracts archives under streaming limits")
+  Component(p2, "ManifestParser / ResourceResolver", "Pure package logic", "Validates edition, structure, and confined paths")
+}
+Rel(p0, p1, "Processes ZIP away from UI thread")
+Rel(p1, p2, "Parses and validates archive manifest")
+Rel(p0, p2, "Validates extracted manifest")
+@enduml

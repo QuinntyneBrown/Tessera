@@ -1,0 +1,51 @@
+@startuml
+title Class structure - Operate the player accessibly and recover from errors
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class ScormPlayer {
+  +view: PlayerViewState
+  +toggleOutline(): void
+  +navigate(request: NavigationRequest): Promise<void>
+  +retry(): Promise<void>
+  +requestExit(): Promise<void>
+}
+class PlayerViewState {
+  +currentActivityId: string
+  +actions: NavigationDecision[]
+  +loadState: LoadState
+  +outlineExpanded: boolean
+  +saveStatus: string
+  +outcome: CourseOutcome
+  +error: PlayerError
+}
+class PlayerError {
+  +category: integration | loading | runtime | persistence
+  +code: string
+  +text: string
+  +retryable: boolean
+  +correlationToken: string
+}
+class StatusAnnouncer {
+  +announceStatus(text: string): void
+}
+ScormPlayer "1" *-- "1" PlayerViewState : owns view state
+PlayerViewState --> PlayerError : current failure
+ScormPlayer --> StatusAnnouncer : announces changes
+@enduml

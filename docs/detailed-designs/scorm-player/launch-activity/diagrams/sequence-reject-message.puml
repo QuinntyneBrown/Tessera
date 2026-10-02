@@ -1,0 +1,38 @@
+@startuml
+title UML sequence behaviour - Reject a forged or stale bridge message
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "ActivityLauncher / RuntimeBridge" as core
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+  participant "SCO / asset" as sco
+end box
+
+sco -> wrapper : Attempt arbitrary message or stale API call
+wrapper -> core : Runtime message
+core -> core : Verify source window, origin, schema and size (L2-016)
+core -> core : Match live SessionBinding (L2-015)
+alt Wrong source window, malformed message or retired session
+  core --> shell : Sanitized runtime category; state unchanged
+  shell --> actor : Actionable status if current activity is affected
+else Valid current-session operation
+  core -> core : Independently validate edition data
+  core -> core : Apply to bound attempt only
+end
+@enduml

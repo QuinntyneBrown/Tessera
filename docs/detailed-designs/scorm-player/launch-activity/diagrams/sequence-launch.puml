@@ -1,0 +1,54 @@
+@startuml
+title UML sequence behaviour - Prepare the API before executing content
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "ActivityLauncher / RuntimeBridge" as core
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+  participant "SCO / asset" as sco
+end box
+box "Backend - Host course delivery infrastructure" #FFF4E5
+  participant "Course delivery service" as delivery
+end box
+
+actor -> shell : Open permitted activity
+shell -> core : launch(activity)
+core -> wrapper : Create new wrapper iframe on approved course origin (L2-015)
+wrapper -> delivery : Same-origin fetch of confined launch resource (L2-016)
+delivery --> wrapper : Valid resource or HTTP failure
+wrapper --> core : Launch check result
+alt Isolation or resource invalid
+  core --> shell : Integration or loading error; refuse execution
+  shell --> actor : Explain configuration or failed activity
+else SCO resource
+  core -> wrapper : Bind session and send allowed SCO state
+  wrapper -> wrapper : Install edition-specific API (L2-004)
+  wrapper --> core : Ready for this session
+  core -> wrapper : Start manifest-designated resource
+  wrapper -> sco : Load SCO with discoverable parent API
+  sco -> wrapper : Initialize through API
+  wrapper --> sco : Edition-specific synchronous result
+  core --> shell : Activity started
+  shell --> actor : Move focus to activity heading
+else Asset resource
+  core -> wrapper : Start asset without runtime session (L2-004)
+  wrapper -> sco : Display asset
+  core --> shell : Asset started
+end
+@enduml

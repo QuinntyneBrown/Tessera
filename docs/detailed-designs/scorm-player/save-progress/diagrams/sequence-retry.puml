@@ -1,0 +1,46 @@
+@startuml
+title UML sequence behaviour - Retry failure and warn before exit
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Learner / host integrator" as actor
+box "Frontend - Host LMS application" #E0F2FE
+  participant "ScormPlayer" as shell
+  participant "PersistenceCoordinator" as core
+  participant "HostIntegration" as host
+end box
+box "Backend - Host LMS API application" #D1FADF
+  participant "Authorized attempt storage" as api
+end box
+
+core -> host : Submit latest valid snapshot
+host -> api : Authorized durable save
+api --> host : Failure or uncertain result
+host --> core : Save failure (L2-013)
+core -> core : Retain latest values and immutable context
+core --> shell : Persistence error; progress unsaved
+shell --> actor : Announce unsaved progress; offer Retry
+actor -> shell : Request exit
+shell -> core : Check latest versus acknowledged revision
+core --> shell : Unsaved state
+shell --> actor : Warn before ending; offer Retry
+actor -> shell : Retry
+shell -> core : retry()
+core -> host : saveState(context, submission, signal)
+host -> api : Authorize and accept latest state
+api --> host : SaveAck
+host --> core : Matching acknowledgement
+core --> shell : Clear failure if latest revision acknowledged
+shell --> actor : Announce saved; allow requested exit
+@enduml

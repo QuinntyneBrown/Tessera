@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Save progress and retry failures
+
+Container_Boundary(frontend, "Tessera inside LMS browser application") {
+  Component(p0, "PersistenceCoordinator", "Browser coordinator", "Serializes immutable revision saves")
+  Component(p1, "SaveState", "Attempt-owned state", "Retains latest snapshot and acknowledged revision")
+  Component(p2, "HostIntegration.saveState", "Host callback", "Authorizes and durably stores submission")
+}
+Rel(p0, p1, "Updates pending and acknowledged revisions")
+Rel(p0, p2, "Saves immutable submission")
+@enduml

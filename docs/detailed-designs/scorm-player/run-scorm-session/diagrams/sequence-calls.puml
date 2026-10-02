@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour - Initialize, read, and validate a write
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+box "Frontend - Host LMS application" #E0F2FE
+  participant "Host RuntimeSession / RuntimeBridge" as core
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper / local API" as wrapper
+  participant "SCO / asset" as sco
+end box
+
+sco -> wrapper : Discover API or API_1484_11
+sco -> wrapper : Initialize with argument (L2-007 / L2-008)
+wrapper -> wrapper : Validate edition lifecycle and argument
+wrapper --> sco : String result and specified last error
+opt Initialized session
+  sco -> wrapper : SetValue(element, value)
+  wrapper -> wrapper : Validate permission, vocabulary, bounds and dependencies (L2-009)
+  alt Invalid value or element
+    wrapper --> sco : Failure string; previous state retained
+    sco -> wrapper : GetLastError / GetErrorString / GetDiagnostic
+    wrapper --> sco : Edition-specific errors
+  else Valid write
+    wrapper -> wrapper : Update local model
+    wrapper -> core : Ordered RuntimeOperation
+    wrapper --> sco : Synchronous success string
+    core -> core : Independently validate and apply current session
+    sco -> wrapper : GetValue(element)
+    wrapper --> sco : Edition-formatted value
+  end
+end
+@enduml
