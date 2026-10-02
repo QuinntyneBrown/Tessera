@@ -38,4 +38,18 @@ describe('parseManifest', () => {
       },
     ]);
   });
+
+  it('rejects malformed XML', () => {
+    expect(() => parseManifest('<manifest><organizations>', ROOT)).toThrowError(
+      /not a valid course manifest/,
+    );
+  });
+
+  it('rejects a document type declaration', () => {
+    const withDoctype = manifest12.replace(
+      '<manifest',
+      '<!DOCTYPE manifest [<!ENTITY x "y">]><manifest',
+    );
+    expect(() => parseManifest(withDoctype, ROOT)).toThrowError(/Document type declarations/);
+  });
 });

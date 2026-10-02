@@ -41,3 +41,19 @@ test('reports a loading error when the manifest does not exist', async ({ page }
   await player.expectErrorMessage(/course manifest/i);
   await player.expectHostReceivedErrorCategory('loading');
 });
+
+// L2-002 AC2
+for (const [course, problem] of [
+  ['malformed-xml', 'malformed XML'],
+  ['doctype-12', 'a document type declaration'],
+] as const) {
+  test(`rejects a manifest with ${problem} without launching content`, async ({ page }) => {
+    const player = new PlayerPage(page);
+
+    await player.open({ course });
+
+    await player.expectErrorMessage(/not a valid course manifest/i);
+    await player.expectHostReceivedErrorCategory('loading');
+    player.expectNoLaunchResourceRequested();
+  });
+}

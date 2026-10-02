@@ -11,11 +11,14 @@ export interface HostScenario {
 /** The player screen: owns every selector and interaction. */
 export class PlayerPage {
   private courseRequests = 0;
+  private launchRequests = 0;
 
   constructor(private readonly page: Page) {
     page.on('request', (request) => {
-      if (new URL(request.url()).pathname.startsWith('/courses/')) {
+      const { pathname } = new URL(request.url());
+      if (pathname.startsWith('/courses/')) {
         this.courseRequests++;
+        if (!pathname.endsWith('/imsmanifest.xml')) this.launchRequests++;
       }
     });
   }
@@ -78,6 +81,10 @@ export class PlayerPage {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
       .analyze();
     expect(results.violations).toEqual([]);
+  }
+
+  expectNoLaunchResourceRequested(): void {
+    expect(this.launchRequests).toBe(0);
   }
 
   expectNoCourseContentRequested(): void {
