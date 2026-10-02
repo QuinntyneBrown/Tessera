@@ -1,0 +1,11 @@
+dist
+.angular
+node_modules
+pnpm-lock.yaml
+docs/mocks
+docs/detailed-designs
+docs
+.github/ISSUE_TEMPLATE
+.github/PULL_REQUEST_TEMPLATE.md
+*.md
+!src/**/*.md
