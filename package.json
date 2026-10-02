@@ -29,6 +29,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.3",
+    "esbuild": "^0.28.2",
     "husky": "^9.1.7",
     "jsdom": "^30.0.0",
     "ng-packagr": "^22.2.0",

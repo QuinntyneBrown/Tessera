@@ -20,4 +20,10 @@
       }
     </ol>
   </nav>
+  <section aria-labelledby="activity-heading">
+    @if (activity(); as activity) {
+      <h2 id="activity-heading" tabindex="-1">{{ activity.title }}</h2>
+    }
+    <div #frameHost></div>
+  </section>
 }

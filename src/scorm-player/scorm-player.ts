@@ -1,12 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  ElementRef,
   effect,
+  inject,
   input,
   output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
+import { ActivityLauncher } from './runtime/activity-launcher';
 import { CourseLoadError } from './package/course-load-error';
 import { loadCourse } from './package/course-loader';
 import { EDITION_LABELS } from './package/edition';
@@ -19,6 +24,9 @@ import {
   PlayerError,
   PlayerEvent,
   ValidatedCourse,
+  Activity,
+  DeliveryDescriptor,
+  ScormEdition,
 } from './types';
 
 @Component({
@@ -36,9 +44,27 @@ export class ScormPlayer {
   protected readonly error = signal<PlayerError | null>(null);
   protected readonly course = signal<ValidatedCourse | null>(null);
   protected readonly editionLabels = EDITION_LABELS;
+  protected readonly activity = signal<Activity | null>(null);
+  private readonly frameHost = viewChild<ElementRef<HTMLElement>>('frameHost');
+  private readonly launchRequest = signal<{
+    activity: Activity;
+    edition: ScormEdition;
+    delivery: DeliveryDescriptor;
+  } | null>(null);
+  private launcher: ActivityLauncher | null = null;
   private readonly loadRequest = signal(0);
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => this.launcher?.dispose());
+    effect(() => {
+      const request = this.launchRequest();
+      const frameHost = this.frameHost();
+      if (!request || !frameHost) return;
+      untracked(() => {
+        this.launcher ??= new ActivityLauncher(frameHost.nativeElement);
+        this.launcher.launch(request.activity, request.edition, request.delivery);
+      });
+    });
     effect((onCleanup) => {
       this.loadRequest();
       const source = this.source();
@@ -53,7 +79,17 @@ export class ScormPlayer {
         onCleanup(() => controller.abort());
         this.course.set(null);
         loadCourse(source!, controller.signal).then(
-          (course) => this.course.set(course),
+          async (course) => {
+            this.course.set(course);
+            const delivery = await this.host()!.prepareDelivery(
+              this.attempt()!,
+              course,
+              controller.signal,
+            );
+            const first = course.activities[0];
+            this.activity.set(first);
+            this.launchRequest.set({ activity: first, edition: course.edition, delivery });
+          },
           (cause) => {
             if (controller.signal.aborted) return;
             const failure = this.loadingError(cause);

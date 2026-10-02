@@ -61,6 +61,14 @@ export class PlayerPage {
     await expect(outline.getByRole('listitem')).toHaveText(titles);
   }
 
+  private get activityFrame() {
+    return this.page.frameLocator('iframe[title^="Course content"]').frameLocator('iframe');
+  }
+
+  async expectActivityDiscoveredApi(): Promise<void> {
+    await expect(this.activityFrame.getByText('API found')).toBeVisible();
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }
