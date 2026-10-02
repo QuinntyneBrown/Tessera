@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import {
   AttemptContext,
   AttemptSnapshot,
+  PackageLimits,
   SaveAck,
   CourseSource,
   HostIntegration,
@@ -49,6 +50,7 @@ export interface HostFixture {
   source?: CourseSource;
   attempt?: AttemptContext;
   host?: HostIntegration;
+  limits?: PackageLimits;
 }
 
 const COURSE_ORIGIN = 'http://127.0.0.1:4300';
@@ -94,9 +96,15 @@ export function hostFixtureFor(
   gate: SaveGate,
 ): HostFixture {
   const omit = query.get('omit');
+  const limits = {
+    'small-archive': { archiveBytes: 100, expandedBytes: 500_000_000, entryCount: 10_000 },
+    'few-entries': { archiveBytes: 100_000_000, expandedBytes: 500_000_000, entryCount: 5 },
+    'small-expanded': { archiveBytes: 100_000_000, expandedBytes: 1_000_000, entryCount: 10_000 },
+  }[query.get('limits') ?? ''];
   let readsFailed = 0;
   const courseName = query.get('course') ?? 'single-sco-12';
   return {
+    limits,
     source:
       query.get('source') === 'zip'
         ? undefined

@@ -15,11 +15,26 @@ async function folder(name) {
   return files;
 }
 
+const good = await folder('single-sco-12');
+const { 'sco.html': _launchPage, ...withoutLaunchPage } = good;
+
 const packages = {
-  'single-sco-12': await folder('single-sco-12'),
+  'single-sco-12': good,
+  'no-manifest': { 'sco.html': good['sco.html'] },
+  'traversal-entry': { ...good, '../evil.html': strToU8('<p>escaped</p>') },
+  'missing-launch': withoutLaunchPage,
+  'not-a-zip': undefined,
+  'many-entries': {
+    ...good,
+    ...Object.fromEntries(Array.from({ length: 20 }, (_, i) => [`extra/${i}.txt`, strToU8('x')])),
+  },
+  'large-expanded': { ...good, 'padding.bin': new Uint8Array(2 * 1024 * 1024) },
 };
 
 await mkdir(out, { recursive: true });
 for (const [name, files] of Object.entries(packages)) {
-  await writeFile(join(out, `${name}.zip`), zipSync(files));
+  await writeFile(
+    join(out, `${name}.zip`),
+    files ? zipSync(files) : strToU8('this is not a zip archive'),
+  );
 }

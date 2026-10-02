@@ -5,6 +5,8 @@ export interface HostScenario {
   omit?: 'attempt' | 'host';
   /** The host takes the course from a ZIP the test chooses rather than an extracted manifest URL. */
   source?: 'zip';
+  /** Package limits the host configures. */
+  limits?: 'small-archive' | 'few-entries' | 'small-expanded';
   /** The attempt key the host issues; each attempt has its own saved state. */
   attempt?: string;
   /** What the host's stored state for the attempt looks like; none means a new attempt. */

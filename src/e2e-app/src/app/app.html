@@ -9,6 +9,7 @@
     [source]="zipMode ? chosenPackage() : fixture.source"
     [attempt]="fixture.attempt"
     [host]="fixture.host"
+    [limits]="fixture.limits"
     (event)="onEvent($event)"
   />
 }

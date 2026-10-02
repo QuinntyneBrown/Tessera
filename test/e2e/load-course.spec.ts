@@ -116,3 +116,38 @@ test('loads a SCORM 1.2 ZIP package and launches it through host delivery', asyn
   await player.expectActivityDiscoveredApi();
   await player.expectNoAccessibilityViolations();
 });
+
+// L2-002 AC1, AC2
+for (const [name, message] of [
+  ['no-manifest', /no imsmanifest\.xml at its root/i],
+  ['traversal-entry', /outside the course/i],
+  ['missing-launch', /does not contain sco\.html/i],
+  ['not-a-zip', /not a valid ZIP archive/i],
+] as const) {
+  test(`rejects the package "${name}" without launching content`, async ({ page }) => {
+    const player = new PlayerPage(page);
+
+    await player.openWithPackage(name);
+
+    await player.expectErrorMessage(message);
+    await player.expectHostReceivedErrorCategory('loading');
+    player.expectNoLaunchResourceRequested();
+  });
+}
+
+// L2-002 AC3
+for (const [name, limits, limit] of [
+  ['single-sco-12', 'small-archive', 'archive size'],
+  ['many-entries', 'few-entries', 'entry count'],
+  ['large-expanded', 'small-expanded', 'expanded size'],
+] as const) {
+  test(`stops and names the ${limit} limit when a package exceeds it`, async ({ page }) => {
+    const player = new PlayerPage(page);
+
+    await player.openWithPackage(name, { limits });
+
+    await player.expectErrorMessage(new RegExp(`exceeds the ${limit} limit`, 'i'));
+    await player.expectHostReceivedErrorCategory('loading');
+    player.expectNoLaunchResourceRequested();
+  });
+}
