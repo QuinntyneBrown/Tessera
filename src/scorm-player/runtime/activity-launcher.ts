@@ -50,6 +50,7 @@ export class ActivityLauncher {
     const frame = document.createElement('iframe');
     frame.title = `Course content: ${activity.title}`;
     frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    frame.style.cssText = 'display:block;inline-size:100%;block-size:28.75rem;border:0';
     frame.src = delivery.wrapperUrl;
     frame.addEventListener('load', () =>
       this.post({ v: 1, kind: 'prepare', edition, sco: activity.resource.kind === 'sco', state }),

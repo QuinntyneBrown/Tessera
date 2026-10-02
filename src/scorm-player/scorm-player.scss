@@ -8,3 +8,36 @@ button {
   padding: 0.5rem 1rem;
   font: inherit;
 }
+
+.layout {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.sidebar,
+.player {
+  min-inline-size: 0;
+}
+
+.outline-toggle {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .layout {
+    grid-template-columns: minmax(15.5rem, 18rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 47.9375em) {
+  .outline-toggle {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  nav.collapsed {
+    display: none;
+  }
+}

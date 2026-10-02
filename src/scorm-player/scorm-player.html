@@ -30,56 +30,77 @@
 @if (course(); as course) {
   <h1>{{ course.title }}</h1>
   <p>{{ editionLabels[course.edition] }}</p>
-  <nav aria-labelledby="outline-heading">
-    <h2 id="outline-heading">Course outline</h2>
-    <ol>
-      @for (item of course.activities; track item.id) {
-        <li>
+  <div class="layout">
+    <div class="sidebar">
+      <button
+        type="button"
+        class="outline-toggle"
+        aria-controls="outline"
+        [attr.aria-expanded]="outlineExpanded()"
+        (click)="toggleOutline()"
+        #outlineToggle
+      >
+        Course outline
+      </button>
+      <nav
+        id="outline"
+        aria-label="Course outline"
+        [class.collapsed]="!outlineExpanded()"
+        (keydown.escape)="collapseOutline()"
+      >
+        <h2>Course outline</h2>
+        <ol>
+          @for (item of course.activities; track item.id) {
+            <li>
+              <button
+                type="button"
+                [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
+                (click)="open(item)"
+              >
+                {{ item.title }}
+              </button>
+            </li>
+          }
+        </ol>
+      </nav>
+    </div>
+    <div class="player">
+      <section aria-labelledby="activity-heading">
+        @if (activity(); as activity) {
+          <h2 id="activity-heading" tabindex="-1" #activityHeading>{{ activity.title }}</h2>
+        }
+        <section aria-label="Course outcome">
+          <p>Status: {{ statusText(outcome()) }}</p>
+          <p>Score: {{ scoreText(outcome()) }}</p>
+        </section>
+        <p role="status">{{ saveStatus() }}</p>
+        <div>
           <button
             type="button"
-            [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
-            (click)="open(item)"
+            [attr.aria-disabled]="neighbour(-1) ? null : 'true'"
+            [attr.aria-describedby]="neighbour(-1) ? null : 'previous-reason'"
+            (click)="move(-1)"
           >
-            {{ item.title }}
+            Previous
           </button>
-        </li>
-      }
-    </ol>
-  </nav>
-  <section aria-labelledby="activity-heading">
-    @if (activity(); as activity) {
-      <h2 id="activity-heading" tabindex="-1" #activityHeading>{{ activity.title }}</h2>
-    }
-    <section aria-label="Course outcome">
-      <p>Status: {{ statusText(outcome()) }}</p>
-      <p>Score: {{ scoreText(outcome()) }}</p>
-    </section>
-    <p role="status">{{ saveStatus() }}</p>
-    <div>
-      <button
-        type="button"
-        [attr.aria-disabled]="neighbour(-1) ? null : 'true'"
-        [attr.aria-describedby]="neighbour(-1) ? null : 'previous-reason'"
-        (click)="move(-1)"
-      >
-        Previous
-      </button>
-      @if (!neighbour(-1)) {
-        <span id="previous-reason">This is the first activity.</span>
-      }
-      <button
-        type="button"
-        [attr.aria-disabled]="neighbour(1) ? null : 'true'"
-        [attr.aria-describedby]="neighbour(1) ? null : 'next-reason'"
-        (click)="move(1)"
-      >
-        Next
-      </button>
-      @if (!neighbour(1)) {
-        <span id="next-reason">This is the last activity.</span>
-      }
+          @if (!neighbour(-1)) {
+            <span id="previous-reason">This is the first activity.</span>
+          }
+          <button
+            type="button"
+            [attr.aria-disabled]="neighbour(1) ? null : 'true'"
+            [attr.aria-describedby]="neighbour(1) ? null : 'next-reason'"
+            (click)="move(1)"
+          >
+            Next
+          </button>
+          @if (!neighbour(1)) {
+            <span id="next-reason">This is the last activity.</span>
+          }
+        </div>
+        <button type="button" (click)="requestExit()">Exit course</button>
+        <div #frameHost></div>
+      </section>
     </div>
-    <button type="button" (click)="requestExit()">Exit course</button>
-    <div #frameHost></div>
-  </section>
+  </div>
 }

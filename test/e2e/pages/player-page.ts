@@ -88,6 +88,41 @@ export class PlayerPage {
     await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
   }
 
+  async useViewport(width: number, height = 900): Promise<void> {
+    await this.page.setViewportSize({ width, height });
+  }
+
+  private get outlineToggle(): Locator {
+    return this.page.getByRole('button', { name: 'Course outline' });
+  }
+
+  async expectOutlineToggle(state: { expanded: boolean }): Promise<void> {
+    await expect(this.outlineToggle).toBeVisible();
+    await expect(this.outlineToggle).toHaveAttribute('aria-expanded', String(state.expanded));
+    const controlled = await this.outlineToggle.getAttribute('aria-controls');
+    await expect(this.page.locator(`#${controlled}`)).toBeAttached();
+  }
+
+  async expectNoOutlineToggle(): Promise<void> {
+    await expect(this.outlineToggle).toBeHidden();
+  }
+
+  async expectOutlineVisible(visible: boolean): Promise<void> {
+    await expect(this.outline.getByRole('button', { name: 'Lesson one' })).toBeVisible({ visible });
+  }
+
+  async pressKey(key: string): Promise<void> {
+    await this.page.keyboard.press(key);
+  }
+
+  async expectOutlineToggleFocused(): Promise<void> {
+    await expect(this.outlineToggle).toBeFocused();
+  }
+
+  async focusOutlineToggle(): Promise<void> {
+    await this.outlineToggle.focus();
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }
@@ -368,7 +403,9 @@ export class PlayerPage {
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {
+    // Scan the player itself; the host fixture's own controls are test scaffolding.
     const results = await new AxeBuilder({ page: this.page })
+      .include('tsr-scorm-player')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
       .analyze();
     expect(results.violations).toEqual([]);

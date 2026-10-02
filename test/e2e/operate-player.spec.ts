@@ -63,3 +63,36 @@ test('exits without saving only when the learner chooses to', async ({ page }) =
   await player.expectHostReceivedExit(false);
   await player.expectNoExitWarning();
 });
+
+// L2-018 AC2, L2-017 AC1
+test('collapses the outline behind a toggle on a narrow screen and works by keyboard', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.useViewport(375);
+  await player.open({ course: 'multi-sco-12' });
+
+  await player.expectOutlineToggle({ expanded: false });
+  await player.expectOutlineVisible(false);
+
+  await player.focusOutlineToggle();
+  await player.pressKey('Enter');
+  await player.expectOutlineToggle({ expanded: true });
+  await player.expectOutlineVisible(true);
+  await player.expectNoAccessibilityViolations();
+
+  await player.pressKey('Tab');
+  await player.pressKey('Escape');
+  await player.expectOutlineToggle({ expanded: false });
+  await player.expectOutlineVisible(false);
+  await player.expectOutlineToggleFocused();
+});
+
+test('keeps the outline in view, without a toggle, on a wide screen', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.useViewport(1280);
+  await player.open({ course: 'multi-sco-12' });
+
+  await player.expectNoOutlineToggle();
+  await player.expectOutlineVisible(true);
+});

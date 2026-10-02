@@ -74,6 +74,8 @@ export class ScormPlayer {
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
   protected readonly exitWarning = signal(false);
+  protected readonly outlineExpanded = signal(false);
+  private readonly outlineToggle = viewChild<ElementRef<HTMLElement>>('outlineToggle');
   protected readonly loading = signal(false);
   protected readonly cancelled = signal(false);
   private loadController: AbortController | null = null;
@@ -260,10 +262,23 @@ export class ScormPlayer {
       : String(outcome.score.raw);
   }
 
+  protected toggleOutline(): void {
+    this.outlineExpanded.update((expanded) => !expanded);
+  }
+
+  /** Collapses the outline and, since focus was inside it, returns focus to its toggle. */
+  protected collapseOutline(): void {
+    this.outlineExpanded.set(false);
+    this.outlineToggle()?.nativeElement.focus();
+  }
+
   protected cancelLoad(): void {
     this.loadController?.abort();
     this.loading.set(false);
     this.cancelled.set(true);
+    // A cancelled load shows nothing of the course, even if its manifest had already been read.
+    this.course.set(null);
+    this.activity.set(null);
   }
 
   protected async requestExit(): Promise<void> {
