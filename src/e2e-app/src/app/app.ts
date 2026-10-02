@@ -8,8 +8,11 @@ import { hostFixtureFor } from './host-fixtures';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly fixture = hostFixtureFor(new URLSearchParams(location.search));
   protected readonly events = signal<string[]>([]);
+  protected readonly saves = signal<string[]>([]);
+  protected readonly fixture = hostFixtureFor(new URLSearchParams(location.search), (submission) =>
+    this.saves.update((saves) => [...saves, JSON.stringify(submission)]),
+  );
 
   constructor() {
     // Host credentials a hostile course must not be able to reach.

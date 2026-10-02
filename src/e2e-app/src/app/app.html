@@ -9,3 +9,8 @@
     <li>{{ event }}</li>
   }
 </ol>
+<ol aria-label="Host saves">
+  @for (save of saves(); track $index) {
+    <li>{{ save }}</li>
+  }
+</ol>

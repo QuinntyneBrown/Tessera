@@ -18,7 +18,7 @@ const ERROR_STRINGS: Record<string, string> = {
 
 /** Lifecycle and data model of one SCO's SCORM 1.2 session. */
 export class RuntimeSession {
-  private readonly values = new Map<string, string>();
+  private readonly written = new Map<string, string>();
   private readonly counts = new Map<string, number>();
   state: SessionState = 'not-initialized';
   lastError = '0';
@@ -55,7 +55,7 @@ export class RuntimeSession {
     if (!rule) return this.fail(key.endsWith('._children') ? '202' : '201', '');
     if (!this.indexesExist(indexes)) return this.fail('201', '');
     if (rule.access === 'w') return this.fail('404', '');
-    return this.succeed(this.values.get(element) ?? rule.initial ?? '');
+    return this.succeed(this.written.get(element) ?? rule.initial ?? '');
   }
 
   setValue(element: string, value: string): string {
@@ -68,11 +68,16 @@ export class RuntimeSession {
     if (indexes.some(([path, index]) => index > (this.counts.get(path) ?? 0)))
       return this.fail('201');
     if (!rule.valid!(value)) return this.fail('405');
-    this.values.set(element, value);
+    this.written.set(element, value);
     for (const [path, index] of indexes) {
       if (index === (this.counts.get(path) ?? 0)) this.counts.set(path, index + 1);
     }
     return this.succeed();
+  }
+
+  /** The values the SCO has written, by element name. */
+  values(): Record<string, string> {
+    return Object.fromEntries(this.written);
   }
 
   errorString(code: string): string {

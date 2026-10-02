@@ -110,6 +110,28 @@ export class PlayerPage {
     return (await results.allTextContents()).map((text) => JSON.parse(text));
   }
 
+  private get hostSaves(): Locator {
+    return this.page.getByRole('list', { name: 'Host saves' }).getByRole('listitem');
+  }
+
+  /** Waits for the host to have received a save whose (only) SCO holds these values. */
+  async expectHostSaved(values: Record<string, string>): Promise<void> {
+    await expect(async () => {
+      const saves = (await this.hostSaves.allTextContents()).map((text) => JSON.parse(text));
+      const last = saves.at(-1);
+      expect(last, 'a save reached the host').toBeDefined();
+      expect(Object.values(last.snapshot.scoStates)[0]).toMatchObject({ values });
+    }).toPass();
+  }
+
+  async expectHostSaveCount(count: number): Promise<void> {
+    await expect(this.hostSaves).toHaveCount(count);
+  }
+
+  async expectSaveStatus(text: string): Promise<void> {
+    await expect(this.page.getByRole('status')).toContainText(text);
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

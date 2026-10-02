@@ -12,6 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ActivityLauncher } from './runtime/activity-launcher';
+import { PersistenceCoordinator } from './runtime/persistence-coordinator';
 import { CourseLoadError } from './package/course-load-error';
 import { loadCourse } from './package/course-loader';
 import { EDITION_LABELS } from './package/edition';
@@ -27,6 +28,7 @@ import {
   Activity,
   DeliveryDescriptor,
   ScormEdition,
+  ScoSnapshot,
 } from './types';
 
 @Component({
@@ -52,6 +54,9 @@ export class ScormPlayer {
     delivery: DeliveryDescriptor;
   } | null>(null);
   private launcher: ActivityLauncher | null = null;
+  private persistence: PersistenceCoordinator | null = null;
+  private scoStates: Record<string, ScoSnapshot> = {};
+  protected readonly saveStatus = signal('');
   private readonly loadRequest = signal(0);
 
   constructor() {
@@ -61,15 +66,17 @@ export class ScormPlayer {
       const frameHost = this.frameHost();
       if (!request || !frameHost) return;
       untracked(() => {
-        this.launcher ??= new ActivityLauncher(frameHost.nativeElement, (activity) =>
-          this.fail({
-            category: 'loading',
-            code: 'activity-unavailable',
-            text: `The activity “${activity.title}” could not be loaded.`,
-            retryable: true,
-            correlationToken: crypto.randomUUID(),
-          }),
-        );
+        this.launcher ??= new ActivityLauncher(frameHost.nativeElement, {
+          onLaunchFailed: (activity) =>
+            this.fail({
+              category: 'loading',
+              code: 'activity-unavailable',
+              text: `The activity “${activity.title}” could not be loaded.`,
+              retryable: true,
+              correlationToken: crypto.randomUUID(),
+            }),
+          onFlush: (activity, values) => this.save(activity, values),
+        });
         this.launcher.launch(request.activity, request.edition, request.delivery);
       });
     });
@@ -104,6 +111,22 @@ export class ScormPlayer {
           },
         );
       });
+    });
+  }
+
+  private save(activity: Activity, values: Record<string, string>): void {
+    this.scoStates[activity.id] = { values };
+    this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, (revision) => {
+      this.saveStatus.set('Progress saved');
+      this.event.emit({ kind: 'save', status: 'saved', revision });
+    });
+    this.saveStatus.set('Saving progress');
+    this.persistence.submit({
+      schemaVersion: 1,
+      context: this.attempt()!,
+      edition: this.course()!.edition,
+      scoStates: { ...this.scoStates },
+      sequencing: { currentActivityId: activity.id },
     });
   }
 

@@ -24,6 +24,7 @@
     @if (activity(); as activity) {
       <h2 id="activity-heading" tabindex="-1">{{ activity.title }}</h2>
     }
+    <p role="status">{{ saveStatus() }}</p>
     <div #frameHost></div>
   </section>
 }

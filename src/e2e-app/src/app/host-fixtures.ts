@@ -1,4 +1,9 @@
-import { AttemptContext, CourseSource, HostIntegration } from '@tessera/scorm-player';
+import {
+  AttemptContext,
+  CourseSource,
+  HostIntegration,
+  SaveSubmission,
+} from '@tessera/scorm-player';
 
 export interface HostFixture {
   source: CourseSource;
@@ -9,7 +14,10 @@ export interface HostFixture {
 const COURSE_ORIGIN = 'http://127.0.0.1:4300';
 
 /** Builds the host-side inputs for the scenario named by the page's query string. */
-export function hostFixtureFor(query: URLSearchParams): HostFixture {
+export function hostFixtureFor(
+  query: URLSearchParams,
+  onSave: (submission: SaveSubmission) => void,
+): HostFixture {
   const omit = query.get('omit');
   const courseName = query.get('course') ?? 'single-sco-12';
   return {
@@ -26,7 +34,10 @@ export function hostFixtureFor(query: URLSearchParams): HostFixture {
         ? undefined
         : {
             loadAttempt: async () => null,
-            saveState: async (_context, submission) => ({ revision: submission.revision }),
+            saveState: async (_context, submission) => {
+              onSave(submission);
+              return { revision: submission.revision };
+            },
             prepareDelivery: async () => {
               if (query.get('isolation') === 'unavailable') throw new Error('no isolated origin');
               return {

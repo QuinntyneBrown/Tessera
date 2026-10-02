@@ -90,4 +90,6 @@ export interface PlayerError {
   readonly correlationToken: string;
 }
 
-export type PlayerEvent = { readonly kind: 'error'; readonly error: PlayerError };
+export type PlayerEvent =
+  | { readonly kind: 'error'; readonly error: PlayerError }
+  | { readonly kind: 'save'; readonly status: 'saved'; readonly revision: number };
