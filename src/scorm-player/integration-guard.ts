@@ -1,4 +1,11 @@
-import { AttemptContext, CourseSource, HostIntegration, PlayerError } from './types';
+import { BRIDGE_PROTOCOL_VERSION } from './runtime/bridge-protocol';
+import {
+  AttemptContext,
+  CourseSource,
+  DeliveryDescriptor,
+  HostIntegration,
+  PlayerError,
+} from './types';
 
 export interface PlayerInputs {
   readonly source: CourseSource | undefined;
@@ -45,4 +52,27 @@ export function checkIntegration({ source, attempt, host }: PlayerInputs): Playe
     );
   }
   return null;
+}
+
+/** Checks that the host delivers the course from an origin isolated from the host application. */
+export function checkDelivery(
+  delivery: DeliveryDescriptor,
+  hostOrigin: string,
+): PlayerError | null {
+  const wrapperOrigin = new URL(delivery.wrapperUrl).origin;
+  if (
+    wrapperOrigin === hostOrigin ||
+    new URL(delivery.courseRoot).origin !== wrapperOrigin ||
+    delivery.bridgeProtocolVersion !== BRIDGE_PROTOCOL_VERSION
+  ) {
+    return isolationUnavailable();
+  }
+  return null;
+}
+
+export function isolationUnavailable(): PlayerError {
+  return integrationError(
+    'isolation-unavailable',
+    'The course cannot start because the host did not deliver it from an isolated origin.',
+  );
 }

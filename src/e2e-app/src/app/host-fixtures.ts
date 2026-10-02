@@ -27,11 +27,14 @@ export function hostFixtureFor(query: URLSearchParams): HostFixture {
         : {
             loadAttempt: async () => null,
             saveState: async (_context, submission) => ({ revision: submission.revision }),
-            prepareDelivery: async () => ({
-              courseRoot: `${COURSE_ORIGIN}/courses/${courseName}/`,
-              wrapperUrl: `${COURSE_ORIGIN}/wrapper/wrapper.html`,
-              bridgeProtocolVersion: 1,
-            }),
+            prepareDelivery: async () => {
+              if (query.get('isolation') === 'unavailable') throw new Error('no isolated origin');
+              return {
+                courseRoot: `${COURSE_ORIGIN}/courses/${courseName}/`,
+                wrapperUrl: `${query.get('isolation') === 'none' ? location.origin : COURSE_ORIGIN}/wrapper/wrapper.html`,
+                bridgeProtocolVersion: 1,
+              };
+            },
           },
   };
 }

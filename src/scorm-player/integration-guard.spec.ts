@@ -1,4 +1,4 @@
-import { checkIntegration } from './integration-guard';
+import { checkDelivery, checkIntegration } from './integration-guard';
 import { AttemptContext, CourseSource, HostIntegration } from './types';
 
 const source: CourseSource = {
@@ -46,5 +46,32 @@ describe('checkIntegration', () => {
   it('reports an attempt context with an empty key', () => {
     const blank = { ...attempt, attemptKey: '' };
     expect(checkIntegration({ source, attempt: blank, host })?.code).toBe('attempt-missing');
+  });
+});
+
+describe('checkDelivery', () => {
+  const delivery = {
+    courseRoot: 'https://course.test/courses/demo/',
+    wrapperUrl: 'https://course.test/wrapper/wrapper.html',
+    bridgeProtocolVersion: 1,
+  };
+
+  it('accepts delivery from a different origin than the host', () => {
+    expect(checkDelivery(delivery, 'https://lms.test')).toBeNull();
+  });
+
+  it('rejects delivery from the host origin', () => {
+    expect(checkDelivery(delivery, 'https://course.test')?.code).toBe('isolation-unavailable');
+  });
+
+  it('rejects a course root outside the wrapper origin', () => {
+    const split = { ...delivery, courseRoot: 'https://other.test/courses/demo/' };
+    expect(checkDelivery(split, 'https://lms.test')?.code).toBe('isolation-unavailable');
+  });
+
+  it('rejects an unsupported bridge protocol version', () => {
+    expect(checkDelivery({ ...delivery, bridgeProtocolVersion: 2 }, 'https://lms.test')?.code).toBe(
+      'isolation-unavailable',
+    );
   });
 });

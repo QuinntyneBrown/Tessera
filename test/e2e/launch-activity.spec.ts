@@ -30,3 +30,18 @@ test('ignores bridge messages forged by course content', async ({ page }) => {
 
   await player.expectForgedMessagesIgnored();
 });
+
+// L2-015 AC3
+for (const isolation of ['none', 'unavailable'] as const) {
+  test(`refuses to launch when the host cannot isolate course delivery (${isolation})`, async ({
+    page,
+  }) => {
+    const player = new PlayerPage(page);
+
+    await player.open({ course: 'single-sco-12', isolation });
+
+    await player.expectErrorMessage(/isolated/i);
+    await player.expectHostReceivedErrorCategory('integration');
+    player.expectNoLaunchResourceRequested();
+  });
+}

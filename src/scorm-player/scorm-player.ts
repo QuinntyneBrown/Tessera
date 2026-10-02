@@ -15,7 +15,7 @@ import { ActivityLauncher } from './runtime/activity-launcher';
 import { CourseLoadError } from './package/course-load-error';
 import { loadCourse } from './package/course-loader';
 import { EDITION_LABELS } from './package/edition';
-import { checkIntegration } from './integration-guard';
+import { checkDelivery, checkIntegration, isolationUnavailable } from './integration-guard';
 import {
   AttemptContext,
   CourseSource,
@@ -81,24 +81,27 @@ export class ScormPlayer {
         loadCourse(source!, controller.signal).then(
           async (course) => {
             this.course.set(course);
-            const delivery = await this.host()!.prepareDelivery(
-              this.attempt()!,
-              course,
-              controller.signal,
-            );
+            const delivery = await this.host()!
+              .prepareDelivery(this.attempt()!, course, controller.signal)
+              .catch(() => null);
+            if (!delivery) return this.fail(isolationUnavailable());
+            const refusal = checkDelivery(delivery, location.origin);
+            if (refusal) return this.fail(refusal);
             const first = course.activities[0];
             this.activity.set(first);
             this.launchRequest.set({ activity: first, edition: course.edition, delivery });
           },
           (cause) => {
-            if (controller.signal.aborted) return;
-            const failure = this.loadingError(cause);
-            this.error.set(failure);
-            this.event.emit({ kind: 'error', error: failure });
+            if (!controller.signal.aborted) this.fail(this.loadingError(cause));
           },
         );
       });
     });
+  }
+
+  private fail(failure: PlayerError): void {
+    this.error.set(failure);
+    this.event.emit({ kind: 'error', error: failure });
   }
 
   protected retry(): void {

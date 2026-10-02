@@ -4,6 +4,8 @@ import { expect, Locator, Page } from '@playwright/test';
 export interface HostScenario {
   omit?: 'attempt' | 'host';
   course?: string;
+  /** The host serves course content from the LMS origin instead of an isolated one. */
+  isolation?: 'none' | 'unavailable';
   /** Makes the first request for the course manifest fail. */
   failFirstManifestRequest?: boolean;
 }
