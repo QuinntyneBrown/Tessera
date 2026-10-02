@@ -96,3 +96,28 @@ test('keeps the outline in view, without a toggle, on a wide screen', async ({ p
   await player.expectNoOutlineToggle();
   await player.expectOutlineVisible(true);
 });
+
+// L2-017 AC1, AC2
+test('moves focus to the activity heading when the learner opens an activity', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'multi-sco-12' });
+
+  await player.chooseActivity('Lesson two');
+
+  await player.expectActivityHeadingFocused('Lesson two');
+});
+
+test('closes the outline and focuses the new activity when chosen on a narrow screen', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.useViewport(375);
+  await player.open({ course: 'multi-sco-12' });
+  await player.focusOutlineToggle();
+  await player.pressKey('Enter');
+
+  await player.chooseActivity('Lesson three');
+
+  await player.expectActivityHeadingFocused('Lesson three');
+  await player.expectOutlineToggle({ expanded: false });
+});

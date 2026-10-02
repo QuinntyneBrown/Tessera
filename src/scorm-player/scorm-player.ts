@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  Injector,
+  afterNextRender,
   ElementRef,
   effect,
   inject,
@@ -68,6 +70,7 @@ export class ScormPlayer {
     delivery: DeliveryDescriptor;
     state: Record<string, string> | null;
   } | null>(null);
+  private readonly injector = inject(Injector);
   private launcher: ActivityLauncher | null = null;
   private delivery: DeliveryDescriptor | null = null;
   private persistence: PersistenceCoordinator | null = null;
@@ -221,6 +224,11 @@ export class ScormPlayer {
       });
     }
     this.activity.set(activity);
+    this.outlineExpanded.set(false);
+    // The learner chose this activity, so take them to it rather than announcing the change.
+    afterNextRender(() => this.activityHeading()?.nativeElement.focus(), {
+      injector: this.injector,
+    });
     this.launchRequest.set({
       activity: this.launchable(activity),
       edition: this.course()!.edition,
