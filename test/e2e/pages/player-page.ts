@@ -207,6 +207,20 @@ export class PlayerPage {
     expect(problems).toEqual([]);
   }
 
+  /** Tags the live activity frame so a later check can tell whether it was replaced. */
+  async markActivityFrame(): Promise<void> {
+    await this.page.evaluate(() => {
+      (document.querySelector('iframe[title^="Course content"]') as any).__marker = 'original';
+    });
+  }
+
+  async expectActivityFrameNotReplaced(): Promise<void> {
+    const marker = await this.page.evaluate(
+      () => (document.querySelector('iframe[title^="Course content"]') as any)?.__marker,
+    );
+    expect(marker, 'the activity frame is the one that was marked').toBe('original');
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }

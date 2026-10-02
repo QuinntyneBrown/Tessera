@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { PlayerPage } from './pages/player-page';
 
 const commitPage = (page: string) => [
@@ -180,3 +180,28 @@ for (const width of [375, 1280]) {
     await player.expectControlsUsable();
   });
 }
+
+// L2-018 AC3, AC7
+test('keeps the activity and its unsaved values through a resize and a zoom change', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.useViewport(1280, 1024);
+  await player.open({ course: 'probe-12' });
+  await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 5'],
+  ]);
+  await player.markActivityFrame();
+
+  await player.useViewport(375, 800);
+  await player.useViewport(320, 256);
+
+  await player.expectActivityFrameNotReplaced();
+  const results = await player.runScoCalls([
+    ['LMSGetValue', 'cmi.core.lesson_location'],
+    ['LMSCommit', ''],
+  ]);
+  expect(results).toEqual(['page 5', 'true']);
+  await player.expectHostSaved({ 'cmi.core.lesson_location': 'page 5' });
+});
