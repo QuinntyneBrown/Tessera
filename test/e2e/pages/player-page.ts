@@ -75,6 +75,15 @@ export class PlayerPage {
     }
   }
 
+  /** Waits for the hostile course to finish forging, then checks that the host started nothing extra. */
+  async expectForgedMessagesIgnored(): Promise<void> {
+    await expect(this.activityFrame.first().getByText('Forged messages sent')).toBeVisible();
+    await this.page.waitForTimeout(500);
+    await expect(
+      this.page.frameLocator('iframe[title^="Course content"]').locator('iframe'),
+    ).toHaveCount(1);
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

@@ -1,11 +1,12 @@
 import { Activity, ScormEdition, DeliveryDescriptor } from '../types';
-import { HostMessage, WrapperMessage } from './bridge-protocol';
+import { HostMessage, parseWrapperMessage } from './bridge-protocol';
 
 /** Shows an activity inside an isolated wrapper frame and starts it once the wrapper is ready. */
 export class ActivityLauncher {
   private frame: HTMLIFrameElement | null = null;
-  private readonly onMessage = (event: MessageEvent<WrapperMessage>) => {
-    if (event.data.kind === 'ready') {
+  private readonly onMessage = (event: MessageEvent) => {
+    if (event.origin !== this.wrapperOrigin || event.source !== this.frame?.contentWindow) return;
+    if (parseWrapperMessage(event.data)?.kind === 'ready') {
       this.post({ v: 1, kind: 'start', url: this.activity!.resource.url });
     }
   };
@@ -36,7 +37,11 @@ export class ActivityLauncher {
     this.frame?.remove();
   }
 
+  private get wrapperOrigin(): string {
+    return new URL(this.delivery!.wrapperUrl).origin;
+  }
+
   private post(message: HostMessage): void {
-    this.frame!.contentWindow!.postMessage(message, new URL(this.delivery!.wrapperUrl).origin);
+    this.frame!.contentWindow!.postMessage(message, this.wrapperOrigin);
   }
 }

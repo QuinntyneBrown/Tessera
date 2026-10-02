@@ -21,3 +21,12 @@ test('keeps course scripts away from the host DOM, cookies and storage', async (
 
   await player.expectCourseCannotReachHost();
 });
+
+// L2-015 AC2, L2-016 AC2
+test('ignores bridge messages forged by course content', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.open({ course: 'forger-12' });
+
+  await player.expectForgedMessagesIgnored();
+});

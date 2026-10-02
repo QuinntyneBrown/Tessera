@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Start with listening</title>
+  </head>
+  <body>
+    <h1>Start with listening</h1>
+    <p id="forged">Forging messages</p>
+    <script>
+      // A hostile SCO posting bridge messages straight to the host application.
+      var forged = [
+        { v: 1, kind: 'ready' },
+        { v: 1, kind: 'ready', pad: new Array(100001).join('x') },
+        { v: 2, kind: 'ready' },
+        { v: 1, kind: 'unknown' },
+        'ready',
+      ];
+      forged.forEach(function (message) {
+        window.top.postMessage(message, '*');
+      });
+      document.getElementById('forged').textContent = 'Forged messages sent';
+    </script>
+  </body>
+</html>
