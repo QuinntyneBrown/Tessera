@@ -121,3 +121,28 @@ test('closes the outline and focuses the new activity when chosen on a narrow sc
   await player.expectActivityHeadingFocused('Lesson three');
   await player.expectOutlineToggle({ expanded: false });
 });
+
+// L2-018 AC1
+for (const width of [320, 576, 768, 992, 1200, 1920]) {
+  test(`stays usable without horizontal scrolling at ${width} CSS px`, async ({ page }) => {
+    const player = new PlayerPage(page);
+    await player.useViewport(width);
+    await player.open({ course: 'multi-sco-12' });
+
+    await player.expectNoHorizontalScroll();
+    await player.expectControlsUsable();
+    await player.expectNoHorizontalScroll();
+    await player.expectNoAccessibilityViolations();
+  });
+}
+
+// L2-018 AC4: a 1280 x 1024 window at 400% zoom is 320 x 256 CSS pixels
+test('reflows to one column at 400% zoom in a 1280 x 1024 window', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.useViewport(320, 256);
+  await player.open({ course: 'multi-sco-12' });
+
+  await player.expectNoHorizontalScroll();
+  await player.expectSingleColumn();
+  await player.expectControlsUsable();
+});

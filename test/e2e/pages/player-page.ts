@@ -123,6 +123,37 @@ export class PlayerPage {
     await this.outlineToggle.focus();
   }
 
+  /** WCAG 1.4.10: the page never needs to scroll sideways. */
+  async expectNoHorizontalScroll(): Promise<void> {
+    const overflow = await this.page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, 'horizontal overflow in CSS px').toBeLessThanOrEqual(0);
+  }
+
+  /** Every control the learner needs is reachable: the outline (directly or via its toggle), navigation, exit. */
+  async expectControlsUsable(): Promise<void> {
+    const toggle = this.outlineToggle;
+    if (await toggle.isVisible()) {
+      await toggle.click();
+    }
+    await expect(this.outline.getByRole('button', { name: 'Lesson one' })).toBeVisible();
+    await expect(this.nextButton).toBeVisible();
+    await expect(this.previousButton).toBeVisible();
+    await expect(this.page.getByRole('button', { name: 'Exit course' })).toBeVisible();
+    const viewport = this.page.viewportSize()!;
+    const frame = await this.page.locator('iframe[title^="Course content"]').boundingBox();
+    expect(frame!.x + frame!.width).toBeLessThanOrEqual(viewport.width);
+  }
+
+  /** The outline and the activity sit one above the other, as at 320 CSS px. */
+  async expectSingleColumn(): Promise<void> {
+    const [sidebar, player] = await this.page.locator('.layout > *').all();
+    const [a, b] = [await sidebar.boundingBox(), await player.boundingBox()];
+    expect(a!.x).toBe(b!.x);
+    expect(b!.y).toBeGreaterThanOrEqual(a!.y + a!.height);
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }
