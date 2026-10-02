@@ -45,6 +45,30 @@
       <p>Score: {{ scoreText(outcome()) }}</p>
     </section>
     <p role="status">{{ saveStatus() }}</p>
+    <div>
+      <button
+        type="button"
+        [attr.aria-disabled]="neighbour(-1) ? null : 'true'"
+        [attr.aria-describedby]="neighbour(-1) ? null : 'previous-reason'"
+        (click)="move(-1)"
+      >
+        Previous
+      </button>
+      @if (!neighbour(-1)) {
+        <span id="previous-reason">This is the first activity.</span>
+      }
+      <button
+        type="button"
+        [attr.aria-disabled]="neighbour(1) ? null : 'true'"
+        [attr.aria-describedby]="neighbour(1) ? null : 'next-reason'"
+        (click)="move(1)"
+      >
+        Next
+      </button>
+      @if (!neighbour(1)) {
+        <span id="next-reason">This is the last activity.</span>
+      }
+    </div>
     <button type="button" (click)="requestExit()">Exit course</button>
     <div #frameHost></div>
   </section>

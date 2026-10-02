@@ -267,6 +267,49 @@ export class PlayerPage {
     }).toPass();
   }
 
+  private get previousButton(): Locator {
+    return this.page.getByRole('button', { name: 'Previous' });
+  }
+
+  private get nextButton(): Locator {
+    return this.page.getByRole('button', { name: 'Next' });
+  }
+
+  async previous(): Promise<void> {
+    // aria-disabled buttons are still activatable, so skip Playwright's enabled check.
+    await this.previousButton.click({ force: true });
+  }
+
+  async next(): Promise<void> {
+    await this.nextButton.click({ force: true });
+  }
+
+  /** A blocked control stays focusable (aria-disabled, not disabled) and carries its reason as text. */
+  private async expectBlocked(button: Locator, reason: string): Promise<void> {
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).not.toHaveAttribute('disabled');
+    await button.focus();
+    await expect(button).toBeFocused();
+    await expect(button).toHaveAccessibleDescription(reason);
+    await expect(this.page.getByText(reason, { exact: true })).toBeVisible();
+  }
+
+  async expectPreviousBlocked(reason: string): Promise<void> {
+    await this.expectBlocked(this.previousButton, reason);
+  }
+
+  async expectNextBlocked(reason: string): Promise<void> {
+    await this.expectBlocked(this.nextButton, reason);
+  }
+
+  async expectPreviousAvailable(): Promise<void> {
+    await expect(this.previousButton).not.toHaveAttribute('aria-disabled', 'true');
+  }
+
+  async expectNextAvailable(): Promise<void> {
+    await expect(this.nextButton).not.toHaveAttribute('aria-disabled', 'true');
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

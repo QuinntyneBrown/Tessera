@@ -217,6 +217,18 @@ export class ScormPlayer {
     });
   }
 
+  /** The activity `offset` places from the current one, or undefined past either end of the course. */
+  protected neighbour(offset: -1 | 1): Activity | undefined {
+    const activities = this.course()?.activities ?? [];
+    const index = activities.findIndex((a) => a.id === this.activity()?.id);
+    return activities[index + offset];
+  }
+
+  protected move(offset: -1 | 1): void {
+    const target = this.neighbour(offset);
+    if (target) void this.open(target);
+  }
+
   protected statusText(outcome: CourseOutcome | null): string {
     return !outcome || outcome.status === 'unknown' ? 'Not yet known' : outcome.status;
   }
