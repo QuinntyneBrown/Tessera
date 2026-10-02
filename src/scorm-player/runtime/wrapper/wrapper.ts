@@ -4,6 +4,7 @@ import { Scorm12Api } from '../scorm12-api';
 
 // Runs on the isolated course origin: exposes the SCORM API, then starts the activity in a nested frame.
 let hostOrigin = '';
+let session: RuntimeSession | null = null;
 
 function send(message: WrapperMessage): void {
   window.parent.postMessage(message, hostOrigin);
@@ -15,7 +16,7 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   const message = event.data;
   if (message.kind === 'prepare') {
     if (message.sco) {
-      const session = new RuntimeSession();
+      session = new RuntimeSession();
       if (message.state) session.restore({ ...message.state });
       (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(session, (operation) =>
         send({ v: 1, kind: 'operation', operation }),
@@ -23,6 +24,8 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
     }
     send({ v: 1, kind: 'ready' });
   } else if (message.kind === 'flush') {
+    // The host is about to retire this activity: end its session so late calls fail with 301.
+    session?.terminate('');
     send({ v: 1, kind: 'flushed' });
   } else if (message.kind === 'start') {
     // An iframe load event cannot prove HTTP success, so check the launch page first.

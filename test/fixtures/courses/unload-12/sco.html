@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Probe with late call</title>
+  </head>
+  <body>
+    <h1>Probe</h1>
+    <label for="calls">API calls (JSON)</label>
+    <textarea id="calls" rows="4" cols="60"></textarea>
+    <button id="run" type="button">Run calls</button>
+    <ol id="results" aria-label="API results"></ol>
+    <button id="show-late" type="button">Show late call</button>
+    <ol id="late" aria-label="Late call"></ol>
+    <script>
+      var api = window.parent.API;
+      // Many SCOs call the API as they unload; by then the player has already ended this session.
+      window.addEventListener('pagehide', function () {
+        try {
+          localStorage.setItem(
+            'late-call',
+            JSON.stringify([
+              api.LMSSetValue('cmi.core.lesson_location', 'late write'),
+              api.LMSGetLastError(),
+            ]),
+          );
+        } catch (error) {}
+      });
+      document.getElementById('run').addEventListener('click', function () {
+        var results = document.getElementById('results');
+        results.replaceChildren();
+        JSON.parse(document.getElementById('calls').value).forEach(function (call) {
+          var item = document.createElement('li');
+          item.textContent = JSON.stringify(api[call[0]].apply(api, call.slice(1)));
+          results.append(item);
+        });
+      });
+      document.getElementById('show-late').addEventListener('click', function () {
+        var item = document.createElement('li');
+        item.textContent = localStorage.getItem('late-call') || '"none"';
+        document.getElementById('late').replaceChildren(item);
+      });
+    </script>
+  </body>
+</html>

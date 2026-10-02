@@ -51,3 +51,22 @@ test('blocks Previous on the first and Next on the last activity and explains wh
   await player.previous();
   await player.expectCurrentActivity('Lesson two');
 });
+
+// L2-010 AC3
+test('rejects a late call from a retired SCO and keeps the next SCO untouched', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'unload-12' });
+  await player.runScoCalls([['LMSInitialize', '']]);
+
+  await player.chooseActivity('Lesson two');
+
+  await player.expectCurrentActivity('Lesson two');
+  const next = await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSGetValue', 'cmi.core.lesson_location'],
+  ]);
+  expect(next).toEqual(['true', '']);
+  expect(await player.lateCallResult()).toEqual(['false', '301']);
+});

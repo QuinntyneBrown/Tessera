@@ -310,6 +310,14 @@ export class PlayerPage {
     await expect(this.nextButton).not.toHaveAttribute('aria-disabled', 'true');
   }
 
+  /** What the previous SCO's unload handler got back when it called its API after being retired. */
+  async lateCallResult(): Promise<unknown> {
+    const sco = this.activityFrame;
+    await sco.getByRole('button', { name: 'Show late call' }).click();
+    const item = sco.getByRole('list', { name: 'Late call' }).getByRole('listitem');
+    return JSON.parse((await item.textContent()) ?? 'null');
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }
