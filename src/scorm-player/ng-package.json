@@ -3,5 +3,6 @@
   "dest": "../../dist/scorm-player",
   "lib": {
     "entryFile": "index.ts"
-  }
+  },
+  "allowedNonPeerDependencies": ["fflate"]
 }

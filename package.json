@@ -11,7 +11,9 @@
     "e2e": "playwright test",
     "lint": "prettier --check .",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "api:update": "ng build scorm-player && api-extractor run --local -c tools/public_api_guard/api-extractor.json",
+    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json"
   },
   "dependencies": {
     "@angular/common": "^22.2.0",
@@ -28,6 +30,7 @@
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.0",
     "@axe-core/playwright": "^4.13.0",
+    "@microsoft/api-extractor": "^7.59.3",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.3",
     "esbuild": "^0.28.2",

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+  "projectFolder": "../..",
+  "mainEntryPointFilePath": "<projectFolder>/dist/scorm-player/types/tessera-scorm-player.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/goldens/scorm-player/",
+    "reportFileName": "index.api.md",
+    "reportTempFolder": "<projectFolder>/dist/api-report/"
+  },
+  "docModel": { "enabled": false },
+  "dtsRollup": { "enabled": false },
+  "tsdocMetadata": { "enabled": false },
+  "compiler": { "tsconfigFilePath": "<projectFolder>/tsconfig.json" },
+  "messages": {
+    "extractorMessageReporting": {
+      "ae-missing-release-tag": { "logLevel": "none" },
+      "ae-forgotten-export": { "logLevel": "none" }
+    }
+  }
+}

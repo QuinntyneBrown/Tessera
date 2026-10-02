@@ -1,11 +1,14 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { ScormPlayerOverviewExample } from '../../../components-examples/tessera/scorm-player';
 
 @Component({
-  imports: [],
+  imports: [ScormPlayerOverviewExample],
   selector: 'tsr-root',
-  styleUrl: './app.scss',
-  templateUrl: './app.html',
+  template: `
+    <main>
+      <h1>Tessera dev app</h1>
+      <tsr-scorm-player-overview-example />
+    </main>
+  `,
 })
-export class App {
-  protected readonly title = signal('dev-app');
-}
+export class App {}
