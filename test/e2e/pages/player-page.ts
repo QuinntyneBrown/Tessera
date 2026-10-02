@@ -3,6 +3,7 @@ import { expect, Locator, Page } from '@playwright/test';
 
 export interface HostScenario {
   omit?: 'attempt' | 'host';
+  course?: string;
 }
 
 /** The player screen: owns every selector and interaction. */
@@ -28,6 +29,19 @@ export class PlayerPage {
 
   private get hostEvents(): Locator {
     return this.page.getByRole('list', { name: 'Host events' }).getByRole('listitem');
+  }
+
+  async expectCourseTitle(title: string): Promise<void> {
+    await expect(this.page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+  }
+
+  async expectEdition(edition: string): Promise<void> {
+    await expect(this.page.getByText(edition, { exact: true })).toBeVisible();
+  }
+
+  async expectActivities(titles: string[]): Promise<void> {
+    const outline = this.page.getByRole('navigation', { name: 'Course outline' });
+    await expect(outline.getByRole('listitem')).toHaveText(titles);
   }
 
   async expectErrorMessage(text: RegExp): Promise<void> {

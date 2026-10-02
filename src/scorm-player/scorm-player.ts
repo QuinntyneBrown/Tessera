@@ -7,6 +7,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { loadCourse } from './package/course-loader';
 import { checkIntegration } from './integration-guard';
 import {
   AttemptContext,
@@ -15,7 +16,15 @@ import {
   PackageLimits,
   PlayerError,
   PlayerEvent,
+  ValidatedCourse,
 } from './types';
+
+const EDITION_LABELS = {
+  '1.2': 'SCORM 1.2',
+  '2004-2nd': 'SCORM 2004 2nd Edition',
+  '2004-3rd': 'SCORM 2004 3rd Edition',
+  '2004-4th': 'SCORM 2004 4th Edition',
+} as const;
 
 @Component({
   selector: 'tsr-scorm-player',
@@ -30,19 +39,22 @@ export class ScormPlayer {
   readonly event = output<PlayerEvent>();
 
   protected readonly error = signal<PlayerError | null>(null);
+  protected readonly course = signal<ValidatedCourse | null>(null);
+  protected readonly editionLabels = EDITION_LABELS;
 
   constructor() {
-    effect(() => {
-      const failure = checkIntegration({
-        source: this.source(),
-        attempt: this.attempt(),
-        host: this.host(),
-      });
+    effect((onCleanup) => {
+      const source = this.source();
+      const failure = checkIntegration({ source, attempt: this.attempt(), host: this.host() });
       untracked(() => {
         this.error.set(failure);
         if (failure) {
           this.event.emit({ kind: 'error', error: failure });
+          return;
         }
+        const controller = new AbortController();
+        onCleanup(() => controller.abort());
+        void loadCourse(source!, controller.signal).then((course) => this.course.set(course));
       });
     });
   }

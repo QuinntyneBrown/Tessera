@@ -14,7 +14,7 @@ export function hostFixtureFor(query: URLSearchParams): HostFixture {
   return {
     source: {
       kind: 'manifest',
-      manifestUrl: `${COURSE_ORIGIN}/courses/single-sco-12/imsmanifest.xml`,
+      manifestUrl: `${COURSE_ORIGIN}/courses/${query.get('course') ?? 'single-sco-12'}/imsmanifest.xml`,
     },
     attempt:
       omit === 'attempt'

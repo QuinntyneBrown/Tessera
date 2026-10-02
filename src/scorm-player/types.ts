@@ -43,9 +43,21 @@ export interface SaveAck {
   readonly revision: number;
 }
 
+export interface ActivityResource {
+  readonly kind: 'sco' | 'asset';
+  readonly url: string;
+}
+
+export interface Activity {
+  readonly id: string;
+  readonly title: string;
+  readonly resource: ActivityResource;
+}
+
 export interface ValidatedCourse {
   readonly edition: ScormEdition;
   readonly title: string;
+  readonly activities: readonly Activity[];
 }
 
 export interface DeliveryDescriptor {

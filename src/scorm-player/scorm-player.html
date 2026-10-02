@@ -4,3 +4,15 @@
     <p>{{ error.text }}</p>
   </section>
 }
+@if (course(); as course) {
+  <h1>{{ course.title }}</h1>
+  <p>{{ editionLabels[course.edition] }}</p>
+  <nav aria-labelledby="outline-heading">
+    <h2 id="outline-heading">Course outline</h2>
+    <ol>
+      @for (activity of course.activities; track activity.id) {
+        <li>{{ activity.title }}</li>
+      }
+    </ol>
+  </nav>
+}
