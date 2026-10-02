@@ -46,6 +46,12 @@ export class ScormPlayer {
   protected readonly error = signal<PlayerError | null>(null);
   protected readonly course = signal<ValidatedCourse | null>(null);
   protected readonly editionLabels = EDITION_LABELS;
+  protected readonly headings = {
+    integration: 'Course cannot start',
+    loading: 'Course could not be loaded',
+    runtime: 'Course stopped working',
+    persistence: 'Progress not saved',
+  };
   protected readonly activity = signal<Activity | null>(null);
   private readonly frameHost = viewChild<ElementRef<HTMLElement>>('frameHost');
   private readonly launchRequest = signal<{
@@ -116,9 +122,22 @@ export class ScormPlayer {
 
   private save(activity: Activity, values: Record<string, string>): void {
     this.scoStates[activity.id] = { values };
-    this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, (revision) => {
-      this.saveStatus.set('Progress saved');
-      this.event.emit({ kind: 'save', status: 'saved', revision });
+    this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, {
+      onAcknowledged: (revision) => {
+        this.saveStatus.set('Progress saved');
+        if (this.error()?.category === 'persistence') this.error.set(null);
+        this.event.emit({ kind: 'save', status: 'saved', revision });
+      },
+      onFailed: () => {
+        this.saveStatus.set('Progress not saved');
+        this.fail({
+          category: 'persistence',
+          code: 'save-failed',
+          text: 'Your progress was not saved. Retry to save it again.',
+          retryable: true,
+          correlationToken: crypto.randomUUID(),
+        });
+      },
     });
     this.saveStatus.set('Saving progress');
     this.persistence.submit({
@@ -136,6 +155,12 @@ export class ScormPlayer {
   }
 
   protected retry(): void {
+    if (this.error()?.category === 'persistence') {
+      this.error.set(null);
+      this.saveStatus.set('Saving progress');
+      this.persistence!.retry();
+      return;
+    }
     if (this.error()?.code === 'activity-unavailable') {
       this.error.set(null);
       this.launchRequest.update((request) => request && { ...request });

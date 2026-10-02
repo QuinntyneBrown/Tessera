@@ -1,7 +1,7 @@
 @if (error(); as error) {
   <section role="alert">
     <h2>
-      {{ error.category === 'integration' ? 'Course cannot start' : 'Course could not be loaded' }}
+      {{ headings[error.category] }}
     </h2>
     <p>{{ error.text }}</p>
     @if (error.retryable) {

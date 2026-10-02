@@ -3,6 +3,8 @@ import { expect, Locator, Page } from '@playwright/test';
 
 export interface HostScenario {
   omit?: 'attempt' | 'host';
+  /** The host holds every save until the test acknowledges or fails it. */
+  save?: 'manual';
   course?: string;
   /** The host serves course content from the LMS origin instead of an isolated one. */
   isolation?: 'none' | 'unavailable';
@@ -139,6 +141,18 @@ export class PlayerPage {
 
   async expectSaveStatus(text: string): Promise<void> {
     await expect(this.page.getByRole('status')).toContainText(text);
+  }
+
+  async acknowledgePendingSave(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Acknowledge pending save' }).click();
+  }
+
+  async failPendingSave(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Fail pending save' }).click();
+  }
+
+  async expectNoErrorMessage(): Promise<void> {
+    await expect(this.alert).toHaveCount(0);
   }
 
   async expectErrorMessage(text: RegExp): Promise<void> {

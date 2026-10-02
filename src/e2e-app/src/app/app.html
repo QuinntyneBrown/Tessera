@@ -14,3 +14,7 @@
     <li>{{ save }}</li>
   }
 </ol>
+<section aria-label="Host controls">
+  <button type="button" (click)="gate.acknowledge()">Acknowledge pending save</button>
+  <button type="button" (click)="gate.fail()">Fail pending save</button>
+</section>

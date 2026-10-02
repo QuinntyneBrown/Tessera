@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
-import { hostFixtureFor } from './host-fixtures';
+import { hostFixtureFor, SaveGate } from './host-fixtures';
 
 @Component({
   imports: [ScormPlayer],
@@ -10,8 +10,11 @@ import { hostFixtureFor } from './host-fixtures';
 export class App {
   protected readonly events = signal<string[]>([]);
   protected readonly saves = signal<string[]>([]);
-  protected readonly fixture = hostFixtureFor(new URLSearchParams(location.search), (submission) =>
-    this.saves.update((saves) => [...saves, JSON.stringify(submission)]),
+  protected readonly gate = new SaveGate();
+  protected readonly fixture = hostFixtureFor(
+    new URLSearchParams(location.search),
+    (submission) => this.saves.update((saves) => [...saves, JSON.stringify(submission)]),
+    this.gate,
   );
 
   constructor() {
