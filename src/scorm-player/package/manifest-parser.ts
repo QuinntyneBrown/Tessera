@@ -67,6 +67,7 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
 
   return {
     edition,
+    root: root.href,
     title: children(organization, 'title')[0].textContent!.trim(),
     activities,
   };

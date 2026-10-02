@@ -3,6 +3,8 @@ import { expect, Locator, Page } from '@playwright/test';
 
 export interface HostScenario {
   omit?: 'attempt' | 'host';
+  /** The host takes the course from a ZIP the test chooses rather than an extracted manifest URL. */
+  source?: 'zip';
   /** The attempt key the host issues; each attempt has its own saved state. */
   attempt?: string;
   /** What the host's stored state for the attempt looks like; none means a new attempt. */
@@ -52,6 +54,12 @@ export class PlayerPage {
       });
     }
     await this.page.goto(`/?${new URLSearchParams(query as Record<string, string>)}`);
+  }
+
+  /** Opens the host with a built ZIP package (see tools/build-packages.mjs) chosen as the course. */
+  async openWithPackage(name: string, scenario: HostScenario = {}): Promise<void> {
+    await this.open({ ...scenario, source: 'zip' });
+    await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
   }
 
   async retry(): Promise<void> {

@@ -1,9 +1,17 @@
-<tsr-scorm-player
-  [source]="fixture.source"
-  [attempt]="fixture.attempt"
-  [host]="fixture.host"
-  (event)="onEvent($event)"
-/>
+@if (zipMode) {
+  <label>
+    Course package
+    <input type="file" accept=".zip" (change)="choosePackage($event)" />
+  </label>
+}
+@if (zipMode ? chosenPackage() : fixture.source) {
+  <tsr-scorm-player
+    [source]="zipMode ? chosenPackage() : fixture.source"
+    [attempt]="fixture.attempt"
+    [host]="fixture.host"
+    (event)="onEvent($event)"
+  />
+}
 <ol aria-label="Host events">
   @for (event of events(); track $index) {
     <li>{{ event }}</li>

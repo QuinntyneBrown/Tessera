@@ -181,6 +181,9 @@ importers:
       '@angular/platform-browser':
         specifier: ^22.2.0
         version: 22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2))
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -236,6 +239,9 @@ importers:
       '@angular/core':
         specifier: ^22.2.0
         version: 22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2)
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -1874,6 +1880,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
 
   find-cache-directory@6.0.0:
     resolution: {integrity: sha512-CvFd5ivA6HcSHbD+59P7CyzINHXzwhuQK8RY7CxJZtgDSAtRlHiCaQpZQ2lMR/WRyUIEmzUvL6G2AGurMfegZA==}
@@ -4123,6 +4132,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fflate@0.8.3: {}
 
   find-cache-directory@6.0.0:
     dependencies:

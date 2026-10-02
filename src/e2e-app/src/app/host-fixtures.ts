@@ -45,7 +45,8 @@ export class SaveGate {
 }
 
 export interface HostFixture {
-  source: CourseSource;
+  /** Undefined until the host has a course: for ZIP scenarios, until a package is chosen. */
+  source?: CourseSource;
   attempt?: AttemptContext;
   host?: HostIntegration;
 }
@@ -71,6 +72,21 @@ function savedSnapshot(context: AttemptContext, foreign: boolean): AttemptSnapsh
   };
 }
 
+/** Serves a ZIP package's validated files from the course origin, as an LMS would. */
+async function uploadFiles(
+  context: AttemptContext,
+  files: ReadonlyMap<string, Blob>,
+): Promise<void> {
+  await Promise.all(
+    Array.from(files, ([path, blob]) =>
+      fetch(`${COURSE_ORIGIN}/delivery/${context.attemptKey}/${path}`, {
+        method: 'PUT',
+        body: blob,
+      }),
+    ),
+  );
+}
+
 /** Builds the host-side inputs for the scenario named by the page's query string. */
 export function hostFixtureFor(
   query: URLSearchParams,
@@ -81,10 +97,13 @@ export function hostFixtureFor(
   let readsFailed = 0;
   const courseName = query.get('course') ?? 'single-sco-12';
   return {
-    source: {
-      kind: 'manifest',
-      manifestUrl: `${COURSE_ORIGIN}/courses/${courseName}/imsmanifest.xml`,
-    },
+    source:
+      query.get('source') === 'zip'
+        ? undefined
+        : {
+            kind: 'manifest',
+            manifestUrl: `${COURSE_ORIGIN}/courses/${courseName}/imsmanifest.xml`,
+          },
     attempt:
       omit === 'attempt'
         ? undefined
@@ -109,10 +128,13 @@ export function hostFixtureFor(
               if (query.get('save') === 'manual') return gate.hold(submission);
               return { revision: submission.revision };
             },
-            prepareDelivery: async () => {
+            prepareDelivery: async (context, course) => {
               if (query.get('isolation') === 'unavailable') throw new Error('no isolated origin');
+              if (course.files) await uploadFiles(context, course.files);
               return {
-                courseRoot: `${COURSE_ORIGIN}/courses/${courseName}/`,
+                courseRoot: course.files
+                  ? `${COURSE_ORIGIN}/delivery/${context.attemptKey}/`
+                  : `${COURSE_ORIGIN}/courses/${courseName}/`,
                 wrapperUrl: `${query.get('isolation') === 'none' ? location.origin : COURSE_ORIGIN}/wrapper/wrapper.html`,
                 bridgeProtocolVersion: 1,
               };

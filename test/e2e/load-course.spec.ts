@@ -103,3 +103,16 @@ test('refuses a course whose SCORM version cannot be identified', async ({ page 
   await player.expectHostReceivedErrorCategory('loading');
   player.expectNoLaunchResourceRequested();
 });
+
+// L2-001 AC1, L2-021 AC2
+test('loads a SCORM 1.2 ZIP package and launches it through host delivery', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.openWithPackage('single-sco-12');
+
+  await player.expectCourseTitle('Better conversations at work');
+  await player.expectEdition('SCORM 1.2');
+  await player.expectActivities(['Start with listening']);
+  await player.expectActivityDiscoveredApi();
+  await player.expectNoAccessibilityViolations();
+});

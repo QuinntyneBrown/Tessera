@@ -1,4 +1,6 @@
-import { CourseSource, ValidatedCourse } from '../types';
+import { CourseSource, PackageLimits, ValidatedCourse } from '../types';
+import { DEFAULT_LIMITS } from './limits';
+import { loadZip } from './zip-loader';
 import { CourseLoadError } from './course-load-error';
 import { parseManifest } from './manifest-parser';
 
@@ -8,10 +10,9 @@ const MANIFEST_UNREACHABLE =
 export async function loadCourse(
   source: CourseSource,
   signal: AbortSignal,
+  limits: PackageLimits = DEFAULT_LIMITS,
 ): Promise<ValidatedCourse> {
-  if (source.kind !== 'manifest') {
-    throw new Error('ZIP sources are not supported yet');
-  }
+  if (source.kind === 'zip') return loadZip(source.file, limits, signal);
   let response: Response;
   try {
     response = await fetch(source.manifestUrl, { signal });

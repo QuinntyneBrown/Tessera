@@ -58,6 +58,10 @@ export interface ValidatedCourse {
   readonly edition: ScormEdition;
   readonly title: string;
   readonly activities: readonly Activity[];
+  /** The root the activity URLs are relative to. */
+  readonly root: string;
+  /** For a ZIP package, its validated files by path; the host serves them. An extracted course has none. */
+  readonly files?: ReadonlyMap<string, Blob>;
 }
 
 export interface DeliveryDescriptor {

@@ -77,7 +77,12 @@ describe('checkDelivery', () => {
 });
 
 describe('checkSnapshot', () => {
-  const course = { edition: '1.2', title: 'Demo', activities: [] } as const;
+  const course = {
+    edition: '1.2',
+    title: 'Demo',
+    activities: [],
+    root: 'https://course.test/',
+  } as const;
   const snapshot = {
     schemaVersion: 1,
     context: attempt,

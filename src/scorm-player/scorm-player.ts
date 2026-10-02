@@ -114,7 +114,7 @@ export class ScormPlayer {
         const controller = new AbortController();
         onCleanup(() => controller.abort());
         this.course.set(null);
-        loadCourse(source!, controller.signal).then(
+        loadCourse(source!, controller.signal, this.limits()).then(
           async (course) => {
             this.course.set(course);
             const delivery = await this.host()!
@@ -149,7 +149,7 @@ export class ScormPlayer {
               course.activities[0];
             this.activity.set(first);
             this.launchRequest.set({
-              activity: first,
+              activity: this.launchable(first),
               edition: course.edition,
               delivery,
               state: this.scoStates[first.id]?.values ?? null,
@@ -210,7 +210,7 @@ export class ScormPlayer {
     }
     this.activity.set(activity);
     this.launchRequest.set({
-      activity,
+      activity: this.launchable(activity),
       edition: this.course()!.edition,
       delivery: this.delivery!,
       state: this.scoStates[activity.id]?.values ?? null,
@@ -227,6 +227,17 @@ export class ScormPlayer {
   protected move(offset: -1 | 1): void {
     const target = this.neighbour(offset);
     if (target) void this.open(target);
+  }
+
+  /** For a ZIP package, points the activity at the host's delivery of the package's files. */
+  private launchable(activity: Activity): Activity {
+    const course = this.course()!;
+    if (!course.files) return activity;
+    const relative = activity.resource.url.slice(course.root.length);
+    return {
+      ...activity,
+      resource: { ...activity.resource, url: new URL(relative, this.delivery!.courseRoot).href },
+    };
   }
 
   protected statusText(outcome: CourseOutcome | null): string {

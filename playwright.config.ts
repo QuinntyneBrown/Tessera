@@ -19,7 +19,8 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: 'node ./tools/build-wrapper.mjs && node ./tools/course-server.mjs',
+      command:
+        'node ./tools/build-wrapper.mjs && node ./tools/build-packages.mjs && node ./tools/course-server.mjs',
       url: 'http://127.0.0.1:4300/courses/single-sco-12/imsmanifest.xml',
       reuseExistingServer: !process.env['CI'],
     },

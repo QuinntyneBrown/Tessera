@@ -17,9 +17,31 @@ const types = {
   '.zip': 'application/zip',
 };
 
+// Course files the host uploads for ZIP packages, keyed by request path.
+const delivered = new Map();
+
 createServer(async (request, response) => {
   const path = posix.normalize(decodeURIComponent(new URL(request.url, 'http://x').pathname));
   response.setHeader('Access-Control-Allow-Origin', hostOrigin);
+  if (request.method === 'OPTIONS') {
+    response.writeHead(204, {
+      'Access-Control-Allow-Methods': 'PUT, GET',
+      'Access-Control-Allow-Headers': '*',
+    });
+    return response.end();
+  }
+  if (request.method === 'PUT' && path.startsWith('/delivery/')) {
+    const chunks = [];
+    for await (const chunk of request) chunks.push(chunk);
+    delivered.set(path, Buffer.concat(chunks));
+    return response.writeHead(204).end();
+  }
+  if (path.startsWith('/delivery/')) {
+    const body = delivered.get(path);
+    if (!body) return response.writeHead(404).end();
+    response.writeHead(200, { 'Content-Type': types[extname(path)] ?? 'application/octet-stream' });
+    return response.end(body);
+  }
   try {
     const body = path.startsWith('/wrapper/')
       ? await readFile(join(wrapper, path.slice('/wrapper/'.length)))

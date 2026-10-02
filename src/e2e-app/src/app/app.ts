@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
+import { CourseSource, PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
 import { hostFixtureFor, SaveGate } from './host-fixtures';
 
 @Component({
@@ -17,6 +17,14 @@ export class App {
       this.saves.update((saves) => [...saves, JSON.stringify({ context, ...submission })]),
     this.gate,
   );
+
+  protected readonly zipMode = new URLSearchParams(location.search).get('source') === 'zip';
+  protected readonly chosenPackage = signal<CourseSource | undefined>(undefined);
+
+  protected choosePackage(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.chosenPackage.set({ kind: 'zip', file });
+  }
 
   constructor() {
     // Host credentials a hostile course must not be able to reach.

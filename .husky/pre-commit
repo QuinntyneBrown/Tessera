@@ -1,1 +1,1 @@
-pnpm lint
+corepack pnpm lint
