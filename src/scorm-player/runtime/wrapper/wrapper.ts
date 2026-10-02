@@ -1,4 +1,6 @@
 import { HostMessage, WrapperMessage } from '../bridge-protocol';
+import { RuntimeSession } from '../runtime-session';
+import { Scorm12Api } from '../scorm12-api';
 
 // Runs on the isolated course origin: exposes the SCORM API, then starts the activity in a nested frame.
 let hostOrigin = '';
@@ -13,7 +15,7 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   const message = event.data;
   if (message.kind === 'prepare') {
     if (message.sco) {
-      (window as unknown as { API: object }).API = Object.freeze({});
+      (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(new RuntimeSession());
     }
     send({ v: 1, kind: 'ready' });
   } else if (message.kind === 'start') {

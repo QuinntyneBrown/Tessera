@@ -100,6 +100,16 @@ export class PlayerPage {
     await expect(this.activityFrame.getByText('No SCORM runtime is present')).toBeVisible();
   }
 
+  /** Has the probe SCO run each [method, ...arguments] against its SCORM API; returns the results in order. */
+  async runScoCalls(calls: string[][]): Promise<string[]> {
+    const sco = this.activityFrame;
+    await sco.getByLabel('API calls (JSON)').fill(JSON.stringify(calls));
+    await sco.getByRole('button', { name: 'Run calls' }).click();
+    const results = sco.getByRole('list', { name: 'API results' }).getByRole('listitem');
+    await expect(results).toHaveCount(calls.length);
+    return (await results.allTextContents()).map((text) => JSON.parse(text));
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }
