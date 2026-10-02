@@ -63,10 +63,14 @@ export class ScormPlayer {
   private persistence: PersistenceCoordinator | null = null;
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
+  protected readonly exitWarning = signal(false);
+  private readonly exitHeading = viewChild<ElementRef<HTMLElement>>('exitHeading');
+  private readonly activityHeading = viewChild<ElementRef<HTMLElement>>('activityHeading');
   private readonly loadRequest = signal(0);
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.launcher?.dispose());
+    effect(() => this.exitHeading()?.nativeElement.focus());
     effect(() => {
       const request = this.launchRequest();
       const frameHost = this.frameHost();
@@ -147,6 +151,32 @@ export class ScormPlayer {
       scoStates: { ...this.scoStates },
       sequencing: { currentActivityId: activity.id },
     });
+  }
+
+  protected async requestExit(): Promise<void> {
+    if (await (this.persistence?.drain() ?? true)) {
+      this.event.emit({ kind: 'exit', saved: true });
+    } else {
+      this.exitWarning.set(true);
+    }
+  }
+
+  protected async retrySaveFromWarning(): Promise<void> {
+    this.retry();
+    if (await this.persistence!.drain()) {
+      this.closeExitWarning();
+      this.event.emit({ kind: 'exit', saved: true });
+    }
+  }
+
+  protected exitWithoutSaving(): void {
+    this.closeExitWarning();
+    this.event.emit({ kind: 'exit', saved: false });
+  }
+
+  private closeExitWarning(): void {
+    this.exitWarning.set(false);
+    this.activityHeading()?.nativeElement.focus();
   }
 
   private fail(failure: PlayerError): void {

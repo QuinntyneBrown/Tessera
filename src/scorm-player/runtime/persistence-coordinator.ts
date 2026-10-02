@@ -9,6 +9,7 @@ export class PersistenceCoordinator {
   private inFlight: SaveSubmission | null = null;
   private failed = false;
   private acknowledged = 0;
+  private drainers: ((saved: boolean) => void)[] = [];
 
   constructor(
     private readonly host: HostIntegration,
@@ -23,6 +24,18 @@ export class PersistenceCoordinator {
   submit(snapshot: AttemptSnapshot): void {
     this.latest = { snapshot, revision: (this.latest?.revision ?? 0) + 1 };
     if (!this.inFlight && !this.failed) this.send();
+  }
+
+  /** Whether the newest snapshot has not yet been acknowledged. */
+  get unsaved(): boolean {
+    return !!this.latest && this.latest.revision > this.acknowledged;
+  }
+
+  /** Settles once everything is acknowledged (true) or a save has failed (false). */
+  drain(): Promise<boolean> {
+    if (!this.unsaved) return Promise.resolve(true);
+    if (this.failed) return Promise.resolve(false);
+    return new Promise((resolve) => this.drainers.push(resolve));
   }
 
   /** Submits the newest retained snapshot again. */
@@ -46,6 +59,7 @@ export class PersistenceCoordinator {
     if (!saved) {
       this.failed = true;
       this.events.onFailed();
+      this.releaseDrainers();
       return;
     }
     if (submission.revision > this.acknowledged) {
@@ -56,5 +70,12 @@ export class PersistenceCoordinator {
       );
     }
     if (this.latest!.revision > this.acknowledged) this.send();
+    this.releaseDrainers();
+  }
+
+  private releaseDrainers(): void {
+    if (this.inFlight || (!this.failed && this.unsaved)) return;
+    const saved = !this.unsaved;
+    this.drainers.splice(0).forEach((resolve) => resolve(saved));
   }
 }

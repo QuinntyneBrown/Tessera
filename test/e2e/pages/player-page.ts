@@ -51,7 +51,7 @@ export class PlayerPage {
   }
 
   async retry(): Promise<void> {
-    await this.page.getByRole('button', { name: 'Retry' }).click();
+    await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }
 
   private get alert(): Locator {
@@ -163,6 +163,48 @@ export class PlayerPage {
 
   async expectNoErrorMessage(): Promise<void> {
     await expect(this.alert).toHaveCount(0);
+  }
+
+  async exit(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Exit course' }).click();
+  }
+
+  async retrySaveFromExitWarning(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Retry save' }).click();
+  }
+
+  async exitWithoutSaving(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Exit without saving' }).click();
+  }
+
+  /** The unsaved-exit warning is shown inline, with focus on its heading. */
+  async expectExitWarningFocused(): Promise<void> {
+    await expect(
+      this.page.getByRole('heading', { name: 'Your progress is not saved' }),
+    ).toBeFocused();
+  }
+
+  async expectNoExitWarning(): Promise<void> {
+    await expect(
+      this.page.getByRole('heading', { name: 'Your progress is not saved' }),
+    ).toHaveCount(0);
+  }
+
+  async expectActivityHeadingFocused(name: string): Promise<void> {
+    await expect(this.page.getByRole('heading', { level: 2, name })).toBeFocused();
+  }
+
+  /** Waits for the host's exit event: `saved` says whether all progress had been saved. */
+  async expectHostReceivedExit(saved: boolean): Promise<void> {
+    await expect(async () => {
+      const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+      expect(events.filter((event) => event.kind === 'exit')).toEqual([{ kind: 'exit', saved }]);
+    }).toPass();
+  }
+
+  async expectNoHostExit(): Promise<void> {
+    const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+    expect(events.filter((event) => event.kind === 'exit')).toEqual([]);
   }
 
   async expectErrorMessage(text: RegExp): Promise<void> {

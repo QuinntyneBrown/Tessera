@@ -92,4 +92,5 @@ export interface PlayerError {
 
 export type PlayerEvent =
   | { readonly kind: 'error'; readonly error: PlayerError }
-  | { readonly kind: 'save'; readonly status: 'saved'; readonly revision: number };
+  | { readonly kind: 'save'; readonly status: 'saved'; readonly revision: number }
+  | { readonly kind: 'exit'; readonly saved: boolean };

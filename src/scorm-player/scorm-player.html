@@ -9,6 +9,14 @@
     }
   </section>
 }
+@if (exitWarning()) {
+  <section aria-labelledby="exit-heading">
+    <h2 id="exit-heading" tabindex="-1" #exitHeading>Your progress is not saved</h2>
+    <p>Leaving now will lose the changes that have not been saved.</p>
+    <button type="button" (click)="retrySaveFromWarning()">Retry save</button>
+    <button type="button" (click)="exitWithoutSaving()">Exit without saving</button>
+  </section>
+}
 @if (course(); as course) {
   <h1>{{ course.title }}</h1>
   <p>{{ editionLabels[course.edition] }}</p>
@@ -22,9 +30,10 @@
   </nav>
   <section aria-labelledby="activity-heading">
     @if (activity(); as activity) {
-      <h2 id="activity-heading" tabindex="-1">{{ activity.title }}</h2>
+      <h2 id="activity-heading" tabindex="-1" #activityHeading>{{ activity.title }}</h2>
     }
     <p role="status">{{ saveStatus() }}</p>
+    <button type="button" (click)="requestExit()">Exit course</button>
     <div #frameHost></div>
   </section>
 }
