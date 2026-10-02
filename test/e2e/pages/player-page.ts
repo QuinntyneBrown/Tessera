@@ -4,6 +4,8 @@ import { expect, Locator, Page } from '@playwright/test';
 export interface HostScenario {
   omit?: 'attempt' | 'host';
   course?: string;
+  /** Makes the first request for the course manifest fail. */
+  failFirstManifestRequest?: boolean;
 }
 
 /** The player screen: owns every selector and interaction. */
@@ -19,8 +21,20 @@ export class PlayerPage {
   }
 
   async open(scenario: HostScenario = {}): Promise<void> {
-    const query = new URLSearchParams(scenario as Record<string, string>);
-    await this.page.goto(`/?${query}`);
+    const { failFirstManifestRequest, ...query } = scenario;
+    if (failFirstManifestRequest) {
+      let failed = false;
+      await this.page.route('**/imsmanifest.xml', (route) => {
+        if (failed) return route.fallback();
+        failed = true;
+        return route.abort('connectionrefused');
+      });
+    }
+    await this.page.goto(`/?${new URLSearchParams(query as Record<string, string>)}`);
+  }
+
+  async retry(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Retry' }).click();
   }
 
   private get alert(): Locator {
@@ -49,10 +63,14 @@ export class PlayerPage {
   }
 
   async expectHostReceivedErrorCategory(category: string): Promise<void> {
-    await expect(this.hostEvents).toHaveCount(1);
-    const event = JSON.parse((await this.hostEvents.first().textContent()) ?? '{}');
-    expect(event.kind).toBe('error');
-    expect(event.error.category).toBe(category);
+    await expect(this.hostEvents.first()).toBeAttached();
+    const events = await this.hostEvents.allTextContents();
+    const errors = events.map((text) => JSON.parse(text)).filter((event) => event.kind === 'error');
+    expect(errors.map((event) => event.error.category)).toEqual([category]);
+  }
+
+  async expectRetryOffered(): Promise<void> {
+    await expect(this.page.getByRole('button', { name: 'Retry' })).toBeVisible();
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {
