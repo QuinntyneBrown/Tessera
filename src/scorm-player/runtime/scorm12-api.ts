@@ -8,6 +8,10 @@ export class Scorm12Api {
     return this.session.initialize(argument);
   }
 
+  LMSFinish(argument: string): string {
+    return this.session.terminate(argument);
+  }
+
   LMSGetValue(element: string): string {
     return this.session.getValue(element);
   }
@@ -16,7 +20,19 @@ export class Scorm12Api {
     return this.session.setValue(element, value);
   }
 
+  LMSCommit(argument: string): string {
+    return this.session.commit(argument);
+  }
+
   LMSGetLastError(): string {
     return this.session.lastError;
+  }
+
+  LMSGetErrorString(code: string): string {
+    return this.session.errorString(code);
+  }
+
+  LMSGetDiagnostic(code: string): string {
+    return this.session.diagnostic(code);
   }
 }
