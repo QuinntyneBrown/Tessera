@@ -22,6 +22,8 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
       );
     }
     send({ v: 1, kind: 'ready' });
+  } else if (message.kind === 'flush') {
+    send({ v: 1, kind: 'flushed' });
   } else if (message.kind === 'start') {
     // An iframe load event cannot prove HTTP success, so check the launch page first.
     fetch(message.url).then(

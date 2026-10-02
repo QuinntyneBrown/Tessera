@@ -13,7 +13,9 @@ export type HostMessage =
       /** Values saved for this SCO by an earlier session, if any. */
       readonly state: Readonly<Record<string, string>> | null;
     }
-  | { readonly v: 1; readonly kind: 'start'; readonly url: string };
+  | { readonly v: 1; readonly kind: 'start'; readonly url: string }
+  /** Asks the wrapper to confirm that every earlier message has been delivered. */
+  | { readonly v: 1; readonly kind: 'flush' };
 
 /** A state-changing API call a SCO made; the host replays it through its own session. */
 export type RuntimeOperation =
@@ -26,6 +28,7 @@ export type RuntimeOperation =
 export type WrapperMessage =
   | { readonly v: 1; readonly kind: 'ready' }
   | { readonly v: 1; readonly kind: 'launch-failed' }
+  | { readonly v: 1; readonly kind: 'flushed' }
   | { readonly v: 1; readonly kind: 'operation'; readonly operation: RuntimeOperation };
 
 /** Returns the message when it is well formed, within the size bound and of a known kind; otherwise null. */
@@ -37,6 +40,7 @@ export function parseWrapperMessage(data: unknown): WrapperMessage | null {
   if (message.v === BRIDGE_PROTOCOL_VERSION && keys.length === 2) {
     if (message.kind === 'ready') return { v: 1, kind: 'ready' };
     if (message.kind === 'launch-failed') return { v: 1, kind: 'launch-failed' };
+    if (message.kind === 'flushed') return { v: 1, kind: 'flushed' };
   }
   if (message.v === BRIDGE_PROTOCOL_VERSION && message.kind === 'operation' && keys.length === 3) {
     const operation = parseOperation((message as { operation?: unknown }).operation);

@@ -41,6 +41,7 @@ import {
 @Component({
   selector: 'tsr-scorm-player',
   templateUrl: './scorm-player.html',
+  styleUrl: './scorm-player.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScormPlayer {
@@ -68,6 +69,7 @@ export class ScormPlayer {
     state: Record<string, string> | null;
   } | null>(null);
   private launcher: ActivityLauncher | null = null;
+  private delivery: DeliveryDescriptor | null = null;
   private persistence: PersistenceCoordinator | null = null;
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
@@ -121,6 +123,7 @@ export class ScormPlayer {
             if (!delivery) return this.fail(isolationUnavailable());
             const refusal = checkDelivery(delivery, location.origin);
             if (refusal) return this.fail(refusal);
+            this.delivery = delivery;
             const loaded = await this.host()!
               .loadAttempt(this.attempt()!, controller.signal)
               .then(
@@ -190,6 +193,28 @@ export class ScormPlayer {
     };
     this.outcome.set(deriveOutcome(snapshot));
     this.persistence.submit(snapshot);
+  }
+
+  /** Opens another activity once the current one has delivered its final state. */
+  protected async open(activity: Activity): Promise<void> {
+    try {
+      await this.launcher!.retire();
+    } catch {
+      return this.fail({
+        category: 'runtime',
+        code: 'activity-not-responding',
+        text: 'The current activity did not respond, so the course stayed on it.',
+        retryable: false,
+        correlationToken: crypto.randomUUID(),
+      });
+    }
+    this.activity.set(activity);
+    this.launchRequest.set({
+      activity,
+      edition: this.course()!.edition,
+      delivery: this.delivery!,
+      state: this.scoStates[activity.id]?.values ?? null,
+    });
   }
 
   protected statusText(outcome: CourseOutcome | null): string {

@@ -5,6 +5,10 @@ describe('parseWrapperMessage', () => {
     expect(parseWrapperMessage({ v: 1, kind: 'ready' })).toEqual({ v: 1, kind: 'ready' });
   });
 
+  it('accepts a flushed message', () => {
+    expect(parseWrapperMessage({ v: 1, kind: 'flushed' })).toEqual({ v: 1, kind: 'flushed' });
+  });
+
   it('accepts a launch-failed message', () => {
     expect(parseWrapperMessage({ v: 1, kind: 'launch-failed' })).toEqual({
       v: 1,

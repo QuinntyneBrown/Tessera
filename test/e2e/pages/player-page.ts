@@ -242,6 +242,31 @@ export class PlayerPage {
     }).toPass();
   }
 
+  private get outline(): Locator {
+    return this.page.getByRole('navigation', { name: 'Course outline' });
+  }
+
+  async chooseActivity(title: string): Promise<void> {
+    await this.outline.getByRole('button', { name: title }).click();
+  }
+
+  async expectCurrentActivity(title: string): Promise<void> {
+    await expect(this.outline.getByRole('button', { name: title })).toHaveAttribute(
+      'aria-current',
+      'step',
+    );
+    await expect(this.outline.locator('[aria-current="step"]')).toHaveCount(1);
+    await expect(this.page.getByRole('heading', { level: 2, name: title })).toBeVisible();
+  }
+
+  /** Waits for a save whose snapshot holds these values for the given activity. */
+  async expectHostSavedActivity(activityId: string, values: Record<string, string>): Promise<void> {
+    await expect(async () => {
+      const saves = (await this.hostSaves.allTextContents()).map((text) => JSON.parse(text));
+      expect(saves.at(-1)?.snapshot.scoStates[activityId]).toMatchObject({ values });
+    }).toPass();
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

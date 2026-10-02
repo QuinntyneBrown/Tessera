@@ -2,6 +2,8 @@ import { Activity, ScormEdition, DeliveryDescriptor } from '../types';
 import { HostMessage, parseWrapperMessage, RuntimeOperation } from './bridge-protocol';
 import { RuntimeSession } from './runtime-session';
 
+const FLUSH_TIMEOUT_MS = 5000;
+
 /** Shows an activity inside an isolated wrapper frame and starts it once the wrapper is ready. */
 export class ActivityLauncher {
   private frame: HTMLIFrameElement | null = null;
@@ -12,12 +14,15 @@ export class ActivityLauncher {
       this.post({ v: 1, kind: 'start', url: this.activity!.resource.url });
     } else if (message?.kind === 'launch-failed') {
       this.events.onLaunchFailed(this.activity!);
+    } else if (message?.kind === 'flushed') {
+      this.flushed?.();
     } else if (message?.kind === 'operation') {
       this.apply(message.operation);
     }
   };
 
   private activity: Activity | null = null;
+  private flushed: (() => void) | null = null;
   private session = new RuntimeSession();
   private delivery: DeliveryDescriptor | null = null;
 
@@ -51,6 +56,25 @@ export class ActivityLauncher {
     );
     this.container.replaceChildren(frame);
     this.frame = frame;
+  }
+
+  /**
+   * Ends the current activity: waits until the wrapper has delivered every operation, then submits the
+   * host-validated state. Rejects when the wrapper does not answer, so the activity is not abandoned.
+   */
+  async retire(): Promise<void> {
+    if (!this.frame) return;
+    const delivered = new Promise<void>((resolve, reject) => {
+      this.flushed = resolve;
+      setTimeout(() => reject(new Error('flush timed out')), FLUSH_TIMEOUT_MS);
+    });
+    this.post({ v: 1, kind: 'flush' });
+    await delivered;
+    this.flushed = null;
+    if (this.session.state === 'initialized') {
+      this.session.terminate('');
+      this.events.onFlush(this.activity!, this.session.values());
+    }
   }
 
   dispose(): void {

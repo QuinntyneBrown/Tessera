@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+button {
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+}

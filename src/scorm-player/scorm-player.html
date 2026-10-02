@@ -23,8 +23,16 @@
   <nav aria-labelledby="outline-heading">
     <h2 id="outline-heading">Course outline</h2>
     <ol>
-      @for (activity of course.activities; track activity.id) {
-        <li>{{ activity.title }}</li>
+      @for (item of course.activities; track item.id) {
+        <li>
+          <button
+            type="button"
+            [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
+            (click)="open(item)"
+          >
+            {{ item.title }}
+          </button>
+        </li>
       }
     </ol>
   </nav>
