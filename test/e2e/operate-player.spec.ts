@@ -205,3 +205,39 @@ test('keeps the activity and its unsaved values through a resize and a zoom chan
   expect(results).toEqual(['page 5', 'true']);
   await player.expectHostSaved({ 'cmi.core.lesson_location': 'page 5' });
 });
+
+// L2-020 AC2, L2-016 AC3
+test('reports a runtime failure to the host without private data, under a stable attempt token', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'forged-ops-12', attempt: 'attempt-secret-1' });
+
+  await player.expectErrorMessage(/activity.*stopped/i);
+  await player.expectRetryOffered();
+  await player.expectNoAccessibilityViolations();
+  await player.expectHostError('runtime');
+
+  const events = (await player.hostEventTexts()).join(' | ');
+  for (const secret of ['attempt-secret-1', 'someone-else', '999', 'cmi.core']) {
+    expect(events, `host events must not contain "${secret}"`).not.toContain(secret);
+  }
+  const [error] = (await player.hostErrors()).filter((e) => e.category === 'runtime');
+  expect(error.correlationToken).toMatch(/^[0-9a-f]{16}$/);
+});
+
+test('uses the same token for one attempt and a different one for another', async ({ browser }) => {
+  const tokens: string[] = [];
+  for (const attempt of ['attempt-a', 'attempt-a', 'attempt-b']) {
+    const page = await browser.newPage();
+    const player = new PlayerPage(page);
+    await player.open({ course: 'forged-ops-12', attempt });
+    await player.expectHostError('runtime');
+    const [error] = (await player.hostErrors()).filter((e) => e.category === 'runtime');
+    tokens.push(error.correlationToken);
+    await page.close();
+  }
+
+  expect(tokens[0]).toBe(tokens[1]);
+  expect(tokens[2]).not.toBe(tokens[0]);
+});

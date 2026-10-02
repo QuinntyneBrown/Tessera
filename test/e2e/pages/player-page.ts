@@ -221,6 +221,23 @@ export class PlayerPage {
     expect(marker, 'the activity frame is the one that was marked').toBe('original');
   }
 
+  /** The raw text of every event the host has received. */
+  async hostEventTexts(): Promise<string[]> {
+    return this.hostEvents.allTextContents();
+  }
+
+  /** The error events the host has received, parsed. */
+  async hostErrors(): Promise<{ category: string; code: string; correlationToken: string }[]> {
+    const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+    return events.filter((event) => event.kind === 'error').map((event) => event.error);
+  }
+
+  async expectHostError(category: string): Promise<void> {
+    await expect(async () => {
+      expect((await this.hostErrors()).map((error) => error.category)).toContain(category);
+    }).toPass();
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }

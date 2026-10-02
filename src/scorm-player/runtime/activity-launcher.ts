@@ -22,6 +22,7 @@ export class ActivityLauncher {
   };
 
   private activity: Activity | null = null;
+  private failureReported = false;
   private flushed: (() => void) | null = null;
   private session = new RuntimeSession();
   private delivery: DeliveryDescriptor | null = null;
@@ -30,6 +31,8 @@ export class ActivityLauncher {
     private readonly container: HTMLElement,
     private readonly events: {
       onLaunchFailed: (activity: Activity) => void;
+      /** The SCO did something its own session accepted but the host's validation rejects. */
+      onRuntimeFailure: (activity: Activity) => void;
       /** The SCO committed or terminated; `values` is the host-validated state. */
       onFlush: (activity: Activity, values: Record<string, string>) => void;
     },
@@ -45,6 +48,7 @@ export class ActivityLauncher {
   ): void {
     this.activity = activity;
     this.session = new RuntimeSession();
+    this.failureReported = false;
     if (state) this.session.restore(state);
     this.delivery = delivery;
     const frame = document.createElement('iframe');
@@ -86,11 +90,18 @@ export class ActivityLauncher {
   /** Replays a SCO's operation through the host's own session, which validates it independently. */
   private apply(operation: RuntimeOperation): void {
     const session = this.session;
-    if (operation.kind === 'initialize') session.initialize('');
-    else if (operation.kind === 'set') session.setValue(operation.element, operation.value);
-    else if (operation.kind === 'commit' && session.commit('') === 'true') {
-      this.events.onFlush(this.activity!, session.values());
-    } else if (operation.kind === 'terminate' && session.terminate('') === 'true') {
+    let accepted: boolean;
+    if (operation.kind === 'initialize') accepted = session.initialize('') === 'true';
+    else if (operation.kind === 'set')
+      accepted = session.setValue(operation.element, operation.value) === 'true';
+    else if (operation.kind === 'commit') accepted = session.commit('') === 'true';
+    else accepted = session.terminate('') === 'true';
+
+    if (!accepted) {
+      // The wrapper only posts operations its own session accepted, so this one was forged or corrupted.
+      if (!this.failureReported) this.events.onRuntimeFailure(this.activity!);
+      this.failureReported = true;
+    } else if (operation.kind === 'commit' || operation.kind === 'terminate') {
       this.events.onFlush(this.activity!, session.values());
     }
   }

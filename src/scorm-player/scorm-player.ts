@@ -14,6 +14,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { ActivityLauncher } from './runtime/activity-launcher';
+import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
 import { PersistenceCoordinator } from './runtime/persistence-coordinator';
 import { CourseLoadError } from './package/course-load-error';
@@ -102,9 +103,17 @@ export class ScormPlayer {
               code: 'activity-unavailable',
               text: `The activity “${activity.title}” could not be loaded.`,
               retryable: true,
-              correlationToken: crypto.randomUUID(),
+              correlationToken: this.token(),
             }),
           onFlush: (activity, values) => this.save(activity, values),
+          onRuntimeFailure: () =>
+            this.fail({
+              category: 'runtime',
+              code: 'runtime-rejected',
+              text: 'The activity sent data the player could not accept and stopped working correctly. Retry to restart it.',
+              retryable: true,
+              correlationToken: this.token(),
+            }),
         });
         this.launcher.launch(request.activity, request.edition, request.delivery, request.state);
       });
@@ -149,7 +158,7 @@ export class ScormPlayer {
                 code: 'load-attempt-failed',
                 text: 'Your saved progress could not be read, so the course was not started. Retry to read it again.',
                 retryable: true,
-                correlationToken: crypto.randomUUID(),
+                correlationToken: this.token(),
               });
             }
             if (controller.signal.aborted) return;
@@ -194,7 +203,7 @@ export class ScormPlayer {
           code: 'save-failed',
           text: 'Your progress was not saved. Retry to save it again.',
           retryable: true,
-          correlationToken: crypto.randomUUID(),
+          correlationToken: this.token(),
         });
       },
     });
@@ -220,7 +229,7 @@ export class ScormPlayer {
         code: 'activity-not-responding',
         text: 'The current activity did not respond, so the course stayed on it.',
         retryable: false,
-        correlationToken: crypto.randomUUID(),
+        correlationToken: this.token(),
       });
     }
     this.activity.set(activity);
@@ -315,6 +324,12 @@ export class ScormPlayer {
     this.activityHeading()?.nativeElement.focus();
   }
 
+  /** Identifies this attempt in diagnostics without revealing the attempt context. */
+  private token(): string {
+    const attempt = this.attempt();
+    return attempt ? correlationTokenFor(attempt) : crypto.randomUUID();
+  }
+
   private fail(failure: PlayerError): void {
     this.loading.set(false);
     this.error.set(failure);
@@ -328,7 +343,10 @@ export class ScormPlayer {
       this.persistence!.retry();
       return;
     }
-    if (this.error()?.code === 'activity-unavailable') {
+    if (
+      this.error()?.code === 'activity-unavailable' ||
+      this.error()?.code === 'runtime-rejected'
+    ) {
       this.error.set(null);
       this.launchRequest.update((request) => request && { ...request });
       return;
@@ -343,7 +361,7 @@ export class ScormPlayer {
       code: known ? cause.code : 'load-failed',
       text: known ? cause.message : 'The course could not be loaded.',
       retryable: known ? cause.retryable : true,
-      correlationToken: crypto.randomUUID(),
+      correlationToken: this.token(),
     };
   }
 }
