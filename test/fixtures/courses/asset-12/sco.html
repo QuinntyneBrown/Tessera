@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Reading list</title>
+  </head>
+  <body>
+    <h1>Reading list</h1>
+    <p id="runtime-status">Checking for a runtime</p>
+    <script>
+      document.getElementById('runtime-status').textContent =
+        window.parent.API || window.parent.API_1484_11
+          ? 'A SCORM runtime is present'
+          : 'No SCORM runtime is present';
+    </script>
+  </body>
+</html>

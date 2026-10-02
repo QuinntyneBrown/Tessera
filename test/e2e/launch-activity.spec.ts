@@ -72,3 +72,12 @@ test('reports a failed activity whose launch page does not exist', async ({ page
   await player.expectErrorMessage(/Start with listening.*could not be loaded/i);
   await player.expectHostReceivedErrorCategory('loading');
 });
+
+// L2-004 AC3
+test('displays an asset without requiring a SCORM runtime', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.open({ course: 'asset-12' });
+
+  await player.expectAssetShownWithoutRuntime();
+});

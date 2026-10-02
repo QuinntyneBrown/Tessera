@@ -96,6 +96,10 @@ export class PlayerPage {
     ).toHaveCount(1);
   }
 
+  async expectAssetShownWithoutRuntime(): Promise<void> {
+    await expect(this.activityFrame.getByText('No SCORM runtime is present')).toBeVisible();
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }
