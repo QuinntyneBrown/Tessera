@@ -69,6 +69,12 @@ export class PlayerPage {
     await expect(this.activityFrame.getByText('API found')).toBeVisible();
   }
 
+  async expectCourseCannotReachHost(): Promise<void> {
+    for (const probe of ['Host DOM', 'Host cookie', 'Host storage']) {
+      await expect(this.activityFrame.getByText(`${probe}: `)).toHaveText(`${probe}: blocked`);
+    }
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

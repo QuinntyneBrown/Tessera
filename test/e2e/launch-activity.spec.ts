@@ -12,3 +12,12 @@ test('launches a single-SCO course so that the SCO finds its API before it runs'
   await player.expectActivityDiscoveredApi();
   await player.expectNoAccessibilityViolations();
 });
+
+// L2-015 AC1
+test('keeps course scripts away from the host DOM, cookies and storage', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.open({ course: 'hostile-12' });
+
+  await player.expectCourseCannotReachHost();
+});

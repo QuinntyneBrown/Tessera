@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Start with listening</title>
+  </head>
+  <body>
+    <h1>Start with listening</h1>
+    <ul id="probes"></ul>
+    <script>
+      function probe(name, attempt) {
+        var outcome;
+        try {
+          outcome = attempt() ? 'readable' : 'empty';
+        } catch (error) {
+          outcome = 'blocked';
+        }
+        var item = document.createElement('li');
+        item.textContent = name + ': ' + outcome;
+        document.getElementById('probes').append(item);
+      }
+      probe('Host DOM', function () {
+        return window.top.document.body.innerHTML;
+      });
+      probe('Host cookie', function () {
+        return window.top.document.cookie;
+      });
+      probe('Host storage', function () {
+        return window.top.localStorage.getItem('lms-token');
+      });
+    </script>
+  </body>
+</html>
