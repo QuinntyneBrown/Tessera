@@ -8,6 +8,8 @@ export interface HostScenario {
   isolation?: 'none' | 'unavailable';
   /** Makes the first request for the course manifest fail. */
   failFirstManifestRequest?: boolean;
+  /** Makes the first request for the activity's launch page return HTTP 503. */
+  failFirstActivityRequest?: boolean;
 }
 
 /** The player screen: owns every selector and interaction. */
@@ -26,7 +28,15 @@ export class PlayerPage {
   }
 
   async open(scenario: HostScenario = {}): Promise<void> {
-    const { failFirstManifestRequest, ...query } = scenario;
+    const { failFirstManifestRequest, failFirstActivityRequest, ...query } = scenario;
+    if (failFirstActivityRequest) {
+      let failed = false;
+      await this.page.route('**/courses/**/sco.html', (route) => {
+        if (failed) return route.fallback();
+        failed = true;
+        return route.fulfill({ status: 503 });
+      });
+    }
     if (failFirstManifestRequest) {
       let failed = false;
       await this.page.route('**/imsmanifest.xml', (route) => {

@@ -61,7 +61,15 @@ export class ScormPlayer {
       const frameHost = this.frameHost();
       if (!request || !frameHost) return;
       untracked(() => {
-        this.launcher ??= new ActivityLauncher(frameHost.nativeElement);
+        this.launcher ??= new ActivityLauncher(frameHost.nativeElement, (activity) =>
+          this.fail({
+            category: 'loading',
+            code: 'activity-unavailable',
+            text: `The activity “${activity.title}” could not be loaded.`,
+            retryable: true,
+            correlationToken: crypto.randomUUID(),
+          }),
+        );
         this.launcher.launch(request.activity, request.edition, request.delivery);
       });
     });
@@ -105,6 +113,11 @@ export class ScormPlayer {
   }
 
   protected retry(): void {
+    if (this.error()?.code === 'activity-unavailable') {
+      this.error.set(null);
+      this.launchRequest.update((request) => request && { ...request });
+      return;
+    }
     this.loadRequest.update((count) => count + 1);
   }
 

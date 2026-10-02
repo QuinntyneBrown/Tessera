@@ -14,7 +14,8 @@ export type HostMessage =
   | { readonly v: 1; readonly kind: 'start'; readonly url: string };
 
 /** Messages the course wrapper sends to the host application. */
-export type WrapperMessage = { readonly v: 1; readonly kind: 'ready' };
+export type WrapperMessage =
+  { readonly v: 1; readonly kind: 'ready' } | { readonly v: 1; readonly kind: 'launch-failed' };
 
 /** Returns the message when it is well formed, within the size bound and of a known kind; otherwise null. */
 export function parseWrapperMessage(data: unknown): WrapperMessage | null {
@@ -22,8 +23,9 @@ export function parseWrapperMessage(data: unknown): WrapperMessage | null {
   if (JSON.stringify(data).length > MAX_MESSAGE_BYTES) return null;
   const keys = Object.keys(data);
   const message = data as { v?: unknown; kind?: unknown };
-  if (message.v === BRIDGE_PROTOCOL_VERSION && message.kind === 'ready' && keys.length === 2) {
-    return { v: 1, kind: 'ready' };
+  if (message.v === BRIDGE_PROTOCOL_VERSION && keys.length === 2) {
+    if (message.kind === 'ready') return { v: 1, kind: 'ready' };
+    if (message.kind === 'launch-failed') return { v: 1, kind: 'launch-failed' };
   }
   return null;
 }

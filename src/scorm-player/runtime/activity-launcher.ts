@@ -6,15 +6,21 @@ export class ActivityLauncher {
   private frame: HTMLIFrameElement | null = null;
   private readonly onMessage = (event: MessageEvent) => {
     if (event.origin !== this.wrapperOrigin || event.source !== this.frame?.contentWindow) return;
-    if (parseWrapperMessage(event.data)?.kind === 'ready') {
+    const message = parseWrapperMessage(event.data);
+    if (message?.kind === 'ready') {
       this.post({ v: 1, kind: 'start', url: this.activity!.resource.url });
+    } else if (message?.kind === 'launch-failed') {
+      this.onLaunchFailed(this.activity!);
     }
   };
 
   private activity: Activity | null = null;
   private delivery: DeliveryDescriptor | null = null;
 
-  constructor(private readonly container: HTMLElement) {
+  constructor(
+    private readonly container: HTMLElement,
+    private readonly onLaunchFailed: (activity: Activity) => void,
+  ) {
     window.addEventListener('message', this.onMessage);
   }
 

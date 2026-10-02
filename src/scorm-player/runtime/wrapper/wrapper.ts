@@ -17,9 +17,17 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
     }
     send({ v: 1, kind: 'ready' });
   } else if (message.kind === 'start') {
-    const frame = document.createElement('iframe');
-    frame.title = 'Course activity';
-    frame.src = message.url;
-    document.body.append(frame);
+    // An iframe load event cannot prove HTTP success, so check the launch page first.
+    fetch(message.url).then(
+      (response) => (response.ok ? startFrame(message.url) : send({ v: 1, kind: 'launch-failed' })),
+      () => send({ v: 1, kind: 'launch-failed' }),
+    );
   }
 });
+
+function startFrame(url: string): void {
+  const frame = document.createElement('iframe');
+  frame.title = 'Course activity';
+  frame.src = url;
+  document.body.append(frame);
+}

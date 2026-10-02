@@ -5,6 +5,13 @@ describe('parseWrapperMessage', () => {
     expect(parseWrapperMessage({ v: 1, kind: 'ready' })).toEqual({ v: 1, kind: 'ready' });
   });
 
+  it('accepts a launch-failed message', () => {
+    expect(parseWrapperMessage({ v: 1, kind: 'launch-failed' })).toEqual({
+      v: 1,
+      kind: 'launch-failed',
+    });
+  });
+
   it.each([
     ['a different protocol version', { v: 2, kind: 'ready' }],
     ['an unknown kind', { v: 1, kind: 'unknown' }],
