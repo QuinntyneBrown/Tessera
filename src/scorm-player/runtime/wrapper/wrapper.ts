@@ -15,9 +15,10 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   const message = event.data;
   if (message.kind === 'prepare') {
     if (message.sco) {
-      (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(
-        new RuntimeSession(),
-        (operation) => send({ v: 1, kind: 'operation', operation }),
+      const session = new RuntimeSession();
+      if (message.state) session.restore({ ...message.state });
+      (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(session, (operation) =>
+        send({ v: 1, kind: 'operation', operation }),
       );
     }
     send({ v: 1, kind: 'ready' });

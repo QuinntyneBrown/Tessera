@@ -10,6 +10,8 @@ export type HostMessage =
       readonly kind: 'prepare';
       readonly edition: ScormEdition;
       readonly sco: boolean;
+      /** Values saved for this SCO by an earlier session, if any. */
+      readonly state: Readonly<Record<string, string>> | null;
     }
   | { readonly v: 1; readonly kind: 'start'; readonly url: string };
 

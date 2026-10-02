@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import {
   AttemptContext,
+  AttemptSnapshot,
   SaveAck,
   CourseSource,
   HostIntegration,
@@ -51,6 +52,25 @@ export interface HostFixture {
 
 const COURSE_ORIGIN = 'http://127.0.0.1:4300';
 
+/** The state the host has stored for an attempt: a distinct location per attempt key. */
+function savedSnapshot(context: AttemptContext, foreign: boolean): AttemptSnapshot {
+  return {
+    schemaVersion: 1,
+    context: foreign ? { ...context, attemptKey: 'someone-elses-attempt' } : context,
+    edition: '1.2',
+    scoStates: {
+      item1: {
+        values: {
+          'cmi.core.lesson_location': `page 8 of ${context.attemptKey}`,
+          'cmi.suspend_data': 'chapter=3;answers=ab',
+          'cmi.core.exit': 'suspend',
+        },
+      },
+    },
+    sequencing: { currentActivityId: 'item1' },
+  };
+}
+
 /** Builds the host-side inputs for the scenario named by the page's query string. */
 export function hostFixtureFor(
   query: URLSearchParams,
@@ -67,12 +87,20 @@ export function hostFixtureFor(
     attempt:
       omit === 'attempt'
         ? undefined
-        : { attemptKey: 'attempt-1', courseKey: 'course-1', courseRevision: '1' },
+        : {
+            attemptKey: query.get('attempt') ?? 'attempt-1',
+            courseKey: 'course-1',
+            courseRevision: '1',
+          },
     host:
       omit === 'host'
         ? undefined
         : {
-            loadAttempt: async () => null,
+            loadAttempt: async (context) => {
+              const snapshot = query.get('snapshot');
+              if (snapshot === 'unreadable') throw new Error('storage unavailable');
+              return snapshot ? savedSnapshot(context, snapshot === 'foreign') : null;
+            },
             saveState: async (_context, submission) => {
               onSave(submission);
               if (query.get('save') === 'manual') return gate.hold(submission);

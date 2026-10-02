@@ -136,3 +136,35 @@ describe('SCORM 1.2 data model', () => {
     expect(session.lastError).toBe('404');
   });
 });
+
+describe('SCORM 1.2 session restore', () => {
+  it('restores saved values, sets entry to resume after a suspend exit, and counts restored arrays', () => {
+    const session = new RuntimeSession();
+    session.restore({
+      'cmi.core.lesson_location': 'page 8',
+      'cmi.objectives.0.id': 'obj-a',
+      'cmi.core.exit': 'suspend',
+    });
+    session.initialize('');
+
+    expect(session.getValue('cmi.core.lesson_location')).toBe('page 8');
+    expect(session.getValue('cmi.core.entry')).toBe('resume');
+    expect(session.getValue('cmi.objectives._count')).toBe('1');
+    expect(session.values()).not.toHaveProperty('cmi.core.exit');
+  });
+
+  it('leaves entry empty when the previous exit was not a suspend', () => {
+    const session = new RuntimeSession();
+    session.restore({ 'cmi.core.lesson_location': 'page 8', 'cmi.core.exit': 'logout' });
+    session.initialize('');
+
+    expect(session.getValue('cmi.core.entry')).toBe('');
+  });
+
+  it('reports ab-initio for a session with nothing restored', () => {
+    const session = new RuntimeSession();
+    session.initialize('');
+
+    expect(session.getValue('cmi.core.entry')).toBe('ab-initio');
+  });
+});

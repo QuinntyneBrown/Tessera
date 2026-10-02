@@ -20,6 +20,7 @@ const ERROR_STRINGS: Record<string, string> = {
 export class RuntimeSession {
   private readonly written = new Map<string, string>();
   private readonly counts = new Map<string, number>();
+  private readonly overrides = new Map<string, string>();
   state: SessionState = 'not-initialized';
   lastError = '0';
 
@@ -55,11 +56,26 @@ export class RuntimeSession {
     if (!rule) return this.fail(key.endsWith('._children') ? '202' : '201', '');
     if (!this.indexesExist(indexes)) return this.fail('201', '');
     if (rule.access === 'w') return this.fail('404', '');
-    return this.succeed(this.written.get(element) ?? rule.initial ?? '');
+    return this.succeed(
+      this.written.get(element) ?? this.overrides.get(element) ?? rule.initial ?? '',
+    );
   }
 
   setValue(element: string, value: string): string {
     if (this.state !== 'initialized') return this.fail('301');
+    return this.write(element, value);
+  }
+
+  /** Loads state saved by an earlier session; call before `initialize`. */
+  restore(values: Record<string, string>): void {
+    for (const [element, value] of Object.entries(values)) {
+      if (element !== 'cmi.core.exit') this.write(element, value);
+    }
+    this.overrides.set('cmi.core.entry', values['cmi.core.exit'] === 'suspend' ? 'resume' : '');
+    this.lastError = '0';
+  }
+
+  private write(element: string, value: string): string {
     const { key, indexes } = normalize(element);
     if (key.endsWith('._children') || key.endsWith('._count')) return this.fail('402');
     const rule = ruleFor(key);

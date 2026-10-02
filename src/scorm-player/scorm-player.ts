@@ -58,6 +58,7 @@ export class ScormPlayer {
     activity: Activity;
     edition: ScormEdition;
     delivery: DeliveryDescriptor;
+    state: Record<string, string> | null;
   } | null>(null);
   private launcher: ActivityLauncher | null = null;
   private persistence: PersistenceCoordinator | null = null;
@@ -87,7 +88,7 @@ export class ScormPlayer {
             }),
           onFlush: (activity, values) => this.save(activity, values),
         });
-        this.launcher.launch(request.activity, request.edition, request.delivery);
+        this.launcher.launch(request.activity, request.edition, request.delivery, request.state);
       });
     });
     effect((onCleanup) => {
@@ -112,9 +113,18 @@ export class ScormPlayer {
             if (!delivery) return this.fail(isolationUnavailable());
             const refusal = checkDelivery(delivery, location.origin);
             if (refusal) return this.fail(refusal);
-            const first = course.activities[0];
+            const snapshot = await this.host()!.loadAttempt(this.attempt()!, controller.signal);
+            this.scoStates = { ...snapshot?.scoStates };
+            const first =
+              course.activities.find((a) => a.id === snapshot?.sequencing.currentActivityId) ??
+              course.activities[0];
             this.activity.set(first);
-            this.launchRequest.set({ activity: first, edition: course.edition, delivery });
+            this.launchRequest.set({
+              activity: first,
+              edition: course.edition,
+              delivery,
+              state: this.scoStates[first.id]?.values ?? null,
+            });
           },
           (cause) => {
             if (!controller.signal.aborted) this.fail(this.loadingError(cause));

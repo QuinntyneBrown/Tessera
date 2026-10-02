@@ -32,16 +32,22 @@ export class ActivityLauncher {
     window.addEventListener('message', this.onMessage);
   }
 
-  launch(activity: Activity, edition: ScormEdition, delivery: DeliveryDescriptor): void {
+  launch(
+    activity: Activity,
+    edition: ScormEdition,
+    delivery: DeliveryDescriptor,
+    state: Record<string, string> | null,
+  ): void {
     this.activity = activity;
     this.session = new RuntimeSession();
+    if (state) this.session.restore(state);
     this.delivery = delivery;
     const frame = document.createElement('iframe');
     frame.title = `Course content: ${activity.title}`;
     frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
     frame.src = delivery.wrapperUrl;
     frame.addEventListener('load', () =>
-      this.post({ v: 1, kind: 'prepare', edition, sco: activity.resource.kind === 'sco' }),
+      this.post({ v: 1, kind: 'prepare', edition, sco: activity.resource.kind === 'sco', state }),
     );
     this.container.replaceChildren(frame);
     this.frame = frame;
