@@ -133,3 +133,27 @@ test('shows unknown outcomes as text instead of inventing a percentage', async (
   await player.expectNoProgressPercentage();
   await player.expectHostReceivedOutcomes([]);
 });
+
+// L2-014 AC2
+test('keeps saves bound to the host attempt when the SCO claims another learner', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12', attempt: 'attempt-7' });
+
+  const results = await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.student_id', 'someone-else'],
+    ['LMSSetValue', 'cmi.core.student_name', 'Someone Else'],
+    ['LMSSetValue', 'cmi.core.lesson_location', 'page 2'],
+    ['LMSCommit', ''],
+  ]);
+
+  expect(results).toEqual(['true', 'false', 'false', 'true', 'true']);
+  await player.expectHostSaved({ 'cmi.core.lesson_location': 'page 2' });
+  await player.expectHostSavesBoundTo({
+    attemptKey: 'attempt-7',
+    courseKey: 'course-1',
+    courseRevision: '1',
+  });
+});

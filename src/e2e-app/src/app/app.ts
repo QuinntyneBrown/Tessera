@@ -13,7 +13,8 @@ export class App {
   protected readonly gate = new SaveGate();
   protected readonly fixture = hostFixtureFor(
     new URLSearchParams(location.search),
-    (submission) => this.saves.update((saves) => [...saves, JSON.stringify(submission)]),
+    (context, submission) =>
+      this.saves.update((saves) => [...saves, JSON.stringify({ context, ...submission })]),
     this.gate,
   );
 

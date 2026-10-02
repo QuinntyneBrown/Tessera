@@ -74,7 +74,7 @@ function savedSnapshot(context: AttemptContext, foreign: boolean): AttemptSnapsh
 /** Builds the host-side inputs for the scenario named by the page's query string. */
 export function hostFixtureFor(
   query: URLSearchParams,
-  onSave: (submission: SaveSubmission) => void,
+  onSave: (context: AttemptContext, submission: SaveSubmission) => void,
   gate: SaveGate,
 ): HostFixture {
   const omit = query.get('omit');
@@ -104,8 +104,8 @@ export function hostFixtureFor(
               }
               return snapshot ? savedSnapshot(context, snapshot === 'foreign') : null;
             },
-            saveState: async (_context, submission) => {
-              onSave(submission);
+            saveState: async (context, submission) => {
+              onSave(context, submission);
               if (query.get('save') === 'manual') return gate.hold(submission);
               return { revision: submission.revision };
             },

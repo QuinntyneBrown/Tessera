@@ -145,6 +145,16 @@ export class PlayerPage {
     await expect(this.hostSaves).toHaveCount(1);
   }
 
+  /** Every save reached the host under exactly this attempt context. */
+  async expectHostSavesBoundTo(context: object): Promise<void> {
+    const saves = (await this.hostSaves.allTextContents()).map((text) => JSON.parse(text));
+    expect(saves.length, 'a save reached the host').toBeGreaterThan(0);
+    for (const save of saves) {
+      expect(save.context).toEqual(context);
+      expect(save.snapshot.context).toEqual(context);
+    }
+  }
+
   async expectHostSaveCount(count: number): Promise<void> {
     await expect(this.hostSaves).toHaveCount(count);
   }
