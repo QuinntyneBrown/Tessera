@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "api:update": "ng build scorm-player && api-extractor run --local -c tools/public_api_guard/api-extractor.json",
-    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json"
+    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json",
+    "demo:record": "node demo/run.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.2.0",
