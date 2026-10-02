@@ -74,6 +74,9 @@ export class ScormPlayer {
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
   protected readonly exitWarning = signal(false);
+  protected readonly loading = signal(false);
+  protected readonly cancelled = signal(false);
+  private loadController: AbortController | null = null;
   protected readonly outcome = signal<CourseOutcome | null>(null);
   private readonly exitHeading = viewChild<ElementRef<HTMLElement>>('exitHeading');
   private readonly activityHeading = viewChild<ElementRef<HTMLElement>>('activityHeading');
@@ -112,14 +115,19 @@ export class ScormPlayer {
           return;
         }
         const controller = new AbortController();
+        this.loadController = controller;
         onCleanup(() => controller.abort());
         this.course.set(null);
+        this.loading.set(true);
+        this.cancelled.set(false);
         loadCourse(source!, controller.signal, this.limits()).then(
           async (course) => {
+            if (controller.signal.aborted) return;
             this.course.set(course);
             const delivery = await this.host()!
               .prepareDelivery(this.attempt()!, course, controller.signal)
               .catch(() => null);
+            if (controller.signal.aborted) return;
             if (!delivery) return this.fail(isolationUnavailable());
             const refusal = checkDelivery(delivery, location.origin);
             if (refusal) return this.fail(refusal);
@@ -139,6 +147,7 @@ export class ScormPlayer {
                 correlationToken: crypto.randomUUID(),
               });
             }
+            if (controller.signal.aborted) return;
             const { snapshot } = loaded;
             const mismatch = snapshot && checkSnapshot(snapshot, this.attempt()!, course);
             if (mismatch) return this.fail(mismatch);
@@ -154,6 +163,7 @@ export class ScormPlayer {
               delivery,
               state: this.scoStates[first.id]?.values ?? null,
             });
+            this.loading.set(false);
           },
           (cause) => {
             if (!controller.signal.aborted) this.fail(this.loadingError(cause));
@@ -250,6 +260,12 @@ export class ScormPlayer {
       : String(outcome.score.raw);
   }
 
+  protected cancelLoad(): void {
+    this.loadController?.abort();
+    this.loading.set(false);
+    this.cancelled.set(true);
+  }
+
   protected async requestExit(): Promise<void> {
     if (await (this.persistence?.drain() ?? true)) {
       this.event.emit({ kind: 'exit', saved: true });
@@ -277,6 +293,7 @@ export class ScormPlayer {
   }
 
   private fail(failure: PlayerError): void {
+    this.loading.set(false);
     this.error.set(failure);
     this.event.emit({ kind: 'error', error: failure });
   }

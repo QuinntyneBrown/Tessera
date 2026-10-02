@@ -64,6 +64,30 @@ export class PlayerPage {
     await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
   }
 
+  async expectLoadingShown(): Promise<void> {
+    await expect(this.page.getByRole('status').filter({ hasText: 'Loading course' })).toBeVisible();
+  }
+
+  /** Cancels the load and requires the player to react within the L2-019 budget of 200 ms. */
+  async cancelLoad(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Cancel' }).click();
+    await expect(
+      this.page.getByRole('status').filter({ hasText: 'Loading was cancelled' }),
+    ).toBeVisible({
+      timeout: 200,
+    });
+  }
+
+  async expectNoCourseShown(): Promise<void> {
+    await expect(this.page.getByRole('heading', { level: 1 })).toHaveCount(0);
+    await expect(this.page.locator('iframe')).toHaveCount(0);
+  }
+
+  /** Chooses another package for the same player, as an LMS does when the learner picks a course. */
+  async chooseAnotherPackage(name: string): Promise<void> {
+    await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }

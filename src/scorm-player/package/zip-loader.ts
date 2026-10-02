@@ -80,7 +80,9 @@ export async function loadZip(
   signal: AbortSignal,
 ): Promise<ValidatedCourse> {
   if (file.size > limits.archiveBytes) throw limitExceeded('archive size');
-  const files = await extract(new Uint8Array(await file.arrayBuffer()), limits, signal);
+  const data = new Uint8Array(await file.arrayBuffer());
+  signal.throwIfAborted();
+  const files = await extract(data, limits, signal);
 
   const resolver = new ResourceResolver(PACKAGE_ROOT);
   for (const name of Object.keys(files)) resolver.resolve(name);

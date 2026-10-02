@@ -9,6 +9,16 @@
     }
   </section>
 }
+@if (loading()) {
+  <section role="status" aria-labelledby="loading-heading">
+    <h2 id="loading-heading">Loading course</h2>
+    <p>Reading and checking the course. You can cancel at any time.</p>
+    <button type="button" (click)="cancelLoad()">Cancel</button>
+  </section>
+}
+@if (cancelled()) {
+  <p role="status">Loading was cancelled. Choose a course to try again.</p>
+}
 @if (exitWarning()) {
   <section aria-labelledby="exit-heading">
     <h2 id="exit-heading" tabindex="-1" #exitHeading>Your progress is not saved</h2>

@@ -151,3 +151,21 @@ for (const [name, limits, limit] of [
     player.expectNoLaunchResourceRequested();
   });
 }
+
+// L2-019 AC2, AC3
+test('shows progress while a large package loads, cancels quickly, and accepts another package', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+
+  await player.openWithPackage('large-50mb');
+  await player.expectLoadingShown();
+  await player.cancelLoad();
+
+  await player.expectNoCourseShown();
+  player.expectNoLaunchResourceRequested();
+
+  await player.chooseAnotherPackage('single-sco-12');
+  await player.expectCourseTitle('Better conversations at work');
+  await player.expectActivityDiscoveredApi();
+});
