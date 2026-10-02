@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Start with listening</title>
+  </head>
+  <body>
+    <h1>Start with listening</h1>
+    <p id="forged">Forging operations</p>
+    <script>
+      // A hostile SCO runs code in the wrapper's realm, so the host sees the messages as coming
+      // from the wrapper window. Only the host's own session validation can stop what they do.
+      var post = parent.Function('message', 'parent.postMessage(message, "*")');
+      [
+        { kind: 'initialize' },
+        { kind: 'set', element: 'cmi.core.student_id', value: 'someone-else' },
+        { kind: 'set', element: 'cmi.core.score.raw', value: '999' },
+        { kind: 'set', element: 'cmi.core.lesson_location', value: 'legitimate' },
+        { kind: 'commit' },
+      ].forEach(function (operation) {
+        post({ v: 1, kind: 'operation', operation: operation });
+      });
+      document.getElementById('forged').textContent = 'Forged operations sent';
+    </script>
+  </body>
+</html>

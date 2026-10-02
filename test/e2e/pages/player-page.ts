@@ -124,6 +124,15 @@ export class PlayerPage {
     }).toPass();
   }
 
+  /** Like expectHostSaved, but the SCO's saved values must be exactly these. */
+  async expectHostSavedOnly(values: Record<string, string>): Promise<void> {
+    await expect(async () => {
+      const saves = (await this.hostSaves.allTextContents()).map((text) => JSON.parse(text));
+      expect(saves.length, 'a save reached the host').toBeGreaterThan(0);
+      expect(Object.values(saves.at(-1).snapshot.scoStates)[0]).toEqual({ values });
+    }).toPass();
+  }
+
   async expectHostSaveCount(count: number): Promise<void> {
     await expect(this.hostSaves).toHaveCount(count);
   }
