@@ -65,3 +65,51 @@ test('ends the session on LMSFinish and then applies the terminated-session rule
 
   expect(results).toEqual(['true', 'true', 'true', 'false', '301']);
 });
+
+// L2-009 AC1, AC2
+test('reads back valid writes and refuses to write a read-only element', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12' });
+
+  const results = await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.score.raw', '85.5'],
+    ['LMSGetValue', 'cmi.core.score.raw'],
+    ['LMSSetValue', 'cmi.core.credit', 'no-credit'],
+    ['LMSGetLastError'],
+    ['LMSGetErrorString', '403'],
+  ]);
+
+  expect(results).toEqual(['true', 'true', '85.5', 'false', '403', 'Element is read only']);
+});
+
+// L2-009 AC3
+test('rejects invalid values without changing the previous valid value', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12' });
+  const tooLong = 'x'.repeat(4097);
+
+  const results = await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.score.raw', '90'],
+    ['LMSSetValue', 'cmi.core.score.raw', '150'],
+    ['LMSGetLastError'],
+    ['LMSSetValue', 'cmi.core.lesson_status', 'finished'],
+    ['LMSGetValue', 'cmi.core.lesson_status'],
+    ['LMSSetValue', 'cmi.suspend_data', tooLong],
+    ['LMSGetValue', 'cmi.suspend_data'],
+    ['LMSGetValue', 'cmi.core.score.raw'],
+  ]);
+
+  expect(results).toEqual([
+    'true',
+    'true',
+    'false',
+    '405',
+    'false',
+    'not attempted',
+    'false',
+    '',
+    '90',
+  ]);
+});
