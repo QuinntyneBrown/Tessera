@@ -31,7 +31,7 @@ function setup() {
   const acknowledged: [number, boolean][] = [];
   let failures = 0;
   const coordinator = new PersistenceCoordinator(host, context, {
-    onAcknowledged: (revision, upToDate) => acknowledged.push([revision, upToDate]),
+    onAcknowledged: (submission, upToDate) => acknowledged.push([submission.revision, upToDate]),
     onFailed: () => failures++,
   });
   return { coordinator, sent, acknowledged, failures: () => failures };

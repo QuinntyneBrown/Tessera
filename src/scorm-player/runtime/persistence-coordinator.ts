@@ -16,7 +16,7 @@ export class PersistenceCoordinator {
     private readonly context: AttemptContext,
     private readonly events: {
       /** `upToDate` is false while a newer snapshot is still unsaved. */
-      onAcknowledged: (revision: number, upToDate: boolean) => void;
+      onAcknowledged: (submission: SaveSubmission, upToDate: boolean) => void;
       onFailed: () => void;
     },
   ) {}
@@ -64,10 +64,7 @@ export class PersistenceCoordinator {
     }
     if (submission.revision > this.acknowledged) {
       this.acknowledged = submission.revision;
-      this.events.onAcknowledged(
-        submission.revision,
-        submission.revision === this.latest!.revision,
-      );
+      this.events.onAcknowledged(submission, submission.revision === this.latest!.revision);
     }
     if (this.latest!.revision > this.acknowledged) this.send();
     this.releaseDrainers();

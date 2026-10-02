@@ -32,6 +32,10 @@
     @if (activity(); as activity) {
       <h2 id="activity-heading" tabindex="-1" #activityHeading>{{ activity.title }}</h2>
     }
+    <section aria-label="Course outcome">
+      <p>Status: {{ statusText(outcome()) }}</p>
+      <p>Score: {{ scoreText(outcome()) }}</p>
+    </section>
     <p role="status">{{ saveStatus() }}</p>
     <button type="button" (click)="requestExit()">Exit course</button>
     <div #frameHost></div>

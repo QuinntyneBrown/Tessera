@@ -211,6 +211,27 @@ export class PlayerPage {
     expect(events.filter((event) => event.kind === 'exit')).toEqual([]);
   }
 
+  async expectOutcomeShown(outcome: { status: string; score: string }): Promise<void> {
+    const region = this.page.getByRole('region', { name: 'Course outcome' });
+    await expect(region).toContainText(`Status: ${outcome.status}`);
+    await expect(region).toContainText(`Score: ${outcome.score}`);
+  }
+
+  async expectNoProgressPercentage(): Promise<void> {
+    await expect(this.page.getByRole('progressbar')).toHaveCount(0);
+    await expect(this.page.getByText(/d+s?%/)).toHaveCount(0);
+  }
+
+  /** The outcome events the host has received, in order. */
+  async expectHostReceivedOutcomes(outcomes: object[]): Promise<void> {
+    await expect(async () => {
+      const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+      expect(
+        events.filter((event) => event.kind === 'outcome').map((event) => event.outcome),
+      ).toEqual(outcomes);
+    }).toPass();
+  }
+
   async expectErrorMessage(text: RegExp): Promise<void> {
     await expect(this.alert).toContainText(text);
   }

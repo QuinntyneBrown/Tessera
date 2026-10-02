@@ -90,7 +90,26 @@ export interface PlayerError {
   readonly correlationToken: string;
 }
 
+/** A value the course has not reported enough data to determine. */
+export type Unknown = 'unknown';
+
+export interface Score {
+  readonly raw?: number;
+  readonly min?: number;
+  readonly max?: number;
+}
+
+/** What the course has achieved; every field says explicitly when it is not yet known. */
+export interface CourseOutcome {
+  readonly status: string | Unknown;
+  readonly completion: string | Unknown;
+  readonly success: string | Unknown;
+  readonly score: Score | Unknown;
+  readonly progress: number | Unknown;
+}
+
 export type PlayerEvent =
   | { readonly kind: 'error'; readonly error: PlayerError }
   | { readonly kind: 'save'; readonly status: 'saved'; readonly revision: number }
+  | { readonly kind: 'outcome'; readonly outcome: CourseOutcome }
   | { readonly kind: 'exit'; readonly saved: boolean };

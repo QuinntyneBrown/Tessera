@@ -96,3 +96,40 @@ test('reads the saved state again on retry and then resumes it', async ({ page }
   expect(results).toEqual(['true', 'page 8 of attempt-1']);
   await player.expectNoErrorMessage();
 });
+
+// L2-012 AC1
+test('reports the SCORM 1.2 lesson status and score to the host once the save is acknowledged', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12' });
+
+  await player.runScoCalls([
+    ['LMSInitialize', ''],
+    ['LMSSetValue', 'cmi.core.score.raw', '85'],
+    ['LMSSetValue', 'cmi.core.lesson_status', 'completed'],
+    ['LMSCommit', ''],
+  ]);
+
+  await player.expectOutcomeShown({ status: 'completed', score: '85' });
+  await player.expectHostReceivedOutcomes([
+    {
+      status: 'completed',
+      completion: 'unknown',
+      success: 'unknown',
+      score: { raw: 85 },
+      progress: 'unknown',
+    },
+  ]);
+  await player.expectNoAccessibilityViolations();
+});
+
+// L2-012 AC3
+test('shows unknown outcomes as text instead of inventing a percentage', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-12' });
+
+  await player.expectOutcomeShown({ status: 'Not yet known', score: 'Not yet known' });
+  await player.expectNoProgressPercentage();
+  await player.expectHostReceivedOutcomes([]);
+});
