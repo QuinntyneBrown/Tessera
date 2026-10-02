@@ -154,6 +154,59 @@ export class PlayerPage {
     expect(b!.y).toBeGreaterThanOrEqual(a!.y + a!.height);
   }
 
+  /** WCAG 1.4.4: player text at 200% of its normal size, without page zoom. */
+  async enlargeTextTo200Percent(): Promise<void> {
+    await this.page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+  }
+
+  /** WCAG 1.4.12: the text-spacing overrides a user style sheet may apply. */
+  async applyTextSpacingOverrides(): Promise<void> {
+    await this.page.addStyleTag({
+      content: `
+        * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }
+        p { margin-bottom: 2em !important; }`,
+    });
+  }
+
+  /** No player text is clipped, truncated or overlapped by another control. */
+  async expectNoClippedOrOverlappingText(): Promise<void> {
+    const problems = await this.page.evaluate(() => {
+      const root = document.querySelector('tsr-scorm-player')!;
+      const found: string[] = [];
+      const controls: { name: string; rect: DOMRect }[] = [];
+      for (const element of Array.from(root.querySelectorAll<HTMLElement>('*'))) {
+        if (element.closest('iframe') || element.offsetParent === null) continue;
+        const style = getComputedStyle(element);
+        const clips = style.overflowX !== 'visible' || style.overflowY !== 'visible';
+        if (
+          clips &&
+          (element.scrollWidth > element.clientWidth + 1 ||
+            element.scrollHeight > element.clientHeight + 1)
+        ) {
+          found.push(`clipped: <${element.localName}> ${element.textContent?.trim().slice(0, 30)}`);
+        }
+        if (element.matches('button, a[href]')) {
+          controls.push({
+            name: element.textContent!.trim(),
+            rect: element.getBoundingClientRect(),
+          });
+        }
+      }
+      for (const [i, a] of controls.entries()) {
+        for (const b of controls.slice(i + 1)) {
+          const overlap =
+            a.rect.left < b.rect.right - 1 &&
+            b.rect.left < a.rect.right - 1 &&
+            a.rect.top < b.rect.bottom - 1 &&
+            b.rect.top < a.rect.bottom - 1;
+          if (overlap) found.push(`overlap: ${a.name} / ${b.name}`);
+        }
+      }
+      return found;
+    });
+    expect(problems).toEqual([]);
+  }
+
   async retry(): Promise<void> {
     await this.page.getByRole('button', { name: 'Retry', exact: true }).click();
   }

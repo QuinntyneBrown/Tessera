@@ -146,3 +146,37 @@ test('reflows to one column at 400% zoom in a 1280 x 1024 window', async ({ page
   await player.expectSingleColumn();
   await player.expectControlsUsable();
 });
+
+// L2-018 AC5
+for (const width of [375, 1280]) {
+  test(`shows no clipped or overlapping text with text enlarged to 200% at ${width} CSS px`, async ({
+    page,
+  }) => {
+    const player = new PlayerPage(page);
+    await player.useViewport(width);
+    await player.open({ course: 'multi-sco-12' });
+
+    await player.enlargeTextTo200Percent();
+
+    await player.expectNoClippedOrOverlappingText();
+    await player.expectNoHorizontalScroll();
+    await player.expectControlsUsable();
+  });
+}
+
+// L2-018 AC6
+for (const width of [375, 1280]) {
+  test(`loses no content or function under the WCAG text-spacing overrides at ${width} CSS px`, async ({
+    page,
+  }) => {
+    const player = new PlayerPage(page);
+    await player.useViewport(width);
+    await player.open({ course: 'multi-sco-12' });
+
+    await player.applyTextSpacingOverrides();
+
+    await player.expectNoClippedOrOverlappingText();
+    await player.expectNoHorizontalScroll();
+    await player.expectControlsUsable();
+  });
+}
