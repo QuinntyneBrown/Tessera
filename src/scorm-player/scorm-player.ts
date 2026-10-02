@@ -16,7 +16,12 @@ import { PersistenceCoordinator } from './runtime/persistence-coordinator';
 import { CourseLoadError } from './package/course-load-error';
 import { loadCourse } from './package/course-loader';
 import { EDITION_LABELS } from './package/edition';
-import { checkDelivery, checkIntegration, isolationUnavailable } from './integration-guard';
+import {
+  checkDelivery,
+  checkIntegration,
+  checkSnapshot,
+  isolationUnavailable,
+} from './integration-guard';
 import {
   AttemptContext,
   CourseSource,
@@ -113,7 +118,24 @@ export class ScormPlayer {
             if (!delivery) return this.fail(isolationUnavailable());
             const refusal = checkDelivery(delivery, location.origin);
             if (refusal) return this.fail(refusal);
-            const snapshot = await this.host()!.loadAttempt(this.attempt()!, controller.signal);
+            const loaded = await this.host()!
+              .loadAttempt(this.attempt()!, controller.signal)
+              .then(
+                (snapshot) => ({ snapshot }),
+                () => null,
+              );
+            if (!loaded) {
+              return this.fail({
+                category: 'persistence',
+                code: 'load-attempt-failed',
+                text: 'Your saved progress could not be read, so the course was not started. Retry to read it again.',
+                retryable: true,
+                correlationToken: crypto.randomUUID(),
+              });
+            }
+            const { snapshot } = loaded;
+            const mismatch = snapshot && checkSnapshot(snapshot, this.attempt()!, course);
+            if (mismatch) return this.fail(mismatch);
             this.scoStates = { ...snapshot?.scoStates };
             const first =
               course.activities.find((a) => a.id === snapshot?.sequencing.currentActivityId) ??
@@ -195,7 +217,7 @@ export class ScormPlayer {
   }
 
   protected retry(): void {
-    if (this.error()?.category === 'persistence') {
+    if (this.error()?.category === 'persistence' && this.error()?.code === 'save-failed') {
       this.error.set(null);
       this.saveStatus.set('Saving progress');
       this.persistence!.retry();

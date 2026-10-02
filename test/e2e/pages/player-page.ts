@@ -6,7 +6,7 @@ export interface HostScenario {
   /** The attempt key the host issues; each attempt has its own saved state. */
   attempt?: string;
   /** What the host's stored state for the attempt looks like; none means a new attempt. */
-  snapshot?: 'saved' | 'foreign' | 'unreadable';
+  snapshot?: 'saved' | 'foreign' | 'unreadable' | 'flaky';
   /** The host holds every save until the test acknowledges or fails it. */
   save?: 'manual';
   course?: string;

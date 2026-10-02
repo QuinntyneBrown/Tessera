@@ -78,6 +78,7 @@ export function hostFixtureFor(
   gate: SaveGate,
 ): HostFixture {
   const omit = query.get('omit');
+  let readsFailed = 0;
   const courseName = query.get('course') ?? 'single-sco-12';
   return {
     source: {
@@ -98,7 +99,9 @@ export function hostFixtureFor(
         : {
             loadAttempt: async (context) => {
               const snapshot = query.get('snapshot');
-              if (snapshot === 'unreadable') throw new Error('storage unavailable');
+              if (snapshot === 'unreadable' || (snapshot === 'flaky' && readsFailed++ === 0)) {
+                throw new Error('storage unavailable');
+              }
               return snapshot ? savedSnapshot(context, snapshot === 'foreign') : null;
             },
             saveState: async (_context, submission) => {

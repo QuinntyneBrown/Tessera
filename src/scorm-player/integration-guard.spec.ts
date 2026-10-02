@@ -1,4 +1,4 @@
-import { checkDelivery, checkIntegration } from './integration-guard';
+import { checkDelivery, checkIntegration, checkSnapshot } from './integration-guard';
 import { AttemptContext, CourseSource, HostIntegration } from './types';
 
 const source: CourseSource = {
@@ -73,5 +73,30 @@ describe('checkDelivery', () => {
     expect(checkDelivery({ ...delivery, bridgeProtocolVersion: 2 }, 'https://lms.test')?.code).toBe(
       'isolation-unavailable',
     );
+  });
+});
+
+describe('checkSnapshot', () => {
+  const course = { edition: '1.2', title: 'Demo', activities: [] } as const;
+  const snapshot = {
+    schemaVersion: 1,
+    context: attempt,
+    edition: '1.2',
+    scoStates: {},
+    sequencing: { currentActivityId: 'a' },
+  } as const;
+
+  it('accepts a snapshot bound to the attempt, course revision and edition', () => {
+    expect(checkSnapshot(snapshot, attempt, course)).toBeNull();
+  });
+
+  it.each([
+    ['another attempt', { ...snapshot, context: { ...attempt, attemptKey: 'other' } }],
+    ['another course', { ...snapshot, context: { ...attempt, courseKey: 'other' } }],
+    ['another course revision', { ...snapshot, context: { ...attempt, courseRevision: '2' } }],
+    ['another edition', { ...snapshot, edition: '2004-3rd' }],
+    ['an unknown schema version', { ...snapshot, schemaVersion: 99 }],
+  ] as const)('rejects a snapshot for %s', (_label, candidate) => {
+    expect(checkSnapshot(candidate, attempt, course)?.code).toBe('snapshot-mismatch');
   });
 });

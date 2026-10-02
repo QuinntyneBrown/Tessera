@@ -1,10 +1,12 @@
 import { BRIDGE_PROTOCOL_VERSION } from './runtime/bridge-protocol';
 import {
   AttemptContext,
+  AttemptSnapshot,
   CourseSource,
   DeliveryDescriptor,
   HostIntegration,
   PlayerError,
+  ValidatedCourse,
 } from './types';
 
 export interface PlayerInputs {
@@ -74,5 +76,27 @@ export function isolationUnavailable(): PlayerError {
   return integrationError(
     'isolation-unavailable',
     'The course cannot start because the host did not deliver it from an isolated origin.',
+  );
+}
+
+/** Checks that saved state belongs to this attempt, course revision and edition before it is applied. */
+export function checkSnapshot(
+  snapshot: AttemptSnapshot,
+  attempt: AttemptContext,
+  course: ValidatedCourse,
+): PlayerError | null {
+  const { context } = snapshot;
+  if (
+    snapshot.schemaVersion === 1 &&
+    snapshot.edition === course.edition &&
+    context.attemptKey === attempt.attemptKey &&
+    context.courseKey === attempt.courseKey &&
+    context.courseRevision === attempt.courseRevision
+  ) {
+    return null;
+  }
+  return integrationError(
+    'snapshot-mismatch',
+    'The saved progress does not belong to this attempt, course or version, so the course was not started.',
   );
 }
