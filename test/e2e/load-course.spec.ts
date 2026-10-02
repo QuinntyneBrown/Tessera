@@ -57,3 +57,20 @@ for (const [course, problem] of [
     player.expectNoLaunchResourceRequested();
   });
 }
+
+// L2-016 AC1
+for (const [course, reference] of [
+  ['traversal-12', 'a path that escapes the course root'],
+  ['external-12', 'a resource on another origin'],
+  ['script-scheme-12', 'an executable URL scheme'],
+] as const) {
+  test(`rejects a manifest that references ${reference}`, async ({ page }) => {
+    const player = new PlayerPage(page);
+
+    await player.open({ course });
+
+    await player.expectErrorMessage(/outside the course/i);
+    await player.expectHostReceivedErrorCategory('loading');
+    player.expectNoLaunchResourceRequested();
+  });
+}
