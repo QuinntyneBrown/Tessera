@@ -74,3 +74,32 @@ for (const [course, reference] of [
     player.expectNoLaunchResourceRequested();
   });
 }
+
+// L2-001 AC3
+for (const [course, edition] of [
+  ['single-sco-2004-2nd', 'SCORM 2004 2nd Edition'],
+  ['single-sco-2004-3rd', 'SCORM 2004 3rd Edition'],
+  ['single-sco-2004-4th', 'SCORM 2004 4th Edition'],
+] as const) {
+  test(`identifies ${edition} and refuses to launch it until its rules are supported`, async ({
+    page,
+  }) => {
+    const player = new PlayerPage(page);
+
+    await player.open({ course });
+
+    await player.expectErrorMessage(new RegExp(`${edition}.*cannot be launched`, 'i'));
+    await player.expectHostReceivedErrorCategory('loading');
+    player.expectNoLaunchResourceRequested();
+  });
+}
+
+test('refuses a course whose SCORM version cannot be identified', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.open({ course: 'unknown-version' });
+
+  await player.expectErrorMessage(/version of this course could not be identified/i);
+  await player.expectHostReceivedErrorCategory('loading');
+  player.expectNoLaunchResourceRequested();
+});

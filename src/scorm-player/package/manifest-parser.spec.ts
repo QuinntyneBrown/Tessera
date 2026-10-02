@@ -52,4 +52,18 @@ describe('parseManifest', () => {
     );
     expect(() => parseManifest(withDoctype, ROOT)).toThrowError(/Document type declarations/);
   });
+
+  it.each([
+    ['CAM 1.3', 'SCORM 2004 2nd Edition'],
+    ['2004 3rd Edition', 'SCORM 2004 3rd Edition'],
+    ['2004 4th Edition', 'SCORM 2004 4th Edition'],
+  ])('identifies %s but refuses to launch it', (schemaVersion, label) => {
+    const xml = manifest12.replace('<schemaversion>1.2<', `<schemaversion>${schemaVersion}<`);
+    expect(() => parseManifest(xml, ROOT)).toThrowError(new RegExp(`${label}.*cannot be launched`));
+  });
+
+  it('refuses a course whose version cannot be identified', () => {
+    const xml = manifest12.replace('<schemaversion>1.2<', '<schemaversion>9.9<');
+    expect(() => parseManifest(xml, ROOT)).toThrowError(/could not be identified/);
+  });
 });

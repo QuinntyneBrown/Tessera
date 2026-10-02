@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="single-sco-12" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Better conversations at work</title>
+      <item identifier="item1" identifierref="res1">
+        <title>Start with listening</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html">
+      <file href="sco.html" />
+    </resource>
+  </resources>
+</manifest>

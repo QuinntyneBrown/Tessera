@@ -1,5 +1,6 @@
 import { Activity, ValidatedCourse } from '../types';
 import { CourseLoadError } from './course-load-error';
+import { detectEdition, EDITION_LABELS, LAUNCHABLE_EDITIONS } from './edition';
 import { ResourceResolver } from './resource-resolver';
 
 const INVALID_MANIFEST = 'The file is not a valid course manifest.';
@@ -24,6 +25,21 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
   const document = new DOMParser().parseFromString(xml, 'application/xml');
   if (document.getElementsByTagName('parsererror').length > 0) {
     throw invalid('The XML is malformed.');
+  }
+  const edition = detectEdition(document);
+  if (!edition) {
+    throw new CourseLoadError(
+      'edition-unidentified',
+      'The SCORM version of this course could not be identified.',
+      false,
+    );
+  }
+  if (!LAUNCHABLE_EDITIONS.includes(edition)) {
+    throw new CourseLoadError(
+      'edition-unavailable',
+      `This is a ${EDITION_LABELS[edition]} course. It cannot be launched because this player does not yet support that edition.`,
+      false,
+    );
   }
   const resolver = new ResourceResolver(root);
 
@@ -50,7 +66,7 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
   });
 
   return {
-    edition: '1.2',
+    edition,
     title: children(organization, 'title')[0].textContent!.trim(),
     activities,
   };
