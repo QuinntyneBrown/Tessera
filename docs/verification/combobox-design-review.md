@@ -4,7 +4,7 @@ Scope: L1-009–L1-018, L2-022–L2-050, all ten combobox feature designs and th
 
 ## Current review status
 
-Repair round in progress. Consecutive clean checks: **0 of 5**. This record shall advance only after complete reviews find no new issues; any fix resets the count. A render or isolated browser check alone does not count as a full clean review.
+Consecutive clean checks: **1 of 5** after the repairs below. This record shall advance only after complete reviews find no new issues; any fix resets the count. A render or isolated browser check alone does not count as a full clean review.
 
 ## Repairs in this round
 
@@ -37,6 +37,12 @@ Repair round in progress. Consecutive clean checks: **0 of 5**. This record shal
 - Axe initially found scrollable-region-focusable on the outer popup; after moving scrolling to the controlled listbox, the inspected open state had zero violations without rule exclusions.
 - At 320 by 256 CSS px, the updated popup and input fit the viewport, the listbox retained visible height, and axe reported zero violations. This is reflow evidence, not actual browser zoom.
 
+## Consecutive checks
+
+| Check | Review focus and evidence | Result |
+|---|---|---|
+| 1 | Cross-artifact behavior alignment; L1/L2 coverage and exact quoted requirements; all relative links; all 60 diagram renders and visual overview; eleven-state axe run and 66 state/width inspections; retry, search, focus, Escape, short-height and enlarged-text/spacing inspection | Clean |
+
 ## Remaining review work
 
-Complete the cross-artifact review, inspect rendered diagrams, run the full mock state/interaction/accessibility/layout matrix, and perform five consecutive complete clean checks. Production screen reader and actual-device release observations remain Not run, as stated by the verification design.
+Continue complete cross-artifact reviews and repeat the mock matrix until five consecutive checks are clean. Production screen reader and actual-device release observations remain Not run, as stated by the verification design.

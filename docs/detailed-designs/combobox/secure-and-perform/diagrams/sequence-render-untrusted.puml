@@ -30,12 +30,12 @@ box "Frontend - Consumer data source" #E0F2FE
   participant "searchFn" as src
 end box
 
+cb -> ids : Create instance identifiers once at component construction
 user -> cb : Type markup or very long text in the input
 cb -> search : Write query signal with the text unchanged
 search -> src : searchFn(query, 0) with the same string (L2-044 AC4)
 src --> search : Items; displayWith returns text that looks like markup
 search --> cb : results signal
-cb -> ids : Create instance identifiers once
 loop Each item
   cb -> opt : Create option host
   opt -> ids : nextOptionId()
