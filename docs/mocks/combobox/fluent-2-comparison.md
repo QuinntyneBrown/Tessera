@@ -280,3 +280,29 @@ These are Fluent capabilities that the L2 v1 decisions exclude, or that add code
 3. P2 items are visual refinements and can be batched.
 4. P3 items need an L2 decision first.
 5. Any change to the mock, its guide, the specifications or the designs changes the SHA-256 fingerprint recorded in [the combobox design review](../../verification/combobox-design-review.md). Repeat that review after these changes.
+
+## Resolution
+
+Applied on 2026-10-03. The list below says, for each item, what changed and where. "Mock" is [index.html](index.html). "Design" is the [combobox detailed design](../../detailed-designs/combobox/). L2 is the [detailed requirements](../../specs/L2.md).
+
+- **I-1, field focus ring.** The ring is drawn on the field while the input has focus; the input's own outline and the green border change are gone. Mock; design: present-accessibly, expose-to-assistive-tech.
+- **I-2, clear-all.** Now a visible "Clear all selections" text button below the field, at the end of the hint row. No undo, by decision. Mock; design: present-accessibly, select-values, operate-by-keyboard.
+- **I-3, popup DOM position.** The popup follows the field, and `role="region"` is gone. Production uses the CDK popover with `withPopoverLocation('inline')`. Mock; L2-030 criterion 7; design: open-and-position-list, verify-and-document; [ADR-0001](../../adr/frontend/0001-render-combobox-panel-as-inline-popover.md).
+- **I-4, icons.** Inline SVG chevron, dismiss, check, spinner and error icons. Mock; design icon list.
+- **I-5, toggle name.** The initial name is "Show options". The L2-041 strings are kept. Mock.
+- **I-6, spinner.** A spinner sits in the field while a request is in flight; it is static unless the motion duration is overridden. Mock.
+- **I-7, disabled state.** Dashed field, chip and button borders, the disabled-text token, and italic disabled options. Mock; design state cues.
+- **I-8, tokens.** The mock uses the `--t-combobox-*` names. The checkbox is filled with the selected-mark token. `--t-combobox-chip-bg` and `--t-combobox-error` are added, and the contradictory chip-border sentence is removed. Mock; design: present-accessibly.
+- **I-9, inline chips.** Chips and the input share the field's wrapping rows. Mock; design: present-accessibly, select-values.
+- **I-10, density.** Options are about 60 px tall, and the status row is one line. A 24 rem panel shows at least five options. Mock; design default metrics.
+- **I-11, state cues.** The selected-row tint is removed, and every row shows hover. Mock; design state cues.
+- **I-12, error placement.** The error sits directly below the field, before the hint, with an icon; `aria-describedby` lists the error first. Mock; L2-031 criterion 9, L2-035 criterion 5; design: integrate-forms, expose-to-assistive-tech.
+- **I-13, placeholder.** "Name or email" fits at 320 CSS px. Mock.
+- **I-14, size and radius.** The empty field is 40 px tall. Coarse pointers get 2.75 rem targets. One radius is used for the field and panel, another for chips and options. Mock; design default metrics.
+- **I-15, dark theme.** A Theme selector offers Light, Dark and System. Mock.
+- **I-16, templates.** A Custom templates Preview state shows initials avatars and a guiding empty message. Mock.
+- **I-17, Space.** Adopted: Space toggles after keyboard navigation. L2-033 criterion 15; design: operate-by-keyboard; mock.
+- **I-18, Enter on a closed list.** The native submission is kept and is now stated in L2. L2-033 criterion 6; design: operate-by-keyboard.
+- **I-19, Page Up / Page Down.** Adopted: they move by one visible page. L2-033 criterion 16; design: operate-by-keyboard; mock.
+
+The combobox design review was repeated after these changes; see [the review record](../../verification/combobox-design-review.md).
