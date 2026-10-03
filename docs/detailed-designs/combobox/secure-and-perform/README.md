@@ -29,7 +29,7 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 
 | Identifier | Form | Referenced by |
 |------------|------|---------------|
-| Input | `inputId` when supplied, otherwise `t-combobox-{uid}-input` | `label for`, hint and summary references |
+| Input | `inputId` when supplied, otherwise `t-combobox-{uid}-input` | `label for`; it holds the error, hint, and summary references |
 | Listbox | `t-combobox-{uid}-listbox` | Input aria-controls |
 | Option | `t-combobox-{uid}-option-{n}` | `aria-activedescendant` |
 | Hint, error, summary | `t-combobox-{uid}-hint`, `-error`, `-summary` | `aria-describedby` |

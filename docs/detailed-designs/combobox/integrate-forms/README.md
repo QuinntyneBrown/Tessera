@@ -46,12 +46,12 @@ The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the ho
 
 ### Touched
 
-The host element listens for `focusout`, and `ComboboxPopup` routes `focusout` from the overlay pane to the same handler. The handler reads `event.relatedTarget`.
+The host element listens for `focusout`. In the inline popover placement the overlay pane lies inside the host, so its `focusout` reaches the same listener by bubbling. Only in the fallback placement, when the pane lies outside the host, does `ComboboxPopup` route `focusout` from the pane to that handler, so each event is handled once. The handler reads `event.relatedTarget`.
 
 - When `relatedTarget` lies inside the host element or inside the overlay pane, focus moved within the component. The handler does nothing. Moves from the input to a chip remove button, to clear-all, or into the overlay therefore do not mark the control touched.
 - Otherwise focus left the whole component, and the handler calls `onTouched()` once. A `null` `relatedTarget`, such as a click on a non-focusable area, counts as leaving.
 
-Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Both host and popup route focusout through this boundary check.
+Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Every focusout, whether it bubbles to the host or is routed from a fallback pane, passes through this boundary check once.
 
 ### Required and invalid state
 

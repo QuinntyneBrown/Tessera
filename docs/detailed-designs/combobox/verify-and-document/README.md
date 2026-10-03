@@ -123,8 +123,8 @@ Use a production fixture with two preselected values, a 6-item page, an inactive
 |----------|-------|
 | Windows / NVDA, JAWS, Narrator | Start the reader, use its form-interaction mode on the named input, and use the hardware keyboard. Run high contrast through Windows accessibility settings. |
 | macOS / VoiceOver | Enable VoiceOver, enter interaction with the form control, and turn Quick Nav off for native input editing. Use the hardware keyboard and the system reduced-motion preference. |
-| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open. |
-| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior. |
+| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open, and whether swiping forward from the input with the list open reaches the first option (`L2-030` criterion 7). |
+| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior, and whether swiping forward from the input with the list open reaches the first option. |
 
 1. Tab or navigate to the input without opening the popup. Confirm the label, role, required state, and selected summary are read.
 2. Open with Arrow Down. Navigate selected, unselected, and disabled options. Confirm active movement does not select and each selected/disabled state is read.

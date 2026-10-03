@@ -27,7 +27,7 @@ The workspace pins `@angular/cdk` 22.2.1. In that version, overlays render as na
 
 ### Option 2: Inline CDK popover after the field (`withPopoverLocation('inline')`)
 - **Pros:** DOM order matches reading order, so the iOS gate can be met. The top layer still escapes clipping and stacks above dialogs. It is one configuration call on an API the design already uses. axe can scope to `t-combobox`.
-- **Cons:** It depends on the Popover API; older browsers fall back to Option 1's placement. The insertion point is fixed when the overlay attaches.
+- **Cons:** It depends on the Popover API; without it, the list falls back to a component-scoped container inside an open native dialog, or to the shared container elsewhere. The CDK takes the insertion point from the origin each time the overlay attaches, so the origin must stay the field.
 
 ### Option 3: Render the panel in the component template, without the CDK overlay
 - **Pros:** The simplest DOM, and no overlay dependency.
@@ -42,15 +42,16 @@ The workspace pins `@angular/cdk` 22.2.1. In that version, overlays render as na
 
 ### Negative
 - Browsers without the Popover API keep the end-of-body placement and its iOS limitation.
-- Moving between the short-viewport fallback and the normal position changes only the connected position, not the insertion point.
+- The short-viewport fallback can't switch the origin to the input row with `setOrigin()`. It must express that anchor as a position offset, which is slightly less direct.
 
 ### Risks
 - The CDK popover-location API is newer than the rest of the overlay API. The pinned CDK must be checked before the positioning ATDD slice, as `open-and-position-list` already requires.
-- Real-device VoiceOver behavior can only be confirmed by the manual L2-049 matrix.
+- Real-device VoiceOver behavior can only be confirmed by the manual L2-049 matrix. Its checklist item (i) and the iOS and Android procedures check swipe navigation from the input to the options.
 
 ## Implementation Notes
 
-- `overlay.position().flexibleConnectedTo(fieldElement).withPopoverLocation('inline')`, keeping the existing positions, `withPush(false)`, and `withFlexibleDimensions(true)`.
+- `overlay.position().flexibleConnectedTo(fieldElement).withPopoverLocation('inline')`, keeping the existing positions, `withPush(false)`, and `withFlexibleDimensions(true)`. The short-viewport fallback anchors to the input row through `offsetY` on the connected position, not through `setOrigin()`.
+- Host-level `focusout` and `keydown` listeners receive pane events by bubbling. `ComboboxPopup` routes pane events to them only in the fallback placement, so each event is handled once.
 - The live region stays outside the panel (L2-036). `focusout` and outside-pointer checks continue to treat the overlay pane and the host as inside the component.
 - The HTML mock models the same DOM order by placing its fixed-position popup directly after the field.
 

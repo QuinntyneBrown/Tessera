@@ -49,6 +49,7 @@ class ComboboxTemplate <<template>> {
   +chip: li.t-combobox-chip
   +chipLabel: span.t-combobox-chip-label
   +chipRemove: button.t-combobox-chip-remove
+  +inputRow: div.t-combobox-input-row
   +input: input.t-combobox-input
   +spinner: span.t-combobox-spinner
   +clearAll: button.t-combobox-clear
@@ -57,6 +58,7 @@ class ComboboxTemplate <<template>> {
   +option: li.t-combobox-option
   +checkbox: span.t-combobox-checkbox
   +error: p.t-combobox-error
+  +hintRow: div.t-combobox-below
 }
 
 class ComboboxStyles <<scss>> {

@@ -30,9 +30,11 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 |------|-------------------|-------|
 | Field | `div.t-combobox-field` | Flex container with wrapping. Draws the border and, through `:has(.t-combobox-input:focus)`, the focus indicator, so a focused chip remove button shows only its own indicator. |
 | Chip list | `ul.t-combobox-chips` of `li.t-combobox-chip` | Each chip holds `span.t-combobox-chip-label` and `button.t-combobox-chip-remove`. |
-| Input | `input.t-combobox-input` | Takes the free space in the last row of the field, after the chips. |
+| Input row | `div.t-combobox-input-row` | Holds the input, the spinner, and the toggle. Sits beside the chip list while the chips fit on one row, and on the row below once they wrap. |
+| Input | `input.t-combobox-input` | Takes the free space in the input row. |
 | Spinner | `span.t-combobox-spinner` | Decorative, `aria-hidden="true"`. Shown while a request is in flight. |
-| Clear-all button | `button.t-combobox-clear` | Text button showing its name, "Clear all selections", below the field at the inline end of the hint row. Rendered while a value exists. Outside the input row, it cannot be mistaken for a control that clears the typed text. |
+| Hint row | `div.t-combobox-below` | Below the field and after the error. Holds the hint, when supplied, at the inline start and clear-all at the inline end; rendered while either exists. |
+| Clear-all button | `button.t-combobox-clear` | Text button showing its name, "Clear all selections", at the inline end of the hint row. Rendered while a value exists. Outside the input row, it cannot be mistaken for a control that clears the typed text. |
 | Toggle button | `button.t-combobox-toggle` | `tabindex="-1"`. Mouse and touch affordance at the inline end of the field. |
 | Panel | `div.t-combobox-panel` in the CDK popover inserted after the field | Holds the independently scrolling listbox and a one-line status row inside the space the overlay grants. |
 | Option | `li.t-combobox-option` | Holds `span.t-combobox-checkbox` (decorative) and the content. |
@@ -54,7 +56,7 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 | `--t-combobox-hover-bg` | Hover background of an option | Distinct from the surface | `Canvas` |
 | `--t-combobox-selected-mark` | Fill and border of a selected option's checkbox | 3:1 against the surface and against its checkmark | `Highlight`, with the checkmark in `HighlightText` |
 | `--t-combobox-disabled-text` | Text of a disabled option; input, placeholder, chips, and icons of a disabled component | 4.5:1, so no inactive-component exemption is relied on | `GrayText` |
-| `--t-combobox-error` | Error text, error icon, and the invalid field border | 4.5:1 against the surface | `CanvasText` |
+| `--t-combobox-error` | Error text, error icon, and the invalid field border | 4.5:1 against the surface and the page background | `CanvasText` |
 | `--t-combobox-motion-duration` | Overlay and chip transitions | Not applicable | Not applicable |
 | `--t-combobox-chip-list-max-height` | Chip-list height before it scrolls vertically, in `rem` | Not applicable | Not applicable |
 
@@ -75,8 +77,8 @@ The disabled treatment is a default. It remains distinct from the other three st
 
 **Layout rules (`L2-039`).** One stylesheet serves every width. It has no breakpoints, and no script switches the template by width, so a resize changes styles only.
 
-- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The field is one wrapping flex layout: the chip list, the input, the spinner, and the toggle share its rows, and the chip list wraps its own chips. Their children have `min-width: 0`, so a long child shrinks rather than overflows.
-- The input takes `flex: 1 1` with a `rem` basis, so it falls to its own row when the chips fill a row, and it stays visible at 320 CSS px.
+- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The field is one wrapping flex layout of two items: the chip list, which wraps its own chips, and the input row, which holds the input, the spinner, and the toggle. Their children have `min-width: 0`, so a long child shrinks rather than overflows.
+- The input row takes `flex: 1 1` with a `rem` basis, so it falls below the chip list once the chips fill a row, and it stays visible at 320 CSS px.
 - `.t-combobox-chip` has `max-width: 100%`. `.t-combobox-chip-label` has `overflow: hidden`, `text-overflow: ellipsis`, and `white-space: nowrap`. This ellipsis is the single documented truncation. The full label stays available as the text content, as the name of the remove button, and as a tooltip. The dismissible, hoverable tooltip mechanism is defined in [Select values](../select-values/).
 - Option text wraps with `overflow-wrap: anywhere`. Options and status rows never truncate.
 - Lengths use `rem` and `em`, so text and spacing scale with the user's text size. No text container sets a fixed `height` or a pixel `line-height`. Rows use `min-height` only. At 200% text and under the text-spacing overrides (line height 1.5, paragraph spacing 2, letter spacing 0.12, word spacing 0.16 times the font size), rows grow, and nothing clips or overlaps.

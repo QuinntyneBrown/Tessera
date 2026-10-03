@@ -274,6 +274,9 @@
         border-radius: 0.5rem;
         background: var(--t-combobox-surface);
       }
+      .combobox :focus-visible {
+        outline-color: var(--t-combobox-focus-ring);
+      }
       .field:has(input:focus) {
         outline: 3px solid var(--t-combobox-focus-ring);
         outline-offset: 2px;
@@ -721,7 +724,7 @@
                 </button>
               </div>
             </div>
-            <div class="popup" id="popup" tabindex="-1" hidden>
+            <div class="popup" id="popup" hidden>
               <div id="results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
               <div class="status" id="status"></div>
             </div>
@@ -909,7 +912,10 @@
         $('validation').hidden = !invalid;
         $('field').classList.toggle('invalid', invalid);
         input.setAttribute('aria-invalid', String(invalid));
-        input.setAttribute('aria-describedby', (invalid ? 'validation ' : '') + 'hint summary');
+        input.setAttribute(
+          'aria-describedby',
+          (invalid ? 'validation ' : '') + 'hint' + (selected.length ? ' summary' : ''),
+        );
       }
       function hideTooltip() {
         clearTimeout(tooltipTimer);
@@ -1016,7 +1022,7 @@
           selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' selected';
         $('summary').textContent = selected.length
           ? selected.length + ' selected: ' + selected.map((item) => item.name).join(', ')
-          : 'No learners selected.';
+          : '';
         $('hint').textContent = minLength
           ? 'Type at least ' + minLength + ' characters to search.'
           : limit === null
@@ -1366,6 +1372,9 @@
         }, 300);
       }
       input.addEventListener('input', inputChanged);
+      input.addEventListener('pointerdown', () => (keyboardNavigating = false));
+      // Pointer presses in the panel keep focus on the input.
+      popup.addEventListener('mousedown', (event) => event.preventDefault());
       input.addEventListener('compositionstart', () => {
         composing = true;
         keyboardNavigating = false;

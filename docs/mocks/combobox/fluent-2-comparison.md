@@ -1,6 +1,6 @@
 # Combobox mock: Fluent 2 comparison and improvements
 
-Review date: 2026-10-03. This document compares the [Tessera combobox HTML mock](index.html) with the [Fluent 2 React Combobox usage guidance](https://fluent2.microsoft.design/components/web/react/core/combobox/usage) and lists changes that would improve the mock. It is a design review. It changes no artifact.
+Review date: 2026-10-03. This document compares the [Tessera combobox HTML mock](index.html) with the [Fluent 2 React Combobox usage guidance](https://fluent2.microsoft.design/components/web/react/core/combobox/usage) and lists changes that would improve the mock. It is a design review of the mock as it stood on that date, so the comparison tables describe the mock before the changes. The [Resolution](#resolution) section records what changed afterwards.
 
 ## Sources and method
 
