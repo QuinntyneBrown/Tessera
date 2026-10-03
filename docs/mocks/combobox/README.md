@@ -18,6 +18,6 @@ Keyboard interaction:
 
 The input retains focus during result navigation and selection. Result IDs come from a local counter, and data renders as text. The live region belongs to the combobox host. Long labels have a tooltip available by hover or remove-button focus, which remains available while hovered and dismisses with Escape.
 
-The controlled listbox scrolls, with status actions outside it and outside the Tab sequence. When a short viewport leaves inadequate room around the full field, the popup anchors vertically to the input row while retaining field width; opening/reflow keeps the focused input visible. This may cover chips, but does not cover the input.
+The controlled listbox scrolls, with status actions outside it and outside the Tab sequence. The preferred popup height scales with root text size (24 rem) and is bounded by the visual viewport. When status content and a visible option portion do not fit around the full field, the popup anchors vertically to the input row while retaining field width; opening/reflow keeps the focused input visible. This may cover chips, but does not cover the input.
 
 One-off Chromium inspection and axe checks are design review evidence, not a production acceptance suite. No tests are added for this mock, as required by AGENTS.md. A 320 by 256 CSS px viewport checks reflow; it is not actual 400% browser zoom. Screen reader observations, real touch keyboards, and production accessibility/performance certification remain separate execution work.

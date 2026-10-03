@@ -961,13 +961,18 @@
         const viewport = window.visualViewport;
         const topEdge = viewport?.offsetTop || 0,
           bottomEdge = topEdge + (viewport?.height || innerHeight);
+        const textSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const requiredRoom = Math.min(
+          bottomEdge - topEdge - 24,
+          $('status').scrollHeight + 4 * textSize,
+        );
         let below = Math.max(0, bottomEdge - rect.bottom - 12),
           above = Math.max(0, rect.top - topEdge - 12);
         if (
           document.activeElement === input &&
           (input.getBoundingClientRect().top < topEdge ||
             input.getBoundingClientRect().bottom > bottomEdge ||
-            Math.max(above, below) < 180)
+            Math.max(above, below) < requiredRoom)
         ) {
           input.scrollIntoView({ block: 'end', behavior: 'instant' });
           rect = $('field').getBoundingClientRect();
@@ -975,7 +980,7 @@
           above = Math.max(0, rect.top - topEdge - 12);
         }
         // When the chip area consumes the viewport, anchor vertically to the input row.
-        if (Math.max(above, below) < 180) {
+        if (Math.max(above, below) < requiredRoom) {
           const row = input.closest('.input-row').getBoundingClientRect();
           rect = { ...rect.toJSON(), top: row.top, bottom: row.bottom };
           below = Math.max(0, bottomEdge - rect.bottom - 12);
@@ -984,7 +989,7 @@
         const flip = below < 240 && above > below;
         popup.style.width = rect.width + 'px';
         popup.style.left = rect.left + 'px';
-        popup.style.maxHeight = Math.min(360, flip ? above : below) + 'px';
+        popup.style.maxHeight = Math.min(24 * textSize, flip ? above : below) + 'px';
         popup.style.top = (flip ? rect.top - popup.offsetHeight - 4 : rect.bottom + 4) + 'px';
       }
       function close() {

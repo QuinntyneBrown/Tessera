@@ -26,6 +26,8 @@ Repair round in progress. Consecutive clean checks: **0 of 5**. This record shal
 
 - Visual review removed residual live-announcer container labels and the unresolved presentation icon source; synchronized opening modes and announcer method names.
 
+- The combined 320 px / 200% text / spacing check exposed a zero-height options area; the popup maximum and available-room threshold now scale with text and rendered status height.
+
 ## Evidence gathered
 
 - PlantUML strict syntax check passed; the bundled renderer regenerated all 60 diagrams with zero reported failures. The latest positioning image was regenerated and visually inspected. Other changed renders and the full cross-artifact review remain in progress.
