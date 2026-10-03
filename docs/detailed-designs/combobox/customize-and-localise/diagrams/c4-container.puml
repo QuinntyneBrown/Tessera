@@ -7,7 +7,7 @@ Person(dev, "Consumer developer", "Configures the component")
 System_Boundary(app, "Host Angular application") {
   Container(hostcode, "Host templates and providers", "Angular", "Binds inputs and outputs, provides COMBOBOX_I18N, and supplies slot templates")
   Container(pkg, "@tessera/combobox", "Angular library", "t-combobox, slot directives, string source, public API")
-  Container(cdk, "@angular/cdk", "Angular library", "Overlay, live announcer, and key manager used by the package")
+  Container(cdk, "@angular/cdk", "Angular library", "Overlay and key manager used by the package")
 }
 System_Ext(source, "Consumer data source", "Answers searchFn calls")
 Container(build, "Package build and API check", "Angular CLI, ng-packagr, api-extractor", "Builds dist/combobox and compares its API with the golden")

@@ -8,13 +8,13 @@ System_Ext(at, "Assistive technology", "Reads the accessibility tree and live re
 System_Boundary(browser, "Host Angular application in the browser") {
   Container(app, "Host application", "Angular", "Supplies the visible label, hint, and error text")
   Container(pkg, "@tessera/combobox", "Angular library", "Sets ARIA attributes and writes announcements")
-  Container(cdk, "Angular CDK", "Library", "Provides LiveAnnouncer and ActiveDescendantKeyManager")
+  Container(cdk, "Angular CDK", "Library", "Provides ActiveDescendantKeyManager")
 }
 System_Ext(data, "Consumer data source", "Serves option pages to searchFn")
 
 Rel(user, at, "Uses")
 Rel(at, app, "Reads", "Accessibility tree")
 Rel(app, pkg, "Hosts t-combobox from", "Angular template")
-Rel(pkg, cdk, "Announces through LiveAnnouncer; tracks the active option with")
+Rel(pkg, cdk, "Tracks the active option with")
 Rel(pkg, data, "Loads option pages through", "searchFn")
 @enduml

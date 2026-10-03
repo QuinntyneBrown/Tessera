@@ -99,7 +99,7 @@ The context view shows the user choosing options in a host application that supp
 
 ![System context for selecting values](diagrams/c4-context.png)
 
-The container view shows the selection held inside `@tessera/combobox`, with the host reading the value and the CDK announcing changes.
+The container view shows the selection held inside `@tessera/combobox`, with the host reading the value and the component announcing changes through its own live region.
 
 ![Containers for selecting values](diagrams/c4-container.png)
 

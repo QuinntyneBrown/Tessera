@@ -17,6 +17,6 @@ Rel(combo, popup, "open, close, dispose")
 Rel(popup, overlay, "Attaches, sizes, and repositions")
 Rel(overlay, scroll, "Listens for scroll and resize")
 Rel(popup, combo, "Emits outsidePointerEvents")
-Rel(combo, keys, "setActiveItem to first enabled option")
+Rel(combo, keys, "Applies normal, last, or none opening mode")
 Rel(keys, option, "Highlights", "Highlightable")
 @enduml

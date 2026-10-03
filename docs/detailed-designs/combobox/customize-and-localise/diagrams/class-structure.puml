@@ -61,7 +61,14 @@ interface ComboboxStrings {
   +chipListLabel: string
   +removeChip: string
   +clearAll: string
-  +toggleList: string
+  +showOptions: string
+  +hideOptions: string
+  +searchPrompt: string
+  +loadMore: string
+  +requiredError: string
+  +announceResult: string
+  +announceSelectedOne: string
+  +announceMoreLoadedOne: string
   +selectedSummary: string
   +labelSeparator: string
   +announceResults: string

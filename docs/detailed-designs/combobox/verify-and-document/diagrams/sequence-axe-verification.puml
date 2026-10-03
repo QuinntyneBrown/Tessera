@@ -58,7 +58,7 @@ else Violations found
   page --> spec : Fail with the rule ids and nodes
 end
 opt Responsive and keyboard checks (L2-048 AC2, AC3)
-  spec -> page : useViewport(width), useZoom(400), text overrides, pressKey
+  spec -> page : useViewport(width), useReflowViewport(), text overrides, pressKey
   page -> cb : Apply the condition and operate the screen
   page --> spec : expectNoHorizontalScroll and keyboard results
 end

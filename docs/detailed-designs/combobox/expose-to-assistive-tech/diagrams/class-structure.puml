@@ -42,7 +42,7 @@ class "ComboboxOption<T>" as ComboboxOption {
 
 class ComboboxAnnouncer {
   -pending: Message[]
-  -windowMs: number <<TO SUPPLY>>
+  -windowMs: number = 150
   +announceResults(count: number): void
   +announceNoResults(): void
   +announceLoading(): void
@@ -54,6 +54,8 @@ class ComboboxAnnouncer {
   +announceMoreLoaded(count: number): void
   -enqueue(message: string, kind: status | selection): void
   -flush(): void
+  +discardSearchStatus(): void
+  +dispose(): void
 }
 
 class Message {
@@ -81,8 +83,8 @@ class "ActiveDescendantKeyManager<ComboboxOption<T>>" as KeyManager <<CDK>> {
   +change: Subject<number>
 }
 
-class LiveAnnouncer <<CDK>> {
-  +announce(message: string, politeness: polite | assertive): Promise<void>
+class InstanceLiveRegion <<DOM>> {
+  +writeText(message: string, politeness: polite | assertive): void
 }
 
 Combobox "1" o-- "*" ComboboxOption : registers through COMBOBOX_PARENT
@@ -92,6 +94,6 @@ Combobox "1" *-- "1" KeyManager : activeIndex follows change
 ComboboxSearch ..> PageLoaded : emits
 ComboboxAnnouncer *-- "*" Message : pending
 ComboboxAnnouncer ..> ComboboxStrings : reads through COMBOBOX_I18N
-ComboboxAnnouncer --> LiveAnnouncer : flushes to
+ComboboxAnnouncer "1" *-- "1" InstanceLiveRegion : flushes to
 KeyManager --> "*" ComboboxOption : tracks
 @enduml

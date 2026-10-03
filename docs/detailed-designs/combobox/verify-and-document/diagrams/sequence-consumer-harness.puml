@@ -26,7 +26,8 @@ box "Frontend - Angular CDK" #E0F2FE
   participant "HarnessEnvironment" as env
 end box
 
-dev -> test : Run test with fake or real timers
+dev -> test : Run Chromium TestBed fixture with fake or real timers
+test -> env : manualChangeDetection for timing-sensitive contract operations
 test -> env : loader.getHarness(ComboboxHarness)
 env --> test : ComboboxHarness for t-combobox
 test -> harness : open() (L2-047 AC1)
@@ -41,8 +42,8 @@ harness --> test : true (L2-047 AC1)
 test -> harness : search("ad") (L2-047 AC2)
 harness -> cb : Focus, clear, and send key events for "ad"
 harness -> env : forceStabilize()
-harness --> test : Input contains "ad"; time is not advanced
-test -> test : Elapse the debounce with fake or real timers
+harness --> test : Input contains "ad"; stabilization follows the environment
+test -> test : Detect changes; elapse debounce; render expected results
 test -> harness : getOptions()
 harness -> env : Locate the listbox through aria-controls in the document root
 harness --> test : Labels, selected state, and disabled state in order (L2-047 AC2)
@@ -61,7 +62,7 @@ harness -> cb : Click the chip remove button
 cb --> harness : Chip removed
 harness --> test : Resolved
 note over harness, cb
-  The harness reads ARIA roles and states only.
+  The harness reads semantic attributes and package-owned content hooks.
   It uses no private member of the component (L2-047 AC5).
 end note
 @enduml

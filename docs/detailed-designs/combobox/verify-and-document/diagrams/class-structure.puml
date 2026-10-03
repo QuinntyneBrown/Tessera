@@ -43,7 +43,7 @@ class ComboboxDemoPage <<Playwright page object>> {
   +open(scenario: ComboboxScenario): Promise of void
   +enterState(state: ComboboxState): Promise of void
   +useViewport(width: number): Promise of void
-  +useZoom(percent: number): Promise of void
+  +useReflowViewport(): Promise of void
   +enlargeTextTo200Percent(): Promise of void
   +applyTextSpacingOverrides(): Promise of void
   +pressKey(key: string): Promise of void

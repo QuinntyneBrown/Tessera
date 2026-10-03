@@ -22,7 +22,7 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "ComboboxAnnouncer" as ann
 end box
 box "Frontend - Angular CDK" #E0F2FE
-  participant "Overlay and ResizeObserver" as cdk
+  participant "OverlayRef" as cdk
 end box
 box "Frontend - Consumer data source" #E0F2FE
   participant "searchFn subscription" as src
@@ -45,19 +45,20 @@ search --> cb : Pending debounce timer cleared
 cb -> popup : dispose()
 alt List open
   popup -> cdk : overlayRef.dispose() removes pane and listbox (L2-046 AC3)
-  popup -> cdk : ResizeObserver.disconnect() (L2-046 AC3)
+  popup -> popup : ResizeObserver.disconnect() (L2-046 AC3)
   cdk -> doc : Remove outside-click listener
 else List closed
   popup --> cb : No overlay exists
 end
 cb -> ann : dispose()
-ann --> cb : Loading and coalescing timers cleared; queued message dropped
-cb --> host : Host and document listeners removed with the view
+ann --> cb : Loading and coalescing timers cleared; queued messages and owned live-region DOM removed
+cb --> host : Host/document listeners, tooltip and scoped dialog fallback container removed
 doc -> doc : Later resize, scroll, document click, or timer
 note right of doc
   No component handler runs and no error is
   thrown (L2-046 AC4). Repeating the cycle
   100 times leaves the overlay panes and
-  document listeners at their baseline (L2-046 AC5).
+  document listeners at their warm-up baseline;
+  the shared application overlay container may remain (L2-046 AC5).
 end note
 @enduml

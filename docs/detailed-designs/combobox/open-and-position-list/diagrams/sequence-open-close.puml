@@ -34,7 +34,7 @@ else type, Arrow Down, Arrow Up, Alt+Arrow Down, or click field or toggle
   combo -> combo : open(); return if already open
   combo -> popup : open(origin, template)
   popup --> combo : Overlay attached
-  combo -> keys : setActiveItem(first enabled option) (L2-029)
+  combo -> keys : Apply openingMode: normal first enabled, Arrow Up last, Alt Down none (L2-029)
   note right of keys
     No enabled option: setActiveItem(-1),
     no aria-activedescendant (L2-029)
@@ -43,12 +43,12 @@ else type, Arrow Down, Arrow Up, Alt+Arrow Down, or click field or toggle
 end
 == New results while open ==
 combo -> combo : Page 0 response replaces results (replaceCount changes)
-combo -> keys : setActiveItem(first enabled option) (L2-029)
+combo -> keys : Apply preserved openingMode on initial page, otherwise first enabled (L2-029)
 note over combo
   An appended page keeps the active option
 end note
 == Close ==
-alt Escape, Alt+Arrow Up, or Tab
+alt Escape, Alt+Arrow Up, Tab, or toggle click while open
   user -> combo : Key press
 else click outside the component
   user -> popup : Click outside overlay and host
@@ -59,5 +59,5 @@ end
 combo -> combo : close(); return if already closed
 combo -> popup : close()
 combo -> host : Emit closed once (L2-029)
-combo --> user : DOM focus remains on the input unless Tab or an outside click moved it (L2-029)
+combo --> user : Closing does not move focus; Tab, outside interaction, or disabling may do so (L2-029)
 @enduml

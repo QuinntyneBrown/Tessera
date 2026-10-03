@@ -19,9 +19,7 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "Combobox<T>" as combobox
   participant "ComboboxSearch<T>" as search
   participant "ComboboxAnnouncer" as announcer
-end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "LiveAnnouncer" as live
+  participant "Instance live region" as live
 end box
 box "Frontend - Consumer data source" #E0F2FE
   participant "searchFn" as data
@@ -45,7 +43,7 @@ alt Request completes within 1 s
     combobox -> combobox : No announcement (L2-023)
   end
   announcer -> announcer : Replace pending search-status message (L2-036 criterion 3)
-  announcer -> live : announce(final message, polite) after the quiet window
+  announcer -> live : announce(final message, polite) after 150 ms; discard if closed or query changed
   live --> user : Reads the results message once
 else Request takes longer than 1 s
   combobox -> announcer : announceLoading() once
@@ -64,11 +62,16 @@ else Request fails
   live --> user : Interrupts with the failure message
 end
 
-user -> combobox : Scroll or arrow past the last option
+user -> combobox : Scroll, arrow past the last option, or activate Load more
 combobox -> search : loadNextPage()
 search -> data : searchFn(query, page + 1)
 data --> search : Page of items
 search --> combobox : pageLoaded(page above 0, count n)
 combobox -> announcer : announceMoreLoaded(n) (L2-036 criterion 9)
-announcer -> live : announce("n more results loaded.", polite)
+announcer -> live : Write singular/plural loaded-count message as textContent
+note over announcer, live
+  Query changes and close discard queued search messages.
+  Selection messages survive coalescing and failures.
+  Every live region belongs to exactly one component.
+end note
 @enduml

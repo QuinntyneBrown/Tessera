@@ -21,9 +21,7 @@ end box
 box "Frontend - @tessera/combobox" #E0F2FE
   participant "Combobox<T>" as combobox
   participant "ComboboxAnnouncer" as announcer
-end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "LiveAnnouncer" as live
+  participant "Instance live region" as live
 end box
 
 user -> combobox : Backspace in an empty input

@@ -9,10 +9,10 @@ Container_Boundary(pkg, "@tessera/combobox") {
   Component(search, "ComboboxSearch of T", "Class", "Supplies status and the pageLoaded stream")
   Component(popup, "ComboboxPopup", "Class", "Attaches the listbox overlay without moving focus")
   Component(announcer, "ComboboxAnnouncer", "Class", "Formats, coalesces, and flushes announcements")
+  Component(live, "Instance live region", "Host DOM", "One region inside this component; polite by default, assertive for failures")
   Component(i18n, "COMBOBOX_I18N", "Injection token", "Supplies every message and name")
 }
 Container_Boundary(cdk, "Angular CDK") {
-  Component(live, "LiveAnnouncer", "CDK a11y", "Owns the visually hidden polite live region in the document body")
   Component(keymanager, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option")
 }
 
@@ -23,5 +23,5 @@ Rel(combobox, announcer, "Requests announcements")
 Rel(combobox, keymanager, "Reads the active option from")
 Rel(keymanager, option, "Sets active styles on")
 Rel(announcer, i18n, "Reads message strings from")
-Rel(announcer, live, "Calls announce with polite or assertive")
+Rel(announcer, live, "Writes textContent with polite or assertive")
 @enduml

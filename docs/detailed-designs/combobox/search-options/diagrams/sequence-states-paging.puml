@@ -51,9 +51,9 @@ else request fails
   search -> fn : searchFn(same query, same page)
 end
 opt hasMore is true
-  user -> combo : Scroll to end or press Arrow Down on last option
+  user -> combo : Scroll to end, press Arrow Down on last option, or activate Load more
   combo -> search : loadNextPage()
-  alt status is loading or hasMore is false
+  alt status is not idle, query is pending, first page absent, or hasMore is false
     search -> search : Ignore, no duplicate request (L2-025)
   else idle
     search -> fn : searchFn(query, pageIndex + 1)
@@ -65,4 +65,11 @@ opt hasMore is true
     combo --> user : Active option stays; next Arrow Down reaches first appended option
   end
 end
+note over combo, search
+  Load more and Retry are status actions outside role=listbox.
+  Neither enters the popup Tab sequence or acts as an option.
+  A failed next page keeps loaded options and requires Retry.
+  Retry appends that same page; it never replaces page zero.
+  Empty pages do not trigger an automatic paging loop.
+end note
 @enduml

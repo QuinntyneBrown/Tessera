@@ -36,7 +36,11 @@ alt bound to a form control
   user -> combo : Select or remove an item
   combo -> combo : commit(next)
   combo -> fc : onChange(next T[]) (L2-031)
-  fc -> fc : Set value, mark dirty, emit valueChanges once (L2-031)
+  fc -> fc : For updateOn change: set value, mark dirty, emit once (L2-031)
+  note over fc, combo
+    For updateOn blur or submit, Angular commits at that boundary.
+    The accessor does not force an earlier commit.
+  end note
   host -> fc : disable()
   fc -> combo : setDisabledState(true)
   combo -> combo : isDisabled true: disable input, chip buttons, clear-all, toggle; close list (L2-031)
@@ -56,5 +60,9 @@ opt both a form control and [(value)] present
   fc -> combo : writeValue(value)
   combo -> combo : value.set(...) updates chips and the model (L2-032)
   combo --> host : valueChange updates the bound signal (L2-032)
+  host -> combo : External model write with a new array
+  combo -> combo : Remember synchronized array before watcher runs
+  combo -> fc : setValue(next) once; keep pristine/touched state unchanged
+  combo --> host : No selectionChange and no echo (L2-032 AC5)
 end
 @enduml

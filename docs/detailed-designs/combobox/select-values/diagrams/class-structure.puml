@@ -47,9 +47,9 @@ class ComboboxChipTemplate {
 }
 
 class ComboboxAnnouncer {
-  +announceSelection(label: string, count: number): void
-  +announceRemoval(label: string): void
-  +announceLimitReached(max: number): void
+  +announceSelected(label: string, count: number): void
+  +announceRemoved(label: string): void
+  +announceMaxReached(max: number): void
 }
 
 interface COMBOBOX_PARENT <<InjectionToken>> {

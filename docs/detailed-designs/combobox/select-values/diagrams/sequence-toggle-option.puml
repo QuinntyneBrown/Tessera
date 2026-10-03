@@ -22,9 +22,7 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "ComboboxOption<T>" as option
   participant "Combobox<T>" as combo
   participant "ComboboxAnnouncer" as announcer
-end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "LiveAnnouncer" as live
+  participant "Instance live region" as live
 end box
 
 user -> option : Click option or press Enter on it
@@ -46,12 +44,12 @@ else enabled
   announcer -> live : announce(message)
   opt maxSelections reached
     combo -> combo : canSelectMore false; unselected options aria-disabled true (L2-028)
-    combo -> announcer : announceLimitReached(max)
+    combo -> announcer : announceMaxReached(max)
     announcer -> live : Maximum of {max} selections reached (L2-028)
   end
-  opt clearSearchOnSelect is true
+  opt Item added and clearSearchOnSelect is true
     combo -> combo : Set query to empty; search reloads by minSearchLength (L2-026)
   end
-  combo --> user : List stays open, focus stays on the input, search text kept (L2-026)
+  combo --> user : List stays open, focus stays on the input, search text follows clearSearchOnSelect (L2-026)
 end
 @enduml

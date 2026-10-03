@@ -28,23 +28,26 @@ end box
 
 user -> combo : Type "a"
 alt IME composition in progress
-  combo -> combo : Keep query unchanged until compositionend (L2-022)
+  combo -> combo : Cancel request and invalidate pending status; wait for compositionend (L2-022)
 else not composing
-  combo -> search : Set query signal
+  combo -> search : Invalidate generation and unsubscribe immediately; set query signal
 end
-search -> search : Debounce debounceMs, drop identical query (L2-022)
+search -> search : Debounce debounceMs; deduplicate completed query (L2-022)
 search --> combo : Emit searchChange once (L2-022)
 alt query shorter than minSearchLength
-  search -> search : Cancel in-flight request, status idle, no call (L2-022)
+  search -> search : Clear results, active option, hasMore; show minimum-length instruction; no call (L2-022)
 else query long enough
   search -> fn : searchFn("a", 0), status loading
   fn -> api : Request page
 end
 user -> combo : Type "b" while "a" is in flight
 combo -> search : Set query "ab"
+search -> search : Immediately invalidate generation; block paging (L2-023)
+search -> fn : Unsubscribe "a" request before debounce (L2-023)
+opt Source supports transport cancellation
+  fn -> api : Abort "a" request
+end
 search -> search : Debounce completes (L2-022)
-search -> fn : Unsubscribe "a" request (L2-023)
-fn -> api : Abort "a" request
 search -> fn : searchFn("ab", 0)
 fn -> api : Request page
 api --> fn : "ab" page

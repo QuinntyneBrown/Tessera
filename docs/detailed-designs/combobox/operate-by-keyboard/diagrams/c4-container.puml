@@ -7,12 +7,12 @@ Person(user, "Keyboard user", "Operates the combobox by keyboard")
 System_Boundary(browser, "Host Angular application in the browser") {
   Container(app, "Host application", "Angular", "Renders the form and any enclosing dialog")
   Container(pkg, "@tessera/combobox", "Angular library", "Provides t-combobox and its key handling")
-  Container(cdk, "Angular CDK", "Library", "Provides the active-descendant key manager, overlay, and live announcer")
+  Container(cdk, "Angular CDK", "Library", "Provides the active-descendant key manager and overlay")
 }
 System_Ext(data, "Consumer data source", "Serves option pages to searchFn")
 
 Rel(user, app, "Presses keys in", "Keyboard")
 Rel(app, pkg, "Hosts t-combobox from", "Angular template")
-Rel(pkg, cdk, "Uses ActiveDescendantKeyManager and LiveAnnouncer from")
+Rel(pkg, cdk, "Uses ActiveDescendantKeyManager from")
 Rel(pkg, data, "Loads option pages through", "searchFn")
 @enduml

@@ -18,7 +18,7 @@ class "Combobox<T>" as Combobox {
   +isOpen: Signal<boolean>
   +activeIndex: Signal<number>
   +value: ModelSignal<T[]>
-  -activateLast: Signal<boolean>
+  -openingMode: Signal<normal | last | none>
   +onInputKeydown(event: KeyboardEvent): void
   +onInput(text: string): void
   +onRetryActivated(): void

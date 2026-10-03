@@ -28,7 +28,12 @@ box "Frontend - Host Angular application" #E0F2FE
 end box
 
 combo -> popup : open(origin, template)
-popup -> overlay : create with FlexibleConnectedPositionStrategy, reposition scroll strategy, no backdrop
+popup -> overlay : create with FlexibleConnectedPositionStrategy, usePopover true, reposition, no backdrop
+note over popup, page
+  Keep the pane in the origin dialog accessible subtree.
+  Verify pinned CDK popover insertion; otherwise use
+  a component-scoped container inside that open dialog.
+end note
 popup -> overlay : updateSize(width = field width) (L2-030)
 popup -> page : Observe field size with ResizeObserver
 alt enough room below the field
@@ -38,7 +43,10 @@ else not enough room below and more room above
 end
 note right of overlay
   Push disabled and dimensions flexible:
-  the pane shrinks and never covers the input (L2-030)
+  the pane shrinks and never covers the input (L2-030).
+  In a short viewport, first reveal the focused input;
+  use the input row vertical origin and full field width.
+  Scroll the controlled listbox, with status actions outside.
 end note
 page --> user : Pane above the dialog content and receiving pointer events (L2-030)
 == While open ==

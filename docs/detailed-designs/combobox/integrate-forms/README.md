@@ -33,7 +33,7 @@ The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the ho
 | `registerOnTouched(fn)` | Stores `fn` as `onTouched` |
 | `setDisabledState(isDisabled)` | Sets the `formDisabled` signal |
 
-`commit(next, change)` from [Select values](../select-values/) calls `onChange(next)` once per user change. Angular then sets the control value to the new `T[]`, emits `valueChanges` once, and marks the control dirty. A programmatic write marks nothing dirty because `writeValue` bypasses `commit`.
+`commit(next, change)` from [Select values](../select-values/) calls `onChange(next)` once per user change. With the default updateOn: change, Angular then sets the control value to the new `T[]`, emits `valueChanges` once, and marks the control dirty. For blur or submit, Angular commits that pending change at its configured boundary; the component shall not force an earlier commit. A programmatic write marks nothing dirty because `writeValue` bypasses `commit`.
 
 ### Disabled state
 
@@ -80,7 +80,7 @@ Signals do not observe AbstractControl state. When the same-element NgControl re
 
 ### Test support
 
-`ComboboxHarness` exposes the disabled state, the chips, and the error text to consumer tests. Acceptance tests bind a `FormControl`, a `ngModel`, and a `[(value)]` signal in turn, and they use `ComboboxDemoPage` for every selector.
+`ComboboxHarness` exposes chips and option states to consumer tests. `ComboboxDemoPage` verifies disabled controls and rendered error text. Acceptance tests bind a `FormControl`, a `ngModel`, and a `[(value)]` signal in turn, and they use `ComboboxDemoPage` for every selector.
 
 ## Requirements
 

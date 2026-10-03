@@ -22,7 +22,7 @@ box "Frontend - Angular Forms" #E0F2FE
   participant "FormControl and RequiredValidator" as fc
 end box
 
-combo -> fc : After first render, subscribe to control.events
+combo -> fc : Resolve NgControl lazily with self optional; subscribe to its current control.events
 note over combo
   required true, value empty, not touched:
   aria-required true, aria-invalid not true,
@@ -35,12 +35,18 @@ alt focus moves inside the component
 else focus leaves the whole component
   user -> combo : Focus moves outside host and overlay
   combo -> combo : focusout relatedTarget is outside: leaving (L2-031)
-  combo -> fc : onTouched() once (L2-031)
+  combo -> fc : onTouched() once per genuine focus exit (L2-031)
   fc -> fc : Mark touched; RequiredValidator reports required error (L2-031)
   fc --> combo : TouchedChangeEvent and StatusChangeEvent
   combo -> combo : controlVersion increments; showError true
   combo --> user : aria-invalid true and error text shown (L2-031)
 end
+note over combo, fc
+  required input or hasValidator(Validators.required) derives aria-required.
+  Standalone required uses local touched state and default error string.
+  Control replacement unsubscribes the old control and resets derived state.
+  Reset clears local touched; later focus exits can mark touched again.
+end note
 opt hint supplied
   combo --> user : Hint shown below the field (L2-031)
 end

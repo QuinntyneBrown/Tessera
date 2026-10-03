@@ -36,6 +36,9 @@ class "ComboboxSearch<T>" as ComboboxSearch {
   +total: Signal<number | undefined>
   +replaceCount: Signal<number>
   +pageLoaded: Observable<PageLoaded>
+  -generation: number
+  -pendingQuery: boolean
+  -completedQuery: string | null
   -pageIndex: number
   -lastRequest: SearchRequest
   +retry(): void

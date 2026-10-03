@@ -33,7 +33,7 @@ note right of combobox : No script switches the template by width.\nvalue, query
 style -> observer : Field width changed
 observer -> popup : Resize callback
 popup -> overlay : Set overlay width to the field width; updatePosition()
-overlay --> popup : Panel repositioned; panel scrolls inside the granted height
+overlay --> popup : Panel repositioned; controlled listbox scrolls inside granted height
 popup --> user : List stays open; selection, typed text, and focused input preserved (L2-039 criterion 6)
 
 user -> style : Set prefers-reduced-motion to reduce

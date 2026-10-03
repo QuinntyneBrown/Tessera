@@ -69,19 +69,20 @@ class ComboboxStyles <<scss>> {
 }
 
 class ComboboxTokens <<CSS custom properties>> {
-  +--t-combobox-text: TO SUPPLY
-  +--t-combobox-placeholder: TO SUPPLY
-  +--t-combobox-surface: TO SUPPLY
-  +--t-combobox-border: TO SUPPLY
-  +--t-combobox-focus-ring: TO SUPPLY
-  +--t-combobox-active-outline: TO SUPPLY
-  +--t-combobox-hover-bg: TO SUPPLY
-  +--t-combobox-selected-mark: TO SUPPLY
-  +--t-combobox-disabled-text: TO SUPPLY
-  +--t-combobox-motion-duration: TO SUPPLY
+  +--t-combobox-text: #18312e / dark #f4f7f5
+  +--t-combobox-placeholder: #536763 / dark #b6cbc3
+  +--t-combobox-surface: #ffffff / dark #18312e
+  +--t-combobox-border: #657f73 / dark #8fa9a0
+  +--t-combobox-focus-ring: #b35c14 / dark #ffbf69
+  +--t-combobox-active-outline: #126454 / dark #8fd5ba
+  +--t-combobox-hover-bg: #f4f7f5 / dark #244b42
+  +--t-combobox-selected-mark: #126454 / dark #8fd5ba
+  +--t-combobox-disabled-text: #536763 / dark #b6cbc3
+  +--t-combobox-motion-duration: 0ms
+  +--t-combobox-chip-list-max-height: 8rem
 }
 
-class IconSource <<TO SUPPLY>> {
+class IconSource <<built-in inline SVG>> {
   +chevron
   +spinner
   +clear

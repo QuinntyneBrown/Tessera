@@ -22,9 +22,7 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "Combobox" as cb
   participant "String functions" as fn
   participant "ComboboxAnnouncer" as ann
-end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "LiveAnnouncer" as live
+  participant "Instance live region" as live
 end box
 
 host -> cb : Provide COMBOBOX_I18N with a partial override (L2-041)

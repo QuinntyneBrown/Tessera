@@ -24,9 +24,7 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "ComboboxIds" as ids
   participant "ComboboxOption" as opt
   participant "ComboboxAnnouncer" as ann
-end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "LiveAnnouncer" as live
+  participant "Instance live region" as live
 end box
 box "Frontend - Consumer data source" #E0F2FE
   participant "searchFn" as src

@@ -93,7 +93,7 @@ The context view shows the user searching through a host application whose data 
 
 ![System context for searching options](diagrams/c4-context.png)
 
-The container view places `@tessera/combobox` and the Angular CDK in the host application's browser. The consumer API is reached only through `searchFn`.
+The container view places `@tessera/combobox` in the host application's browser. The consumer API is reached only through `searchFn`.
 
 ![Containers for searching options](diagrams/c4-container.png)
 

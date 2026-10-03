@@ -7,12 +7,10 @@ Person(user, "Application user", "Types a query")
 System_Boundary(browser, "Host application in the browser") {
   Container(host, "Host Angular application", "Angular", "Supplies the label and searchFn")
   Container(combobox, "@tessera/combobox", "Angular library", "Debounces queries, cancels outdated requests, renders result states")
-  Container(cdk, "Angular CDK", "Library", "Provides the live announcer used for result announcements")
 }
 Container_Ext(api, "Consumer API", "Host-defined HTTPS service", "Returns one page of options per request")
 Rel(user, combobox, "Types in", "Keyboard and IME")
 Rel(host, combobox, "Binds searchFn, debounceMs, minSearchLength")
 Rel(combobox, host, "Calls searchFn(query, page)")
-Rel(combobox, cdk, "Announces results through", "LiveAnnouncer")
 Rel(host, api, "searchFn reaches", "HTTPS")
 @enduml

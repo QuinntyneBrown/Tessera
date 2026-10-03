@@ -64,7 +64,7 @@ The feature belongs to the combobox subsystem and refines `L1-016`. It supplies 
 
 These keys settle the sibling designs' owned strings. requiredError is used only for an empty required value without a supplied error input. Consumer error text stays consumer-owned.
 
-A count of 1 selects the singular result, selected-total, or appended-result key; other counts select the existing plural key. Partial overrides can replace either independently. Locales with additional grammatical cases can replace the message through their consumer labels or provide already formatted strings by recreating the instance. v1 does not introduce ICU parsing.
+A count of 1 selects the singular result, selected-total, or appended-result key; other counts select the existing plural key. Partial overrides can replace either independently. The v1 string contract distinguishes one from other; it does not implement locale-specific plural categories or ICU parsing. Overrides can use grammatically neutral count messages. Recreating an instance changes providers, but does not supply dynamic plural selection.
 
 **Template slots**
 
@@ -102,7 +102,7 @@ A count of 1 selects the singular result, selected-total, or appended-result key
 
 - The outputs are `searchChange` (`string`), `opened` and `closed` (`void`), and `selectionChange` (`ComboboxSelectionChange<T>`). Their emission rules belong to `L2-022`, `L2-026`, and `L2-029` and are unchanged here (`L2-043` AC2).
 - `ComboboxPage<T>` has `items: T[]`, `hasMore: boolean`, and optional `total: number`. A host `searchFn` returning `Observable<ComboboxPage<MyItem>>` type-checks against it (`L2-043` AC3).
-- `public-api.ts` exports `Combobox`, the three slot directives, the three context types, `COMBOBOX_I18N`, `ComboboxStrings`, `DEFAULT_COMBOBOX_STRINGS`, `ComboboxPage`, `ComboboxSelectionChange`, and `ComboboxHarness`. `ComboboxOption`, `ComboboxSearch`, `ComboboxPopup`, `ComboboxAnnouncer`, and `COMBOBOX_PARENT` stay internal. `index.ts` re-exports `public-api.ts`. The package has no secondary entry point.
+- `public-api.ts` exports `Combobox`, the three slot directives, the three context types, `COMBOBOX_I18N`, `ComboboxStrings`, `DEFAULT_COMBOBOX_STRINGS`, `ComboboxPage`, `ComboboxSelectionChange`, `ComboboxOptionState`, and `ComboboxHarness`. `ComboboxOption`, `ComboboxSearch`, `ComboboxPopup`, `ComboboxAnnouncer`, and `COMBOBOX_PARENT` stay internal. `index.ts` re-exports `public-api.ts`. The package has no secondary entry point.
 - `src/combobox/package.json` names the package `@tessera/combobox`, sets `sideEffects: false`, and declares peer dependencies on `@angular/core`, `@angular/common`, `@angular/forms`, `@angular/cdk`, and `rxjs`. `src/combobox/ng-package.json` sets `dest` to `../../dist/combobox` relative to ng-package.json and `lib.entryFile` to `index.ts`, as for `scorm-player`. The root `package.json` adds `@angular/cdk`, which the workspace does not yet depend on.
 - CDK OverlayContainer loads its structural styles through its style loader ([upstream source](https://github.com/angular/components/blob/main/src/cdk/overlay/overlay-container.ts)). The packed-package smoke check verifies that the pinned CDK does this too; the package uses public CDK APIs and does not import its private loader.
 - The selector remains `t-combobox` as specified. Existing `tsr-` selectors are unchanged; convergence is outside this feature.

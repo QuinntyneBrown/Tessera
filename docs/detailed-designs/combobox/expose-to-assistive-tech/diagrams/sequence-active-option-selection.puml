@@ -22,16 +22,16 @@ box "Frontend - @tessera/combobox" #E0F2FE
   participant "Combobox<T>" as combobox
   participant "ComboboxOption<T>" as option
   participant "ComboboxAnnouncer" as announcer
+  participant "Instance live region" as live
 end box
 box "Frontend - Angular CDK" #E0F2FE
   participant "ActiveDescendantKeyManager" as manager
-  participant "LiveAnnouncer" as live
 end box
 
 user -> combobox : Arrow Down in the input
 combobox -> manager : setNextItemActive()
 manager -> option : setActiveStyles()
-option -> option : Add active class; scrollIntoView with block nearest (L2-037 criterion 2)
+option -> option : Add active class; adjust only the listbox scrollTop by option bounds (L2-037 criterion 2)
 manager --> combobox : change(index)
 combobox -> combobox : activeOptionId() = option id; set aria-activedescendant (L2-035 criterion 4)
 combobox --> user : Screen reader reads the active option; focus stays on the input (L2-037 criterion 1)

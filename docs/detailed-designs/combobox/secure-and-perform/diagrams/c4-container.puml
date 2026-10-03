@@ -9,7 +9,7 @@ System_Boundary(app, "Host Angular application") {
   Container(hostcode, "Host templates", "Angular", "Binds searchFn, value, and optional slot templates")
   Container(pkg, "@tessera/combobox", "Angular library", "Renders text, generates ids, debounces searches, and tears down on destroy")
   Container(core, "Angular core", "Signals, DestroyRef, zoneless scheduler", "Schedules rendering and runs destroy callbacks")
-  Container(cdk, "@angular/cdk", "Angular library", "Overlay, ResizeObserver wrapper, key manager, and live announcer")
+  Container(cdk, "@angular/cdk", "Angular library", "Overlay and key manager")
 }
 System_Ext(source, "Consumer data source", "Returns untrusted items")
 Container(e2e, "e2e-app", "Angular application, provideZonelessChangeDetection", "Hosts ComboboxScenario fixtures with hostile data and timing controls")
