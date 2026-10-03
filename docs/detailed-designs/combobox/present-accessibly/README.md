@@ -45,7 +45,7 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 | Token | Applies to | Target | Forced-colors value |
 |-------|------------|--------|---------------------|
 | `--t-combobox-text` | Input, chip label, option text, hidden summary | 4.5:1 against the surface | `CanvasText` |
-| `--t-combobox-placeholder` | Placeholder text | 4.5:1 against the surface | `GrayText` |
+| `--t-combobox-placeholder` | Placeholder text and hint text | 4.5:1 against the surface and the page background | `GrayText` |
 | `--t-combobox-surface` | Field and panel background; checkmark of a selected checkbox | Reference color for the text targets | `Canvas` |
 | `--t-combobox-chip-bg` | Chip background | Chip text 4.5:1 and chip border 3:1 against it | `Canvas` |
 | `--t-combobox-border` | Field, chip, panel, and checkbox borders; icons | 3:1 against the adjacent color | `ButtonText` |
