@@ -8,6 +8,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   afterEveryRender,
+  afterRenderEffect,
   afterNextRender,
   computed,
   contentChild,
@@ -191,6 +192,8 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
   private popupPosition: FlexibleConnectedPositionStrategy | undefined;
   private widthObserver: ResizeObserver | undefined;
   private popupListeners: (() => void) | undefined;
+  private geometryFrame: number | undefined;
+  private popupGeometryKey: readonly number[] | undefined;
   private tooltip: OverlayRef | undefined;
   protected readonly tooltipText = signal('');
   protected readonly tooltipId = `t-combobox-${this.uid}-tooltip`;
@@ -308,7 +311,6 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     });
     afterEveryRender(() => {
       this.bindControl();
-      if (this.isOpen()) this.updatePopupGeometry();
       const options = this.options();
       if (options !== this.optionSnapshot) {
         const previous = this.activeIndex();
@@ -330,6 +332,16 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
               : options.findIndex((option) => !option.disabled),
         );
       }
+    });
+    afterRenderEffect(() => {
+      const isOpen = this.isOpen();
+      this.results();
+      this.hasMore();
+      this.status();
+      this.query();
+      this.value();
+      this.activeIndex();
+      if (isOpen) this.schedulePopupGeometry();
     });
     this.queries
       .pipe(
@@ -571,13 +583,14 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
       });
     }
     this.isOpen.set(true);
+    this.popupGeometryKey = undefined;
     this.popup.attach(new TemplatePortal(this.panel(), this.viewContainer));
     this.inheritPopupTheme(this.popup);
-    this.widthObserver = new ResizeObserver(() => this.updatePopupGeometry());
+    this.widthObserver = new ResizeObserver(() => this.schedulePopupGeometry());
     this.widthObserver.observe(origin);
     const reposition = (event: Event) => {
       if (!(event.target instanceof Node) || !this.popup?.overlayElement.contains(event.target))
-        this.updatePopupGeometry();
+        this.schedulePopupGeometry();
     };
     document.addEventListener('scroll', reposition, true);
     window.addEventListener('resize', reposition);
@@ -704,15 +717,28 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     this.keyManager?.setActiveItem(-1);
     this.announcer.cancelSearch();
     this.stopPopupTracking();
+    this.popupGeometryKey = undefined;
     this.popup?.detach();
     this.closed.emit();
   }
 
   private stopPopupTracking(): void {
+    if (this.geometryFrame !== undefined) {
+      cancelAnimationFrame(this.geometryFrame);
+      this.geometryFrame = undefined;
+    }
     this.widthObserver?.disconnect();
     this.widthObserver = undefined;
     this.popupListeners?.();
     this.popupListeners = undefined;
+  }
+
+  private schedulePopupGeometry(): void {
+    if (!this.isOpen() || this.geometryFrame !== undefined) return;
+    this.geometryFrame = requestAnimationFrame(() => {
+      this.geometryFrame = undefined;
+      this.updatePopupGeometry();
+    });
   }
 
   private updatePopupGeometry(): void {
@@ -731,6 +757,26 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     const statusHeight = Array.from(panel.children)
       .filter((element) => element.getAttribute('role') !== 'listbox')
       .reduce((sum, element) => sum + element.getBoundingClientRect().height, 0);
+    const geometryKey = [
+      viewportTop,
+      viewportBottom,
+      inputBounds.top,
+      inputBounds.bottom,
+      field.left,
+      field.top,
+      field.bottom,
+      field.width,
+      row.top,
+      row.bottom,
+      rem,
+      statusHeight,
+      panel.scrollHeight,
+    ];
+    if (
+      this.popupGeometryKey?.every((value, index) => value === geometryKey[index]) &&
+      this.popupGeometryKey.length === geometryKey.length
+    )
+      return;
     const useRow =
       Math.max(field.top - viewportTop, viewportBottom - field.bottom) < 4 * rem + statusHeight;
     const top = useRow ? row.top : field.top,
@@ -760,6 +806,7 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     this.popupPosition!.withPositions(flip ? [up, down] : [down, up]);
     this.popup.updateSize({ width: field.width });
     this.popup.updatePosition();
+    this.popupGeometryKey = geometryKey;
   }
 
   private inheritPopupTheme(overlay: OverlayRef): void {

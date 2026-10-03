@@ -500,6 +500,31 @@ export class ComboboxDemoPage {
       .toBe(true);
   }
 
+  async measureUnrelatedHostRenderLayouts(expectedHostCount: number): Promise<number> {
+    const session = await this.page.context().newCDPSession(this.page);
+    try {
+      await session.send('Performance.enable');
+      await this.page.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          ),
+      );
+      const layoutCount = async (): Promise<number> => {
+        const { metrics } = await session.send('Performance.getMetrics');
+        return metrics.find((metric) => metric.name === 'LayoutCount')!.value;
+      };
+      const before = await layoutCount();
+      await this.page.locator('main').evaluate((main) => {
+        main.dispatchEvent(new Event('host-update'));
+      });
+      await expect(this.page.getByLabel('Host update count')).toHaveText(String(expectedHostCount));
+      return (await layoutCount()) - before;
+    } finally {
+      await session.detach();
+    }
+  }
+
   async expectInputAndSelectionRetained(): Promise<void> {
     await this.expectInput('ad');
     await this.expectSelected('Ada', true);

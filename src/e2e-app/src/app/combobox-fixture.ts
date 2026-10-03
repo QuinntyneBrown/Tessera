@@ -62,6 +62,7 @@ import { Observable } from 'rxjs';
         [class.performance-fixture]="parameters.get('performance') === 'true'"
         [attr.dir]="parameters.get('direction') || 'ltr'"
         (keydown)="recordEscape($event)"
+        (host-update)="renderUnrelatedHostUpdates()"
       >
         <h1>Assign learners</h1>
         <button type="button" (click)="setDisabled(true)">Disable field</button>
@@ -155,6 +156,7 @@ import { Observable } from 'rxjs';
           </div>
         }
         <output aria-label="Submit count">{{ submissions() }}</output>
+        <output aria-label="Host update count" hidden>{{ hostUpdates() }}</output>
         @if (parameters.get('instances') === '2') {
           <t-combobox ariaLabel="Other learners" [searchFn]="search" />
         }
@@ -210,6 +212,7 @@ export class ComboboxFixture {
   readonly requests = signal<string[]>([]);
   readonly events = signal<string[]>([]);
   readonly submissions = signal(0);
+  readonly hostUpdates = signal(0);
   readonly mounted = signal(true);
   readonly harnessReport = signal<unknown>(null);
   async runHarness(): Promise<void> {
@@ -376,6 +379,13 @@ export class ComboboxFixture {
     changes: 0,
   });
   readonly json = JSON.stringify;
+  async renderUnrelatedHostUpdates(): Promise<void> {
+    for (let i = 0; i < 10; i++) {
+      this.hostUpdates.update((count) => count + 1);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    }
+  }
+
   changeConfiguration(): void {
     this.inputs = {
       ...this.inputs,
