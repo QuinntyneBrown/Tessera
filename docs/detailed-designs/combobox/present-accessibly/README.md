@@ -28,43 +28,46 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 
 | Part | Element and class | Notes |
 |------|-------------------|-------|
-| Field | `div.t-combobox-field` | Flex container with wrapping. Draws the border and, through `:focus-within`, the focus indicator. |
+| Field | `div.t-combobox-field` | Flex container with wrapping. Draws the border and, through `:has(.t-combobox-input:focus)`, the focus indicator, so a focused chip remove button shows only its own indicator. |
 | Chip list | `ul.t-combobox-chips` of `li.t-combobox-chip` | Each chip holds `span.t-combobox-chip-label` and `button.t-combobox-chip-remove`. |
-| Input | `input.t-combobox-input` | Takes the free space in the last row of the field. |
+| Input | `input.t-combobox-input` | Takes the free space in the last row of the field, after the chips. |
 | Spinner | `span.t-combobox-spinner` | Decorative, `aria-hidden="true"`. Shown while a request is in flight. |
-| Clear-all button | `button.t-combobox-clear` | Rendered while a value exists. |
-| Toggle button | `button.t-combobox-toggle` | `tabindex="-1"`. Mouse and touch affordance. |
-| Panel | `div.t-combobox-panel` in the CDK overlay | Holds the independently scrolling listbox and sibling status rows inside the space the overlay grants. |
+| Clear-all button | `button.t-combobox-clear` | Text button showing its name, "Clear all selections", below the field at the inline end of the hint row. Rendered while a value exists. Outside the input row, it cannot be mistaken for a control that clears the typed text. |
+| Toggle button | `button.t-combobox-toggle` | `tabindex="-1"`. Mouse and touch affordance at the inline end of the field. |
+| Panel | `div.t-combobox-panel` in the CDK popover inserted after the field | Holds the independently scrolling listbox and a one-line status row inside the space the overlay grants. |
 | Option | `li.t-combobox-option` | Holds `span.t-combobox-checkbox` (decorative) and the content. |
+| Error | `p.t-combobox-error` | Shown directly below the field and before the hint, with a decorative error icon. |
 
-**Icons.** Built-in inline SVG path icons use currentColor and aria-hidden for chevron, loading, clear, and checkmark. No icon package or background image is needed. Loading always has text, and a static indicator is sufficient under reduced motion.
+**Icons.** Built-in inline SVG path icons use currentColor and aria-hidden for chevron, loading, chip removal, checkmark, and error. No icon package or background image is needed. Loading always has text, and a static indicator is sufficient under reduced motion.
 
-**Design tokens.** Light defaults: text #18312e, placeholder/disabled text #536763, surface #ffffff, border #657f73, focus #b35c14, active outline/selected mark #126454, and hover #f4f7f5. Dark defaults: text #f4f7f5, placeholder/disabled text #b6cbc3, surface #18312e, border #8fa9a0, focus #ffbf69, active outline/selected mark #8fd5ba, and hover #244b42. Checkmark backgrounds use the surface token. The chip area defaults to 8 rem and motion duration to 0 ms. Consumers may override tokens while retaining contrast targets.
+**Design tokens.** Light defaults: text #18312e, placeholder/disabled text #536763, surface #ffffff, border #657f73, focus #b35c14, active outline/selected mark #126454, and hover #f4f7f5, chip background #e4f2ec, and error #8a1c12. Dark defaults: text #f4f7f5, placeholder/disabled text #b6cbc3, surface #18312e, border #8fa9a0, focus #ffbf69, active outline/selected mark #8fd5ba, hover #244b42, chip background #244b42, and error #ffb4a8. A selected checkbox is filled with the selected-mark token and draws its checkmark in the surface token. The chip area defaults to 8 rem and motion duration to 0 ms. Consumers may override tokens while retaining contrast targets.
 
 | Token | Applies to | Target | Forced-colors value |
 |-------|------------|--------|---------------------|
 | `--t-combobox-text` | Input, chip label, option text, hidden summary | 4.5:1 against the surface | `CanvasText` |
 | `--t-combobox-placeholder` | Placeholder text | 4.5:1 against the surface | `GrayText` |
-| `--t-combobox-surface` | Field, chip, and panel background | Reference color for the text targets | `Canvas` |
+| `--t-combobox-surface` | Field and panel background; checkmark of a selected checkbox | Reference color for the text targets | `Canvas` |
+| `--t-combobox-chip-bg` | Chip background | Chip text 4.5:1 and chip border 3:1 against it | `Canvas` |
 | `--t-combobox-border` | Field, chip, panel, and checkbox borders; icons | 3:1 against the adjacent color | `ButtonText` |
 | `--t-combobox-focus-ring` | Focus indicator of the field, chip remove buttons, and clear-all | 3:1 against the adjacent colors | `Highlight` |
 | `--t-combobox-active-outline` | Outline of the active option | 3:1 against the surface | `Highlight` |
 | `--t-combobox-hover-bg` | Hover background of an option | Distinct from the surface | `Canvas` |
-| `--t-combobox-selected-mark` | Checkmark of a selected option | 3:1 against the checkbox background | `CanvasText` |
-| `--t-combobox-disabled-text` | Text of a disabled option | 4.5:1, so no inactive-component exemption is relied on | `GrayText` |
+| `--t-combobox-selected-mark` | Fill and border of a selected option's checkbox | 3:1 against the surface and against its checkmark | `Highlight`, with the checkmark in `HighlightText` |
+| `--t-combobox-disabled-text` | Text of a disabled option; input, placeholder, chips, and icons of a disabled component | 4.5:1, so no inactive-component exemption is relied on | `GrayText` |
+| `--t-combobox-error` | Error text, error icon, and the invalid field border | 4.5:1 against the surface | `CanvasText` |
 | `--t-combobox-motion-duration` | Overlay and chip transitions | Not applicable | Not applicable |
 | `--t-combobox-chip-list-max-height` | Chip-list height before it scrolls vertically, in `rem` | Not applicable | Not applicable |
 
-The values above settle the default theme decision. A block under `@media (forced-colors: active)` reassigns the tokens in the right-hand column. The component code therefore needs no second set of rules for forced-colors mode (`L2-038` criterion 4). The field, chip, checkbox, and panel use real `border` declarations, because `box-shadow` is removed in forced-colors mode. A transparent border still appears there, so chips keep a `1px solid transparent` border in the normal themes. The focus indicator and the active outline use `outline`, which forced-colors mode keeps. The panel carries a border in every mode, because its elevation shadow disappears.
+The values above settle the default theme decision. A block under `@media (forced-colors: active)` reassigns the tokens in the right-hand column. The component code therefore needs no second set of rules for forced-colors mode (`L2-038` criterion 4). The field, chip, checkbox, and panel use real `border` declarations, because `box-shadow` is removed in forced-colors mode. The focus indicator and the active outline use `outline`, which forced-colors mode keeps. The panel carries a border in every mode, because its elevation shadow disappears.
 
 **State cues beyond color (`L2-038` criterion 2).**
 
 | State | Color cue | Non-color cue |
 |-------|-----------|---------------|
-| Selected | `--t-combobox-selected-mark` | Checkmark inside the checkbox; `aria-selected="true"` |
+| Selected | `--t-combobox-selected-mark` | Filled checkbox with a checkmark; `aria-selected="true"`. The row itself is not tinted. |
 | Active | `--t-combobox-active-outline` | 2 px outline inset on the option row |
-| Hover | `--t-combobox-hover-bg` | Background change under `@media (hover: hover)` only |
-| Disabled | `--t-combobox-disabled-text` | Italic text and a dashed checkbox border; `aria-disabled="true"` |
+| Hover | `--t-combobox-hover-bg` | Background change on every option, selected or not, under `@media (hover: hover)` only |
+| Disabled | `--t-combobox-disabled-text` | Italic text and a dashed checkbox border; `aria-disabled="true"`. A disabled component also shows a dashed field border. |
 
 The disabled treatment is a default. It remains distinct from the other three states in each theme.
 
@@ -72,11 +75,12 @@ The disabled treatment is a default. It remains distinct from the other three st
 
 **Layout rules (`L2-039`).** One stylesheet serves every width. It has no breakpoints, and no script switches the template by width, so a resize changes styles only.
 
-- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The chip area and input row use wrapping flex layouts. Their children have `min-width: 0`, so a long child shrinks rather than overflows.
+- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The field is one wrapping flex layout: the chip list, the input, the spinner, and the toggle share its rows, and the chip list wraps its own chips. Their children have `min-width: 0`, so a long child shrinks rather than overflows.
 - The input takes `flex: 1 1` with a `rem` basis, so it falls to its own row when the chips fill a row, and it stays visible at 320 CSS px.
 - `.t-combobox-chip` has `max-width: 100%`. `.t-combobox-chip-label` has `overflow: hidden`, `text-overflow: ellipsis`, and `white-space: nowrap`. This ellipsis is the single documented truncation. The full label stays available as the text content, as the name of the remove button, and as a tooltip. The dismissible, hoverable tooltip mechanism is defined in [Select values](../select-values/).
 - Option text wraps with `overflow-wrap: anywhere`. Options and status rows never truncate.
 - Lengths use `rem` and `em`, so text and spacing scale with the user's text size. No text container sets a fixed `height` or a pixel `line-height`. Rows use `min-height` only. At 200% text and under the text-spacing overrides (line height 1.5, paragraph spacing 2, letter spacing 0.12, word spacing 0.16 times the font size), rows grow, and nothing clips or overlaps.
+- Default metrics: the empty field is about 2.5 rem tall, chips are 2 rem tall, options use 0.5 rem by 0.75 rem padding, and the status row is one line that wraps only when narrow. Under `@media (pointer: coarse)`, the input row and the buttons grow to 2.75 rem. The field and panel share one corner radius (0.5 rem); chips, options, and checkboxes share another (0.25 rem).
 - The panel is a bounded flex column; the controlled listbox has `min-height: 0` and `overflow-y: auto`, and sibling status actions remain available. The narrow-height positioning fallback uses the input row as the vertical origin, as defined in [Open and position the list](../open-and-position-list/). At 400% zoom in a 1280 by 1024 window, the viewport is 320 by 256 CSS px, and the list scrolls inside the panel. The page does not scroll horizontally. [Open and position the list](../open-and-position-list/) sizes the overlay and keeps the focused input visible.
 - A resize or a zoom change reflows CSS only. The `ResizeObserver` in `ComboboxPopup` updates the overlay width and position. The component keeps `value`, `query`, and `isOpen`, and no DOM node is recreated, so the typed text, the selection, and the focused input persist (`L2-039` criterion 6).
 

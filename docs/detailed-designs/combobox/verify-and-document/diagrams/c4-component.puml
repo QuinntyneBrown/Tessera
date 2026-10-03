@@ -14,7 +14,7 @@ Container_Boundary(e2e, "e2e-app") {
 }
 Container_Boundary(tests, "Playwright acceptance tests") {
   Component(page, "ComboboxDemoPage", "Playwright page object", "Owns selectors; opens scenarios; sets viewport, zoom, and text overrides; runs axe")
-  Component(axe, "AxeBuilder", "@axe-core/playwright", "Scans t-combobox and the overlay container")
+  Component(axe, "AxeBuilder", "@axe-core/playwright", "Scans t-combobox, including its inline popover list")
   Component(specs, "Feature spec files", "Playwright test files", "One header comment and one L2 comment per test")
 }
 Container_Boundary(docs, "Documentation") {

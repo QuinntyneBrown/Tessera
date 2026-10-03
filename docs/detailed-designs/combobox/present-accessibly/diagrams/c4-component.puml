@@ -8,7 +8,7 @@ Container_Boundary(pkg, "@tessera/combobox") {
   Component(styles, "combobox.scss", "Component styles", "Layout rules, design tokens, and media-feature blocks")
   Component(option, "ComboboxOption of T", "Directive", "Option host with checkbox and active class")
   Component(popup, "ComboboxPopup", "Class", "Overlay panel; width follows the field through ResizeObserver")
-  Component(icons, "Icon source", "Built-in inline SVG", "Chevron, spinner, clear, and checkmark")
+  Component(icons, "Icon source", "Built-in inline SVG", "Chevron, spinner, dismiss, checkmark, and error")
 }
 Container_Boundary(cdk, "Angular CDK") {
   Component(overlay, "OverlayRef", "CDK overlay", "Positions the panel and emits outsidePointerEvents")

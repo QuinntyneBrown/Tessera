@@ -6,13 +6,13 @@
 
 **Popup list** — panel of options that appears next to the field while the combobox is open
 
-**Overlay** — Angular CDK layer that renders content outside its parent element, attached to a page-level container
+**Overlay** — Angular CDK layer that renders content in the browser's top layer as a native popover, positioned against an origin element
 
 **Active option** — option that the input points to through `aria-activedescendant` while DOM focus stays on the input
 
 **Origin element** — field element that the overlay attaches to and takes its width from
 
-The list renders in an overlay so that no ancestor's `overflow` or stacking context clips it. The overlay is not modal and does not trap focus. Option navigation keeps input focus. Closing itself does not focus anything; Tab, outside interactions, and disabling may move focus through browser behavior.
+The list renders in an overlay so that no ancestor's `overflow` or stacking context clips it. The overlay host sits directly after the field in the DOM, so assistive technology that follows DOM order reaches the options after the input. The overlay is not modal and does not trap focus. Option navigation keeps input focus. Closing itself does not focus anything; Tab, outside interactions, and disabling may move focus through browser behavior.
 
 ## Description
 
@@ -60,7 +60,7 @@ The toggle button is a `<button tabindex="-1">` named Show options when closed a
 - **Scrolling.** The reposition strategy follows the document and any `cdkScrollable`. The CDK `ScrollDispatcher` does not report a scroll in an arbitrary ancestor. While the list is open, `ComboboxPopup` therefore also listens for `scroll` in the capture phase on `document` and calls `updatePosition()`. The overlay stays attached to the field whichever ancestor scrolls. The capture handler ignores events from inside the panel to avoid reposition loops.
 - **Viewport resize.** The position strategy reapplies on each `ViewportRuler` change.
 - **Destruction.** `Combobox<T>` registers `popup.dispose()` with `DestroyRef.onDestroy`. `dispose()` removes the overlay pane from the DOM even when the list is open.
-- **Inside a dialog.** CDK overlays use `usePopover: true` and the connected strategy insertion point under the origin, retaining the dialog DOM ancestry while entering the top layer. Without Popover API, a component-scoped OverlayContainer attaches inside the closest open native dialog, or uses the ordinary CDK container outside a dialog. No application-wide container is moved. Both CDK and native dialog fixtures verify pointer interaction, Escape, and announcements. The pinned CDK public API shall be verified before its ATDD slice; the [upstream overlay implementation](https://github.com/angular/components/blob/main/src/cdk/overlay/overlay.ts) is the current reference.
+- **DOM placement and dialogs.** The overlay is a CDK popover: `usePopover` is true, the CDK default, and the position strategy calls `withPopoverLocation('inline')`. The CDK therefore inserts the overlay host directly after the origin field, inside the component host, and the reading order is label, field, list, error, and hint (`L2-030` criterion 7). Safari does not support `aria-owns`, and VoiceOver on iOS moves by swiping in DOM order, so a list appended to the end of the document could not be reached from the input. The popover still enters the top layer, so it keeps the dialog's DOM ancestry, appears above dialog content, and receives pointer events (`L2-030` criterion 6). The decision is recorded in [ADR-0001](../../../adr/frontend/0001-render-combobox-panel-as-inline-popover.md). Without the Popover API, a component-scoped OverlayContainer attaches inside the closest open native dialog, or uses the ordinary CDK container outside a dialog; that fallback loses the inline reading order. The short-viewport fallback changes only the connected position, not the insertion point, which the CDK takes from the field when the overlay attaches. No application-wide container is moved. Both CDK and native dialog fixtures verify pointer interaction, Escape, and announcements. The pinned CDK public API shall be verified before its ATDD slice; the [upstream overlay implementation](https://github.com/angular/components/blob/main/src/cdk/overlay/overlay.ts) is the current reference.
 
 ### Test support
 

@@ -39,7 +39,7 @@ else focus leaves the whole component
   fc -> fc : Mark touched; RequiredValidator reports required error (L2-031)
   fc --> combo : TouchedChangeEvent and StatusChangeEvent
   combo -> combo : controlVersion increments; showError true
-  combo --> user : aria-invalid true and error text shown (L2-031)
+  combo --> user : aria-invalid true; error text and icon shown below the field, before the hint (L2-031)
 end
 note over combo, fc
   required input or hasValidator(Validators.required) derives aria-required.

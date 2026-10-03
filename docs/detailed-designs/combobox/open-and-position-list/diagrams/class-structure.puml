@@ -61,6 +61,7 @@ class FlexibleConnectedPositionStrategy <<CDK>> {
   +withPositions(positions: ConnectedPosition[]): this
   +withPush(canPush: boolean): this
   +withFlexibleDimensions(flexible: boolean): this
+  +withPopoverLocation(location: 'inline'): this
 }
 
 Combobox "1" *-- "1" ComboboxPopup : owns

@@ -67,7 +67,7 @@ Signals do not observe AbstractControl state. When the same-element NgControl re
 
 ### Hint and error text
 
-`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. Hint and rendered error ids feed aria-describedby.
+`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders directly below the field and before the hint, prefixed by a decorative error icon in the `--t-combobox-error` token; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. The rendered error id and the hint id feed aria-describedby in that order (`L2-031` criterion 9, `L2-035` criterion 5). The order and the icon follow the Fluent 2 Field pattern, which places validation text nearest the control.
 
 ### Model binding without forms
 

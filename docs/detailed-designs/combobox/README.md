@@ -37,7 +37,7 @@ The package runs entirely in the host application's browser. It has no backend o
 
 The package has no secondary entry points. Its proposed source layout follows `AGENTS.md`, mirrors `src/scorm-player/`, and uses Angular CLI and ng-packagr. The package depends on `@angular/cdk` for the overlay, the active-descendant key manager, and the component-harness base.
 
-Shared building blocks, all proposed because `src/combobox/` does not exist yet:
+Shared building blocks. `src/combobox/` holds the first implementation slices, recorded in [the implementation record](../../verification/combobox-implementation.md); everything below that those slices do not yet provide remains proposed:
 
 | Name | Kind | Responsibility |
 |------|------|----------------|
