@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 1px solid #657f73;
+  border-radius: 0.375rem;
+  color: #18312e;
+  background: #fff;
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid #b35c14;
+    outline-offset: 2px;
+  }
+}

@@ -1,13 +1,16 @@
 import { Component, signal } from '@angular/core';
 import { CourseSource, PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
 import { hostFixtureFor, SaveGate } from './host-fixtures';
+import { ComboboxFixture } from './combobox-fixture';
 
 @Component({
-  imports: [ScormPlayer],
+  imports: [ScormPlayer, ComboboxFixture],
   selector: 'tsr-root',
   templateUrl: './app.html',
 })
 export class App {
+  protected readonly comboboxMode =
+    new URLSearchParams(location.search).get('screen') === 'combobox';
   protected readonly events = signal<string[]>([]);
   protected readonly saves = signal<string[]>([]);
   protected readonly gate = new SaveGate();

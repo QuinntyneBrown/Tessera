@@ -1,30 +1,36 @@
-@if (zipMode) {
-  <label>
-    Course package
-    <input type="file" accept=".zip" (change)="choosePackage($event)" />
-  </label>
-}
-@if (zipMode ? chosenPackage() : fixture.source) {
-  <tsr-scorm-player
-    [source]="zipMode ? chosenPackage() : fixture.source"
-    [attempt]="fixture.attempt"
-    [host]="fixture.host"
-    [limits]="fixture.limits"
-    (event)="onEvent($event)"
-  />
-}
-<ol aria-label="Host events">
-  @for (event of events(); track $index) {
-    <li>{{ event }}</li>
+@if (comboboxMode) {
+  <tsr-combobox-fixture />
+} @else {
+  @if (zipMode) {
+    <label>
+      Course package
+      <input type="file" accept=".zip" (change)="choosePackage($event)" />
+    </label>
   }
-</ol>
-<ol aria-label="Host saves">
-  @for (save of saves(); track $index) {
-    <li>{{ save }}</li>
+  @if (zipMode ? chosenPackage() : fixture.source) {
+    <tsr-scorm-player
+      [source]="zipMode ? chosenPackage() : fixture.source"
+      [attempt]="fixture.attempt"
+      [host]="fixture.host"
+      [limits]="fixture.limits"
+      (event)="onEvent($event)"
+    />
   }
-</ol>
-<section aria-label="Host controls">
-  <button type="button" (click)="gate.acknowledge()">Acknowledge pending save</button>
-  <button type="button" (click)="gate.acknowledgeStale()">Acknowledge pending save as stale</button>
-  <button type="button" (click)="gate.fail()">Fail pending save</button>
-</section>
+  <ol aria-label="Host events">
+    @for (event of events(); track $index) {
+      <li>{{ event }}</li>
+    }
+  </ol>
+  <ol aria-label="Host saves">
+    @for (save of saves(); track $index) {
+      <li>{{ save }}</li>
+    }
+  </ol>
+  <section aria-label="Host controls">
+    <button type="button" (click)="gate.acknowledge()">Acknowledge pending save</button>
+    <button type="button" (click)="gate.acknowledgeStale()">
+      Acknowledge pending save as stale
+    </button>
+    <button type="button" (click)="gate.fail()">Fail pending save</button>
+  </section>
+}

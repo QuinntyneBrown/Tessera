@@ -1,5 +1,6 @@
 packages:
   - src/scorm-player
+  - src/combobox
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

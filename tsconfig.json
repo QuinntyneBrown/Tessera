@@ -10,7 +10,8 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "paths": {
-      "@tessera/scorm-player": ["./src/scorm-player/index.ts"]
+      "@tessera/scorm-player": ["./src/scorm-player/index.ts"],
+      "@tessera/combobox": ["./src/combobox/index.ts"]
     },
     "target": "ES2022",
     "module": "preserve"
@@ -24,6 +25,9 @@
   "references": [
     {
       "path": "./src/scorm-player/tsconfig.lib.json"
+    },
+    {
+      "path": "./src/combobox/tsconfig.lib.json"
     },
     {
       "path": "./src/dev-app/tsconfig.app.json"

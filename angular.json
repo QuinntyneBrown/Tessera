@@ -201,6 +201,26 @@
           "defaultConfiguration": "development"
         }
       }
+    },
+    "combobox": {
+      "projectType": "library",
+      "root": "src/combobox",
+      "sourceRoot": "src/combobox",
+      "prefix": "t",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "src/combobox/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "src/combobox/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
     }
   }
 }
