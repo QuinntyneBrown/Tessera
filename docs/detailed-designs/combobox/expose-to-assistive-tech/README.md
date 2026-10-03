@@ -40,7 +40,7 @@ The slice adds ARIA bindings to `Combobox<T>` and `ComboboxOption<T>`, an announ
 | `aria-label` | The `ariaLabel` input, present only when it is non-empty |
 | `aria-controls` | The listbox id, present only while the listbox is rendered |
 | `aria-activedescendant` | `activeOptionId()`, which is the active option's id while the list is open, and absent when no option is active or the list is closed |
-| `aria-describedby` | `describedBy()`: the hint id, the error id while the error is shown, and the summary id while at least one value is selected |
+| `aria-describedby` | `describedBy()`: the error id while the error is shown, the hint id, and the summary id while at least one value is selected, so the error is read first |
 
 The visible name comes from the consumer's `<label for>` and the `inputId` input. Without a visible label and without `ariaLabel`, the component reports a development-time error. The check runs once in `afterNextRender` when `isDevMode()` is true. It looks for a `label[for]` that matches the input id in the host's root node. It logs a documented message through `console.error` and never throws, so a missing label cannot break a running page. The documented diagnostic is `[t-combobox] Supply a visible label associated with inputId or a non-empty ariaLabel.` The adoption page described in [Verify and document](../verify-and-document/) explains both fixes.
 
@@ -98,7 +98,7 @@ All text reaches the region through `textContent`, so a label that contains mark
 - The overlay carries no `aria-modal`, and Tab from the input closes the list and follows the browser's order, as specified in [Operate by keyboard](../operate-by-keyboard/).
 - `ComboboxOption.setActiveStyles()` adds the active class and scrolls the option into view. It compares the option and controlled listbox bounds and changes only the listbox scrollTop by the necessary delta. This avoids scrolling the document or another ancestor. The listbox sets no `scroll-behavior`, so scrolling is instant under every motion preference (`L2-037` criterion 2).
 - The active, selected, and hover treatments use three separate hooks: the active class from `setActiveStyles()`, the `aria-selected` attribute with the checkmark, and the `:hover` pseudo-class. Hover does not change the active option. [Present the component accessibly](../present-accessibly/) assigns the visual cues (`L2-037` criterion 4).
-- The field wrapper shows the focus indicator through `:focus-within`, and the chip remove buttons and clear-all show it through `:focus-visible`. The theme tokens in that feature supply the colors and contrast targets (`L2-037` criterion 3).
+- The field wrapper shows the focus indicator through `:has(.t-combobox-input:focus)`, and the chip remove buttons and clear-all show it through `:focus-visible`, so exactly one indicator is visible at a time. The theme tokens in that feature supply the colors and contrast targets (`L2-037` criterion 3).
 
 **Acceptance criteria coverage.**
 

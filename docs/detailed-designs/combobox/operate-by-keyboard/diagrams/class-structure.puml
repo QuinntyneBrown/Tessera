@@ -19,6 +19,7 @@ class "Combobox<T>" as Combobox {
   +activeIndex: Signal<number>
   +value: ModelSignal<T[]>
   -openingMode: Signal<normal | last | none>
+  -keyboardNavigating: boolean
   +onInputKeydown(event: KeyboardEvent): void
   +onInput(text: string): void
   +onRetryActivated(): void
@@ -33,6 +34,7 @@ class "Combobox<T>" as Combobox {
   +close(): void
   +isRtl(): boolean
   +activateFirstEnabled(): void
+  +visiblePageSize(): number
 }
 
 class "ComboboxSearch<T>" as ComboboxSearch {
@@ -65,6 +67,7 @@ class "ActiveDescendantKeyManager<ComboboxOption<T>>" as KeyManager <<CDK>> {
   +setNextItemActive(): void
   +setPreviousItemActive(): void
   +setLastItemActive(): void
+  +setActiveItem(index: number): void
   +skipPredicate(predicate: (item: ComboboxOption<T>) => boolean): this
 }
 

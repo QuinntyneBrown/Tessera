@@ -28,11 +28,13 @@ box "Frontend - Host Angular application" #E0F2FE
 end box
 
 combo -> popup : open(origin, template)
-popup -> overlay : create with FlexibleConnectedPositionStrategy, usePopover true, reposition, no backdrop
+popup -> overlay : create with FlexibleConnectedPositionStrategy, usePopover true, withPopoverLocation inline, reposition, no backdrop
+overlay -> page : Insert popover host directly after the field (L2-030)
 note over popup, page
-  Keep the pane in the origin dialog accessible subtree.
-  Verify pinned CDK popover insertion; otherwise use
-  a component-scoped container inside that open dialog.
+  DOM order is label, field, list, error, hint, so VoiceOver
+  on iOS reaches the options after the input. The top layer
+  keeps the dialog ancestry. Without the Popover API, use
+  a component-scoped container inside the open dialog.
 end note
 popup -> overlay : updateSize(width = field width) (L2-030)
 popup -> page : Observe field size with ResizeObserver

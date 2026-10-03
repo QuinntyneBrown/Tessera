@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,23 +8,61 @@
       :root {
         color-scheme: light;
         font-family: Inter, 'Segoe UI', Arial, sans-serif;
-        --ink: #18312e;
-        --muted: #536763;
-        --line: #657f73;
-        --surface: #fff;
-        --canvas: #f4f7f5;
-        --accent: #126454;
-        --soft: #e4f2ec;
-        --focus: #b35c14;
-        --error: #8a1c12;
+        /* Host page colors; not part of the component contract. */
+        --page-canvas: #f4f7f5;
+        --page-card: #ffffff;
+        --page-divider: #d8e2df;
+        --page-line: #657f73;
+        --page-ink: #18312e;
+        --page-muted: #536763;
+        --page-accent: #126454;
+        --page-accent-soft: #e4f2ec;
+        --page-focus: #b35c14;
+        /* Component tokens from the present-accessibly design. */
+        --t-combobox-text: #18312e;
+        --t-combobox-placeholder: #536763;
+        --t-combobox-surface: #ffffff;
+        --t-combobox-chip-bg: #e4f2ec;
+        --t-combobox-border: #657f73;
+        --t-combobox-focus-ring: #b35c14;
+        --t-combobox-active-outline: #126454;
+        --t-combobox-hover-bg: #f4f7f5;
+        --t-combobox-selected-mark: #126454;
+        --t-combobox-disabled-text: #536763;
+        --t-combobox-error: #8a1c12;
+        --t-combobox-motion-duration: 0ms;
+        --t-combobox-chip-list-max-height: 8rem;
+      }
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+        --page-canvas: #10221f;
+        --page-card: #18312e;
+        --page-divider: #2f5249;
+        --page-line: #8fa9a0;
+        --page-ink: #f4f7f5;
+        --page-muted: #b6cbc3;
+        --page-accent: #8fd5ba;
+        --page-accent-soft: #244b42;
+        --page-focus: #ffbf69;
+        --t-combobox-text: #f4f7f5;
+        --t-combobox-placeholder: #b6cbc3;
+        --t-combobox-surface: #18312e;
+        --t-combobox-chip-bg: #244b42;
+        --t-combobox-border: #8fa9a0;
+        --t-combobox-focus-ring: #ffbf69;
+        --t-combobox-active-outline: #8fd5ba;
+        --t-combobox-hover-bg: #244b42;
+        --t-combobox-selected-mark: #8fd5ba;
+        --t-combobox-disabled-text: #b6cbc3;
+        --t-combobox-error: #ffb4a8;
       }
       * {
         box-sizing: border-box;
       }
       body {
         margin: 0;
-        background: var(--canvas);
-        color: var(--ink);
+        background: var(--page-canvas);
+        color: var(--page-ink);
         line-height: 1.5;
         overflow-wrap: anywhere;
       }
@@ -40,7 +78,7 @@
         cursor: not-allowed;
       }
       :focus-visible {
-        outline: 3px solid var(--focus);
+        outline: 3px solid var(--page-focus);
         outline-offset: 3px;
       }
       [hidden] {
@@ -52,10 +90,16 @@
       p {
         margin: 0;
       }
+      svg {
+        display: block;
+        flex-shrink: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
       .topbar {
         padding: 1rem 1.5rem;
-        border-bottom: 1px solid #d8e2df;
-        background: var(--surface);
+        border-bottom: 1px solid var(--page-divider);
+        background: var(--page-card);
       }
       .topbar h1 {
         font-size: 1rem;
@@ -66,7 +110,7 @@
         padding: 2rem 1.5rem 4rem;
       }
       .eyebrow {
-        color: var(--accent);
+        color: var(--page-accent);
         font-size: 0.8rem;
         font-weight: 750;
         letter-spacing: 0.08em;
@@ -80,13 +124,13 @@
       }
       .intro {
         max-width: 44rem;
-        color: var(--muted);
+        color: var(--page-muted);
       }
       .controls {
         min-inline-size: 0;
         margin: 1.5rem 0;
         padding: 1rem;
-        border: 1px dashed var(--line);
+        border: 1px dashed var(--page-line);
         border-radius: 0.5rem;
       }
       .controls legend {
@@ -104,11 +148,11 @@
       select {
         min-width: 0;
         max-width: 100%;
-        border: 1px solid var(--line);
+        border: 1px solid var(--page-line);
         border-radius: 0.375rem;
         padding: 0.5rem;
-        background: var(--surface);
-        color: var(--ink);
+        background: var(--page-card);
+        color: var(--page-ink);
       }
       .control-row label {
         display: inline-flex;
@@ -120,7 +164,7 @@
         flex: 0 0 1.25rem;
         width: 1.25rem;
         height: 1.25rem;
-        accent-color: var(--accent);
+        accent-color: var(--page-accent);
       }
       .layout {
         display: flex;
@@ -132,9 +176,9 @@
         flex: 3 1 32rem;
         min-width: 0;
         padding: 1.5rem;
-        border: 1px solid #d8e2df;
+        border: 1px solid var(--page-divider);
         border-radius: 0.75rem;
-        background: var(--surface);
+        background: var(--page-card);
       }
       .notes {
         flex: 1 1 16rem;
@@ -146,7 +190,7 @@
       }
       .notes ul {
         padding-inline-start: 1.25rem;
-        color: var(--muted);
+        color: var(--page-muted);
       }
       .notes li + li {
         margin-top: 0.75rem;
@@ -157,15 +201,15 @@
         gap: 0.75rem;
         padding-bottom: 1.25rem;
         margin-bottom: 1.5rem;
-        border-bottom: 1px solid #d8e2df;
+        border-bottom: 1px solid var(--page-divider);
       }
       .course-icon {
         display: grid;
         place-items: center;
         flex: 0 0 2.75rem;
         height: 2.75rem;
-        background: var(--soft);
-        color: var(--accent);
+        background: var(--page-accent-soft);
+        color: var(--page-ink);
         border-radius: 0.5rem;
         font-weight: 750;
       }
@@ -173,116 +217,10 @@
         font-size: 1rem;
       }
       .course p,
-      .hint,
-      .count {
-        color: var(--muted);
+      .count,
+      .note {
+        color: var(--page-muted);
         font-size: 0.875rem;
-      }
-      .label {
-        display: block;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-      .field {
-        border: 1px solid var(--line);
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-      }
-      .field:focus-within {
-        border-color: var(--accent);
-      }
-      .field.invalid {
-        border-color: var(--error);
-      }
-      .field.disabled {
-        background: var(--canvas);
-      }
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        max-height: 8rem;
-        overflow-y: auto;
-      }
-      .chips:not(:empty) {
-        padding: 0.25rem;
-        margin-bottom: 0.5rem;
-      }
-      .chip {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        max-width: 100%;
-        min-width: 0;
-        background: var(--soft);
-        border: 1px solid var(--line);
-        border-radius: 0.375rem;
-        padding-inline-start: 0.5rem;
-        position: relative;
-      }
-      .chip-label {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-size: 0.875rem;
-      }
-      .chip button {
-        flex: 0 0 2rem;
-        width: 2rem;
-        min-height: 2rem;
-        border: 0;
-        background: transparent;
-        color: var(--ink);
-      }
-      .tooltip {
-        position: fixed;
-        z-index: 20;
-        max-width: min(24rem, calc(100vw - 2rem));
-        padding: 0.5rem 0.75rem;
-        background: var(--ink);
-        color: white;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        pointer-events: auto;
-      }
-      .input-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.25rem;
-      }
-      .input-row input {
-        flex: 1 1 8rem;
-        min-width: 0;
-        width: 100%;
-        border: 0;
-        padding: 0.5rem;
-        color: var(--ink);
-        background: transparent;
-        min-height: 2.75rem;
-      }
-      .icon-button {
-        flex: 0 0 2.75rem;
-        min-height: 2.75rem;
-        border: 0;
-        border-radius: 0.375rem;
-        background: transparent;
-        color: var(--muted);
-      }
-      .icon-button:hover:enabled,
-      .chip button:hover:enabled {
-        background: #cde4db;
-      }
-      .hint {
-        margin-top: 0.5rem;
-      }
-      .error {
-        color: var(--error);
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
       }
       .footer {
         display: flex;
@@ -290,80 +228,260 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 1rem;
-        border-top: 1px solid #d8e2df;
+        border-top: 1px solid var(--page-divider);
         margin-top: 2rem;
         padding-top: 1.25rem;
       }
       .button {
         min-height: 2.75rem;
-        border: 1px solid var(--line);
+        border: 1px solid var(--page-line);
         border-radius: 0.375rem;
         padding: 0.5rem 1rem;
-        background: var(--surface);
-        color: var(--ink);
+        background: var(--page-card);
+        color: var(--page-ink);
         font-weight: 700;
         font-size: 0.875rem;
       }
       .primary {
-        background: var(--accent);
-        color: white;
-        border-color: var(--accent);
+        background: var(--page-accent);
+        color: var(--page-card);
+        border-color: var(--page-accent);
+      }
+      .button:disabled {
+        background: transparent;
+        color: var(--page-muted);
+        border-color: var(--page-line);
+        border-style: dashed;
+      }
+
+      /* Component styles: t-combobox. */
+      .combobox {
+        color: var(--t-combobox-text);
+      }
+      .label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .field {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem;
+        min-height: 2.5rem;
+        padding: 0.1875rem 0.25rem 0.1875rem 0.375rem;
+        border: 1px solid var(--t-combobox-border);
+        border-radius: 0.5rem;
+        background: var(--t-combobox-surface);
+      }
+      .combobox :focus-visible {
+        outline-color: var(--t-combobox-focus-ring);
+      }
+      .field:has(input:focus) {
+        outline: 3px solid var(--t-combobox-focus-ring);
+        outline-offset: 2px;
+      }
+      .field input:focus-visible {
+        outline: none;
+      }
+      .field.invalid {
+        border-color: var(--t-combobox-error);
+      }
+      .field.disabled {
+        border-style: dashed;
+        color: var(--t-combobox-disabled-text);
+      }
+      .chips {
+        display: flex;
+        flex: 0 1 auto;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        min-width: 0;
+        max-width: 100%;
+        max-height: var(--t-combobox-chip-list-max-height);
+        overflow-y: auto;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .chips:empty {
+        display: none;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 2rem;
+        background: var(--t-combobox-chip-bg);
+        border: 1px solid var(--t-combobox-border);
+        border-radius: 0.25rem;
+        padding-inline-start: 0.5rem;
+      }
+      .chip-label {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 0.875rem;
+      }
+      .field.disabled .chip {
+        border-style: dashed;
+      }
+      .chip button,
+      .icon-button {
+        display: grid;
+        place-items: center;
+        padding: 0;
+        border: 0;
+        border-radius: 0.25rem;
+        background: transparent;
+        color: var(--t-combobox-text);
+      }
+      .chip button {
+        flex: 0 0 1.75rem;
+        width: 1.75rem;
+        min-height: 1.75rem;
+      }
+      .chip button svg {
+        width: 1rem;
+        height: 1rem;
+      }
+      .input-row {
+        display: flex;
+        flex: 1 1 10rem;
+        align-items: center;
+        gap: 0.25rem;
+        min-width: 0;
+      }
+      .input-row input {
+        flex: 1 1 8rem;
+        min-width: 0;
+        width: 100%;
+        min-height: 2rem;
+        border: 0;
+        padding: 0 0.375rem;
+        color: inherit;
+        background: transparent;
+      }
+      input::placeholder {
+        color: var(--t-combobox-placeholder);
+        opacity: 1;
+      }
+      .field.disabled input::placeholder {
+        color: var(--t-combobox-disabled-text);
+      }
+      .spinner {
+        color: var(--t-combobox-border);
+      }
+      .icon-button {
+        flex: 0 0 2rem;
+        width: 2rem;
+        min-height: 2rem;
+        color: var(--t-combobox-border);
+      }
+      .field.disabled .icon-button,
+      .field.disabled .chip button {
+        color: var(--t-combobox-disabled-text);
+      }
+      @media (hover: hover) {
+        .icon-button:hover:enabled,
+        .chip button:hover:enabled {
+          background: var(--t-combobox-hover-bg);
+        }
+      }
+      .error {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.375rem;
+        margin-top: 0.5rem;
+        color: var(--t-combobox-error);
+        font-size: 0.875rem;
+      }
+      .error svg {
+        width: 1rem;
+        height: 1rem;
+        margin-top: 0.125rem;
+      }
+      .below {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.25rem 1rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+      }
+      .hint {
+        color: var(--t-combobox-placeholder);
+      }
+      .text-button {
+        min-height: 1.5rem;
+        margin-inline-start: auto;
+        padding: 0.125rem 0.25rem;
+        border: 0;
+        border-radius: 0.25rem;
+        background: transparent;
+        color: var(--t-combobox-text);
+        font-size: 0.875rem;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+      }
+      .text-button:disabled {
+        color: var(--t-combobox-disabled-text);
+        text-decoration-style: dashed;
+      }
+      .tooltip {
+        position: fixed;
+        z-index: 20;
+        max-width: min(24rem, calc(100vw - 2rem));
+        padding: 0.5rem 0.75rem;
+        background: var(--t-combobox-text);
+        color: var(--t-combobox-surface);
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        pointer-events: auto;
       }
       .popup {
         position: fixed;
         z-index: 10;
-        border: 1px solid var(--line);
-        border-radius: 0.5rem;
-        background: var(--surface);
-        box-shadow: 0 0.5rem 1rem #18312e18;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        padding: 0.25rem;
+        border: 1px solid var(--t-combobox-border);
+        border-radius: 0.5rem;
+        background: var(--t-combobox-surface);
+        color: var(--t-combobox-text);
+        box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 0.14);
       }
       #results {
         min-height: 0;
         overflow-y: auto;
         overscroll-behavior: contain;
       }
-      .status {
-        flex-shrink: 0;
-      }
       .option {
         display: flex;
         align-items: flex-start;
         gap: 0.75rem;
-        padding: 0.75rem;
-        margin: 0.25rem;
-        border: 2px solid transparent;
+        padding: 0.5rem 0.75rem;
+        margin: 0.125rem 0;
         border-radius: 0.25rem;
         cursor: pointer;
       }
-      .option:hover {
-        background: var(--canvas);
-      }
-      .option[aria-selected='true'] {
-        background: var(--soft);
+      @media (hover: hover) {
+        .option:hover {
+          background: var(--t-combobox-hover-bg);
+        }
       }
       .option.active {
-        border-color: var(--accent);
+        outline: 2px solid var(--t-combobox-active-outline);
+        outline-offset: -2px;
       }
       .option[aria-disabled='true'] {
         cursor: not-allowed;
       }
-      .option[aria-disabled='true'] .check {
-        border-style: dashed;
-      }
-      input::placeholder {
-        color: var(--muted);
-        opacity: 1;
-      }
-      .status button {
-        max-width: 100%;
-      }
-      @media (hover: none) {
-        .option:hover {
-          background: var(--surface);
-        }
+      .option[aria-disabled='true'] .option-copy {
+        font-style: italic;
       }
       .check {
         display: grid;
@@ -371,34 +489,61 @@
         flex: 0 0 1.25rem;
         height: 1.25rem;
         margin-top: 0.125rem;
-        border: 1px solid var(--line);
+        border: 1px solid var(--t-combobox-border);
         border-radius: 0.25rem;
-        font-size: 0.875rem;
+        color: var(--t-combobox-surface);
+      }
+      .check svg {
+        width: 0.875rem;
+        height: 0.875rem;
       }
       [aria-selected='true'] .check {
-        background: var(--accent);
-        color: white;
-        border-color: var(--accent);
+        background: var(--t-combobox-selected-mark);
+        border-color: var(--t-combobox-selected-mark);
+      }
+      .option[aria-disabled='true'] .check {
+        border-style: dashed;
       }
       .option-copy {
         min-width: 0;
       }
       .option-name {
         display: block;
-        font-weight: 650;
       }
+      /* Consumer template content in the mock uses host page colors. */
       .option-detail {
         display: block;
-        color: var(--muted);
-        font-size: 0.8rem;
+        color: var(--page-muted);
+        font-size: 0.8125rem;
+      }
+      .avatar {
+        display: grid;
+        place-items: center;
+        flex: 0 0 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: var(--page-accent-soft);
+        color: var(--page-ink);
+        font-size: 0.75rem;
+        font-weight: 700;
       }
       .status {
-        padding: 1rem;
-        color: var(--muted);
-        border-top: 1px solid #d8e2df;
+        display: flex;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.25rem 0.75rem;
+        padding: 0.5rem 0.75rem 0.25rem;
+        border-top: 1px solid var(--t-combobox-border);
+        font-size: 0.875rem;
       }
-      .status p + button {
-        margin-top: 0.75rem;
+      .status .button {
+        min-height: 1.75rem;
+        padding: 0.125rem 0.625rem;
+        border-color: var(--t-combobox-border);
+        background: var(--t-combobox-surface);
+        color: var(--t-combobox-text);
       }
       .sr-only {
         position: absolute;
@@ -410,6 +555,32 @@
         clip-path: inset(50%);
         white-space: nowrap;
         border: 0;
+      }
+      @media (pointer: coarse) {
+        .input-row input,
+        .icon-button,
+        .chip button,
+        .status .button {
+          min-height: 2.75rem;
+        }
+        .icon-button,
+        .chip button {
+          flex-basis: 2.75rem;
+          width: 2.75rem;
+        }
+        .text-button {
+          min-height: 2.75rem;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .spinner svg {
+          animation: t-combobox-spin var(--t-combobox-motion-duration) linear infinite;
+        }
+      }
+      @keyframes t-combobox-spin {
+        to {
+          transform: rotate(1turn);
+        }
       }
       @media (max-width: 40em) {
         .shell {
@@ -426,25 +597,27 @@
         }
       }
       @media (forced-colors: active) {
-        .field,
-        .chip,
-        .popup,
-        .button,
-        select,
-        .check {
-          border-color: ButtonText;
-        }
-        .option.active {
-          border-color: Highlight;
+        :root,
+        :root[data-theme] {
+          --page-line: ButtonText;
+          --page-focus: Highlight;
+          --t-combobox-text: CanvasText;
+          --t-combobox-placeholder: GrayText;
+          --t-combobox-surface: Canvas;
+          --t-combobox-chip-bg: Canvas;
+          --t-combobox-border: ButtonText;
+          --t-combobox-focus-ring: Highlight;
+          --t-combobox-active-outline: Highlight;
+          --t-combobox-hover-bg: Canvas;
+          --t-combobox-selected-mark: Highlight;
+          --t-combobox-disabled-text: GrayText;
+          --t-combobox-error: CanvasText;
         }
         [aria-selected='true'] .check {
           forced-color-adjust: none;
           background: Highlight;
           color: HighlightText;
           border-color: Highlight;
-        }
-        :focus-visible {
-          outline-color: Highlight;
         }
         .tooltip {
           background: CanvasText;
@@ -479,6 +652,13 @@
             <option value="limit">Selection limit (3)</option>
             <option value="many">200 selections</option>
             <option value="long">Long label</option>
+            <option value="custom">Custom templates</option>
+          </select>
+          <label for="theme">Theme</label>
+          <select id="theme">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
           </select>
           <label><input type="checkbox" id="rtl" /> Right-to-left</label>
           <button type="button" class="button" id="reset">Reset</button>
@@ -493,7 +673,7 @@
               <p>Required learning · 35 minutes</p>
             </div>
           </div>
-          <div id="combobox">
+          <div class="combobox" id="combobox">
             <label class="label" for="learner-search"
               >Learners <span aria-hidden="true">*</span></label
             >
@@ -508,29 +688,58 @@
                   aria-required="true"
                   aria-describedby="hint summary"
                   autocomplete="off"
-                  placeholder="Search by name or email"
+                  placeholder="Name or email"
                 />
-                <button
-                  type="button"
-                  class="icon-button"
-                  id="clear"
-                  aria-label="Clear all selections"
-                >
-                  ×
-                </button>
+                <span class="spinner" id="spinner" aria-hidden="true" hidden>
+                  <svg viewBox="0 0 20 20" focusable="false">
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="7"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-dasharray="30 14"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
                 <button
                   type="button"
                   class="icon-button"
                   id="toggle"
                   tabindex="-1"
-                  aria-label="Show learners"
+                  aria-label="Show options"
                 >
-                  ⌄
+                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                    <path
+                      d="M5 7.5l5 5 5-5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
-            <p class="hint" id="hint">Select one or more learners. Search to narrow the results.</p>
-            <p class="error" id="validation" hidden>Select at least one learner.</p>
+            <div class="popup" id="popup" hidden>
+              <div id="results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
+              <div class="status" id="status"></div>
+            </div>
+            <p class="error" id="validation" hidden>
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6" />
+                <path d="M10 5.5v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <circle cx="10" cy="14.25" r="1.1" fill="currentColor" />
+              </svg>
+              <span>Select at least one learner.</span>
+            </p>
+            <div class="below">
+              <p class="hint" id="hint">Select one or more learners. Search to narrow the results.</p>
+              <button type="button" class="text-button" id="clear">Clear all selections</button>
+            </div>
             <span class="sr-only" id="summary"></span>
             <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
           </div>
@@ -538,13 +747,16 @@
             <p class="count" id="count"></p>
             <button type="submit" class="button primary" id="assign">Preview assignment</button>
           </div>
-          <p class="hint" id="confirmation" role="status"></p>
+          <p class="note" id="confirmation" role="status"></p>
         </form>
         <aside class="notes" aria-labelledby="notes-title">
           <h3 id="notes-title">Try the interaction</h3>
           <ul>
             <li>Search “Morgan” or “Alex”, or open the list to browse everyone.</li>
-            <li>Use ↑ / ↓ to browse and Enter to select. Selected learners stay in the results.</li>
+            <li>
+              Use ↑ / ↓ or Page Up / Page Down to browse, then Enter or Space to select. Selected
+              learners stay in the results.
+            </li>
             <li>Escape closes the list. Tab continues through the form.</li>
             <li>
               With an empty search, Backspace removes the last selection. Use ← to reach its remove
@@ -552,33 +764,28 @@
             </li>
             <li>
               Scroll to the bottom or use Load more for more results. Use the preview controls to
-              explore failure and edge states.
+              explore failure and edge states, the dark theme, and custom templates.
             </li>
           </ul>
-          <p class="hint">
+          <p class="note">
             Mock configuration: 300 ms debounce, empty-query browsing enabled. No production Angular
             API is implemented here.
           </p>
         </aside>
       </div>
     </main>
-    <div
-      class="popup"
-      id="popup"
-      role="region"
-      aria-label="Learner search results"
-      tabindex="-1"
-      hidden
-    >
-      <div id="results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
-      <div class="status" id="status"></div>
-    </div>
     <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
     <script>
       const $ = (id) => document.getElementById(id);
       const input = $('learner-search'),
         popup = $('popup'),
         list = $('results');
+      const ICONS = {
+        dismiss:
+          '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+        check:
+          '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      };
       const names = [
         'Ada Chen',
         'Grace Patel',
@@ -635,7 +842,8 @@
       let lastRequest = null,
         openingMode = 'normal',
         preserveOpeningMode = false,
-        pageFailureUsed = false;
+        pageFailureUsed = false,
+        keyboardNavigating = false;
       let announcementTimer,
         failureTimer,
         tooltipTimer,
@@ -696,6 +904,7 @@
         clearTimeout(requestTimer);
         clearTimeout(loadingTimer);
         busy = false;
+        $('spinner').hidden = true;
         discardStatus();
       }
       function validate() {
@@ -703,7 +912,10 @@
         $('validation').hidden = !invalid;
         $('field').classList.toggle('invalid', invalid);
         input.setAttribute('aria-invalid', String(invalid));
-        input.setAttribute('aria-describedby', 'hint summary' + (invalid ? ' validation' : ''));
+        input.setAttribute(
+          'aria-describedby',
+          (invalid ? 'validation ' : '') + 'hint' + (selected.length ? ' summary' : ''),
+        );
       }
       function hideTooltip() {
         clearTimeout(tooltipTimer);
@@ -759,7 +971,7 @@
         label.textContent = person.name;
         const remove = document.createElement('button');
         remove.type = 'button';
-        remove.textContent = '×';
+        remove.innerHTML = ICONS.dismiss;
         remove.setAttribute('aria-label', 'Remove ' + person.name);
         remove.addEventListener('click', () => removeChip(person));
         chip.addEventListener('pointerenter', () => showTooltip(chip, person));
@@ -810,7 +1022,7 @@
           selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' selected';
         $('summary').textContent = selected.length
           ? selected.length + ' selected: ' + selected.map((item) => item.name).join(', ')
-          : 'No learners selected.';
+          : '';
         $('hint').textContent = minLength
           ? 'Type at least ' + minLength + ' characters to search.'
           : limit === null
@@ -869,6 +1081,14 @@
           input.setAttribute('aria-activedescendant', optionId(results[active]));
         else input.removeAttribute('aria-activedescendant');
       }
+      function visiblePageSize() {
+        const panel = list.getBoundingClientRect();
+        const visible = [...list.children].filter((node) => {
+          const row = node.getBoundingClientRect();
+          return row.top >= panel.top - 1 && row.bottom <= panel.bottom + 1;
+        }).length;
+        return Math.max(1, visible);
+      }
       function canPage() {
         return (
           !busy &&
@@ -892,6 +1112,13 @@
         });
         return button;
       }
+      function initials(name) {
+        return name
+          .split(' ')
+          .map((part) => part[0])
+          .join('')
+          .slice(0, 2);
+      }
       function renderResults() {
         const scrollTop = list.scrollTop;
         list.replaceChildren();
@@ -907,7 +1134,7 @@
           const check = document.createElement('span');
           check.className = 'check';
           check.setAttribute('aria-hidden', 'true');
-          check.textContent = has(person) ? '✓' : '';
+          if (has(person)) check.innerHTML = ICONS.check;
           const copy = document.createElement('span');
           copy.className = 'option-copy';
           const name = document.createElement('span');
@@ -923,7 +1150,15 @@
                 ? ' · Selection limit reached'
                 : '');
           copy.append(name, detail);
-          option.append(check, copy);
+          option.append(check);
+          if (mode === 'custom') {
+            const avatar = document.createElement('span');
+            avatar.className = 'avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            avatar.textContent = initials(person.name);
+            option.append(avatar);
+          }
+          option.append(copy);
           option.addEventListener('mousedown', (event) => event.preventDefault());
           option.addEventListener('click', () => {
             active = index;
@@ -932,6 +1167,7 @@
           list.append(option);
         });
         list.setAttribute('aria-busy', String(busy));
+        $('spinner').hidden = !busy;
         $('status').replaceChildren();
         const message = document.createElement('p');
         message.textContent =
@@ -944,7 +1180,11 @@
                 : failed
                   ? 'Learners could not be loaded. Your selections are safe.'
                   : !results.length
-                    ? 'No results'
+                    ? mode === 'custom' && completedQuery
+                      ? 'No learners match “' +
+                        completedQuery +
+                        '”. Check the spelling or search by email.'
+                      : 'No results'
                     : results.length < total
                       ? results.length + ' of ' + total + ' learners'
                       : total + ' learner' + (total === 1 ? '' : 's') + ' available';
@@ -994,6 +1234,7 @@
       }
       function close() {
         open = false;
+        keyboardNavigating = false;
         popup.hidden = true;
         discardStatus();
         clearTimeout(loadingTimer);
@@ -1108,6 +1349,7 @@
       }
       function inputChanged() {
         if (composing) return;
+        keyboardNavigating = false;
         cancelRequest();
         failed = false;
         pendingQuery = true;
@@ -1130,8 +1372,12 @@
         }, 300);
       }
       input.addEventListener('input', inputChanged);
+      input.addEventListener('pointerdown', () => (keyboardNavigating = false));
+      // Pointer presses in the panel keep focus on the input.
+      popup.addEventListener('mousedown', (event) => event.preventDefault());
       input.addEventListener('compositionstart', () => {
         composing = true;
+        keyboardNavigating = false;
         cancelRequest();
         pendingQuery = true;
         renderResults();
@@ -1143,6 +1389,7 @@
       input.addEventListener('keydown', (event) => {
         if (event.isComposing || composing) return;
         const key = event.key;
+        if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) keyboardNavigating = false;
         if (key === 'Escape') {
           if (open) {
             close();
@@ -1186,8 +1433,33 @@
               );
             }
           }
+          if (!event.altKey) keyboardNavigating = true;
           syncActive();
           revealActive();
+          return;
+        }
+        if ((key === 'PageDown' || key === 'PageUp') && open) {
+          event.preventDefault();
+          openingMode = 'normal';
+          preserveOpeningMode = false;
+          keyboardNavigating = true;
+          if (active < 0) active = key === 'PageDown' ? (results.length ? 0 : -1) : results.length - 1;
+          else if (key === 'PageDown' && active === results.length - 1) nextPage();
+          else
+            active = Math.max(
+              0,
+              Math.min(
+                results.length - 1,
+                active + (key === 'PageDown' ? 1 : -1) * visiblePageSize(),
+              ),
+            );
+          syncActive();
+          revealActive();
+          return;
+        }
+        if (key === ' ' && open && keyboardNavigating && results[active]) {
+          event.preventDefault();
+          togglePerson(results[active]);
           return;
         }
         if (key === 'Enter' && open) {
@@ -1216,7 +1488,7 @@
           $('chips').querySelectorAll('button')[selected.length - 1].focus();
         }
       });
-      function componentKeydown(event) {
+      $('combobox').addEventListener('keydown', (event) => {
         if (event.isComposing) return;
         if (event.key === 'Tab') close();
         else if (event.key === 'Escape' && open) {
@@ -1226,9 +1498,7 @@
           event.preventDefault();
           event.stopPropagation();
         }
-      }
-      $('combobox').addEventListener('keydown', componentKeydown);
-      popup.addEventListener('keydown', componentKeydown);
+      });
       $('field').addEventListener('click', (event) => {
         if (!event.target.closest('button') && !event.target.closest('.chip') && !disabled) {
           input.focus();
@@ -1252,29 +1522,23 @@
         announce('All selections cleared.');
       });
       document.addEventListener('pointerdown', (event) => {
-        if (
-          !$('combobox').contains(event.target) &&
-          !popup.contains(event.target) &&
-          !$('tooltip').contains(event.target)
-        ) {
+        if (!$('combobox').contains(event.target) && !$('tooltip').contains(event.target)) {
           close();
           hideTooltip();
         }
       });
       document.addEventListener('focusin', (event) => {
-        if (!$('combobox').contains(event.target) && !popup.contains(event.target)) {
+        if (!$('combobox').contains(event.target)) {
           close();
           hideTooltip();
         }
       });
-      function focusOut(event) {
-        if (!$('combobox').contains(event.relatedTarget) && !popup.contains(event.relatedTarget)) {
+      $('combobox').addEventListener('focusout', (event) => {
+        if (!$('combobox').contains(event.relatedTarget)) {
           touched = true;
           validate();
         }
-      }
-      $('combobox').addEventListener('focusout', focusOut);
-      popup.addEventListener('focusout', focusOut);
+      });
       list.addEventListener('scroll', () => {
         if (list.scrollTop > 0 && list.scrollTop + list.clientHeight >= list.scrollHeight - 8)
           nextPage();
@@ -1361,6 +1625,14 @@
         }
       }
       $('scenario').addEventListener('change', () => scenario($('scenario').value));
+      const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      function applyTheme() {
+        const choice = $('theme').value;
+        document.documentElement.dataset.theme =
+          choice === 'system' ? (darkScheme.matches ? 'dark' : 'light') : choice;
+      }
+      $('theme').addEventListener('change', applyTheme);
+      darkScheme.addEventListener('change', applyTheme);
       $('rtl').addEventListener('change', () => {
         document.documentElement.dir = $('rtl').checked ? 'rtl' : 'ltr';
         hideTooltip();
@@ -1368,6 +1640,8 @@
       });
       $('reset').addEventListener('click', () => {
         $('scenario').value = 'normal';
+        $('theme').value = 'light';
+        applyTheme();
         $('rtl').checked = false;
         document.documentElement.dir = 'ltr';
         scenario('normal');

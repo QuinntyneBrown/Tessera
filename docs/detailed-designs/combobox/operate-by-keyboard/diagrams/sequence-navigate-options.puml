@@ -53,6 +53,23 @@ else Last option and hasMore
 else Last option and no more pages
   combobox --> user : No request; active option unchanged (L2-033 criterion 4)
 end
+combobox -> combobox : keyboardNavigating = true
+
+user -> combobox : Page Down or Page Up (list open)
+combobox -> combobox : preventDefault(); keyboardNavigating = true
+combobox -> manager : setActiveItem(active +/- visiblePageSize()), clamped, no wrap (L2-033 criterion 16)
+opt Page Down on the last option and hasMore
+  combobox -> search : loadNextPage() (L2-025)
+end
+
+user -> combobox : Space
+alt keyboardNavigating and enabled option active
+  combobox -> combobox : toggle(item); preventDefault(); no space inserted (L2-033 criterion 15)
+else keyboardNavigating and disabled option active
+  combobox -> combobox : preventDefault(); nothing selected
+else Typed or moved the caret since navigating
+  combobox -> combobox : Not handled; the browser inserts a space
+end
 
 user -> combobox : Enter
 alt Error row shown
@@ -68,6 +85,8 @@ else No active option, hasMore, and paging eligible
 else No active option or disabled option
   combobox -> combobox : Select nothing; preventDefault() while open (L2-033 criterion 6)
   combobox -x form : Submission blocked
+else List closed
+  combobox -> form : Not handled; implicit submission applies (L2-033 criterion 6)
 end
 
 user -> combobox : Escape

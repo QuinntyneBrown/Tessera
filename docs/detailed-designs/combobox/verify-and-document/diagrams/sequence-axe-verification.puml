@@ -48,7 +48,7 @@ else Other state
   page -> cb : Type, select, or open as the state requires
 end
 spec -> page : expectNoAccessibilityViolations()
-page -> axe : Include t-combobox and the overlay container
+page -> axe : Include t-combobox, which contains the inline popover list
 axe -> cb : Analyze with wcag2a to wcag22aa tags
 cb --> axe : DOM and ARIA state
 axe --> page : violations

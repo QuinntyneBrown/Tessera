@@ -38,7 +38,7 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 | `removeChip(labelOrIndex)` | Finds the chip by label or index and clicks its remove button. It rejects when no chip matches. |
 
 - Timing follows the harness environment. In the Chromium TestBed contract fixture, `manualChangeDetection()` encloses timing-sensitive harness actions and reads; the fixture explicitly detects changes, advances fake time or awaits real time, and renders the expected state before inspection. Default Testbed stabilization can flush fake timers or await stability, so `search()` alone does not guarantee return before debounce. Loading-state verification uses the Playwright page object, not default harness stabilization. See the [CDK Testbed implementation](https://github.com/angular/components/blob/main/src/cdk/testing/testbed/testbed-harness-environment.ts) and [manual change detection API](https://github.com/angular/components/blob/main/src/cdk/testing/change-detection.ts).
-- The harness uses package-owned DOM hooks and semantic attributes: ARIA roles (`combobox`, `listbox`, `option`), `aria-expanded`, `aria-controls`, `aria-selected`, `aria-disabled`, and the semantic chip list. Because the listbox lives in a CDK overlay outside the host, the harness locates it with `documentRootLocatorFactory()` and the `aria-controls` identifier of its own input. This keeps two comboboxes on one page separate (`L2-047` AC5).
+- The harness uses package-owned DOM hooks and semantic attributes: ARIA roles (`combobox`, `listbox`, `option`), `aria-expanded`, `aria-controls`, `aria-selected`, `aria-disabled`, and the semantic chip list. The listbox is a CDK popover inserted after the field inside the host (`L2-030` criterion 7), but without the Popover API it falls back to an overlay container outside the host. The harness therefore locates it with `documentRootLocatorFactory()` and the `aria-controls` identifier of its own input. This keeps two comboboxes on one page separate (`L2-047` AC5).
 - An option label is the text of the component-owned content wrapper, which excludes the decorative checkbox. A chip label is the text of the chip's label wrapper, which holds either `displayWith(item)` or custom template content. The wrappers carry package-owned class hooks that only the harness reads.
 - The harness has no filter predicate. A consumer with more than one combobox picks one with `getAllHarnesses()`. No with() filters are included in v1.
 - Harness behavior is exercised in a browser-only TestBed fixture served by the Chromium e2e app. The fixture creates a `ComponentFixture`, obtains `TestbedHarnessEnvironment.loader(fixture)`, and exposes typed contract operations through a test-only bridge. `ComboboxDemoPage` invokes that bridge with Playwright and owns all selectors. The fixture initializes Angular's browser testing environment before creating TestBed and destroys its fixture on teardown. No invented CDK Playwright adapter or jsdom run substitutes for this check. `ComboboxOptionState` is exported with the harness.
@@ -60,7 +60,7 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 | `hostile`, `instances` | Hostile labels and two instances, as used by [Secure and perform](../secure-and-perform/) |
 
 - `ComboboxDemoPage` offers these verification helpers. `useViewport(width)` sets one of 320, 576, 768, 992, 1200, or 1920 CSS px. `useReflowViewport()` applies the 320 by 256 CSS px viewport, as the [present accessibly](../present-accessibly/) design specifies. `enlargeTextTo200Percent()` and `applyTextSpacingOverrides()` inject the style overrides, as `PlayerPage` does. `expectNoHorizontalScroll()` and `expectNoAccessibilityViolations()` complete the set.
-- `expectNoAccessibilityViolations()` runs `AxeBuilder` from `@axe-core/playwright` with the tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, and `wcag22aa`. It includes `t-combobox` and the CDK overlay container, because the open list renders outside the host. It asserts an empty `violations` array.
+- `expectNoAccessibilityViolations()` runs `AxeBuilder` from `@axe-core/playwright` with the tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, and `wcag22aa`. It includes `t-combobox`, which contains the open list as an inline popover in Chromium (`L2-030` criterion 7). It asserts an empty `violations` array.
 
 **Automated accessibility verification**
 
@@ -123,8 +123,8 @@ Use a production fixture with two preselected values, a 6-item page, an inactive
 |----------|-------|
 | Windows / NVDA, JAWS, Narrator | Start the reader, use its form-interaction mode on the named input, and use the hardware keyboard. Run high contrast through Windows accessibility settings. |
 | macOS / VoiceOver | Enable VoiceOver, enter interaction with the form control, and turn Quick Nav off for native input editing. Use the hardware keyboard and the system reduced-motion preference. |
-| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open. |
-| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior. |
+| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open, and whether swiping forward from the input with the list open reaches the first option (`L2-030` criterion 7). |
+| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior, and whether swiping forward from the input with the list open reaches the first option. |
 
 1. Tab or navigate to the input without opening the popup. Confirm the label, role, required state, and selected summary are read.
 2. Open with Arrow Down. Navigate selected, unselected, and disabled options. Confirm active movement does not select and each selected/disabled state is read.
@@ -204,6 +204,6 @@ A consumer test operates the combobox through the harness, which finds the listb
 
 ![Sequence diagram: Operate the combobox from a consumer test](diagrams/sequence-consumer-harness.png)
 
-A Playwright test enters a state through `ComboboxDemoPage` and runs axe over the host and the overlay. Responsive and keyboard checks use the same page object.
+A Playwright test enters a state through `ComboboxDemoPage` and runs axe over the host, which contains the open list. Responsive and keyboard checks use the same page object.
 
 ![Sequence diagram: Run automated accessibility verification](diagrams/sequence-axe-verification.png)

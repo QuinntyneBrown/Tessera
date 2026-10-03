@@ -14,7 +14,7 @@
 
 **Right-to-left layout** — layout in which the inline start edge is the right edge, as in Arabic and Hebrew
 
-DOM focus rests on the input while the user navigates options. The input handles each key and moves the active option by keyboard, so the user needs no pointer. Chips sit before the input in the field, and the remove button of each chip is a second place that holds focus. The feature extends the WAI-ARIA Authoring Practices combobox input-focus model with a multi-select listbox and applies the v1 decisions of the subsystem: Arrow navigation does not wrap, and Home and End move the text cursor.
+DOM focus rests on the input while the user navigates options. The input handles each key and moves the active option by keyboard, so the user needs no pointer. Chips sit before the input in the field, and the remove button of each chip is a second place that holds focus. The feature extends the WAI-ARIA Authoring Practices combobox input-focus model with a multi-select listbox and applies the v1 decisions of the subsystem: Arrow navigation does not wrap, Home and End move the text cursor, Space toggles only after keyboard navigation, and Page Up and Page Down move by one visible page.
 
 This feature owns key handling only. Searching, selection state, list positioning, announcements, and form integration belong to sibling features and appear here as collaborators.
 
@@ -29,11 +29,13 @@ The slice adds two key handlers to `Combobox<T>` and wires them to collaborators
 - `Combobox<T>.removeChip(item)` is specified in [Select values](../select-values/). It chooses the focus target first: the next chip's remove button, else the previous chip's, else the input (`L2-027` criterion 6). It focuses that target and then calls `commit(next, { removed: item })`, which emits `selectionChange` and announces "{label} removed." through `ComboboxAnnouncer`.
 - `Combobox<T>.focusChip(index)` and `focusInput()` move DOM focus. Chip remove buttons are found with `viewChildren`, so the template owns their DOM.
 - `Combobox<T>.isRtl()` reads the computed CSS `direction` of the host element. A `dir="rtl"` attribute or a `direction: rtl` style on any ancestor therefore mirrors the keys, and no extra import is needed. The value is read on each key press, so a change of direction at run time takes effect immediately.
-- `ActiveDescendantKeyManager<ComboboxOption<T>>` from the CDK `a11y` module tracks the active option. The component creates it with `withWrap(false)` and `skipPredicate(() => false)`, because the manager skips disabled items by default. It does not enable type-ahead or Home and End handling. The component never forwards `keydown` to the manager's `onKeydown`. It calls `setNextItemActive()`, `setPreviousItemActive()`, and `setLastItemActive()` explicitly, so the manager cannot react to keys outside the key map. Because disabled options are not skipped, Arrow keys reach them (`L2-035` criterion 7). The open-time rule that activates the first enabled option is `activateFirstEnabled()`, specified in [Open and position the list](../open-and-position-list/).
+- `ActiveDescendantKeyManager<ComboboxOption<T>>` from the CDK `a11y` module tracks the active option. The component creates it with `withWrap(false)` and `skipPredicate(() => false)`, because the manager skips disabled items by default. It does not enable type-ahead or Home and End handling. The component never forwards `keydown` to the manager's `onKeydown`. It calls `setNextItemActive()`, `setPreviousItemActive()`, `setLastItemActive()`, and, for Page Down and Page Up, `setActiveItem(index)` explicitly, so the manager cannot react to keys outside the key map. Because disabled options are not skipped, Arrow keys reach them (`L2-035` criterion 7). The open-time rule that activates the first enabled option is `activateFirstEnabled()`, specified in [Open and position the list](../open-and-position-list/).
 - `ComboboxOption<T>` publishes the manager's active state through `aria-activedescendant` on the input and exposes `item` and `disabled`. Enter calls `Combobox<T>.toggle(item)` for the active option ([Select values](../select-values/)). `Combobox<T>` removes the attribute when the list is closed or no option is active.
 - `ComboboxSearch<T>` supplies `status`, `hasMore`, `retry()`, and `loadNextPage()`. The keyboard layer reads the first two and calls the last two.
-- `ComboboxPopup` supplies `open()` and `close()` for the overlay. It does not subscribe to the CDK overlay `keydownEvents()`, so Escape is handled by component handlers rather than the CDK dispatcher. A shared bubbling boundary handler on host and popup closes on Tab or Escape from chips, clear-all, and popup actions. It preserves chip focus, restores input focus from popup actions, and never prevents Tab. Input-handled Escape stops propagation to avoid handling it twice; a visible tooltip has first priority.
+- `ComboboxPopup` supplies `open()` and `close()` for the overlay. It does not subscribe to the CDK overlay `keydownEvents()`, so Escape is handled by component handlers rather than the CDK dispatcher. A shared bubbling boundary handler on the host closes on Tab or Escape from chips, clear-all, and popup actions; popup keys reach it by bubbling in the inline popover placement, and the handler is also attached to the pane only in the fallback placement, so each key is handled once. It preserves chip focus, restores input focus from popup actions, and never prevents Tab. Input-handled Escape stops propagation to avoid handling it twice; a visible tooltip has first priority.
 - `openingMode` records normal, last, or none. It stays in effect through the first asynchronous response. Arrow Up chooses last; Alt+Arrow Down chooses none; other opens choose normal. A plain arrow clears this mode and navigates from the current index, or from the corresponding end when none is active. The popup feature owns these rules.
+- `keyboardNavigating` records whether the user last moved or set the active option with Arrow Down, Arrow Up, Page Down, or Page Up. Those keys set it. `onInput(text)`, `compositionstart`, Arrow Left, Arrow Right, Home, End, a pointer press in the input, and `close()` clear it. Space reads it (`L2-033` criterion 15).
+- `visiblePageSize()` counts the options whose boxes lie fully inside the listbox's visible area, with a minimum of 1. Page Down and Page Up move by that count (`L2-033` criterion 16).
 
 **Input key map** (focus on the input):
 
@@ -48,12 +50,18 @@ The slice adds two key handlers to `Combobox<T>` and wires them to collaborators
 | Enter | Error row shown | `onRetryActivated()`, which calls `search.retry()`, and `preventDefault()`. |
 | Enter | List open, enabled option active | `toggle(item)` for that option and `preventDefault()`, which blocks form submission. |
 | Enter | List open, no active option or a disabled one | Selects nothing and calls `preventDefault()`. With no active option and hasMore, calls loadNextPage; disabled active options do not trigger paging. |
-| Enter | List closed, error row not shown | Selects nothing. The browser default applies. |
+| Enter | List closed, error row not shown | Selects nothing. The browser default applies, including implicit form submission (`L2-033` criterion 6). |
+| Space | List open, `keyboardNavigating` true, enabled option active | `toggle(item)` for that option and `preventDefault()`, so no space is inserted. |
+| Space | List open, `keyboardNavigating` true, disabled option active | `preventDefault()` only. Nothing is selected and no space is inserted. |
+| Space | Any other state | Not handled. The browser inserts a space and `onInput(text)` updates `query`. |
+| Page Down | List open | `preventDefault()` and set `keyboardNavigating`. Moves the active option forward by `visiblePageSize()`, stopping at the last loaded option. On the last option, `loadNextPage()` runs when `hasMore` is true, as for Arrow Down. With no active option, the first loaded option becomes active. |
+| Page Up | List open | `preventDefault()` and set `keyboardNavigating`. Moves the active option back by `visiblePageSize()`, stopping at the first option. With no active option, the last loaded option becomes active. |
+| Page Down, Page Up | List closed | Not handled. The page scrolls by browser default. |
 | Escape | Full-label tooltip visible | Dismiss tooltip and stop propagation before all other Escape handling. |
 | Escape | List open | `close()` and `stopPropagation()`. |
 | Escape | List closed, input has text | Clears `query` and calls `stopPropagation()`. |
 | Escape | List closed, input empty | Not handled. The event propagates. |
-| Home, End | Any | Not handled. The text cursor moves and no option becomes active. |
+| Home, End | Any | Not forwarded to the key manager. The text cursor moves, no option becomes active, and `keyboardNavigating` is cleared. |
 | Backspace | Input empty, chips exist | `commit(next, { removed: last })` without moving focus. Focus stays on the input. |
 | Backspace | Input has text | Not handled. The browser edits the text. |
 | Arrow Left (Arrow Right in right-to-left) | Cursor at start or input empty, chips exist | `focusChip(last)` and `preventDefault()`. |
@@ -74,7 +82,7 @@ The cursor is at the start when `selectionStart` and `selectionEnd` are both 0. 
 
 The Arrow keys resolve through two values, `previousKey` and `nextKey`, computed from `isRtl()`. The same mapping decides which Arrow key leaves the input toward the chips, so the input and chip handlers share one direction rule.
 
-DOM order inside the host is the chip remove buttons, the input, and the clear-all button. The toggle button has `tabindex="-1"`. Tab from a chip therefore reaches the next chip or the input, then the clear-all button, and then leaves the component. A `focusout` handler, specified in [Integrate with forms](../integrate-forms/), marks the control touched when `relatedTarget` lies outside the host. Moving between chips, the input, and the buttons does not mark the control touched.
+DOM order inside the host is the chip remove buttons, the input, the toggle, the popover list, and then, below the field, the error, the hint, and the clear-all button. Popup actions stay outside the Tab sequence. The toggle button has `tabindex="-1"`. Tab from a chip therefore reaches the next chip or the input, then the clear-all button, and then leaves the component. A `focusout` handler, specified in [Integrate with forms](../integrate-forms/), marks the control touched when `relatedTarget` lies outside the host. Moving between chips, the input, and the buttons does not mark the control touched.
 
 Acceptance criteria coverage:
 
@@ -90,12 +98,14 @@ Acceptance criteria coverage:
 | `L2-033` 12 | Start-direction Arrow row; cursor test |
 | `L2-033` 13 | Tab rows |
 | `L2-033` 14 | `onInput(text)` |
+| `L2-033` 15 | Space rows; `keyboardNavigating` |
+| `L2-033` 16 | Page Down and Page Up rows; `visiblePageSize()` and `setActiveItem(index)` |
 | `L2-034` 1 | Chip key map, first two rows; `removeChip(item)` |
 | `L2-034` 2, 3 | Chip key map, Arrow rows; `previousKey` and `nextKey` |
 | `L2-034` 4 | Tab row; DOM order; `focusout` and touched |
 | `L2-034` 5 | Start-direction Arrow row with `isRtl()` true |
 
-Opening modes are specified consistently in L2-029 and L2-033. Arrow Up starts at the last loaded option, not the last option of the remote data set. Escape reaches an enclosing dialog only after the tooltip, popup, and non-empty query have been dismissed in that order. Bubbling Tab and Escape handlers on the host and popup also cover chip and popup-action focus.
+Opening modes are specified consistently in L2-029 and L2-033. Arrow Up starts at the last loaded option, not the last option of the remote data set. Escape reaches an enclosing dialog only after the tooltip, popup, and non-empty query have been dismissed in that order. Bubbling Tab and Escape handlers on the host, and on the pane in the fallback placement, also cover chip and popup-action focus.
 
 ## Requirements
 

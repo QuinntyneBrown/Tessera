@@ -46,12 +46,12 @@ The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the ho
 
 ### Touched
 
-The host element listens for `focusout`, and `ComboboxPopup` routes `focusout` from the overlay pane to the same handler. The handler reads `event.relatedTarget`.
+The host element listens for `focusout`. In the inline popover placement the overlay pane lies inside the host, so its `focusout` reaches the same listener by bubbling. Only in the fallback placement, when the pane lies outside the host, does `ComboboxPopup` route `focusout` from the pane to that handler, so each event is handled once. The handler reads `event.relatedTarget`.
 
 - When `relatedTarget` lies inside the host element or inside the overlay pane, focus moved within the component. The handler does nothing. Moves from the input to a chip remove button, to clear-all, or into the overlay therefore do not mark the control touched.
 - Otherwise focus left the whole component, and the handler calls `onTouched()` once. A `null` `relatedTarget`, such as a click on a non-focusable area, counts as leaving.
 
-Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Both host and popup route focusout through this boundary check.
+Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Every focusout, whether it bubbles to the host or is routed from a fallback pane, passes through this boundary check once.
 
 ### Required and invalid state
 
@@ -67,7 +67,7 @@ Signals do not observe AbstractControl state. When the same-element NgControl re
 
 ### Hint and error text
 
-`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. Hint and rendered error ids feed aria-describedby.
+`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders directly below the field and before the hint, prefixed by a decorative error icon in the `--t-combobox-error` token; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. The rendered error id and the hint id feed aria-describedby in that order (`L2-031` criterion 9, `L2-035` criterion 5). The order and the icon follow the Fluent 2 Field pattern, which places validation text nearest the control.
 
 ### Model binding without forms
 
