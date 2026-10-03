@@ -16,7 +16,9 @@ skinparam package {
 }
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
+  participant "ActivityLauncher" as launcher
   participant "Host RuntimeSession / RuntimeBridge" as core
+  participant "PersistenceCoordinator" as persist
   participant "HostIntegration" as host
 end box
 box "Frontend - Isolated course context" #E0F2FE
@@ -32,19 +34,21 @@ wrapper -> wrapper : Validate lifecycle and empty argument
 wrapper -> core : Post commit or terminate after prior writes
 wrapper --> sco : Edition result under verified policy (<TO SUPPLY>)
 core -> core : Apply prior operations in order (L2-009)
-core -> host : PersistenceCoordinator.submit(snapshot); saveState(context, submission, signal)
-host -> api : Authorize and persist immutable snapshot
-api --> host : Save acknowledgement or failure
-host --> core : Durable result
-core --> shell : Saved status or retained unsaved state
-opt Activity replacement
+core -> persist : submit(snapshot)
+persist -> host : saveState(context, submission, signal)
+sco -> wrapper : Call API after Terminate, before retirement
+wrapper --> sco : Edition-specific terminated-session error (L2-010)
+opt Activity replacement after Commit; a validated Terminate already counts as the flush (does not await the save acknowledgement)
+  launcher -> core : flush()
   core -> wrapper : Request flush
   wrapper --> core : Flush reply after prior operations
-  core -> core : Retain state; remove old iframe and binding (L2-010)
-  core --> shell : Safe to create new session
+  core --> launcher : Flushed; state retained
+  launcher -> launcher : retireCurrent() removes old iframe and binding (L2-010)
+  wrapper -> core : Late message from removed window
+  core -> core : Reject; replacement state unchanged
 end
-sco -> wrapper : Call captured old API after retirement
-wrapper --> sco : Edition-specific terminated-session error
-wrapper -> core : Late message from removed window
-core -> core : Reject; replacement state unchanged
+host -> api : Authorize and persist immutable snapshot
+api --> host : Save acknowledgement or failure
+host --> persist : Durable result
+persist --> shell : Saved status or retained unsaved state
 @enduml

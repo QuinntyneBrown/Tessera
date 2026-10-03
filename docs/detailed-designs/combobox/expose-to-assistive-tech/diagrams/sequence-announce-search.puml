@@ -1,0 +1,74 @@
+@startuml
+title UML sequence behaviour - Announce search outcomes
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Screen reader user" as user
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combobox
+  participant "ComboboxSearch<T>" as search
+  participant "ComboboxAnnouncer" as announcer
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "LiveAnnouncer" as live
+end box
+box "Frontend - Consumer data source" #E0F2FE
+  participant "searchFn" as data
+end box
+
+user -> combobox : Type characters 50 ms apart
+combobox -> search : query changes
+search -> data : searchFn(query, page) after debounce
+combobox -> search : Observe status becomes loading
+combobox -> combobox : Start 1 s loading timer (L2-036 criterion 4)
+
+alt Request completes within 1 s
+  data --> search : Page of items
+  search --> combobox : pageLoaded(page 0, count n); status idle
+  combobox -> combobox : Clear loading timer
+  alt List open and n above 0
+    combobox -> announcer : announceResults(n) (L2-036 criterion 2)
+  else List open and n is 0
+    combobox -> announcer : announceNoResults()
+  else List closed
+    combobox -> combobox : No announcement (L2-023)
+  end
+  announcer -> announcer : Replace pending search-status message (L2-036 criterion 3)
+  announcer -> live : announce(final message, polite) after the quiet window
+  live --> user : Reads the results message once
+else Request takes longer than 1 s
+  combobox -> announcer : announceLoading() once
+  announcer -> live : announce("Loading results.", polite)
+  live --> user : Reads the loading message
+  data --> search : Page of items
+  search --> combobox : pageLoaded(page 0, count n)
+  combobox -> announcer : announceResults(n)
+  announcer -> live : announce(results message, polite)
+else Request fails
+  data --> search : Error
+  search --> combobox : status error; error row shown
+  combobox -> announcer : announceFailure() (L2-036 criterion 5)
+  announcer -> announcer : Discard pending search-status messages
+  announcer -> live : announce("Results could not be loaded.", assertive)
+  live --> user : Interrupts with the failure message
+end
+
+user -> combobox : Scroll or arrow past the last option
+combobox -> search : loadNextPage()
+search -> data : searchFn(query, page + 1)
+data --> search : Page of items
+search --> combobox : pageLoaded(page above 0, count n)
+combobox -> announcer : announceMoreLoaded(n) (L2-036 criterion 9)
+announcer -> live : announce("n more results loaded.", polite)
+@enduml

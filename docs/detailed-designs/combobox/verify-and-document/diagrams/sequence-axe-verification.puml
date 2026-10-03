@@ -1,0 +1,66 @@
+@startuml
+title UML sequence behaviour - Run automated accessibility verification
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Maintainer" as maint
+box "Frontend - Playwright acceptance test" #E0F2FE
+  participant "Spec file" as spec
+  participant "ComboboxDemoPage" as page
+  participant "AxeBuilder" as axe
+end box
+box "Frontend - e2e-app in Chromium" #E0F2FE
+  participant "ComboboxHostFixture" as fixture
+  participant "Combobox" as cb
+end box
+box "Frontend - Consumer data source" #E0F2FE
+  participant "createMockUserSearch" as mock
+end box
+
+maint -> spec : Run pnpm e2e (Chromium only)
+spec -> page : enterState(state) (L2-048 AC1)
+page -> fixture : Open with a ComboboxScenario in the query string
+fixture -> cb : Configure inputs and slot templates
+fixture -> mock : Create searchFn from the scenario
+page -> cb : Drive the screen into the state
+alt State is loading
+  cb -> mock : searchFn with searchDelayMs of 5 s
+  page -> cb : Assert the loading row without waiting for it to end
+else State is error
+  cb -> mock : searchFn with failure always
+  mock --> cb : Error
+  page -> cb : Assert the error row and Retry
+else State is invalid
+  page -> cb : Focus the field, then leave it
+  cb --> page : aria-invalid is true after touch
+else Other state
+  page -> cb : Type, select, or open as the state requires
+end
+spec -> page : expectNoAccessibilityViolations()
+page -> axe : Include t-combobox and the overlay container
+axe -> cb : Analyze with wcag2a to wcag22aa tags
+cb --> axe : DOM and ARIA state
+axe --> page : violations
+alt Violations is empty
+  page --> spec : Pass (L2-048 AC1)
+else Violations found
+  page --> spec : Fail with the rule ids and nodes
+end
+opt Responsive and keyboard checks (L2-048 AC2, AC3)
+  spec -> page : useViewport(width), useZoom(400), text overrides, pressKey
+  page -> cb : Apply the condition and operate the screen
+  page --> spec : expectNoHorizontalScroll and keyboard results
+end
+spec --> maint : Report; each file header names its L2 requirements (L2-048 AC4)
+@enduml

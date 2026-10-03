@@ -13,23 +13,23 @@ This feature preserves the latest valid state through commits, termination, retr
 ## Description
 
 - `PersistenceCoordinator` captures validated state and serializes saves within one attempt.
-- `SaveSubmission` contains the snapshot and its revision. The attempt key and revision together identify the submission, so the host can treat a repeated revision as idempotent.
+- `SaveSubmission` contains the snapshot and its revision. The host binds every save to the `context` argument of `saveState`; the copy in `snapshot.context` is checked only when the snapshot is restored. The attempt key and revision together identify the submission, so the host can treat a repeated revision as idempotent.
 - `SaveAck` contains the acknowledged revision. The host echoes that revision only after its configured durable storage boundary.
-- `SaveState` contains latest valid revision, latest acknowledged revision, in-flight submission, retained latest snapshot, and the last sanitized failure.
+- `SaveState` contains latest valid revision, latest acknowledged revision and its `acknowledgedAt` time, in-flight submission, retained latest snapshot, and the last sanitized failure.
 - `HostIntegration.saveState` performs authorized persistence. A retry of the same immutable revision repeats the same submission.
-- `ScormPlayer` shows pending, saved, and unsaved statuses, with keyboard-operable Retry and exit warning actions.
+- `ScormPlayer` shows two save statuses: "Last saved at {time}", the time of the latest acknowledgement, or "Not saved" after a failure. The timestamp never claims that newer changes are saved, so dirty and in-flight states need no third status. Before the first acknowledgement or failure, no save status is shown; after any failure the status is "Not saved", with a keyboard-operable Retry in the save region; requesting exit adds the Exit without saving action there (see operate-player).
 
-Every save in the player goes through `PersistenceCoordinator.submit()`; no other component calls `saveState`. `submit` returns immediately; a caller that needs the outcome awaits `drain()`, which settles when the latest revision is acknowledged or fails. The coordinator receives only host-validated operations. Each commit, termination, or activity flush takes a consistent snapshot of SCO and sequencing state. Each attempt has at most one in-flight save.
+Every save in the player goes through `PersistenceCoordinator`: `submit()` for new state and `retry()` to resend the latest retained revision. No other component calls `saveState`. `submit` returns immediately; a caller that needs the outcome awaits `drain()`, which settles when the latest revision is acknowledged or fails. The coordinator receives only host-validated or host-computed state. Each commit, termination, activity flush, or sequencing change applied by `NavigationController` takes a consistent snapshot of SCO and sequencing state. Each attempt has at most one in-flight save.
 
 When changes arrive during a save, the coordinator retains a newer snapshot and submits it after the in-flight request settles. An acknowledgement clears dirty status only through its revision. It never labels newer changes saved.
 
 A failure retains the latest valid snapshot. Retry submits that latest snapshot rather than a stale failed copy. If the network outcome is uncertain, the host's idempotent revision contract prevents duplicate persistence effects.
 
-The coordinator emits a saved outcome once per newly acknowledged revision. Duplicate acknowledgements do not duplicate events. Host errors become a persistence category and correlation token, never raw response bodies or learner values.
+The coordinator publishes each newly acknowledged revision once; `ScormPlayer` then emits the outcome that `OutcomeCalculator.derive()` produced for that revision's snapshot. Duplicate acknowledgements do not duplicate events. Host errors become a persistence category and correlation token, never raw response bodies or learner values.
 
 Activity navigation preserves failed state in host memory and continues once the flush has transferred the final state; it does not wait for the save acknowledgement. Exiting the player while unsaved shows a warning and Retry before ending the attempt. Explicit acceptance of loss is separate from successful saving.
 
-Browser process termination cannot guarantee an asynchronous save. Normal exit drains pending work while the page remains alive. The host's crash-recovery strategy, background transport policy, duplicate-tab conflict policy, and retention lifetime are `<TO SUPPLY>`. In-memory retry is not durable crash recovery.
+Browser process termination cannot guarantee an asynchronous save. Normal exit first flushes the current session through `RuntimeBridge.flush()`, then drains pending work while the page remains alive. The host's crash-recovery strategy, background transport policy, duplicate-tab conflict policy, and retention lifetime are `<TO SUPPLY>`. In-memory retry is not durable crash recovery.
 
 The SCORM commit return policy described in [runtime sessions](../run-scorm-session/) remains `<TO SUPPLY>`. Queue acceptance never produces a saved status or a durable host acknowledgement.
 

@@ -1,0 +1,75 @@
+@startuml
+title UML sequence behaviour - Navigate and select options by keyboard
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard user" as user
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Host dialog" as dialog
+  participant "Form" as form
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combobox
+  participant "ComboboxSearch<T>" as search
+  participant "ComboboxOption<T>" as option
+  participant "ComboboxPopup" as popup
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "ActiveDescendantKeyManager" as manager
+end box
+
+user -> combobox : Arrow Down in the input (list closed)
+combobox -> popup : open() (L2-033 criterion 1)
+popup --> combobox : Overlay attached
+combobox -> manager : activateFirstEnabled() after render (L2-029)
+combobox --> user : aria-expanded true; aria-activedescendant set
+
+user -> combobox : Arrow Down (list open)
+alt Not the last option
+  combobox -> manager : setNextItemActive() without wrap
+  manager -> option : setActiveStyles()
+  combobox --> user : aria-activedescendant names the next option
+else Last option and hasMore
+  combobox -> search : loadNextPage()
+  search --> combobox : Appended page (L2-025)
+  combobox --> user : Active option stays on the last option
+else Last option and no more pages
+  combobox --> user : No request; active option unchanged (L2-033 criterion 4)
+end
+
+user -> combobox : Enter
+alt Error row shown
+  combobox -> search : retry() (L2-033 criterion 7)
+  combobox -> combobox : preventDefault()
+else Enabled option active
+  combobox -> combobox : toggle(item) of the active option (L2-033 criterion 5)
+  combobox -> combobox : preventDefault(); form not submitted
+  combobox --> user : Focus stays on the input
+else No active option or disabled option
+  combobox -> combobox : Select nothing; preventDefault() while open (L2-033 criterion 6)
+  combobox -x form : Submission blocked
+end
+
+user -> combobox : Escape
+alt List open
+  combobox -> popup : close() (L2-033 criterion 8)
+  combobox -> combobox : stopPropagation()
+  combobox -x dialog : Event not delivered; dialog stays open (L2-033 criterion 9)
+else List closed and input has text
+  combobox -> combobox : Clear query; stopPropagation()
+else List closed and input empty
+  combobox -> dialog : Event propagates; dialog receives Escape
+end
+combobox --> user : DOM focus remains on the input
+@enduml

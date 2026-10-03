@@ -18,17 +18,16 @@ actor "Learner / host integrator" as actor
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
   participant "AttemptRestorer / OutcomeCalculator" as core
-  participant "HostIntegration" as host
+  participant "NavigationController" as nav
+  participant "ActivityLauncher" as launcher
 end box
-box "Backend - Host LMS API application" #D1FADF
-  participant "Authorized attempt storage" as api
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper" as wrapper
 end box
 
 actor -> shell : Reopen authorized attempt
-shell -> host : loadAttempt(context, signal)
-host -> api : Authorize and read bound course revision
-api --> host : Snapshot or null (new attempt)
-host --> core : Host load result
+shell -> shell : Holds the AttemptSnapshot or null from loadAttempt (integrate-host) and the ValidatedCourse (load-course)
+shell -> core : restore(context, course, snapshot)
 core -> core : Validate context, edition and schema (L2-011)
 alt Snapshot mismatch or unsupported schema
   core --> shell : Integration error; refuse restore
@@ -36,11 +35,17 @@ alt Snapshot mismatch or unsupported schema
 else null: new attempt
   core -> core : Create edition defaults without old state
   core --> shell : Initial permitted activity
+  shell -> nav : navigate(request) calls NavigationController.request for the initial activity
+  nav -> launcher : launch(activity); then set SequencingState.currentActivityId
+  launcher -> wrapper : prepare(empty ScoSnapshot) before API discovery
+  shell --> actor : Present current position and known outcomes; announce course ready with the current activity unless focus moved to the activity heading
 else Valid saved attempt
   core -> core : Restore per-SCO data and sequencing state
-  core -> core : Check saved activity under current rules
-  core --> shell : RestoredAttempt with permitted activity
-  shell -> shell : ActivityLauncher sends the SCO's ScoSnapshot through CourseWrapper.prepare()
+  core --> shell : RestoredAttempt with saved currentActivityId
+  shell -> nav : navigate(request) calls NavigationController.request for the saved activity
+  nav -> nav : Permit the saved activity under current rules, or deny (fallback <TO SUPPLY>)
+  nav -> launcher : launch(activity); then set SequencingState.currentActivityId
+  launcher -> wrapper : prepare(ScoSnapshot) before API discovery
+  shell --> actor : Present current position and known outcomes; announce course ready with the current activity unless focus moved to the activity heading
 end
-shell --> actor : Present current position and known outcomes
 @enduml

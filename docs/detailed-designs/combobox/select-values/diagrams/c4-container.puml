@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Select values
+
+Person(user, "Application user", "Selects and removes values")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Binds value, compareWith, displayWith, maxSelections")
+  Container(combobox, "@tessera/combobox", "Angular library", "Holds the selection, renders chips, applies the selection limit")
+  Container(cdk, "Angular CDK", "Library", "Provides the live announcer for selection messages")
+}
+Rel(user, combobox, "Clicks options and chip buttons in", "Pointer and keyboard")
+Rel(host, combobox, "Binds value and reads selectionChange", "Inputs and outputs")
+Rel(combobox, cdk, "Announces limit and changes through", "LiveAnnouncer")
+@enduml

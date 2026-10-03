@@ -1,0 +1,134 @@
+@startuml
+title Class structure - Customize, localise, and publish the API
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class "Combobox<T>" as Combobox {
+  +searchFn: required input, (query, page) to Observable of ComboboxPage
+  +displayWith: input, (item) to string
+  +compareWith: input, (a, b) to boolean
+  +optionDisabled: input, (item) to boolean
+  +placeholder: input string
+  +debounceMs: input number
+  +minSearchLength: input number
+  +maxSelections: input number or null
+  +clearSearchOnSelect: input boolean
+  +disabled: input boolean
+  +required: input boolean
+  +ariaLabel: input string or null
+  +inputId: input string
+  +hint: input string
+  +error: input string
+  +value: model T[]
+  +searchChange: output string
+  +opened: output void
+  +closed: output void
+  +selectionChange: output ComboboxSelectionChange
+  -strings: Signal of ComboboxStrings
+  -ngOnInit(): void
+}
+interface "ComboboxPage<T>" as ComboboxPage {
+  +items: T[]
+  +hasMore: boolean
+  +total?: number
+}
+interface "ComboboxSelectionChange<T>" as ComboboxSelectionChange {
+  +added?: T
+  +removed?: T
+  +value: T[]
+}
+interface ComboboxStrings {
+  +noResults: string
+  +retry: string
+  +loading: string
+  +resultsError: string
+  +chipListLabel: string
+  +removeChip: string
+  +clearAll: string
+  +toggleList: string
+  +selectedSummary: string
+  +labelSeparator: string
+  +announceResults: string
+  +announceNoResults: string
+  +announceLoading: string
+  +announceSelected: string
+  +announceRemoved: string
+  +announceCleared: string
+  +announceMaxReached: string
+  +announceMoreLoaded: string
+}
+class DEFAULT_COMBOBOX_STRINGS <<const>> {
+  English text for every key
+}
+class COMBOBOX_I18N <<InjectionToken>> {
+  +factory: returns Partial of ComboboxStrings
+}
+class StringFunctions <<module functions>> {
+  +resolveComboboxStrings(overrides: Partial of ComboboxStrings): ComboboxStrings
+  +formatComboboxString(template: string, values: Record of string or number): string
+}
+class ComboboxAnnouncer {
+  +announceResults(n: number): void
+  +announceSelected(label: string, n: number): void
+  +announceRemoved(label: string): void
+}
+class "ComboboxOption<T>" as ComboboxOption {
+  +id: string
+  +item: T
+  +selected: Signal of boolean
+  +active: Signal of boolean
+}
+class "ComboboxOptionTemplate<T>" as ComboboxOptionTemplate {
+  +templateRef: TemplateRef of ComboboxOptionContext
+}
+class "ComboboxChipTemplate<T>" as ComboboxChipTemplate {
+  +templateRef: TemplateRef of ComboboxChipContext
+}
+class ComboboxEmptyTemplate {
+  +templateRef: TemplateRef of ComboboxEmptyContext
+}
+interface "ComboboxOptionContext<T>" as ComboboxOptionContext {
+  +$implicit: T
+  +selected: boolean
+  +active: boolean
+}
+interface "ComboboxChipContext<T>" as ComboboxChipContext {
+  +$implicit: T
+}
+interface ComboboxEmptyContext {
+  +query: string
+}
+Combobox "1" --> "1" ComboboxAnnouncer : requests announcements
+Combobox ..> StringFunctions : resolves strings
+ComboboxAnnouncer ..> StringFunctions : resolves and formats
+StringFunctions ..> COMBOBOX_I18N : reads override
+StringFunctions ..> DEFAULT_COMBOBOX_STRINGS : merges over
+StringFunctions ..> ComboboxStrings : returns
+DEFAULT_COMBOBOX_STRINGS ..|> ComboboxStrings
+Combobox ..> ComboboxPage : searchFn returns
+Combobox ..> ComboboxSelectionChange : emits
+Combobox "1" o-- "0..1" ComboboxOptionTemplate : contentChild
+Combobox "1" o-- "0..1" ComboboxChipTemplate : contentChild
+Combobox "1" o-- "0..1" ComboboxEmptyTemplate : contentChild
+Combobox "1" *-- "*" ComboboxOption : renders
+ComboboxOptionTemplate ..> ComboboxOptionContext
+ComboboxChipTemplate ..> ComboboxChipContext
+ComboboxEmptyTemplate ..> ComboboxEmptyContext
+ComboboxOption ..> ComboboxOptionTemplate : renders template of
+@enduml

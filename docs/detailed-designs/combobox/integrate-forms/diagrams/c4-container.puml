@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Integrate with forms
+
+Person(user, "Application user", "Edits the field")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Binds formControl, ngModel, or [(value)]")
+  Container(combobox, "@tessera/combobox", "Angular library", "Acts as ControlValueAccessor and exposes a value model")
+  Container(forms, "@angular/forms", "Angular library", "Owns FormControl value, dirty, touched, and validators")
+}
+Rel(user, combobox, "Selects, removes, and tabs out of", "Keyboard and pointer")
+Rel(host, combobox, "Binds [(value)], required, hint, error", "Inputs and outputs")
+Rel(host, forms, "Declares the control and validators in")
+Rel(forms, combobox, "writeValue and setDisabledState", "NG_VALUE_ACCESSOR")
+Rel(combobox, forms, "onChange and onTouched", "NG_VALUE_ACCESSOR")
+@enduml

@@ -1,0 +1,60 @@
+@startuml
+title UML sequence behaviour - Write and change the value
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as user
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Angular Forms" #E0F2FE
+  participant "FormControl" as fc
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combo
+end box
+
+alt bound to a form control
+  host -> fc : setValue(array) or setValue(null)
+  fc -> combo : writeValue(value)
+  combo -> combo : value.set(value or empty array); chips render (L2-031)
+  note right of combo
+    writeValue never calls onChange
+    and never emits selectionChange
+  end note
+  user -> combo : Select or remove an item
+  combo -> combo : commit(next)
+  combo -> fc : onChange(next T[]) (L2-031)
+  fc -> fc : Set value, mark dirty, emit valueChanges once (L2-031)
+  host -> fc : disable()
+  fc -> combo : setDisabledState(true)
+  combo -> combo : isDisabled true: disable input, chip buttons, clear-all, toggle; close list (L2-031)
+  host -> fc : enable()
+  fc -> combo : setDisabledState(false)
+  combo --> user : Input and buttons operable again (L2-031)
+else bound with [(value)] and no form control
+  host -> combo : Signal holds two items
+  combo --> user : Two chips render (L2-032)
+  user -> combo : Select or remove an item
+  combo -> combo : commit(next) sets value
+  combo --> host : valueChange updates the bound signal (L2-032)
+  host -> combo : Signal set to a new array
+  combo --> user : Chips update; selectionChange does not emit (L2-032)
+end
+opt both a form control and [(value)] present
+  fc -> combo : writeValue(value)
+  combo -> combo : value.set(...) updates chips and the model (L2-032)
+  combo --> host : valueChange updates the bound signal (L2-032)
+end
+@enduml

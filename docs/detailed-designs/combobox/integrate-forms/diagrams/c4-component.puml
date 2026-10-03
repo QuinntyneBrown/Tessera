@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Integrate with forms
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(accessor, "Combobox<T> accessor", "ControlValueAccessor", "writeValue, registerOnChange, registerOnTouched, setDisabledState")
+  Component(model, "value model", "model<T[]>", "Holds the selection; two-way bound through [(value)]")
+  Component(disabled, "isDisabled", "computed signal", "Combines the disabled input and the form disabled state")
+  Component(touch, "Focus-out handler", "Event handler", "Calls onTouched only when focus leaves host and overlay")
+  Component(bridge, "Control bridge", "Signals", "Turns control events into the showError signal")
+}
+Container_Boundary(forms, "@angular/forms") {
+  Component(ngControl, "NgControl and FormControl", "Angular Forms", "Holds value, dirty, touched, and required validity")
+}
+Rel(ngControl, accessor, "writeValue and setDisabledState")
+Rel(accessor, model, "Sets value; null becomes empty array")
+Rel(accessor, ngControl, "onChange once per user change")
+Rel(accessor, disabled, "Sets form disabled state")
+Rel(touch, ngControl, "onTouched once per departure")
+Rel(ngControl, bridge, "Emits control events")
+@enduml

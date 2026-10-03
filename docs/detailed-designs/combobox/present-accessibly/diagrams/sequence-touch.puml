@@ -1,0 +1,59 @@
+@startuml
+title UML sequence behaviour - Operate the list by touch
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Touch user" as user
+box "Frontend - Browser" #E0F2FE
+  participant "On-screen keyboard" as keyboard
+end box
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Host form control" as host
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combobox
+  participant "ComboboxOption<T>" as option
+  participant "ComboboxPopup" as popup
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "OverlayRef" as overlay
+end box
+
+user -> combobox : Tap an option
+combobox -> combobox : onKeepFocusMousedown() calls preventDefault() on the compatibility mousedown (L2-040 criterion 1)
+combobox --> keyboard : Focus stays on the input; keyboard stays open
+combobox -> combobox : click raised by the tap (a drag scroll raises none)
+combobox -> combobox : click handler calls toggle(item); list stays open
+combobox -> host : commit(next, change) updates value; selectionChange (L2-026)
+combobox --> user : Option shows checkmark; focus on the input
+
+user -> combobox : Tap a chip remove button, clear-all, or the toggle button
+alt Chip remove button
+  combobox -> combobox : removeChip(item); focus per L2-027 (L2-040 criterion 2)
+else Clear-all button
+  combobox -> combobox : onKeepFocusMousedown(); clearAll(); focusInput()
+else Toggle button
+  combobox -> combobox : onKeepFocusMousedown(); toggle click behavior of L2-029
+end
+combobox --> user : Target of at least 24 by 24 CSS px received the tap (L2-039 criterion 5)
+
+user -> overlay : Tap outside the component
+overlay -> popup : outsidePointerEvents emits; ComboboxPopup relays the click
+alt Target outside the host element
+  popup -> combobox : close() (L2-040 criterion 3)
+  combobox --> user : List closes; closed emitted once
+else Target inside the host element
+  popup -> popup : Ignore; field and toggle handlers apply
+end
+@enduml

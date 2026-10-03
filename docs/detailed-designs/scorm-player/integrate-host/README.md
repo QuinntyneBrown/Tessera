@@ -13,7 +13,7 @@ This feature connects the host application to the browser player before course l
 The repository contains requirements and an HTML mock in `docs/mocks/scorm-player/`. It contains no production component. The types below are proposed design elements.
 
 - `ScormPlayer`, in `src/scorm-player/scorm-player.ts`, is the standalone Angular component exported by `public-api.ts` and `index.ts`.
-- `PlayerInputs` contains `source: CourseSource`, `attempt: AttemptContext`, `host: HostIntegration`, and `limits: PackageLimits`.
+- `ScormPlayer` has four inputs, `source: CourseSource`, `attempt: AttemptContext`, `host: HostIntegration`, and an optional `limits: PackageLimits` that falls back to the package defaults, and one `event: PlayerEvent` output.
 - `CourseSource` is a discriminated union of `{kind: 'zip', file: File}` and `{kind: 'manifest', manifestUrl: string}`.
 - `AttemptContext` contains an opaque `attemptKey`, a `courseKey`, and a `courseRevision`. The host binds these values to its authenticated learner.
 - `HostIntegration` supplies `loadAttempt`, `saveState`, and `prepareDelivery` functions. Their browser calls resolve asynchronously.
@@ -26,7 +26,7 @@ The library is one package without secondary entry points. Angular CLI configura
 
 The host checks authorization on every delivery, read, and save request. The component checks configuration but cannot prove server authorization. The public contract contains no bearer tokens, host cookies, or learner identity obtained from a SCO.
 
-Changing `source` or `attempt` initiates the same flush and unsaved-state workflow as an explicit exit. The component prevents replacement until pending changes are retained or the learner explicitly accepts loss. Callbacks remain bound to the old immutable context until that workflow finishes.
+Changing `source` or `attempt` initiates the same flush and unsaved-state workflow as an explicit exit. The component prevents replacement until the host acknowledges the latest revision or the learner explicitly accepts loss. If the flush itself fails, the same choice is offered; Retry re-runs the pending replacement (flush, then drain); accepting loss discards the unresponsive wrapper and continues the replacement. Callbacks remain bound to the old immutable context until that workflow finishes.
 
 Decided for the first implementation: Angular 22 (standalone, signals, zoneless), selector `tsr-scorm-player`, inputs `source`, `attempt`, `host` and `limits`, and one `event` output carrying the `PlayerEvent` union. `IntegrationGuard` is `checkIntegration` in `src/scorm-player/integration-guard.ts`; it reports `attempt-missing`, `source-missing`, `host-missing` and `host-incomplete`. Host endpoint routes, snapshot migration policy, and the authorization mechanism remain `<TO SUPPLY>`. These choices precede public API publication.
 

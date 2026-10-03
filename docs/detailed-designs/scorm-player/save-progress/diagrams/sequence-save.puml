@@ -36,8 +36,8 @@ end
 api --> host : Durable SaveAck(revision)
 host --> core : Matching acknowledged revision
 core -> core : Advance acknowledged revision; deduplicate event
-core --> shell : Publish acknowledged outcome once (L2-013)
-shell --> actor : Announce saved or still-pending status
+core --> shell : Publish acknowledged revision once; ScormPlayer emits its outcome (L2-013)
+shell --> actor : Show save status; announce its first appearance and each return from unsaved to saved (failures use the alert)
 opt A newer retained revision exists
   core -> host : Submit latest snapshot next
   host -> api : Save newer revision

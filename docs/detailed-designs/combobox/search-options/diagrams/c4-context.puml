@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Search options
+
+Person(user, "Application user", "Types a query to find options")
+System(app, "Host Angular application with @tessera/combobox", "Search options through t-combobox")
+System_Ext(source, "Consumer data source", "Server or in-memory source behind searchFn")
+Rel(user, app, "Types a query in", "Browser")
+Rel(app, source, "Requests pages of options from", "searchFn")
+@enduml

@@ -20,6 +20,7 @@ box "Frontend - Host LMS application" #E0F2FE
   participant "NavigationController / SequencingEngine" as core
   participant "ActivityLauncher" as launcher
   participant "RuntimeBridge / host RuntimeSession" as bridge
+  participant "PersistenceCoordinator" as persist
   participant "HostIntegration" as host
 end box
 box "Frontend - Isolated course context" #E0F2FE
@@ -34,14 +35,18 @@ alt Denied or boundary reached
   shell --> actor : Convey unavailable state and text reason
 else Launch permitted
   core -> launcher : launch(selected activity)
-  launcher -> wrapper : Request flush
+  launcher -> bridge : flush()
+  bridge -> wrapper : Request flush
   wrapper --> bridge : Flush reply after prior operations
-  bridge -> host : PersistenceCoordinator.submit(snapshot); saveState(context, submission, signal); navigation does not wait (L2-013)
+  bridge -> persist : submit(snapshot); navigation does not wait (L2-013)
+  persist -> host : saveState(context, submission, signal)
   bridge --> launcher : Flushed
   launcher -> launcher : Retire old binding
   launcher -> wrapper : Create new wrapper iframe for selected resource
   wrapper --> launcher : New activity ready
   launcher --> core : Launched
+  core -> core : Set SequencingState.currentActivityId
+  core -> persist : submit(snapshot with updated SequencingState)
   core --> shell : Current position and permitted actions
   shell --> actor : Move focus to activity heading
 end

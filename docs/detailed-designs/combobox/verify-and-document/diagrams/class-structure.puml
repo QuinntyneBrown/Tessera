@@ -1,0 +1,115 @@
+@startuml
+title Class structure - Verify and document
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+class ComponentHarness <<CDK>> {
+  +locatorFor(selector): AsyncFactoryFn
+  +forceStabilize(): Promise of void
+  +documentRootLocatorFactory(): LocatorFactory
+}
+class ComboboxHarness {
+  +hostSelector: t-combobox
+  +open(): Promise of void
+  +isOpen(): Promise of boolean
+  +search(text: string): Promise of void
+  +getOptions(): Promise of ComboboxOptionState[]
+  +toggleOption(labelOrIndex: string or number): Promise of void
+  +getChips(): Promise of string[]
+  +removeChip(labelOrIndex: string or number): Promise of void
+}
+class ComboboxOptionState <<data>> {
+  +label: string
+  +selected: boolean
+  +disabled: boolean
+}
+class ComboboxDemoPage <<Playwright page object>> {
+  +open(scenario: ComboboxScenario): Promise of void
+  +enterState(state: ComboboxState): Promise of void
+  +useViewport(width: number): Promise of void
+  +useZoom(percent: number): Promise of void
+  +enlargeTextTo200Percent(): Promise of void
+  +applyTextSpacingOverrides(): Promise of void
+  +pressKey(key: string): Promise of void
+  +typeText(text: string): Promise of void
+  +expectNoHorizontalScroll(): Promise of void
+  +expectNoAccessibilityViolations(): Promise of void
+}
+class ComboboxScenario <<query string>> {
+  +searchDelayMs?: number
+  +pageSize?: number
+  +pageCount?: number
+  +failure?: always or first-request or next-page
+  +valueSize?: number
+  +maxSelections?: number
+  +required?: boolean
+  +disabled?: boolean
+  +rtl?: boolean
+  +dialog?: boolean
+  +templates?: custom
+  +hostile?: boolean
+  +instances?: number
+}
+enum ComboboxState {
+  closed
+  open-with-results
+  loading
+  empty
+  error
+  invalid
+  disabled
+  max-reached
+  custom-templates
+}
+class ComboboxHostFixture <<e2e-app>> {
+  +scenario: ComboboxScenario
+}
+class MockUserSearch <<examples>> {
+  +createMockUserSearch(options): searchFn
+}
+class ManualVerificationRecord <<matrix row>> {
+  +combination: string
+  +date: string
+  +version: string
+  +result: Not run or Pass or Fail
+  +defects: string
+  +checklist: items a to h
+}
+class DocumentationPage <<src/combobox/README.md>> {
+  +sections: string[]
+  +definitionOfDone: string
+}
+class ExampleSet <<examples folder>> {
+  +reactiveForms: Component
+  +templateDriven: Component
+  +twoWay: Component
+  +customTemplates: Component
+  +paging: Component
+}
+ComponentHarness <|-- ComboboxHarness
+ComboboxHarness ..> ComboboxOptionState : returns
+ComboboxDemoPage ..> ComboboxScenario : serializes
+ComboboxDemoPage ..> ComboboxState : enters
+ComboboxDemoPage --> ComboboxHostFixture : opens
+ComboboxHostFixture ..> ComboboxScenario : reads
+ComboboxHostFixture ..> MockUserSearch : uses
+ExampleSet ..> MockUserSearch : uses
+DocumentationPage "1" o-- "1" ExampleSet : links to
+DocumentationPage "1" ..> "*" ManualVerificationRecord : links to matrix of
+@enduml

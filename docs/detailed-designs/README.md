@@ -6,6 +6,8 @@ Tessera is a browser component library for learning management systems (LMSs). I
 
 **SCORM** — Sharable Content Object Reference Model, the course packaging and browser runtime protocol defined by ADL
 
+Its second package, `@tessera/combobox`, provides an asynchronous multi-select combobox. Its designs are in the [combobox subsystem](combobox/).
+
 The `scorm-player` subsystem follows the capability grouping in [L1 requirements](../specs/L1.md) and [L2 requirements](../specs/L2.md). The flat specification folder contains no predefined subsystem folders.
 
 These designs describe proposed components. The repository currently contains requirements and an HTML mock, with no production library. The mock supplies a visual reference; it does not define protocol, persistence, or sequencing behavior.
@@ -42,7 +44,7 @@ The following decisions remain `<TO SUPPLY>` before their affected production sl
 | Synchronous commit and finish policy | [Runtime](scorm-player/run-scorm-session/) and [persistence](scorm-player/save-progress/) | Verify all four editions' permitted buffering, failure codes, transport failures, and durable acknowledgement semantics |
 | Complete edition rule definitions | [Loading](scorm-player/load-course/), [runtime](scorm-player/run-scorm-session/), [navigation](scorm-player/navigate-course/), [resume](scorm-player/resume-and-report-attempt/) | Extract edition detection, runtime validation, sequencing, and rollup rules from authoritative ADL specifications |
 | Isolated course-delivery contract | [Launch](scorm-player/launch-activity/) | Define wrapper distribution, per-attempt origins, credential isolation, redirect checks, handshake timeouts, and message bounds |
-| Host integration and public API release | [Integration](scorm-player/integrate-host/) | Define Angular support, selector and event names, endpoint authorization, snapshot migration, and attempt replacement |
+| Host integration and public API release | [Integration](scorm-player/integrate-host/) | Define endpoint authorization and snapshot migration |
 | Package and performance configuration | [Loading](scorm-player/load-course/) | Choose archive tooling, safe default limits, organization selection, and reference-machine conditions |
 | Persistence across interruptions | [Persistence](scorm-player/save-progress/) | Define crash recovery, duplicate-tab conflicts, retention, and background save policy |
 | Manual accessibility procedure | [Player operation](scorm-player/operate-player/) | Supply platform-specific screen reader scripts and record observed results |

@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Open and position the list
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns isOpen, activeIndex, opened, closed, open, and close")
+  Component(popup, "ComboboxPopup", "Class", "Wraps the overlay; syncs width and position")
+  Component(option, "ComboboxOption<T>", "Directive", "Implements Highlightable; reports disabled state")
+}
+Container_Boundary(cdk, "Angular CDK") {
+  Component(overlay, "Overlay and FlexibleConnectedPositionStrategy", "CDK overlay", "Renders the pane below or above the field")
+  Component(scroll, "ScrollDispatcher and ViewportRuler", "CDK scrolling", "Report scroll and viewport changes")
+  Component(keys, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option")
+}
+Rel(combo, popup, "open, close, dispose")
+Rel(popup, overlay, "Attaches, sizes, and repositions")
+Rel(overlay, scroll, "Listens for scroll and resize")
+Rel(popup, combo, "Emits outsidePointerEvents")
+Rel(combo, keys, "setActiveItem to first enabled option")
+Rel(keys, option, "Highlights", "Highlightable")
+@enduml

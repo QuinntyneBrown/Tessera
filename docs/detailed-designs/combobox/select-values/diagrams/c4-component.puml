@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Select values
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns value model, toggle, commit, removeChip, clearAll, and the chip list")
+  Component(option, "ComboboxOption<T>", "Directive", "Shows aria-selected, aria-disabled, and the checked indicator")
+  Component(chipTpl, "ComboboxChipTemplate", "Directive on ng-template", "Supplies optional chip content")
+  Component(announcer, "ComboboxAnnouncer", "Class", "Announces selection changes and the limit message")
+  Component(i18n, "COMBOBOX_I18N", "Injection token", "Supplies chip, button, and limit strings")
+}
+Rel(option, combo, "Calls toggle(item); reads isSelected and isOptionDisabled", "COMBOBOX_PARENT")
+Rel(combo, chipTpl, "Renders chip content from")
+Rel(combo, announcer, "Announces after each commit and at the limit")
+Rel(announcer, i18n, "Reads strings from")
+@enduml

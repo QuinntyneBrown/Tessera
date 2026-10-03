@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour - Touched and validation state
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as user
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combo
+end box
+box "Frontend - Angular Forms" #E0F2FE
+  participant "FormControl and RequiredValidator" as fc
+end box
+
+combo -> fc : After first render, subscribe to control.events
+note over combo
+  required true, value empty, not touched:
+  aria-required true, aria-invalid not true,
+  no error text (L2-031)
+end note
+alt focus moves inside the component
+  user -> combo : Focus moves from input to chip remove button, clear-all, or overlay
+  combo -> combo : focusout relatedTarget is inside host or overlay: ignore (L2-031)
+  combo --> user : Control stays untouched (L2-031)
+else focus leaves the whole component
+  user -> combo : Focus moves outside host and overlay
+  combo -> combo : focusout relatedTarget is outside: leaving (L2-031)
+  combo -> fc : onTouched() once (L2-031)
+  fc -> fc : Mark touched; RequiredValidator reports required error (L2-031)
+  fc --> combo : TouchedChangeEvent and StatusChangeEvent
+  combo -> combo : controlVersion increments; showError true
+  combo --> user : aria-invalid true and error text shown (L2-031)
+end
+opt hint supplied
+  combo --> user : Hint shown below the field (L2-031)
+end
+@enduml

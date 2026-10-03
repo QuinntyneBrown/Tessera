@@ -20,9 +20,9 @@ skinparam class {
   BackgroundColor #F9FAFB
 }
 class ActivityLauncher {
-  +current: Activity
   +launch(activity: Activity): Promise<void>
   +retireCurrent(): Promise<void>
+  +flush(): Promise<void>
 }
 class DeliveryDescriptor {
   +courseRoot: URL
@@ -33,7 +33,6 @@ class RuntimeBridge {
   +binding: SessionBinding
   +receive(event: MessageEvent): void
   +flush(): Promise<void>
-  +revoke(): void
 }
 class SessionBinding {
   +wrapper: WindowProxy

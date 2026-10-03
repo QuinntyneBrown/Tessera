@@ -4,19 +4,19 @@
 
 A SCORM course describes learning activities in an XML manifest named `imsmanifest.xml`. SCORM (Sharable Content Object Reference Model) defines how those activities communicate with a learning management system.
 
-**Course root** — delivery location containing the manifest and its permitted resources
+**Course root** — base that contains the manifest and its permitted resources: the manifest URL's directory for an extracted course, or a package-relative base for an archive before `prepareDelivery` assigns its delivery location
 
 The loading feature accepts a ZIP archive or an extracted manifest URL. It produces a validated course model before any course script executes. Loading remains cancellable while the archive is processed.
 
 ## Description
 
 - `CourseLoader`, in `src/scorm-player/package/`, coordinates input validation, fetches, version detection, and cancellation.
-- `PackageWorker` extracts archives and parses their manifests away from the UI thread. It reports bounded progress messages.
+- `PackageWorker` extracts archives and parses their manifests away from the UI thread. The UI shows the `loading` state while it runs; it sends no progress messages.
 - `PackageLimits` contains `archiveBytes`, `expandedBytes`, and `entryCount`. The loader checks archive size before transfer and counts actual expanded bytes while extracting.
 - `ManifestParser` reads namespace-qualified organization, item, resource, and sequencing metadata. `ScormEdition` distinguishes `1.2`, `2004-2nd`, `2004-3rd`, and `2004-4th`.
 - `ResourceResolver` resolves declared base paths and resource references against the course root.
 - `ValidatedCourse` contains edition, title, organization structure, activity identifiers, resource kind, launch references, and edition-specific sequencing metadata. For an archive it also carries the validated `files`, which `prepareDelivery` hands to the host to serve; an extracted course has none.
-- `LoadState` represents idle, loading, ready, cancelled, or error. The existing shell remains visible while the loader processes its source.
+- `LoadState` represents idle, loading, or ready. Cancel returns it to idle. A loading failure is a `PlayerError` with category `loading`, held in `PlayerViewState.error`. The player region and its loading status, with Cancel, remain visible while the loader processes its source.
 
 The loader refuses a missing root manifest, malformed XML, unsupported edition, invalid resource reference, or exceeded limit. The parser disables external entity resolution and rejects document type declarations. Archive entries never write arbitrary filesystem paths.
 

@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Select values
+
+Person(user, "Application user", "Selects and removes options")
+System(app, "Host Angular application with @tessera/combobox", "Select values through t-combobox")
+System_Ext(source, "Consumer data source", "Supplies the options through searchFn")
+Rel(user, app, "Selects options and removes chips in", "Browser")
+Rel(app, source, "Requests options from", "searchFn")
+@enduml

@@ -12,7 +12,7 @@ The launch feature displays either resource inside an isolated course context. I
 
 ## Description
 
-- `ActivityLauncher` coordinates preflight, final-state transfer, session retirement, and the selected launch resource.
+- `ActivityLauncher` coordinates preflight, final-state transfer, session retirement, and the selected launch resource. Its `flush()` asks `RuntimeBridge.flush()` for the current session's final state without launching anything, for exit and source or attempt replacement.
 - `DeliveryDescriptor` names a host-approved `courseRoot`, `wrapperUrl`, and supported `bridgeProtocolVersion`. Exact-origin checks use `courseRoot.origin`.
 - `CourseWrapper` is a browser wrapper served on the isolated course origin. It hosts one nested course frame and the synchronous runtime object.
 - `RuntimeBridge`, in `src/scorm-player/runtime/`, validates cross-origin messages and binds them to a single live `SessionBinding`.
@@ -29,7 +29,7 @@ The bridge verifies the exact `event.origin`, that `event.source` is the live wr
 
 The wrapper checks the launch resource with a same-origin `fetch` before loading it, because an iframe load event alone cannot prove HTTP success. A failed check reports the activity as a loading error. The wrapper sends ready only after its API and restored state exist. The launcher then permits SCO execution. An asset skips runtime initialization.
 
-Activity changes send the wrapper a flush request before retirement. Because `postMessage` delivers one window's messages in order, the flush reply follows every earlier operation. The host validates and retains those operations, then removes the old iframe. A missing or failed flush reply leaves the activity change blocked with a runtime error. Late old-session messages never target the replacement session.
+Activity changes send the wrapper a flush request before retirement; a Terminate the host has already validated counts as the flush reply. Because `postMessage` delivers one window's messages in order, the flush reply follows every earlier operation. The host validates and retains those operations, then removes the old iframe. A missing or failed flush reply leaves the activity change blocked with a runtime error. When the current session already holds that runtime error, `launch()` discards the unresponsive wrapper instead of waiting for a flush again. Retrying that error discards the unresponsive wrapper and relaunches from the state the host has already validated; operations the host never received are lost, and the runtime `PlayerError` text says so. Late old-session messages never target the replacement session.
 
 The wrapper build and deployment contract, per-attempt origin provisioning, CSP and cookie settings, redirect validation, bridge byte limits, handshake timeout, and permitted course capabilities are `<TO SUPPLY>`. A host that cannot satisfy isolation and synchronous API discovery receives an integration error before launch. Browser sandbox behavior is described in [MDN's iframe reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe).
 

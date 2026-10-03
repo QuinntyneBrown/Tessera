@@ -25,7 +25,7 @@ end box
 
 actor -> shell : Cancel loading
 shell -> core : Abort the load signal (L2-019)
-core -> core : Terminate worker; release buffers
+core -> core : Aborted signal ends the worker and releases buffers
 core --> shell : Cancelled; no launch descriptor
 shell --> actor : Accept another source
 opt Retry after loading failure

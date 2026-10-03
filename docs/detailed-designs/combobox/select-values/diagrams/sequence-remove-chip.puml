@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour - Remove chips and write a value
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as user
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combo
+  participant "Chip list and input" as dom
+end box
+
+alt user activates a chip remove button
+  user -> combo : Activate remove button of chip i
+  combo -> combo : Choose destination: next chip button, else previous chip button, else input (L2-027)
+  combo -> dom : Focus destination before removal (L2-027)
+  combo -> combo : commit(value without item, removed) (L2-027)
+  combo -> host : Emit selectionChange with removed item and new value (L2-027)
+  combo --> user : Chip removed; focus on destination
+else user activates clear-all
+  user -> combo : Activate clear-all button
+  combo -> combo : commit(empty array) (L2-027)
+  combo -> host : Emit selectionChange once with value empty (L2-027)
+  combo -> dom : Focus the input (L2-027)
+  combo --> user : No chips; clear-all button not rendered (L2-027)
+end
+== Programmatic write ==
+host -> combo : writeValue or value signal set to items never returned by searchFn
+combo -> combo : Replace value without commit (L2-026)
+combo -> dom : Render one chip per item using displayWith (L2-027)
+note over combo
+  selectionChange does not emit
+  for a programmatic change (L2-026)
+end note
+@enduml

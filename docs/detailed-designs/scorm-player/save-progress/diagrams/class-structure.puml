@@ -35,12 +35,13 @@ class SaveAck {
 class SaveState {
   +latestRevision: number
   +acknowledgedRevision: number
+  +acknowledgedAt: Date | null
   +latestSnapshot: AttemptSnapshot
   +inFlight: SaveSubmission
   +failure: PlayerError
 }
 interface HostIntegration {
-  +saveState(context: AttemptContext, state: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
+  +saveState(context: AttemptContext, submission: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
 }
 PersistenceCoordinator "1" *-- "1" SaveState : owns save lifecycle
 SaveState "1" *-- "0..1" SaveSubmission : in flight

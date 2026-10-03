@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour - Position the list
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as user
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combo
+  participant "ComboboxPopup" as popup
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "OverlayRef" as overlay
+  participant "ScrollDispatcher and ViewportRuler" as scroll
+end box
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Field, ancestors, and dialog" as page
+end box
+
+combo -> popup : open(origin, template)
+popup -> overlay : create with FlexibleConnectedPositionStrategy, reposition scroll strategy, no backdrop
+popup -> overlay : updateSize(width = field width) (L2-030)
+popup -> page : Observe field size with ResizeObserver
+alt enough room below the field
+  overlay -> page : Place pane below the field (L2-030)
+else not enough room below and more room above
+  overlay -> page : Flip pane above the field (L2-030)
+end
+note right of overlay
+  Push disabled and dimensions flexible:
+  the pane shrinks and never covers the input (L2-030)
+end note
+page --> user : Pane above the dialog content and receiving pointer events (L2-030)
+== While open ==
+alt window or container resize
+  page --> popup : ResizeObserver callback
+  popup -> overlay : updateSize(width = field width) and updatePosition() (L2-030)
+else viewport resize
+  scroll --> overlay : ViewportRuler change
+  overlay -> overlay : Reapply position (L2-030)
+else ancestor scroll
+  page --> popup : scroll event in capture phase on document
+  popup -> overlay : updatePosition() (L2-030)
+  scroll --> overlay : Document or cdkScrollable scroll
+end
+== Destroy ==
+combo -> popup : dispose() on DestroyRef.onDestroy
+popup -> overlay : dispose()
+overlay -> page : Remove pane from the DOM (L2-030)
+popup -> popup : Disconnect observer and remove scroll listener
+@enduml

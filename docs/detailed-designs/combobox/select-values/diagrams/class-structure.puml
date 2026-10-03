@@ -1,0 +1,67 @@
+@startuml
+title Class structure - Select values
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+
+class "Combobox<T>" as Combobox {
+  +value: ModelSignal<T[]>
+  +displayWith: (item: T) => string
+  +compareWith: (a: T, b: T) => boolean
+  +optionDisabled: (item: T) => boolean
+  +maxSelections: number | null
+  +clearSearchOnSelect: boolean
+  +selectionChange: OutputEmitterRef<ComboboxSelectionChange<T>>
+  +canSelectMore: Signal<boolean>
+  +isSelected(item: T): boolean
+  +isOptionDisabled(item: T): boolean
+  +toggle(item: T): void
+  +removeChip(item: T): void
+  +clearAll(): void
+  -commit(next: T[], change: ComboboxChange<T>): void
+}
+
+class "ComboboxSelectionChange<T>" as ComboboxSelectionChange {
+  +added?: T
+  +removed?: T
+  +value: T[]
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +item: T
+  +selected: Signal<boolean>
+  +disabled: Signal<boolean>
+  +ariaSelected: string
+  +ariaDisabled: string | null
+}
+
+class ComboboxChipTemplate {
+  +implicit: T
+}
+
+class ComboboxAnnouncer {
+  +announceSelection(label: string, count: number): void
+  +announceRemoval(label: string): void
+  +announceLimitReached(max: number): void
+}
+
+interface COMBOBOX_PARENT <<InjectionToken>> {
+  +toggle(item: T): void
+  +isSelected(item: T): boolean
+  +isOptionDisabled(item: T): boolean
+}
+
+Combobox ..> ComboboxSelectionChange : emits
+Combobox "1" --> "*" ComboboxOption : renders
+Combobox ..> ComboboxChipTemplate : renders chip content
+Combobox --> ComboboxAnnouncer : announces through
+ComboboxOption ..> COMBOBOX_PARENT : reads and calls
+Combobox ..|> COMBOBOX_PARENT : provides
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Present the component accessibly
+
+Person(user, "Combobox user", "Operates the control by pointer or touch")
+System_Ext(platform, "Browser and operating system", "Zoom, text size, forced colors, reduced motion, on-screen keyboard")
+System_Boundary(browser, "Host Angular application in the browser") {
+  Container(app, "Host application", "Angular", "Places t-combobox in a responsive layout")
+  Container(pkg, "@tessera/combobox", "Angular library", "Provides the template, the stylesheet, and the pointer handlers")
+  Container(cdk, "Angular CDK", "Library", "Provides Overlay, outside-pointer events, and positioning")
+}
+System_Ext(data, "Consumer data source", "Serves option pages to searchFn")
+
+Rel(user, app, "Taps and clicks", "Pointer, touch")
+Rel(platform, pkg, "Applies media features to the stylesheet of", "prefers-reduced-motion, forced-colors, hover")
+Rel(app, pkg, "Hosts t-combobox from", "Angular template")
+Rel(pkg, cdk, "Opens the panel and receives outside taps through")
+Rel(pkg, data, "Loads option pages through", "searchFn")
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+title UML sequence behaviour - Render untrusted data as text
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "End user" as user
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Consumer ng-template" as tpl
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox" as cb
+  participant "ComboboxSearch" as search
+  participant "ComboboxIds" as ids
+  participant "ComboboxOption" as opt
+  participant "ComboboxAnnouncer" as ann
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "LiveAnnouncer" as live
+end box
+box "Frontend - Consumer data source" #E0F2FE
+  participant "searchFn" as src
+end box
+
+user -> cb : Type markup or very long text in the input
+cb -> search : Write query signal with the text unchanged
+search -> src : searchFn(query, 0) with the same string (L2-044 AC4)
+src --> search : Items; displayWith returns text that looks like markup
+search --> cb : results signal
+cb -> ids : Create instance identifiers once
+loop Each item
+  cb -> opt : Create option host
+  opt -> ids : nextOptionId()
+  ids --> opt : t-combobox-uid-option-n, not derived from data (L2-044 AC3)
+  alt Consumer template supplied
+    opt -> tpl : Render with item, selected, active
+    tpl --> opt : Consumer-owned content; no HTML parsing by the component
+  else Default content
+    opt --> user : Label bound as a text node (L2-044 AC1)
+  end
+end
+cb --> user : Chips, option labels, and hidden summary show literal text (L2-044 AC1)
+cb -> ann : Announce results and selection with label strings
+ann -> live : announce(string)
+live --> user : Live region receives the string as textContent; no markup is created (L2-044 AC2)
+cb --> user : aria-controls and aria-describedby list only ComboboxIds values (L2-044 AC3)
+note over cb, ids
+  A second instance on the page takes a different uid,
+  so its ids never collide (L2-044 AC5).
+end note
+@enduml

@@ -17,24 +17,40 @@ skinparam package {
 actor "Learner / host integrator" as actor
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
-  participant "PersistenceCoordinator / ActivityLauncher" as core
+  participant "ActivityLauncher" as launcher
+  participant "RuntimeBridge" as bridge
+  participant "PersistenceCoordinator" as persist
   participant "HostIntegration" as host
+end box
+box "Frontend - Isolated course context" #E0F2FE
+  participant "CourseWrapper" as wrapper
 end box
 box "Backend - Host LMS API application" #D1FADF
   participant "Authorized attempt storage" as api
 end box
 
 actor -> shell : Change source or attempt
-shell -> core : Request flush using old context (L2-021)
-core -> host : PersistenceCoordinator.submit(snapshot), then await drain(); saveState(context, submission, signal) (old context)
-host -> api : Save under old authorized attempt
-api --> host : Acknowledgement or failure
-host --> core : Save result
-alt Save acknowledged
-  core --> shell : Retire old session
-  shell --> actor : Load replacement context
-else Progress unsaved
-  core --> shell : Keep latest state and old context
-  shell --> actor : Offer retry or explicit loss decision
+shell -> launcher : ActivityLauncher.flush() under the old context (L2-021)
+launcher -> bridge : flush()
+bridge -> wrapper : Request flush
+alt Flush reply missing or failed
+  bridge --> shell : Runtime error; replacement stays blocked
+  shell --> actor : Offer retry (re-runs this flush) or explicit loss decision; accepting loss discards the wrapper and continues the replacement
+else Flush reply after prior operations
+  wrapper --> bridge : Flush reply
+  bridge -> persist : submit(snapshot)
+  shell -> persist : drain()
+  persist -> host : saveState(old context, submission, signal)
+  host -> api : Save under old authorized attempt
+  api --> host : Acknowledgement or failure
+  host --> persist : Save result
+  alt Save acknowledged
+    persist --> shell : Drained
+    shell -> launcher : retireCurrent()
+    shell --> actor : Load replacement context
+  else Progress unsaved
+    persist --> shell : Failure; latest state and old context kept
+    shell --> actor : Offer retry or explicit loss decision
+  end
 end
 @enduml

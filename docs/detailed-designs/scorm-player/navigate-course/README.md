@@ -15,7 +15,7 @@ SCORM 1.2 uses the launchable manifest structure. SCORM 2004 additionally applie
 - `NavigationController` receives learner choice, previous, next, and SCO navigation requests.
 - `SequencingEngine` computes permitted actions and the next delivery decision from manifest metadata and attempt state.
 - `SequencingState` stores activity attempts, objective state, and current position inside `AttemptSnapshot`. Rollup is recomputed from that state, not stored.
-- `NavigationDecision` represents launch, end-attempt, or denied, with a textual reason where applicable.
+- `NavigationDecision` represents `launch`, `end`, or `denied`, with a textual reason where applicable.
 - `ActivityLauncher` completes the current session's flush before acting on a launch decision.
 - `ScormPlayer` projects permitted actions into outline and navigation controls.
 
@@ -25,7 +25,7 @@ For SCORM 2004, choice and flow controls, attempt limits, objectives, and rollup
 
 The engine processes a valid SCO request after session termination. It updates attempt and objective state, applies sequencing and rollup, then returns the resulting launch or end decision. A denied choice never starts a resource.
 
-`SequencingEngine.rollup` returns a `RollupResult` with course-level completion and success; `OutcomeCalculator` is the only producer of `CourseOutcome`. Sequencing updates and SCO state share one attempt snapshot. Resume restores that snapshot before calculating availability. Course-level outcomes consume the same rollup result, preventing a separate progress algorithm from contradicting navigation.
+`SequencingEngine.rollup` returns a `RollupResult` with course-level completion and success; `OutcomeCalculator` is the only producer of `CourseOutcome`. Sequencing updates and SCO state share one attempt snapshot. Every `SequencingState` change, including the current activity, is submitted to `PersistenceCoordinator` after the engine applies it. Resume restores that snapshot before calculating availability. Course-level outcomes consume the same rollup result, preventing a separate progress algorithm from contradicting navigation.
 
 The complete per-edition sequencing algorithm, request vocabulary, previous-action interpretation, objective mappings, and end-attempt transitions are `<TO SUPPLY>`. These tables come from the relevant ADL sequencing specifications. No supported edition launches until its required rule coverage exists.
 

@@ -17,6 +17,7 @@ skinparam package {
 actor "Learner / host integrator" as actor
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
+  participant "ActivityLauncher / RuntimeBridge" as launcher
   participant "PersistenceCoordinator" as core
   participant "HostIntegration" as host
 end box
@@ -32,7 +33,10 @@ core -> core : Retain latest values and immutable context
 core --> shell : Persistence error; progress unsaved
 shell --> actor : Announce unsaved progress; offer Retry
 actor -> shell : Request exit
-shell -> core : Check latest versus acknowledged revision
+shell -> shell : requestExit()
+shell -> launcher : ActivityLauncher.flush(), which calls RuntimeBridge.flush()
+launcher -> core : submit(flushed snapshot)
+shell -> core : drain(); check latest versus acknowledged revision
 core --> shell : Unsaved state
 shell --> actor : Warn before ending; offer Retry
 actor -> shell : Retry

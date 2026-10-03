@@ -1,0 +1,84 @@
+@startuml
+' --- shared skin header ---
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+' --------------------------
+title Class structure - Operate by keyboard
+
+class "Combobox<T>" as Combobox {
+  +query: Signal<string>
+  +isOpen: Signal<boolean>
+  +activeIndex: Signal<number>
+  +value: ModelSignal<T[]>
+  -activateLast: Signal<boolean>
+  +onInputKeydown(event: KeyboardEvent): void
+  +onInput(text: string): void
+  +onRetryActivated(): void
+  +onChipKeydown(event: KeyboardEvent, item: T, index: number): void
+  +onChipRemoveClick(item: T): void
+  +toggle(item: T): void
+  +removeChip(item: T): void
+  +commit(next: T[], change: object): void
+  +focusChip(index: number): void
+  +focusInput(): void
+  +open(): void
+  +close(): void
+  +isRtl(): boolean
+  +activateFirstEnabled(): void
+}
+
+class "ComboboxSearch<T>" as ComboboxSearch {
+  +status: Signal<idle | loading | error>
+  +hasMore: Signal<boolean>
+  +retry(): void
+  +loadNextPage(): void
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +id: string
+  +disabled: boolean
+  +selected: boolean
+  +setActiveStyles(): void
+  +setInactiveStyles(): void
+}
+
+class ComboboxPopup {
+  +open(): void
+  +close(): void
+}
+
+class ComboboxAnnouncer {
+  +announce(message: string): void
+}
+
+class "ActiveDescendantKeyManager<ComboboxOption<T>>" as KeyManager <<CDK>> {
+  +activeItem: ComboboxOption<T>
+  +withWrap(shouldWrap: boolean): this
+  +setNextItemActive(): void
+  +setPreviousItemActive(): void
+  +setLastItemActive(): void
+  +skipPredicate(predicate: (item: ComboboxOption<T>) => boolean): this
+}
+
+interface Highlightable <<CDK>> {
+  +disabled?: boolean
+  +setActiveStyles(): void
+  +setInactiveStyles(): void
+}
+
+Combobox "1" *-- "1" KeyManager : created with withWrap(false)
+Combobox ..> ComboboxSearch : reads status and hasMore, calls retry and loadNextPage
+Combobox ..> ComboboxPopup : open and close
+Combobox ..> ComboboxAnnouncer : commit announces removed value
+Combobox "1" o-- "*" ComboboxOption : registers through COMBOBOX_PARENT
+KeyManager --> "*" ComboboxOption : tracks
+ComboboxOption ..|> Highlightable
+@enduml

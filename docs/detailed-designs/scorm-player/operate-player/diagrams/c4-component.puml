@@ -7,5 +7,5 @@ Container_Boundary(frontend, "Tessera inside LMS browser application") {
   Component(p0, "ScormPlayer / PlayerViewState", "Angular view", "Renders semantic controls and stable course frame")
   Component(p1, "StatusAnnouncer", "Browser accessibility", "Announces SCO-driven activity, outcome and save changes")
 }
-Rel(p0, p1, "Publishes each new status or failure once")
+Rel(p0, p1, "Publishes each new status once; ScormPlayer renders failures in the alert region")
 @enduml

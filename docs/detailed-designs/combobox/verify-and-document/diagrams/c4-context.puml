@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Verify and document
+
+Person(dev, "Consumer developer", "Adopts the package, reads the documentation, and tests with the harness")
+Person(maintainer, "Maintainer", "Changes the component and runs the automated checks")
+Person(tester, "Accessibility tester", "Runs the manual screen reader checklist and records results")
+System(repo, "Tessera repository with @tessera/combobox", "Verify and document")
+System_Ext(chromium, "Chromium with Playwright", "Runs automated acceptance and axe-core checks")
+System_Ext(sr, "Screen readers and browsers", "NVDA, JAWS, VoiceOver, TalkBack, Narrator, and their browsers")
+Rel(dev, repo, "Reads documentation and examples; imports ComboboxHarness")
+Rel(maintainer, repo, "Changes component, tests, and documents in")
+Rel(maintainer, chromium, "Runs automated tests in", "Playwright")
+Rel(chromium, repo, "Drives the e2e application of", "HTTP, CDP")
+Rel(tester, sr, "Operates the component with")
+Rel(sr, repo, "Reads the component in the dev app of", "Browser")
+Rel(tester, repo, "Records results in")
+@enduml

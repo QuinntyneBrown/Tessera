@@ -24,7 +24,7 @@ box "Backend - Host LMS API application" #D1FADF
   participant "Authorized attempt storage" as api
 end box
 
-actor -> shell : Supply PlayerInputs
+actor -> shell : Supply source, attempt, host and limits inputs
 shell -> core : Validate required inputs (L2-021)
 alt Missing attempt or callback
   core --> shell : Integration error (L2-014)

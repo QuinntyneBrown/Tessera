@@ -28,7 +28,7 @@ box "Backend - Host course delivery infrastructure" #FFF4E5
 end box
 
 actor -> shell : Open permitted activity
-shell -> core : launch(activity)
+shell -> core : navigate(request) calls NavigationController.request(request), which calls ActivityLauncher.launch(activity) (L2-005)
 core -> wrapper : Create new wrapper iframe on approved course origin (L2-015)
 wrapper -> delivery : Same-origin fetch of confined launch resource (L2-016)
 delivery --> wrapper : Valid resource or HTTP failure

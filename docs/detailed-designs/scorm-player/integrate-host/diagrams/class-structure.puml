@@ -20,15 +20,12 @@ skinparam class {
   BackgroundColor #F9FAFB
 }
 class ScormPlayer {
-  +inputs: PlayerInputs
-  +events: PlayerEvent
-  +requestExit(): Promise<void>
-}
-class PlayerInputs {
   +source: CourseSource
   +attempt: AttemptContext
   +host: HostIntegration
-  +limits: PackageLimits
+  +limits?: PackageLimits
+  +event: PlayerEvent
+  +requestExit(): Promise<void>
 }
 class AttemptContext {
   +attemptKey: string
@@ -37,10 +34,9 @@ class AttemptContext {
 }
 interface HostIntegration {
   +loadAttempt(context: AttemptContext, signal: AbortSignal): Promise<AttemptSnapshot | null>
-  +saveState(context: AttemptContext, state: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
+  +saveState(context: AttemptContext, submission: SaveSubmission, signal: AbortSignal): Promise<SaveAck>
   +prepareDelivery(context: AttemptContext, course: ValidatedCourse, signal: AbortSignal): Promise<DeliveryDescriptor>
 }
-ScormPlayer "1" *-- "1" PlayerInputs : owns configured inputs
-PlayerInputs "1" *-- "1" AttemptContext : binds identity
-PlayerInputs --> HostIntegration : delegates I/O
+ScormPlayer "1" *-- "1" AttemptContext : binds identity
+ScormPlayer --> HostIntegration : loads attempt state and prepares delivery
 @enduml

@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Present the component accessibly
+
+Person(user, "Combobox user", "Sees the control at any zoom, text size, or color mode; operates it by pointer or touch")
+System(host, "Host application with t-combobox", "Angular application that supplies a label and a searchFn")
+System_Ext(platform, "Browser and operating system", "Supplies viewport size, zoom, text size, forced colors, reduced motion, and the on-screen keyboard")
+System_Ext(data, "Consumer data source", "Answers searchFn(query, page) with a page of options")
+
+Rel(user, platform, "Configures zoom, text size, and display settings in")
+Rel(user, host, "Taps and clicks the combobox in", "Pointer, touch")
+Rel(platform, host, "Reports media features and input to", "CSS media features, DOM events")
+Rel(host, data, "Requests option pages from", "searchFn")
+@enduml

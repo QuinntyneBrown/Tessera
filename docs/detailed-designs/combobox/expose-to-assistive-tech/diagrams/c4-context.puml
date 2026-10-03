@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Expose state to assistive technology
+
+Person(user, "Screen reader user", "Searches, selects, and removes values using speech or braille output")
+System(host, "Host application with t-combobox", "Angular application that supplies a visible label and a searchFn")
+System_Ext(at, "Assistive technology", "JAWS, NVDA, VoiceOver, TalkBack, or Narrator reading the accessibility tree")
+System_Ext(data, "Consumer data source", "Answers searchFn(query, page) with a page of options")
+
+Rel(user, at, "Listens to and commands", "Speech, braille, keyboard")
+Rel(at, host, "Reads roles, states, and live messages from", "Accessibility tree")
+Rel(host, data, "Requests option pages from", "searchFn")
+@enduml

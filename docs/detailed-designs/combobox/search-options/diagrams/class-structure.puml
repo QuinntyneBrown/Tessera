@@ -1,0 +1,79 @@
+@startuml
+title Class structure - Search options
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+
+enum SearchStatus {
+  idle
+  loading
+  error
+}
+
+class "Combobox<T>" as Combobox {
+  +query: WritableSignal<string>
+  +isComposing: WritableSignal<boolean>
+  +searchFn: (query: string, page: number) => Observable<ComboboxPage<T>>
+  +debounceMs: number = 300
+  +minSearchLength: number = 1
+  +searchChange: OutputEmitterRef<string>
+  +onInput(text: string): void
+  +onCompositionEnd(text: string): void
+  +onRetryActivated(): void
+}
+
+class "ComboboxSearch<T>" as ComboboxSearch {
+  +results: Signal<T[]>
+  +status: Signal<SearchStatus>
+  +hasMore: Signal<boolean>
+  +total: Signal<number | undefined>
+  +replaceCount: Signal<number>
+  +pageLoaded: Observable<PageLoaded>
+  -pageIndex: number
+  -lastRequest: SearchRequest
+  +retry(): void
+  +loadNextPage(): void
+  +cancel(): void
+}
+
+class PageLoaded {
+  +page: number
+  +count: number
+}
+
+class SearchRequest {
+  +query: string
+  +page: number
+}
+
+class "ComboboxPage<T>" as ComboboxPage {
+  +items: T[]
+  +hasMore: boolean
+  +total?: number
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +item: T
+  +ariaSetSize: number | null
+  +ariaPosInSet: number | null
+}
+
+class ComboboxEmptyTemplate {
+  +query: string
+}
+
+Combobox "1" *-- "1" ComboboxSearch : owns
+ComboboxSearch ..> SearchRequest : emits
+ComboboxSearch ..> ComboboxPage : reduces
+ComboboxSearch --> SearchStatus : has
+Combobox "1" --> "*" ComboboxOption : renders
+Combobox ..> ComboboxEmptyTemplate : renders when no results
+ComboboxSearch ..> PageLoaded : emits
+@enduml

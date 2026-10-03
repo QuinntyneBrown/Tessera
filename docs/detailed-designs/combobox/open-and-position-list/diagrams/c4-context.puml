@@ -1,0 +1,9 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Open and position the list
+
+Person(user, "Application user", "Opens and closes the results list")
+System(app, "Host Angular application with @tessera/combobox", "Shows the list next to the field through t-combobox")
+Rel(user, app, "Opens and closes the list in", "Keyboard, pointer, and touch")
+@enduml

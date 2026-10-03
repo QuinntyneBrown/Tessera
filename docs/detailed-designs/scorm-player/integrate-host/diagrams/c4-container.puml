@@ -13,6 +13,7 @@ Container(delivery, "Course delivery service", "Host-defined HTTPS service", "Se
 Rel(learner, frontend, "Uses player controls")
 Rel(frontend, api, "Host callbacks authorize and persist", "HTTPS")
 Rel(frontend, course, "Constrained session protocol", "postMessage; exact origins")
+Rel(frontend, delivery, "Fetches extracted manifest", "HTTPS; CORS")
 Rel(course, delivery, "Loads wrapper and resources", "HTTPS")
 Rel(api, delivery, "Prepares authorized delivery")
 @enduml

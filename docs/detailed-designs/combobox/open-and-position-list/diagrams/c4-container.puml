@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Open and position the list
+
+Person(user, "Application user", "Opens and closes the list")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Hosts t-combobox, possibly inside a dialog")
+  Container(combobox, "@tessera/combobox", "Angular library", "Decides when to open and close; places the list")
+  Container(cdk, "Angular CDK", "Library", "Provides Overlay, ScrollDispatcher, ViewportRuler, and ActiveDescendantKeyManager")
+}
+Rel(user, combobox, "Types, presses keys, and clicks in", "Keyboard and pointer")
+Rel(host, combobox, "Reads opened and closed outputs", "Outputs")
+Rel(combobox, cdk, "Renders the list in an overlay with", "Overlay API")
+@enduml

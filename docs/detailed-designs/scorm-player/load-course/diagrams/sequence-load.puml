@@ -18,6 +18,7 @@ actor "Learner / host integrator" as actor
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
   participant "CourseLoader" as core
+  participant "PackageWorker" as worker
   participant "HostIntegration" as host
 end box
 box "Backend - Host LMS API application" #D1FADF
@@ -31,14 +32,15 @@ actor -> shell : Supply source
 shell --> actor : Render shell and loading status (L2-019)
 shell -> core : load(source, limits, signal)
 alt ZIP input
-  core -> core : Check archive bytes; extract in worker (L2-002)
-  core -> core : Count actual expanded bytes and entries
+  core -> core : Check archive bytes (L2-002)
+  core -> worker : extract(file, limits, signal)
+  worker -> worker : Count expanded bytes and entries; parse manifest; confine paths (L2-001 / L2-016)
+  worker --> core : ValidatedCourse or typed failure
 else Extracted input
   core -> delivery : Fetch manifest under configured CORS policy (L2-001)
   delivery --> core : Manifest XML or fetch error (L2-003)
+  core -> core : Detect edition; parse structure; confine paths (L2-001 / L2-016)
 end
-core -> core : Detect edition; parse structure (L2-001)
-core -> core : Confine and validate resource paths (L2-016)
 alt Invalid source or exceeded limit
   core --> shell : Typed loading failure; no executable content
   shell --> actor : Name cause and offer retry

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Operate by keyboard
+
+Person(user, "Keyboard user", "Searches, selects, and removes values without a pointer")
+System(host, "Host application with t-combobox", "Angular application whose form contains the combobox")
+System_Ext(data, "Consumer data source", "Answers searchFn(query, page) with a page of options")
+System_Ext(at, "Assistive technology", "Screen reader that follows the active descendant and reads announcements")
+
+Rel(user, host, "Operates the combobox with", "Keyboard")
+Rel(host, data, "Requests option pages from", "searchFn")
+Rel(host, at, "Exposes roles, states, and live messages to", "Accessibility tree")
+@enduml

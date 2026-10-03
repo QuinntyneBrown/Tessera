@@ -20,7 +20,7 @@ box "Frontend - Host LMS application" #E0F2FE
   participant "RuntimeBridge / host RuntimeSession" as bridge
   participant "NavigationController / SequencingEngine" as core
   participant "ActivityLauncher" as launcher
-  participant "HostIntegration" as host
+  participant "PersistenceCoordinator" as persist
 end box
 box "Frontend - Isolated course context" #E0F2FE
   participant "CourseWrapper / local API" as wrapper
@@ -33,21 +33,28 @@ wrapper --> sco : Synchronous result
 sco -> wrapper : Terminate session
 wrapper -> bridge : Terminate with navigation request after prior operations
 bridge -> bridge : Validate; submit final snapshot (see run-scorm-session finish)
-bridge -> core : Validated final state and navigation request
+bridge -> core : NavigationController.request(SCO navigation request) with validated final state
 core -> core : Update objectives and attempt counts
 core -> core : Apply edition sequencing and rollup (L2-006)
+core -> persist : submit(snapshot with updated SequencingState)
 alt Result selects activity
   core -> launcher : launch(selected activity)
   launcher -> wrapper : Retire terminated binding; create new wrapper iframe
   wrapper --> launcher : Ready
   launcher --> core : Launched
+  core -> core : Set SequencingState.currentActivityId
+  core -> persist : submit(snapshot with updated SequencingState)
   core --> shell : Updated position and availability
 else Result ends attempt
-  core -> host : Await PersistenceCoordinator.drain() for the submitted termination
-  host --> core : Durable acknowledgement or failure
+  core -> persist : drain() for the submitted termination and sequencing state
+  persist --> core : Settled with acknowledgement, or failed
   core --> shell : End decision with save status
 else Request disallowed
   core --> shell : Keep permitted position and reason
 end
-shell --> actor : Announce navigation result
+alt New activity and the retired iframe held focus
+  shell --> actor : Move focus to activity heading; no live-region announcement
+else Otherwise
+  shell --> actor : Announce the new activity, the ended attempt, or the denial reason
+end
 @enduml

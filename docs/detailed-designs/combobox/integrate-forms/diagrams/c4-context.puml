@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Integrate with forms
+
+Person(user, "Application user", "Selects values and leaves the field")
+System(app, "Host Angular application with @tessera/combobox", "Binds t-combobox to a form control or a model signal")
+System_Ext(forms, "Angular Forms", "Reactive and template-driven form library")
+Rel(user, app, "Edits the field in", "Browser")
+Rel(app, forms, "Creates and validates controls with", "FormControl, NgModel")
+@enduml

@@ -1,0 +1,63 @@
+@startuml
+title UML sequence behaviour - Release resources on destroy
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+participant "Host view" as host
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox" as cb
+  participant "ComboboxSearch" as search
+  participant "ComboboxPopup" as popup
+  participant "ComboboxAnnouncer" as ann
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "Overlay and ResizeObserver" as cdk
+end box
+box "Frontend - Consumer data source" #E0F2FE
+  participant "searchFn subscription" as src
+end box
+participant "Document and window" as doc
+
+note over cb
+  The list is open, a request is in flight,
+  and a debounce timer is pending.
+end note
+host -> cb : Destroy the component (L2-046)
+cb -> cb : DestroyRef.onDestroy callbacks run
+cb -> search : takeUntilDestroyed completes the pipeline
+alt Request in flight
+  search -> src : Unsubscribe the inner request (L2-046 AC2)
+else No request
+  search --> cb : Nothing to cancel
+end
+search --> cb : Pending debounce timer cleared
+cb -> popup : dispose()
+alt List open
+  popup -> cdk : overlayRef.dispose() removes pane and listbox (L2-046 AC3)
+  popup -> cdk : ResizeObserver.disconnect() (L2-046 AC3)
+  cdk -> doc : Remove outside-click listener
+else List closed
+  popup --> cb : No overlay exists
+end
+cb -> ann : dispose()
+ann --> cb : Loading and coalescing timers cleared; queued message dropped
+cb --> host : Host and document listeners removed with the view
+doc -> doc : Later resize, scroll, document click, or timer
+note right of doc
+  No component handler runs and no error is
+  thrown (L2-046 AC4). Repeating the cycle
+  100 times leaves the overlay panes and
+  document listeners at their baseline (L2-046 AC5).
+end note
+@enduml

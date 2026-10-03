@@ -26,7 +26,7 @@ end box
 actor -> shell : Focus and expand outline by keyboard
 shell -> shell : Update aria-expanded and associated region (L2-017)
 actor -> shell : Choose permitted activity
-shell -> core : Request validated launch
+shell -> core : navigate(request) calls NavigationController.request(request), which calls ActivityLauncher.launch(activity)
 core -> wrapper : Prepare and start selected SCO
 wrapper --> core : Activity ready
 core --> shell : Current activity and permitted controls
@@ -34,6 +34,6 @@ shell -> shell : Focus stable heading; no live-region repeat
 shell --> actor : Named content frame follows in tab order
 actor -> shell : Resize viewport or collapse outline
 shell -> shell : Reflow chrome without recreating iframe (L2-018)
-shell -> shell : Return focus to toggle if outline hides focus
+shell -> shell : Return focus to toggle if outline hides focus; to current outline button if toggle hides
 shell --> actor : Operable controls; active SCO and dirty state retained
 @enduml

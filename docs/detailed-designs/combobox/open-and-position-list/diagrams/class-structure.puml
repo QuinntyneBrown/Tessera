@@ -1,0 +1,74 @@
+@startuml
+title Class structure - Open and position the list
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+
+class "Combobox<T>" as Combobox {
+  +isOpen: WritableSignal<boolean>
+  +activeIndex: WritableSignal<number>
+  +opened: OutputEmitterRef<void>
+  +closed: OutputEmitterRef<void>
+  +open(): void
+  +close(): void
+  +onKeydown(event: KeyboardEvent): void
+  +onFieldClick(): void
+  +onToggleClick(): void
+  -activateFirstEnabled(): void
+}
+
+class ComboboxPopup {
+  -overlayRef: OverlayRef
+  -resizeObserver: ResizeObserver
+  +outsidePointerEvents: Observable<MouseEvent>
+  +open(origin: HTMLElement, template: TemplateRef): void
+  +close(): void
+  +updatePosition(): void
+  +dispose(): void
+}
+
+class "ComboboxSearch<T>" as ComboboxSearch {
+  +results: Signal<T[]>
+  +replaceCount: Signal<number>
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +disabled: Signal<boolean>
+  +setActiveStyles(): void
+  +setInactiveStyles(): void
+  +getLabel(): string
+}
+
+class "ActiveDescendantKeyManager<ComboboxOption>" as KeyManager <<CDK>> {
+  +activeItemIndex: number | null
+  +setActiveItem(index: number): void
+}
+
+class Overlay <<CDK>>
+class OverlayRef <<CDK>> {
+  +updateSize(size: OverlaySizeConfig): void
+  +updatePosition(): void
+  +dispose(): void
+}
+class FlexibleConnectedPositionStrategy <<CDK>> {
+  +withPositions(positions: ConnectedPosition[]): this
+  +withPush(canPush: boolean): this
+  +withFlexibleDimensions(flexible: boolean): this
+}
+
+Combobox "1" *-- "1" ComboboxPopup : owns
+Combobox "1" *-- "1" KeyManager : owns
+Combobox "1" --> "*" ComboboxOption : registers
+Combobox ..> ComboboxSearch : reads replaceCount
+KeyManager o-- "*" ComboboxOption : manages
+ComboboxPopup ..> Overlay : creates overlay with
+ComboboxPopup "1" --> "1" OverlayRef : holds
+OverlayRef --> FlexibleConnectedPositionStrategy : positions with
+@enduml

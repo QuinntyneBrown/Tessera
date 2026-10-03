@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Customize, localise, and publish the API
+
+Container(hostcode, "Host templates and providers", "Angular", "Provides COMBOBOX_I18N and slot templates")
+Container(cdk, "@angular/cdk", "Angular library", "LiveAnnouncer writes the announcement text")
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(cb, "Combobox<T>", "Standalone OnPush component", "Public inputs, outputs, and value model; renders strings and slots")
+  Component(token, "COMBOBOX_I18N", "InjectionToken", "Carries a partial ComboboxStrings override")
+  Component(defaults, "DEFAULT_COMBOBOX_STRINGS", "Constant", "English defaults for every owned string")
+  Component(resolve, "resolveComboboxStrings and formatComboboxString", "Pure functions", "Merge overrides over defaults; substitute placeholders in one pass")
+  Component(ann, "ComboboxAnnouncer", "Class", "Formats each live-region message and passes it to the CDK")
+  Component(opt, "ComboboxOption<T>", "Directive", "Owns the role option host and its ARIA attributes")
+  Component(slots, "ComboboxOptionTemplate, ComboboxChipTemplate, ComboboxEmptyTemplate", "Directives", "Expose consumer ng-template content and typed contexts")
+  Component(api, "public-api.ts", "Barrel file", "Lists the exports of the package")
+}
+Rel(hostcode, token, "Provides override to")
+Rel(hostcode, slots, "Supplies ng-template to")
+Rel(cb, resolve, "Resolves strings with")
+Rel(ann, resolve, "Resolves strings with")
+Rel(resolve, token, "Reads override from")
+Rel(resolve, defaults, "Merges override over")
+Rel(cb, slots, "Finds with contentChild")
+Rel(cb, opt, "Renders each option with")
+Rel(opt, slots, "Renders option template through ngTemplateOutlet")
+Rel(cb, ann, "Requests announcements from")
+Rel(ann, cdk, "Announces text through")
+Rel(api, cb, "Exports")
+@enduml

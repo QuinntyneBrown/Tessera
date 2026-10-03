@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Expose state to assistive technology
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(combobox, "Combobox of T", "Angular component", "Binds ARIA attributes; derives describedBy, activeOptionId, and labelledBy")
+  Component(option, "ComboboxOption of T", "Directive", "Owns the role option host, its id, and its ARIA attributes")
+  Component(search, "ComboboxSearch of T", "Class", "Supplies status and the pageLoaded stream")
+  Component(popup, "ComboboxPopup", "Class", "Attaches the listbox overlay without moving focus")
+  Component(announcer, "ComboboxAnnouncer", "Class", "Formats, coalesces, and flushes announcements")
+  Component(i18n, "COMBOBOX_I18N", "Injection token", "Supplies every message and name")
+}
+Container_Boundary(cdk, "Angular CDK") {
+  Component(live, "LiveAnnouncer", "CDK a11y", "Owns the visually hidden polite live region in the document body")
+  Component(keymanager, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option")
+}
+
+Rel(combobox, option, "Registers options through COMBOBOX_PARENT")
+Rel(combobox, search, "Reads status; subscribes to pageLoaded")
+Rel(combobox, popup, "Opens and closes the listbox")
+Rel(combobox, announcer, "Requests announcements")
+Rel(combobox, keymanager, "Reads the active option from")
+Rel(keymanager, option, "Sets active styles on")
+Rel(announcer, i18n, "Reads message strings from")
+Rel(announcer, live, "Calls announce with polite or assertive")
+@enduml

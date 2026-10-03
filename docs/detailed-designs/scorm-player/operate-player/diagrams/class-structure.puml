@@ -23,15 +23,12 @@ class ScormPlayer {
   +view: PlayerViewState
   +toggleOutline(): void
   +navigate(request: NavigationRequest): Promise<void>
-  +retry(): Promise<void>
+  +retry(error: PlayerError): Promise<void>
   +requestExit(): Promise<void>
 }
 class PlayerViewState {
-  +currentActivityId: string
-  +actions: NavigationDecision[]
   +loadState: LoadState
   +outlineExpanded: boolean
-  +saveStatus: string
   +outcome: CourseOutcome
   +error: PlayerError
 }
@@ -41,6 +38,7 @@ class PlayerError {
   +text: string
   +retryable: boolean
   +correlationToken: string
+  +activityId?: string
 }
 class StatusAnnouncer {
   +announceStatus(text: string): void

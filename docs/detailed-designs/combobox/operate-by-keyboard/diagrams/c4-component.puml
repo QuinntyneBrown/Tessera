@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Operate by keyboard
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(combobox, "Combobox of T", "Angular component", "Owns onInputKeydown, onChipKeydown, focusChip, and isRtl; calls toggle, removeChip, and commit")
+  Component(search, "ComboboxSearch of T", "Class", "Supplies status and hasMore; runs retry and loadNextPage")
+  Component(option, "ComboboxOption of T", "Directive", "Owns the option host; supplies item and disabled")
+  Component(popup, "ComboboxPopup", "Class", "Opens and closes the overlay")
+  Component(announcer, "ComboboxAnnouncer", "Class", "Announces the removal of a value")
+}
+Container_Boundary(cdk, "Angular CDK") {
+  Component(keymanager, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option without wrapping")
+}
+
+Rel(combobox, keymanager, "Moves the active option with explicit calls")
+Rel(combobox, option, "Reads item and disabled of the active option from")
+Rel(combobox, search, "Reads status and hasMore; calls retry and loadNextPage")
+Rel(combobox, popup, "Calls open and close")
+Rel(combobox, announcer, "Announces removed value")
+Rel(keymanager, option, "Sets active state on")
+@enduml

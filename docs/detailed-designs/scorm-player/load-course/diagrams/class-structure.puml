@@ -24,8 +24,7 @@ class CourseLoader {
 }
 class PackageWorker {
   +expandedBytes: number
-  +extract(file: File, limits: PackageLimits): ValidatedCourse
-  +terminate(): void
+  +extract(file: File, limits: PackageLimits, signal: AbortSignal): Promise<ValidatedCourse>
 }
 class ManifestParser {
   +parse(xml: string, root: URL): ValidatedCourse

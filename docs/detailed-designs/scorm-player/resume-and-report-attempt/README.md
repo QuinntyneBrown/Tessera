@@ -16,9 +16,9 @@ This feature restores each SCO's saved data and the permitted current activity. 
 - `AttemptSnapshot` contains `schemaVersion`, immutable context, edition, per-SCO snapshots, and sequencing state. The current activity is `SequencingState.currentActivityId`.
 - `ScoSnapshot` stores valid runtime values by element name. Only the selected SCO's state enters the isolated wrapper.
 - `OutcomeCalculator` maps accepted edition-specific runtime values and sequencing rollup into `CourseOutcome`.
-- `CourseOutcome` contains distinct `status`, `completion`, `success`, `score`, and optional `progress`. Unknown fields remain explicit.
-- `SequencingEngine` checks whether the saved activity remains permitted before resume.
-- `PersistenceCoordinator` emits one acknowledged outcome event for each accepted save revision.
+- `CourseOutcome` contains distinct `status`, `completion`, `success`, `score`, and `progress`. Unknown fields remain explicit.
+- `AttemptRestorer` returns the saved `currentActivityId`; `NavigationController.request` decides whether it is still permitted, as it does for every launch.
+- `PersistenceCoordinator` publishes each accepted save revision once; `ScormPlayer` emits the matching `CourseOutcome` from `OutcomeCalculator` as one outcome event.
 
 The host loads state only after authorization. Snapshot mismatch produces an integration error rather than applying another attempt's values. A new attempt starts only when `loadAttempt` resolves to `null`. Deliberate state transfer requires the host to supply a snapshot rebound to that new context.
 
@@ -26,7 +26,7 @@ The restorer returns a `RestoredAttempt`; `ActivityLauncher` then sends the sele
 
 For SCORM 1.2, lesson status and score retain their edition meaning. For SCORM 2004, completion and success remain distinct, and course rollup uses the detected edition's rules. Unknown overall completion remains unknown. A count of visited activities does not establish completion.
 
-The player displays provisional outcomes from validated current state. Host outcome events describe acknowledged saved revisions; pending or failed saves remain separately visible. Score events contain only fields documented for the outcome contract.
+The player displays provisional outcomes from validated current state. Host outcome events describe acknowledged saved revisions; failed saves remain visible as "Not saved". Score events contain only fields documented for the outcome contract.
 
 Snapshot migration, course-revision mismatch recovery, fallback activity selection, edition-specific outcome mappings, and valid percentage derivation are `<TO SUPPLY>`. These gaps do not authorize inferred completion.
 

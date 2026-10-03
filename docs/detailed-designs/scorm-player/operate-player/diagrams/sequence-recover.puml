@@ -17,6 +17,7 @@ skinparam package {
 actor "Learner / host integrator" as actor
 box "Frontend - Host LMS application" #E0F2FE
   participant "ScormPlayer" as shell
+  participant "NavigationController" as nav
   participant "CourseLoader / ActivityLauncher / PersistenceCoordinator" as core
   participant "HostIntegration" as host
 end box
@@ -34,23 +35,38 @@ core --> shell : PlayerError(category, code, text, correlationToken)
 shell -> shell : Publish actionable message (L2-020)
 shell --> actor : PlayerEvent error (category, code, correlationToken)
 shell --> actor : Announce failure and available action (L2-017)
-actor -> shell : Activate Retry by keyboard
-shell -> core : Retry the workflow named by the error category
+actor -> shell : Activate Retry by keyboard; retry(error) routes by category
 alt Loading failure, manifest or package code
-  core -> delivery : Restart manifest load
-  delivery --> core : Manifest or loading error
+  shell -> core : CourseLoader.load(source, limits, signal)
+  opt Extracted source
+    core -> delivery : Fetch manifest
+    delivery --> core : Manifest or loading error
+  end
 else Loading failure, activity launch code
-  core -> delivery : ActivityLauncher.launch(activity) rechecks the launch resource
-  delivery --> core : Resource or loading error
+  shell -> nav : navigate(request) for the error's activityId calls NavigationController.request, which re-checks it
+  nav -> core : ActivityLauncher.launch(activity)
+  core -> wrapper : Create new wrapper iframe
+  wrapper -> delivery : Same-origin recheck of the launch resource
+  delivery --> wrapper : Resource or HTTP failure
+  wrapper --> core : Launch check result
 else Persistence failure
-  core -> host : PersistenceCoordinator.retry(); saveState(context, submission, signal)
+  shell -> core : PersistenceCoordinator.retry()
+  core -> host : saveState(context, submission, signal)
   host -> api : Authorized revision save
   api --> host : Save result
   host --> core : Matching acknowledgement or failure
 else Detected runtime failure
-  core -> wrapper : Flush failed session; relaunch current activity
+  shell -> nav : navigate(request) for the current activity calls NavigationController.request
+  nav -> core : ActivityLauncher.launch(activity)
+  core -> wrapper : Discard the failed wrapper (no flush); create new wrapper iframe
   wrapper --> core : Relaunched with retained state, or runtime error
 end
 core --> shell : Recovered state or actionable failure
-shell --> actor : Announce result without exposing learner data
+alt Activity relaunched
+  shell --> actor : Move focus to activity heading; no live-region announcement
+else Course reloaded or progress saved again
+  shell --> actor : Announce course ready (unless focus moved to the activity heading) or return to saved in the polite region
+else Still failing
+  shell --> actor : Show the new error in its region without exposing learner data
+end
 @enduml

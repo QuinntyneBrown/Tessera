@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Present the component accessibly
+
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(combobox, "Combobox of T", "Angular component", "Template parts; onKeepFocusMousedown; click handlers call toggle, clearAll, removeChip")
+  Component(styles, "combobox.scss", "Component styles", "Layout rules, design tokens, and media-feature blocks")
+  Component(option, "ComboboxOption of T", "Directive", "Option host with checkbox and active class")
+  Component(popup, "ComboboxPopup", "Class", "Overlay panel; width follows the field through ResizeObserver")
+  Component(icons, "Icon source", "To be supplied", "Chevron, spinner, clear, and checkmark")
+}
+Container_Boundary(cdk, "Angular CDK") {
+  Component(overlay, "OverlayRef", "CDK overlay", "Positions the panel and emits outsidePointerEvents")
+}
+
+Rel(combobox, styles, "Is styled by")
+Rel(combobox, option, "Renders options with")
+Rel(combobox, popup, "Opens and closes")
+Rel(combobox, icons, "Draws decorative icons from")
+Rel(popup, overlay, "Creates and updates")
+Rel(overlay, popup, "Emits outside taps to")
+@enduml

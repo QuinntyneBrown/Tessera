@@ -1,0 +1,99 @@
+@startuml
+' --- shared skin header ---
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+' --------------------------
+title Class structure - Present the component accessibly
+
+class "Combobox<T>" as Combobox {
+  +value: ModelSignal<T[]>
+  +query: Signal<string>
+  +isOpen: Signal<boolean>
+  +onKeepFocusMousedown(event: MouseEvent): void
+  +toggle(item: T): void
+  +clearAll(): void
+  +removeChip(item: T): void
+  +focusInput(): void
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +id: string
+  +disabled: boolean
+  +selected: boolean
+  +item: T
+}
+
+class ComboboxPopup {
+  +open(origin: HTMLElement, template: TemplateRef): void
+  +close(): void
+  +outsidePointerEvents: Observable<MouseEvent>
+  -observeFieldWidth(): void
+}
+
+class "OverlayRef" as OverlayRef <<CDK>> {
+  +outsidePointerEvents(): Observable<MouseEvent>
+  +updatePosition(): void
+}
+
+class ComboboxTemplate <<template>> {
+  +field: div.t-combobox-field
+  +chipList: ul.t-combobox-chips
+  +chip: li.t-combobox-chip
+  +chipLabel: span.t-combobox-chip-label
+  +chipRemove: button.t-combobox-chip-remove
+  +input: input.t-combobox-input
+  +spinner: span.t-combobox-spinner
+  +clearAll: button.t-combobox-clear
+  +toggle: button.t-combobox-toggle
+  +panel: div.t-combobox-panel
+  +option: li.t-combobox-option
+  +checkbox: span.t-combobox-checkbox
+}
+
+class ComboboxStyles <<scss>> {
+  +flexWrapField: layout rule
+  +chipEllipsis: layout rule
+  +minTarget: 24px by 24px
+  +relativeUnits: rem and em
+  +reducedMotionBlock: no-preference gate
+  +forcedColorsBlock: system colors
+  +hoverBlock: hover media feature
+}
+
+class ComboboxTokens <<CSS custom properties>> {
+  +--t-combobox-text: TO SUPPLY
+  +--t-combobox-placeholder: TO SUPPLY
+  +--t-combobox-surface: TO SUPPLY
+  +--t-combobox-border: TO SUPPLY
+  +--t-combobox-focus-ring: TO SUPPLY
+  +--t-combobox-active-outline: TO SUPPLY
+  +--t-combobox-hover-bg: TO SUPPLY
+  +--t-combobox-selected-mark: TO SUPPLY
+  +--t-combobox-disabled-text: TO SUPPLY
+  +--t-combobox-motion-duration: TO SUPPLY
+}
+
+class IconSource <<TO SUPPLY>> {
+  +chevron
+  +spinner
+  +clear
+  +checkmark
+}
+
+Combobox "1" *-- "1" ComboboxTemplate : renders
+Combobox "1" o-- "*" ComboboxOption : renders
+Combobox ..> ComboboxPopup : open and close
+ComboboxPopup --> OverlayRef : creates
+OverlayRef ..> ComboboxPopup : outsidePointerEvents relayed to close the list
+ComboboxTemplate ..> ComboboxStyles : styled by
+ComboboxStyles --> ComboboxTokens : reads
+ComboboxTemplate ..> IconSource : draws from
+@enduml

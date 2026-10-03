@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Customize, localise, and publish the API
+
+Person(dev, "Consumer developer", "Installs the package, supplies strings, templates, and inputs")
+Person(user, "End user", "Reads localised text and custom option and chip content")
+System(host, "Host Angular application with t-combobox", "Customize, localise, and publish the API")
+System_Ext(registry, "Package registry", "Distributes the @tessera/combobox package")
+System_Ext(source, "Consumer data source", "Answers searchFn calls with ComboboxPage data")
+Rel(dev, registry, "Installs the package from", "npm")
+Rel(dev, host, "Configures inputs, i18n token, and template slots")
+Rel(user, host, "Uses", "Browser")
+Rel(host, source, "Calls searchFn against", "Consumer-defined")
+@enduml

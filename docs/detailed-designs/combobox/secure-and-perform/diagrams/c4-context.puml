@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Secure and perform
+
+Person(user, "End user", "Types queries and selects options")
+System_Ext(at, "Assistive technology", "Reads the live region, labels, and states")
+System(host, "Host Angular application with t-combobox", "Renders untrusted data as text, stays responsive, and releases resources")
+System_Ext(source, "Consumer data source", "Returns items that the component treats as untrusted")
+Rel(user, host, "Types and selects in", "Browser")
+Rel(at, host, "Reads text from", "Accessibility tree")
+Rel(host, source, "Sends the query unchanged to", "Consumer-defined")
+Rel(source, host, "Returns untrusted items to", "Consumer-defined")
+@enduml

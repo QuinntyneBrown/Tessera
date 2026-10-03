@@ -1,0 +1,67 @@
+@startuml
+title UML sequence behaviour - Operate the combobox from a consumer test
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Consumer developer" as dev
+box "Frontend - Host Angular application test" #E0F2FE
+  participant "Consumer test" as test
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "ComboboxHarness" as harness
+  participant "Combobox" as cb
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "HarnessEnvironment" as env
+end box
+
+dev -> test : Run test with fake or real timers
+test -> env : loader.getHarness(ComboboxHarness)
+env --> test : ComboboxHarness for t-combobox
+test -> harness : open() (L2-047 AC1)
+alt List is closed
+  harness -> cb : Click the field
+  cb --> harness : aria-expanded becomes true
+else List is already open
+  harness --> test : No action
+end
+test -> harness : isOpen()
+harness --> test : true (L2-047 AC1)
+test -> harness : search("ad") (L2-047 AC2)
+harness -> cb : Focus, clear, and send key events for "ad"
+harness -> env : forceStabilize()
+harness --> test : Input contains "ad"; time is not advanced
+test -> test : Elapse the debounce with fake or real timers
+test -> harness : getOptions()
+harness -> env : Locate the listbox through aria-controls in the document root
+harness --> test : Labels, selected state, and disabled state in order (L2-047 AC2)
+alt Option given by label or by index
+  test -> harness : toggleOption("Ada") or toggleOption(0) (L2-047 AC3)
+  harness -> cb : Click the matching role option
+  cb --> harness : aria-selected flips
+  harness --> test : Selected state flipped
+else No option matches
+  harness --> test : Rejects with a message naming the label or index
+end
+test -> harness : getChips()
+harness --> test : Chip labels in selection order (L2-047 AC4)
+test -> harness : removeChip("Ada") or removeChip(0)
+harness -> cb : Click the chip remove button
+cb --> harness : Chip removed
+harness --> test : Resolved
+note over harness, cb
+  The harness reads ARIA roles and states only.
+  It uses no private member of the component (L2-047 AC5).
+end note
+@enduml

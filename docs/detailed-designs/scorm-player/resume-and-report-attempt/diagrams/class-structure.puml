@@ -33,7 +33,7 @@ class ScoSnapshot {
   +values: Map<string, string>
 }
 class OutcomeCalculator {
-  +derive(edition: ScormEdition, state: AttemptSnapshot, rollup: RollupResult): CourseOutcome
+  +derive(state: AttemptSnapshot, rollup: RollupResult): CourseOutcome
 }
 class CourseOutcome {
   +status: string | unknown

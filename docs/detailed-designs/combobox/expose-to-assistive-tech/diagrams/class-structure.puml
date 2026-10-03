@@ -1,0 +1,97 @@
+@startuml
+' --- shared skin header ---
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+' --------------------------
+title Class structure - Expose state to assistive technology
+
+class "Combobox<T>" as Combobox {
+  +inputId: InputSignal<string>
+  +ariaLabel: InputSignal<string | null>
+  +hint: InputSignal<string>
+  +error: InputSignal<string>
+  +isOpen: Signal<boolean>
+  +activeIndex: Signal<number>
+  -uid: number
+  +listboxId: string
+  +summaryId: string
+  +activeOptionId: Signal<string | null>
+  +describedBy: Signal<string | null>
+  +selectedSummary: Signal<string>
+  +labelledBy(): string | null
+  +toggle(item: T): void
+  -assertAccessibleName(): void
+}
+
+class "ComboboxOption<T>" as ComboboxOption {
+  +id: string
+  +item: T
+  +disabled: boolean
+  +selected: boolean
+  +setActiveStyles(): void
+  +setInactiveStyles(): void
+}
+
+class ComboboxAnnouncer {
+  -pending: Message[]
+  -windowMs: number <<TO SUPPLY>>
+  +announceResults(count: number): void
+  +announceNoResults(): void
+  +announceLoading(): void
+  +announceFailure(): void
+  +announceSelected(label: string, total: number): void
+  +announceRemoved(label: string): void
+  +announceCleared(): void
+  +announceMaxReached(max: number): void
+  +announceMoreLoaded(count: number): void
+  -enqueue(message: string, kind: status | selection): void
+  -flush(): void
+}
+
+class Message {
+  +text: string
+  +kind: status | selection
+}
+
+class "ComboboxSearch<T>" as ComboboxSearch {
+  +status: Signal<idle | loading | error>
+  +pageLoaded: Observable<PageLoaded> <<proposed>>
+}
+
+class PageLoaded {
+  +page: number
+  +count: number
+}
+
+interface ComboboxStrings {
+  +message strings with n, label, and max placeholders
+  +names for chip list, remove, and clear-all
+}
+
+class "ActiveDescendantKeyManager<ComboboxOption<T>>" as KeyManager <<CDK>> {
+  +activeItem: ComboboxOption<T>
+  +change: Subject<number>
+}
+
+class LiveAnnouncer <<CDK>> {
+  +announce(message: string, politeness: polite | assertive): Promise<void>
+}
+
+Combobox "1" o-- "*" ComboboxOption : registers through COMBOBOX_PARENT
+Combobox ..> ComboboxSearch : reads status; subscribes to pageLoaded
+Combobox ..> ComboboxAnnouncer : requests announcements
+Combobox "1" *-- "1" KeyManager : activeIndex follows change
+ComboboxSearch ..> PageLoaded : emits
+ComboboxAnnouncer *-- "*" Message : pending
+ComboboxAnnouncer ..> ComboboxStrings : reads through COMBOBOX_I18N
+ComboboxAnnouncer --> LiveAnnouncer : flushes to
+KeyManager --> "*" ComboboxOption : tracks
+@enduml

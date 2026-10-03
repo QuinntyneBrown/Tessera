@@ -1,0 +1,63 @@
+@startuml
+title UML sequence behaviour - Open and close the list
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Application user" as user
+box "Frontend - Host Angular application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - @tessera/combobox" #E0F2FE
+  participant "Combobox<T>" as combo
+  participant "ComboboxPopup" as popup
+end box
+box "Frontend - Angular CDK" #E0F2FE
+  participant "ActiveDescendantKeyManager" as keys
+end box
+
+alt focus arrives by Tab or script
+  user -> combo : Focus the input
+  combo --> user : List stays closed (L2-029)
+else type, Arrow Down, Arrow Up, Alt+Arrow Down, or click field or toggle
+  user -> combo : Open trigger
+  combo -> combo : open(); return if already open
+  combo -> popup : open(origin, template)
+  popup --> combo : Overlay attached
+  combo -> keys : setActiveItem(first enabled option) (L2-029)
+  note right of keys
+    No enabled option: setActiveItem(-1),
+    no aria-activedescendant (L2-029)
+  end note
+  combo -> host : Emit opened once (L2-029)
+end
+== New results while open ==
+combo -> combo : Page 0 response replaces results (replaceCount changes)
+combo -> keys : setActiveItem(first enabled option) (L2-029)
+note over combo
+  An appended page keeps the active option
+end note
+== Close ==
+alt Escape, Alt+Arrow Up, or Tab
+  user -> combo : Key press
+else click outside the component
+  user -> popup : Click outside overlay and host
+  popup --> combo : outsidePointerEvents
+else component becomes disabled
+  host -> combo : Disabled state set (L2-029)
+end
+combo -> combo : close(); return if already closed
+combo -> popup : close()
+combo -> host : Emit closed once (L2-029)
+combo --> user : DOM focus remains on the input unless Tab or an outside click moved it (L2-029)
+@enduml

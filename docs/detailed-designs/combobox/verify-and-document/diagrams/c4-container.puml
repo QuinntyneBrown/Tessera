@@ -1,0 +1,31 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Verify and document
+
+Person(dev, "Consumer developer", "Adopts the package")
+Person(maintainer, "Maintainer", "Runs automated checks")
+Person(tester, "Accessibility tester", "Runs the manual checklist")
+System_Boundary(repo, "Tessera repository") {
+  Container(pkg, "@tessera/combobox", "Angular library", "t-combobox and ComboboxHarness in src/combobox/testing")
+  Container(examples, "Combobox examples", "Angular standalone components", "Five example components and createMockUserSearch")
+  Container(devapp, "dev-app", "Angular application", "ComboboxDevPage demonstrates the component with a mock searchFn")
+  Container(e2e, "e2e-app", "Angular application, zoneless", "ComboboxHostFixture hosts the component from a ComboboxScenario")
+  Container(tests, "Playwright acceptance tests", "Playwright, axe-core, Chromium", "Spec files and ComboboxDemoPage")
+  Container(harnessspec, "Harness spec", "Vitest, TestbedHarnessEnvironment", "Proves the L2-047 criteria through the public entry")
+  Container(docs, "Documentation page and matrix", "Markdown", "src/combobox/README.md and the screen reader verification matrix")
+}
+System_Ext(sr, "Screen readers and browsers", "Manual verification targets")
+Rel(dev, docs, "Reads")
+Rel(dev, pkg, "Imports component and harness from", "npm")
+Rel(maintainer, tests, "Runs", "pnpm e2e")
+Rel(tests, e2e, "Drives and scans with axe-core", "Playwright")
+Rel(e2e, pkg, "Hosts")
+Rel(e2e, examples, "Reuses createMockUserSearch from")
+Rel(devapp, examples, "Renders")
+Rel(examples, pkg, "Use")
+Rel(harnessspec, pkg, "Operates through ComboboxHarness", "Public API")
+Rel(tester, sr, "Operates the dev app with")
+Rel(sr, devapp, "Reads", "Browser")
+Rel(tester, docs, "Records results in")
+@enduml
