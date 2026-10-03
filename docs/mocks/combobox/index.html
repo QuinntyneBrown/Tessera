@@ -10,7 +10,7 @@
         font-family: Inter, 'Segoe UI', Arial, sans-serif;
         --ink: #18312e;
         --muted: #536763;
-        --line: #7f978d;
+        --line: #657f73;
         --surface: #fff;
         --canvas: #f4f7f5;
         --accent: #126454;
@@ -246,7 +246,7 @@
         color: white;
         border-radius: 0.375rem;
         font-size: 0.875rem;
-        pointer-events: none;
+        pointer-events: auto;
       }
       .input-row {
         display: flex;
@@ -341,6 +341,10 @@
       .option[aria-disabled='true'] {
         cursor: not-allowed;
       }
+      .option[aria-disabled='true'] .check { border-style: dashed; }
+      input::placeholder { color: var(--muted); opacity: 1; }
+      .status button { max-width: 100%; }
+      @media (hover: none) { .option:hover { background: var(--surface); } }
       .check {
         display: grid;
         place-items: center;
@@ -448,6 +452,8 @@
             <option value="loading">Slow loading</option>
             <option value="empty">No results</option>
             <option value="error">Search error</option>
+            <option value="page-error">Next-page error</option>
+            <option value="minimum">Minimum 2 characters</option>
             <option value="disabled">Disabled</option>
             <option value="invalid">Required / invalid</option>
             <option value="limit">Selection limit (3)</option>
@@ -506,6 +512,7 @@
             <p class="hint" id="hint">Select one or more learners. Search to narrow the results.</p>
             <p class="error" id="validation" hidden>Select at least one learner.</p>
             <span class="sr-only" id="summary"></span>
+            <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
           </div>
           <div class="footer">
             <p class="count" id="count"></p>
@@ -524,7 +531,7 @@
               button.
             </li>
             <li>
-              Scroll to the bottom for more results. Use the preview controls to explore failure and
+              Scroll to the bottom or use Load more for more results. Use the preview controls to explore failure and
               edge states.
             </li>
           </ul>
@@ -540,14 +547,13 @@
       id="popup"
       role="region"
       aria-label="Learner search results"
-      tabindex="0"
+      tabindex="-1"
       hidden
     >
       <div id="results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
       <div class="status" id="status"></div>
     </div>
     <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
-    <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
     <script>
       const $ = (id) => document.getElementById(id);
       const input = $('learner-search'),
@@ -585,532 +591,290 @@
         email: name.toLowerCase().replaceAll(' ', '.') + '@example.com',
         disabled: id === 8,
       }));
-      let selected = [],
-        results = [],
-        total = 0,
-        active = -1,
-        open = false,
-        busy = false,
-        failed = false,
-        touched = false,
-        disabled = false,
-        limit = null;
-      let mode = 'normal',
-        page = 0,
-        failedPage = 0,
-        query = '',
-        version = 0,
-        timer,
-        requestTimer,
-        loadingTimer,
-        announcementTimer,
-        composing = false,
-        openAtEnd = false;
-      const pageSize = 6;
+      // Local simulation only. Angular forms, CDK, packaging and release verification are not implemented.
+      let selected = people.slice(0, 2), results = [], total = 0, active = -1;
+      let open = false, busy = false, failed = false, touched = false, disabled = false;
+      let mode = 'normal', limit = null, minLength = 0, page = -1, completedQuery = null;
+      let version = 0, timer, requestTimer, loadingTimer, composing = false, pendingQuery = false;
+      let lastRequest = null, openingMode = 'normal', preserveOpeningMode = false, pageFailureUsed = false;
+      let announcementTimer, failureTimer, tooltipTimer, tooltipOwner = null;
+      let pendingStatus = null, pendingSelections = [], optionSequence = 0;
+      const pageSize = 6, optionIds = new WeakMap(), chipNodes = new Map();
       const has = (person) => selected.some((item) => item.id === person.id);
-      const unavailable = (person) =>
-        person.disabled || (limit !== null && selected.length >= limit && !has(person));
-      function announce(message, urgent = false) {
-        clearTimeout(announcementTimer);
-        $('live').setAttribute('aria-live', urgent ? 'assertive' : 'polite');
-        $('live').textContent = '';
-        announcementTimer = setTimeout(() => {
-          $('live').textContent = message;
-        }, 150);
+      const unavailable = (person) => person.disabled || (limit !== null && selected.length >= limit && !has(person));
+      function optionId(person) {
+        if (!optionIds.has(person)) optionIds.set(person, 'learner-option-' + (++optionSequence));
+        return optionIds.get(person);
       }
-      function cancel() {
-        version++;
-        clearTimeout(timer);
-        clearTimeout(requestTimer);
-        clearTimeout(loadingTimer);
-        busy = false;
+      function discardStatus() { pendingStatus = null; clearTimeout(failureTimer); }
+      function announce(message, kind = 'selection') {
+        const live = $('live');
+        if (kind === 'failure') {
+          discardStatus(); clearTimeout(announcementTimer); live.textContent = '';
+          live.setAttribute('aria-live', 'assertive');
+          const generation = version;
+          failureTimer = setTimeout(() => {
+            if (generation === version && open && failed) live.textContent = message;
+            if (pendingSelections.length) announcementTimer = setTimeout(flushAnnouncements, 150);
+          }, 20);
+          return;
+        }
+        if (kind === 'status') pendingStatus = { message, generation: version };
+        else pendingSelections.push(message);
+        clearTimeout(announcementTimer);
+        announcementTimer = setTimeout(flushAnnouncements, 150);
+      }
+      function flushAnnouncements() {
+        if (!pendingSelections.length && !pendingStatus) return;
+        $('live').setAttribute('aria-live', 'polite'); $('live').textContent = '';
+        // A separate task permits repeated messages to be exposed to assistive technology.
+        announcementTimer = setTimeout(() => {
+          const messages = pendingSelections.splice(0);
+          if (pendingStatus && open && !pendingQuery && pendingStatus.generation === version) messages.push(pendingStatus.message);
+          pendingStatus = null;
+          $('live').textContent = messages.join(' ');
+        }, 20);
+      }
+      function cancelRequest() {
+        version++; clearTimeout(timer); timer = undefined;
+        clearTimeout(requestTimer); clearTimeout(loadingTimer); busy = false; discardStatus();
       }
       function validate() {
         const invalid = touched && !selected.length;
-        $('validation').hidden = !invalid;
-        $('field').classList.toggle('invalid', invalid);
+        $('validation').hidden = !invalid; $('field').classList.toggle('invalid', invalid);
         input.setAttribute('aria-invalid', String(invalid));
         input.setAttribute('aria-describedby', 'hint summary' + (invalid ? ' validation' : ''));
       }
-      function hideTooltip() {
-        $('tooltip').hidden = true;
+      function hideTooltip() { clearTimeout(tooltipTimer); $('tooltip').hidden = true; tooltipOwner = null; }
+      function hideTooltipIfLeft() {
+        clearTimeout(tooltipTimer);
+        tooltipTimer = setTimeout(() => {
+          if (!tooltipOwner?.matches(':hover') && !tooltipOwner?.contains(document.activeElement) && !$('tooltip').matches(':hover')) hideTooltip();
+        }, 250);
       }
-      function showTooltip(button, person) {
-        const tip = $('tooltip');
-        tip.textContent = person.name;
-        tip.hidden = false;
-        const rect = button.closest('li').getBoundingClientRect();
+      function showTooltip(chip, person) {
+        if (chip.querySelector('.chip-label').scrollWidth <= chip.querySelector('.chip-label').clientWidth) return;
+        clearTimeout(tooltipTimer); tooltipOwner = chip;
+        const tip = $('tooltip'); tip.textContent = person.name; tip.hidden = false;
+        const rect = chip.getBoundingClientRect();
         tip.style.left = Math.max(8, Math.min(rect.left, innerWidth - tip.offsetWidth - 8)) + 'px';
-        tip.style.top = Math.max(8, rect.top - tip.offsetHeight - 8) + 'px';
+        tip.style.top = Math.max(8, Math.min(rect.bottom + 4, innerHeight - tip.offsetHeight - 8)) + 'px';
+      }
+      $('tooltip').addEventListener('pointerenter', () => clearTimeout(tooltipTimer));
+      $('tooltip').addEventListener('pointerleave', hideTooltipIfLeft);
+      $('tooltip').addEventListener('mousedown', (event) => event.preventDefault());
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !$('tooltip').hidden) {
+          hideTooltip(); event.preventDefault(); event.stopPropagation();
+        }
+      }, true);
+      function makeChip(person) {
+        const chip = document.createElement('li'); chip.className = 'chip';
+        const label = document.createElement('span'); label.className = 'chip-label'; label.textContent = person.name;
+        const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = '×'; remove.setAttribute('aria-label', 'Remove ' + person.name);
+        remove.addEventListener('click', () => removeChip(person));
+        chip.addEventListener('pointerenter', () => showTooltip(chip, person)); chip.addEventListener('pointerleave', hideTooltipIfLeft);
+        remove.addEventListener('focus', () => showTooltip(chip, person)); remove.addEventListener('blur', hideTooltipIfLeft);
+        remove.addEventListener('keydown', (event) => {
+          const index = selected.findIndex((item) => item.id === person.id);
+          const previous = getComputedStyle($('combobox')).direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+          if (['Backspace', 'Delete'].includes(event.key)) { event.preventDefault(); removeChip(person); }
+          else if (event.key === previous) { event.preventDefault(); $('chips').querySelectorAll('button')[Math.max(0, index - 1)]?.focus(); }
+          else if (event.key === (previous === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft')) { event.preventDefault(); ($('chips').querySelectorAll('button')[index + 1] || input).focus(); }
+        });
+        chip.append(label, remove); return chip;
       }
       function renderSelection() {
-        hideTooltip();
-        $('chips').replaceChildren();
-        selected.forEach((person, index) => {
-          const chip = document.createElement('li');
-          chip.className = 'chip';
-          const label = document.createElement('span');
-          label.className = 'chip-label';
-          label.textContent = person.name;
-          const remove = document.createElement('button');
-          remove.type = 'button';
-          remove.textContent = '×';
-          remove.setAttribute('aria-label', 'Remove ' + person.name);
-          remove.disabled = disabled;
-          remove.addEventListener('click', () => removeChip(index));
-          remove.addEventListener('focus', () => showTooltip(remove, person));
-          remove.addEventListener('mouseenter', () => showTooltip(remove, person));
-          remove.addEventListener('blur', hideTooltip);
-          remove.addEventListener('mouseleave', hideTooltip);
-          remove.addEventListener('keydown', (event) => {
-            const previous = document.documentElement.dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
-            if (['Backspace', 'Delete'].includes(event.key)) {
-              event.preventDefault();
-              removeChip(index);
-            } else if (event.key === previous) {
-              event.preventDefault();
-              $('chips').querySelectorAll('button')[Math.max(0, index - 1)]?.focus();
-            } else if (event.key === (previous === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft')) {
-              event.preventDefault();
-              const next = $('chips').querySelectorAll('button')[index + 1];
-              (next || input).focus();
-            }
-          });
-          chip.append(label, remove);
-          $('chips').append(chip);
+        for (const [id, chip] of chipNodes) {
+          if (!selected.some((person) => person.id === id)) { if (tooltipOwner === chip) hideTooltip(); chip.remove(); chipNodes.delete(id); }
+        }
+        selected.forEach((person) => {
+          if (!chipNodes.has(person.id)) { const chip = makeChip(person); chipNodes.set(person.id, chip); $('chips').append(chip); }
+          chipNodes.get(person.id).querySelector('button').disabled = disabled;
         });
-        $('clear').hidden = !selected.length;
-        $('clear').disabled = disabled;
-        input.disabled = disabled;
-        $('toggle').disabled = disabled;
-        $('assign').disabled = disabled;
+        $('clear').hidden = !selected.length; $('clear').disabled = disabled; input.disabled = disabled; $('toggle').disabled = disabled; $('assign').disabled = disabled;
         $('field').classList.toggle('disabled', disabled);
-        $('count').textContent =
-          selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' selected';
-        $('summary').textContent = selected.length
-          ? selected.length + ' selected: ' + selected.map((item) => item.name).join(', ')
-          : 'No learners selected.';
-        $('hint').textContent =
-          limit === null
-            ? 'Select one or more learners. Search to narrow the results.'
-            : 'Choose up to ' + limit + ' learners. Remove a selection to choose someone else.';
-        $('confirmation').textContent = '';
-        validate();
-        position();
+        $('count').textContent = selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' selected';
+        $('summary').textContent = selected.length ? selected.length + ' selected: ' + selected.map((item) => item.name).join(', ') : 'No learners selected.';
+        $('hint').textContent = minLength ? 'Type at least ' + minLength + ' characters to search.' : limit === null ? 'Select one or more learners. Search to narrow the results.' : 'Choose up to ' + limit + ' learners. Remove a selection to choose someone else.';
+        $('confirmation').textContent = ''; validate(); position();
       }
-      function removeChip(index) {
-        const [person] = selected.splice(index, 1);
-        renderSelection();
-        renderResults();
-        const buttons = $('chips').querySelectorAll('button');
-        (buttons[Math.min(index, buttons.length - 1)] || input).focus();
-        announce(person.name + ' removed.');
+      function removeChip(person) {
+        if (disabled) return;
+        const index = selected.findIndex((item) => item.id === person.id); if (index < 0) return;
+        const destination = selected[index + 1] || selected[index - 1];
+        (destination ? chipNodes.get(destination.id).querySelector('button') : input).focus();
+        selected.splice(index, 1); hideTooltip(); renderSelection(); renderResults(); announce(person.name + ' removed.');
       }
       function togglePerson(person) {
-        if (disabled || unavailable(person)) return;
-        const existed = has(person);
-        selected = existed
-          ? selected.filter((item) => item.id !== person.id)
-          : [...selected, person];
-        renderSelection();
-        renderResults();
+        if (disabled) return;
         input.focus();
-        announce(
-          existed
-            ? person.name + ' removed.'
-            : person.name +
-                ' selected. ' +
-                selected.length +
-                ' selected in total.' +
-                (limit !== null && selected.length >= limit
-                  ? ' Maximum of ' + limit + ' selections reached.'
-                  : ''),
-        );
+        if (unavailable(person)) { syncActive(); return; }
+        const existed = has(person); selected = existed ? selected.filter((item) => item.id !== person.id) : [...selected, person];
+        renderSelection(); renderResults();
+        announce(existed ? person.name + ' removed.' : person.name + ' selected. ' + selected.length + ' selected in total.');
+        if (!existed && limit !== null && selected.length >= limit) announce('Maximum of ' + limit + ' selections reached.');
+      }
+      function revealActive() {
+        const option = list.children[active]; if (!open || !option) return;
+        const row = option.getBoundingClientRect(), panel = popup.getBoundingClientRect();
+        if (row.top < panel.top + 2) popup.scrollTop -= panel.top + 2 - row.top;
+        else if (row.bottom > panel.bottom - 2) popup.scrollTop += row.bottom - panel.bottom + 2;
       }
       function syncActive() {
-        [...list.children].forEach((node, index) =>
-          node.classList.toggle('active', index === active),
-        );
-        if (open && active >= 0 && results[active])
-          input.setAttribute('aria-activedescendant', 'learner-option-' + results[active].id);
+        [...list.children].forEach((node, index) => node.classList.toggle('active', index === active));
+        if (open && active >= 0 && results[active]) input.setAttribute('aria-activedescendant', optionId(results[active]));
         else input.removeAttribute('aria-activedescendant');
       }
+      function canPage() { return !busy && !failed && !pendingQuery && !composing && input.value === completedQuery && results.length < total; }
+      function popupAction(label, handler) {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'button'; button.textContent = label; button.tabIndex = -1;
+        button.addEventListener('mousedown', (event) => event.preventDefault());
+        button.addEventListener('click', () => { input.focus(); handler(); }); return button;
+      }
       function renderResults() {
-        list.replaceChildren();
+        const scrollTop = popup.scrollTop; list.replaceChildren();
         results.forEach((person, index) => {
-          const option = document.createElement('div');
-          option.className = 'option';
-          option.id = 'learner-option-' + person.id;
-          option.setAttribute('role', 'option');
-          option.setAttribute('aria-selected', String(has(person)));
-          option.setAttribute('aria-disabled', String(unavailable(person)));
-          option.setAttribute('aria-setsize', total);
-          option.setAttribute('aria-posinset', index + 1);
-          const check = document.createElement('span');
-          check.className = 'check';
-          check.setAttribute('aria-hidden', 'true');
-          check.textContent = has(person) ? '✓' : '';
-          const copy = document.createElement('span');
-          copy.className = 'option-copy';
-          const name = document.createElement('span');
-          name.className = 'option-name';
-          name.textContent = person.name;
-          const detail = document.createElement('span');
-          detail.className = 'option-detail';
-          detail.textContent =
-            person.email +
-            (person.disabled
-              ? ' · Account inactive'
-              : unavailable(person)
-                ? ' · Selection limit reached'
-                : '');
-          copy.append(name, detail);
-          option.append(check, copy);
-          option.addEventListener('pointerdown', (event) => {
-            event.preventDefault();
-          });
-          option.addEventListener('click', () => {
-            active = index;
-            togglePerson(person);
-          });
-          list.append(option);
+          const option = document.createElement('div'); option.className = 'option'; option.id = optionId(person); option.setAttribute('role', 'option'); option.setAttribute('aria-selected', String(has(person))); option.setAttribute('aria-disabled', String(unavailable(person))); option.setAttribute('aria-setsize', total); option.setAttribute('aria-posinset', index + 1);
+          const check = document.createElement('span'); check.className = 'check'; check.setAttribute('aria-hidden', 'true'); check.textContent = has(person) ? '✓' : '';
+          const copy = document.createElement('span'); copy.className = 'option-copy';
+          const name = document.createElement('span'); name.className = 'option-name'; name.textContent = person.name;
+          const detail = document.createElement('span'); detail.className = 'option-detail'; detail.textContent = person.email + (person.disabled ? ' · Account inactive' : unavailable(person) ? ' · Selection limit reached' : '');
+          copy.append(name, detail); option.append(check, copy);
+          option.addEventListener('mousedown', (event) => event.preventDefault());
+          option.addEventListener('click', () => { active = index; togglePerson(person); }); list.append(option);
         });
-        list.setAttribute('aria-busy', String(busy));
-        $('status').replaceChildren();
+        list.setAttribute('aria-busy', String(busy)); $('status').replaceChildren();
         const message = document.createElement('p');
-        message.textContent = busy
-          ? 'Loading learners…'
-          : failed
-            ? 'Learners could not be loaded. Your selections are safe.'
-            : !results.length
-              ? 'No results'
-              : results.length < total
-                ? results.length + ' of ' + total + ' learners · Scroll for more'
-                : total + ' learner' + (total === 1 ? '' : 's') + ' available';
+        message.textContent = input.value.length < minLength ? 'Type at least ' + minLength + ' characters to search.' : busy ? 'Loading learners…' : pendingQuery ? 'Waiting to search…' : failed ? 'Learners could not be loaded. Your selections are safe.' : !results.length ? 'No results' : results.length < total ? results.length + ' of ' + total + ' learners' : total + ' learner' + (total === 1 ? '' : 's') + ' available';
         $('status').append(message);
-        if (failed) {
-          const retry = document.createElement('button');
-          retry.type = 'button';
-          retry.className = 'button';
-          retry.textContent = 'Retry';
-          retry.addEventListener('click', retrySearch);
-          $('status').append(retry);
-        }
-        syncActive();
-        position();
+        if (failed) $('status').append(popupAction('Retry', retrySearch));
+        else if (canPage()) $('status').append(popupAction('Load more results', nextPage));
+        syncActive(); position(); popup.scrollTop = scrollTop;
       }
       function position() {
         if (!open) return;
-        const rect = $('field').getBoundingClientRect(),
-          viewport = window.visualViewport;
-        const topEdge = viewport?.offsetTop || 0,
-          bottomEdge = topEdge + (viewport?.height || innerHeight);
-        popup.style.width = rect.width + 'px';
-        popup.style.left = rect.left + 'px';
-        const below = bottomEdge - rect.bottom - 12,
-          above = rect.top - topEdge - 12,
-          flip = below < 240 && above > below;
-        popup.style.maxHeight = Math.max(0, Math.min(360, flip ? above : below)) + 'px';
+        const rect = $('field').getBoundingClientRect(), viewport = window.visualViewport;
+        const topEdge = viewport?.offsetTop || 0, bottomEdge = topEdge + (viewport?.height || innerHeight);
+        const below = Math.max(0, bottomEdge - rect.bottom - 12), above = Math.max(0, rect.top - topEdge - 12), flip = below < 240 && above > below;
+        popup.style.width = rect.width + 'px'; popup.style.left = rect.left + 'px';
+        popup.style.maxHeight = Math.min(360, flip ? above : below) + 'px';
         popup.style.top = (flip ? rect.top - popup.offsetHeight - 4 : rect.bottom + 4) + 'px';
       }
       function close() {
-        open = false;
-        popup.hidden = true;
-        input.setAttribute('aria-expanded', 'false');
-        input.removeAttribute('aria-controls');
-        input.removeAttribute('aria-activedescendant');
-        $('toggle').setAttribute('aria-label', 'Show learners');
+        open = false; popup.hidden = true; discardStatus(); clearTimeout(loadingTimer);
+        input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-controls'); input.removeAttribute('aria-activedescendant'); $('toggle').setAttribute('aria-label', 'Show options');
       }
-      function openList(fetch = true) {
-        if (disabled) return;
-        open = true;
-        popup.hidden = false;
-        input.setAttribute('aria-expanded', 'true');
-        input.setAttribute('aria-controls', 'results');
-        $('toggle').setAttribute('aria-label', 'Hide learners');
-        if (active < 0) active = results.findIndex((person) => !unavailable(person));
-        syncActive();
-        position();
-        if (fetch && !results.length && !busy && !failed) search(0);
+      function chooseInitialActive() {
+        active = openingMode === 'none' ? -1 : openingMode === 'last' ? results.length - 1 : results.findIndex((person) => !unavailable(person));
       }
-      function search(nextPage) {
-        if (disabled || (busy && nextPage > 0)) return;
-        if (nextPage === 0) cancel();
-        const stamp = version,
-          requestedQuery = input.value;
-        busy = true;
-        failed = false;
-        renderResults();
-        loadingTimer = setTimeout(() => {
-          if (open && busy) announce('Loading results.');
-        }, 1000);
-        requestTimer = setTimeout(
-          () => {
-            if (stamp !== version || disabled) return;
-            clearTimeout(loadingTimer);
-            busy = false;
-            if (mode === 'error') {
-              failed = true;
-              failedPage = nextPage;
-              renderResults();
-              if (open) announce('Results could not be loaded.', true);
-              return;
-            }
-            const matches =
-              mode === 'empty'
-                ? []
-                : people.filter((person) =>
-                    (person.name + ' ' + person.email)
-                      .toLowerCase()
-                      .includes(requestedQuery.toLowerCase()),
-                  );
-            query = requestedQuery;
-            total = matches.length;
-            const items = matches.slice(nextPage * pageSize, (nextPage + 1) * pageSize);
-            results = nextPage === 0 ? items : [...results, ...items];
-            page = nextPage;
-            if (nextPage === 0) {
-              active = openAtEnd
-                ? results.length - 1
-                : results.findIndex((person) => !unavailable(person));
-              openAtEnd = false;
-            }
-            renderResults();
-            if (open)
-              announce(
-                nextPage
-                  ? items.length + ' more results loaded.'
-                  : total
-                    ? total + ' results available.'
-                    : 'No results found.',
-              );
-          },
-          mode === 'loading' ? 5000 : 450,
-        );
+      function openList(fetch = true, intent = 'normal') {
+        if (disabled || composing) return;
+        if (!open) {
+          openingMode = intent; preserveOpeningMode = true; chooseInitialActive();
+          if (limit !== null && selected.length >= limit) announce('Maximum of ' + limit + ' selections reached.');
+        }
+        open = true; popup.hidden = false; input.setAttribute('aria-expanded', 'true'); input.setAttribute('aria-controls', 'results'); $('toggle').setAttribute('aria-label', 'Hide options');
+        syncActive(); position(); revealActive();
+        if (fetch && input.value.length >= minLength && !pendingQuery && !busy && !failed && input.value !== completedQuery) search(0);
+      }
+      function search(nextPage, requestQuery = input.value) {
+        if (disabled || composing || (nextPage > 0 && (busy || pendingQuery))) return;
+        if (nextPage === 0) cancelRequest();
+        const stamp = version; lastRequest = { query: requestQuery, page: nextPage }; pendingQuery = false; busy = true; failed = false; renderResults();
+        loadingTimer = setTimeout(() => { if (open && busy && stamp === version) announce('Loading results.', 'status'); }, 1000);
+        requestTimer = setTimeout(() => {
+          if (stamp !== version || disabled || composing) return;
+          clearTimeout(loadingTimer); busy = false;
+          if (mode === 'error' || (mode === 'page-error' && nextPage > 0 && !pageFailureUsed)) {
+            pageFailureUsed = true; failed = true; renderResults(); if (open) announce('Results could not be loaded.', 'failure'); return;
+          }
+          const matches = mode === 'empty' ? [] : people.filter((person) => (person.name + ' ' + person.email).toLowerCase().includes(requestQuery.toLowerCase()));
+          completedQuery = requestQuery; total = matches.length; const items = matches.slice(nextPage * pageSize, (nextPage + 1) * pageSize);
+          results = nextPage === 0 ? items : [...results, ...items]; page = nextPage;
+          if (nextPage === 0) { if (!preserveOpeningMode) openingMode = 'normal'; chooseInitialActive(); preserveOpeningMode = false; popup.scrollTop = 0; }
+          renderResults(); if (nextPage === 0) revealActive();
+          if (open) announce(nextPage ? items.length + ' more result' + (items.length === 1 ? '' : 's') + ' loaded.' : items.length ? items.length + ' result' + (items.length === 1 ? '' : 's') + ' available.' : 'No results found.', 'status');
+        }, mode === 'loading' ? 5000 : 450);
       }
       function retrySearch() {
-        mode = 'normal';
-        $('scenario').value = 'normal';
-        input.focus();
-        search(failedPage);
+        if (!failed || busy || !lastRequest) return;
+        if (mode === 'error') { mode = 'normal'; $('scenario').value = 'normal'; }
+        search(lastRequest.page, lastRequest.query);
       }
-      function nextPage() {
-        if (!busy && !failed && results.length < total) search(page + 1);
-      }
+      function nextPage() { if (canPage()) search(page + 1, completedQuery); }
       function inputChanged() {
         if (composing) return;
-        cancel();
-        failed = false;
-        openAtEnd = false;
-        openList(false);
-        renderResults();
+        cancelRequest(); failed = false; pendingQuery = true; openingMode = 'normal'; preserveOpeningMode = false;
+        openList(false); renderResults();
         timer = setTimeout(() => {
-          if (input.value !== query || !results.length) search(0);
+          timer = undefined; pendingQuery = false;
+          if (input.value.length < minLength) { results = []; total = 0; active = -1; completedQuery = null; page = -1; renderResults(); }
+          else if (input.value !== completedQuery) search(0);
+          else renderResults();
         }, 300);
       }
       input.addEventListener('input', inputChanged);
-      input.addEventListener('compositionstart', () => {
-        composing = true;
-        cancel();
-      });
-      input.addEventListener('compositionend', () => {
-        composing = false;
-        inputChanged();
-      });
+      input.addEventListener('compositionstart', () => { composing = true; cancelRequest(); pendingQuery = true; renderResults(); });
+      input.addEventListener('compositionend', () => { composing = false; inputChanged(); });
       input.addEventListener('keydown', (event) => {
-        if (event.isComposing) return;
+        if (event.isComposing || composing) return;
         const key = event.key;
-        if (key === 'Tab') {
-          close();
-          return;
-        }
         if (key === 'Escape') {
-          if (open) {
-            close();
-            event.preventDefault();
-            event.stopPropagation();
-          } else if (input.value) {
-            input.value = '';
-            cancel();
-            query = '';
-            results = [];
-            event.preventDefault();
-            event.stopPropagation();
-          }
+          if (open) { close(); event.preventDefault(); event.stopPropagation(); }
+          else if (input.value) { input.value = ''; cancelRequest(); completedQuery = null; results = []; total = 0; active = -1; pendingQuery = false; failed = false; renderResults(); event.preventDefault(); event.stopPropagation(); }
           return;
         }
-        if (event.altKey && key === 'ArrowUp') {
-          event.preventDefault();
-          close();
-          return;
-        }
+        if (event.altKey && key === 'ArrowUp') { if (open) { event.preventDefault(); close(); } return; }
         if (key === 'ArrowDown' || key === 'ArrowUp') {
           event.preventDefault();
-          if (!open) {
-            openAtEnd = key === 'ArrowUp';
-            openList();
-            if (openAtEnd) active = results.length - 1;
-          } else if (!event.altKey) {
-            if (key === 'ArrowDown' && active === results.length - 1) nextPage();
-            active = Math.max(
-              -1,
-              Math.min(results.length - 1, Math.max(0, active + (key === 'ArrowDown' ? 1 : -1))),
-            );
+          if (!open) openList(true, event.altKey ? 'none' : key === 'ArrowUp' ? 'last' : 'normal');
+          else if (!event.altKey) {
+            openingMode = 'normal'; preserveOpeningMode = false;
+            if (active < 0) active = key === 'ArrowDown' ? (results.length ? 0 : -1) : results.length - 1;
+            else { if (key === 'ArrowDown' && active === results.length - 1) nextPage(); active = Math.max(0, Math.min(results.length - 1, active + (key === 'ArrowDown' ? 1 : -1))); }
           }
-          syncActive();
-          list.children[active]?.scrollIntoView({ block: 'nearest' });
-          return;
+          syncActive(); revealActive(); return;
         }
-        if (key === 'Enter' && open) {
-          event.preventDefault();
-          if (failed) retrySearch();
-          else if (results[active]) togglePerson(results[active]);
-          return;
-        }
-        if (key === 'Backspace' && !input.value && selected.length) {
-          event.preventDefault();
-          const person = selected.pop();
-          renderSelection();
-          renderResults();
-          announce(person.name + ' removed.');
-        }
-        const towardChips = document.documentElement.dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
-        if (
-          key === towardChips &&
-          input.selectionStart === 0 &&
-          input.selectionEnd === 0 &&
-          selected.length
-        ) {
-          event.preventDefault();
-          $('chips').querySelectorAll('button')[selected.length - 1].focus();
-        }
+        if (key === 'Enter' && open) { event.preventDefault(); if (failed) retrySearch(); else if (results[active]) togglePerson(results[active]); else nextPage(); return; }
+        if (key === 'Backspace' && !input.value && selected.length) { event.preventDefault(); const person = selected.pop(); renderSelection(); renderResults(); announce(person.name + ' removed.'); }
+        const towardChips = getComputedStyle($('combobox')).direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+        if (key === towardChips && input.selectionStart === 0 && input.selectionEnd === 0 && selected.length) { event.preventDefault(); $('chips').querySelectorAll('button')[selected.length - 1].focus(); }
       });
-      $('field').addEventListener('click', (event) => {
-        if (!event.target.closest('button') && !disabled) {
-          input.focus();
-          openList();
-        }
-      });
-      $('toggle').addEventListener('click', () => {
-        input.focus();
-        if (open) close();
-        else openList();
-      });
-      $('clear').addEventListener('click', () => {
-        selected = [];
-        renderSelection();
-        renderResults();
-        input.focus();
-        announce('All selections cleared.');
-      });
-      document.addEventListener('pointerdown', (event) => {
-        if (!$('combobox').contains(event.target) && !popup.contains(event.target)) close();
-      });
-      document.addEventListener('focusin', (event) => {
-        if (!$('combobox').contains(event.target) && !popup.contains(event.target)) {
-          if (open) close();
-        }
-      });
-      $('combobox').addEventListener('focusout', () => {
-        setTimeout(() => {
-          if (
-            !$('combobox').contains(document.activeElement) &&
-            !popup.contains(document.activeElement)
-          ) {
-            touched = true;
-            validate();
-          }
-        }, 0);
-      });
-      popup.addEventListener('scroll', () => {
-        if (popup.scrollTop > 0 && popup.scrollTop + popup.clientHeight >= popup.scrollHeight - 8)
-          nextPage();
-      });
-      window.addEventListener('resize', () => {
-        hideTooltip();
-        position();
-      });
-      window.addEventListener(
-        'scroll',
-        () => {
-          hideTooltip();
-          position();
-        },
-        true,
-      );
-      window.visualViewport?.addEventListener('resize', position);
-      window.visualViewport?.addEventListener('scroll', position);
+      function componentKeydown(event) {
+        if (event.isComposing) return;
+        if (event.key === 'Tab') close();
+        else if (event.key === 'Escape' && open) { const fromPopup = popup.contains(event.target); close(); if (fromPopup) input.focus(); event.preventDefault(); event.stopPropagation(); }
+      }
+      $('combobox').addEventListener('keydown', componentKeydown); popup.addEventListener('keydown', componentKeydown);
+      $('field').addEventListener('click', (event) => { if (!event.target.closest('button') && !event.target.closest('.chip') && !disabled) { input.focus(); openList(); } });
+      for (const id of ['toggle', 'clear']) $(id).addEventListener('mousedown', (event) => event.preventDefault());
+      $('toggle').addEventListener('click', () => { input.focus(); if (open) close(); else openList(); });
+      $('clear').addEventListener('click', () => { if (disabled) return; input.focus(); selected = []; hideTooltip(); renderSelection(); renderResults(); announce('All selections cleared.'); });
+      document.addEventListener('pointerdown', (event) => { if (!$('combobox').contains(event.target) && !popup.contains(event.target) && !$('tooltip').contains(event.target)) { close(); hideTooltip(); } });
+      document.addEventListener('focusin', (event) => { if (!$('combobox').contains(event.target) && !popup.contains(event.target)) { close(); hideTooltip(); } });
+      function focusOut(event) {
+        if (!$('combobox').contains(event.relatedTarget) && !popup.contains(event.relatedTarget)) { touched = true; validate(); }
+      }
+      $('combobox').addEventListener('focusout', focusOut); popup.addEventListener('focusout', focusOut);
+      popup.addEventListener('scroll', () => { if (popup.scrollTop > 0 && popup.scrollTop + popup.clientHeight >= popup.scrollHeight - 8) nextPage(); });
+      window.addEventListener('resize', () => { hideTooltip(); position(); });
+      window.addEventListener('scroll', (event) => { if (!popup.contains(event.target) && !$('chips').contains(event.target)) { hideTooltip(); position(); } }, true);
+      window.visualViewport?.addEventListener('resize', position); window.visualViewport?.addEventListener('scroll', position);
       new ResizeObserver(position).observe($('field'));
-      $('assignment').addEventListener('submit', (event) => {
-        event.preventDefault();
-        touched = true;
-        validate();
-        if (!selected.length) input.focus();
-        else {
-          close();
-          $('confirmation').textContent =
-            'Preview only: ' +
-            selected.length +
-            ' learner' +
-            (selected.length === 1 ? '' : 's') +
-            ' would be assigned to Workplace safety essentials.';
-        }
-      });
+      $('assignment').addEventListener('submit', (event) => { event.preventDefault(); touched = true; validate(); if (!selected.length) input.focus(); else { close(); $('confirmation').textContent = 'Preview only: ' + selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' would be assigned to Workplace safety essentials.'; } });
       function scenario(value) {
-        cancel();
-        close();
-        mode = value;
-        disabled = value === 'disabled';
-        limit = value === 'limit' ? 3 : null;
-        touched = value === 'invalid';
-        input.value = '';
-        query = '';
-        results = [];
-        total = 0;
-        active = -1;
-        failed = false;
-        page = 0;
-        openAtEnd = false;
-        selected =
-          value === 'invalid'
-            ? []
-            : value === 'limit'
-              ? people.slice(0, 3)
-              : value === 'many'
-                ? Array.from({ length: 200 }, (_, id) => ({
-                    id: 1000 + id,
-                    name: 'Learner ' + (id + 1),
-                  }))
-                : value === 'long'
-                  ? [
-                      {
-                        id: 900,
-                        name: 'Alexandra Montgomery-Williams · International workplace safety and compliance team',
-                      },
-                    ]
-                  : people.slice(0, 2);
-        renderSelection();
-        renderResults();
-        if (!disabled && value !== 'invalid') {
-          input.focus();
-          openList();
-        }
+        cancelRequest(); close(); hideTooltip(); clearTimeout(announcementTimer); pendingSelections = []; $('live').textContent = '';
+        mode = value; disabled = value === 'disabled'; limit = value === 'limit' ? 3 : null; minLength = value === 'minimum' ? 2 : 0;
+        touched = value === 'invalid'; input.value = value === 'minimum' ? 'a' : ''; completedQuery = null; results = []; total = 0; active = -1; failed = false; pendingQuery = false; page = -1; pageFailureUsed = false; lastRequest = null;
+        selected = value === 'invalid' ? [] : value === 'limit' ? people.slice(0, 3) : value === 'many' ? Array.from({ length: 200 }, (_, id) => ({ id: 1000 + id, name: 'Learner ' + (id + 1) })) : value === 'long' ? [{ id: 900, name: 'Alexandra Montgomery-Williams · International workplace safety and compliance team' }] : people.slice(0, 2);
+        for (const chip of chipNodes.values()) chip.remove(); chipNodes.clear();
+        renderSelection(); renderResults(); if (!disabled && value !== 'invalid') { input.focus(); openList(); }
       }
       $('scenario').addEventListener('change', () => scenario($('scenario').value));
-      $('rtl').addEventListener('change', () => {
-        document.documentElement.dir = $('rtl').checked ? 'rtl' : 'ltr';
-        position();
-      });
-      $('reset').addEventListener('click', () => {
-        $('scenario').value = 'normal';
-        $('rtl').checked = false;
-        document.documentElement.dir = 'ltr';
-        scenario('normal');
-        close();
-      });
-      selected = people.slice(0, 2);
-      renderSelection();
-      renderResults();
+      $('rtl').addEventListener('change', () => { document.documentElement.dir = $('rtl').checked ? 'rtl' : 'ltr'; hideTooltip(); position(); });
+      $('reset').addEventListener('click', () => { $('scenario').value = 'normal'; $('rtl').checked = false; document.documentElement.dir = 'ltr'; scenario('normal'); close(); });
+      renderSelection(); renderResults();
     </script>
   </body>
 </html>
