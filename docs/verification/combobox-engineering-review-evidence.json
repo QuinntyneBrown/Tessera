@@ -1,0 +1,394 @@
+{
+  "developmentOperationProbe": {
+    "date": "2026-10-03T21:08:38.061Z",
+    "revision": "dca2a8a02daa0714575211f0794916d703e4de63",
+    "environment": {
+      "mode": "headless Chromium; Angular development acceptance application; diagnostic instrumentation",
+      "chromium": "153.0.8010.12",
+      "node": "v22.23.2",
+      "os": "10.0.26200",
+      "cpu": "Snapdragon(R) X 12-core X1E80100 @ 3.40 GHz"
+    },
+    "scenarios": [
+      {
+        "name": "50 options: ten ArrowDown keys",
+        "counts": {
+          "computedStyleReads": 12,
+          "rectReads": 36,
+          "listLabel": 4,
+          "isSelected": 600,
+          "isOptionDisabled": 200,
+          "bindControl": 2,
+          "updatePopupGeometry": 2,
+          "heightWrites": 2,
+          "overlay.updateSize": 2,
+          "overlay.updatePosition": 2,
+          "options": 50,
+          "chips": 0,
+          "componentElements": 163
+        },
+        "cdpDelta": {
+          "LayoutCount": 6,
+          "RecalcStyleCount": 9,
+          "LayoutDuration": 0.0009809999999999992,
+          "RecalcStyleDuration": 0.0013099999999999987,
+          "ScriptDuration": 0.023063,
+          "TaskDuration": 0.04433500000000001
+        }
+      },
+      {
+        "name": "50 options: ten unrelated host signal changes",
+        "counts": {
+          "bindControl": 10,
+          "updatePopupGeometry": 10,
+          "rectReads": 80,
+          "computedStyleReads": 10,
+          "heightWrites": 10,
+          "overlay.updateSize": 10,
+          "overlay.updatePosition": 10,
+          "options": 50,
+          "chips": 0,
+          "componentElements": 163
+        },
+        "cdpDelta": {
+          "LayoutCount": 30,
+          "RecalcStyleCount": 30,
+          "LayoutDuration": 0.004980999999999999,
+          "RecalcStyleDuration": 0.005137000000000003,
+          "ScriptDuration": 0.018902999999999975,
+          "TaskDuration": 0.05477499999999991
+        }
+      },
+      {
+        "name": "50 options: one PageDown",
+        "counts": {
+          "computedStyleReads": 2,
+          "rectReads": 61,
+          "listLabel": 2,
+          "isSelected": 300,
+          "isOptionDisabled": 100,
+          "bindControl": 1,
+          "updatePopupGeometry": 1,
+          "heightWrites": 1,
+          "overlay.updateSize": 1,
+          "overlay.updatePosition": 1,
+          "options": 50,
+          "chips": 0,
+          "componentElements": 163
+        },
+        "cdpDelta": {
+          "LayoutCount": 3,
+          "RecalcStyleCount": 4,
+          "LayoutDuration": 0.0004170000000000007,
+          "RecalcStyleDuration": 0.0004689999999999972,
+          "ScriptDuration": 0.005700000000000038,
+          "TaskDuration": 0.011581999999999981
+        }
+      },
+      {
+        "name": "250 options: ten ArrowDown keys",
+        "counts": {
+          "computedStyleReads": 12,
+          "rectReads": 34,
+          "listLabel": 4,
+          "isSelected": 3000,
+          "isOptionDisabled": 1000,
+          "bindControl": 2,
+          "updatePopupGeometry": 2,
+          "heightWrites": 2,
+          "overlay.updateSize": 2,
+          "overlay.updatePosition": 2,
+          "options": 250,
+          "chips": 0,
+          "componentElements": 762
+        },
+        "cdpDelta": {
+          "LayoutCount": 6,
+          "RecalcStyleCount": 9,
+          "LayoutDuration": 0.0009410000000000043,
+          "RecalcStyleDuration": 0.0013309999999999989,
+          "ScriptDuration": 0.014231999999999967,
+          "TaskDuration": 0.029000000000000026
+        }
+      },
+      {
+        "name": "closed: ten unrelated host signal changes",
+        "counts": {
+          "bindControl": 10,
+          "options": 0,
+          "chips": 0,
+          "componentElements": 8
+        },
+        "cdpDelta": {
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "LayoutDuration": 0,
+          "RecalcStyleDuration": 0,
+          "ScriptDuration": 0.00571200000000005,
+          "TaskDuration": 0.017755000000000076
+        }
+      },
+      {
+        "name": "50 options and 200 unmatched chips: ten ArrowDown keys",
+        "counts": {
+          "computedStyleReads": 13,
+          "rectReads": 41,
+          "listLabel": 6,
+          "isSelected": 900,
+          "comparisons": 180000,
+          "isOptionDisabled": 300,
+          "bindControl": 3,
+          "updatePopupGeometry": 3,
+          "heightWrites": 3,
+          "overlay.updateSize": 3,
+          "overlay.updatePosition": 3,
+          "options": 50,
+          "chips": 200,
+          "componentElements": 1165
+        },
+        "cdpDelta": {
+          "LayoutCount": 9,
+          "RecalcStyleCount": 13,
+          "LayoutDuration": 0.0012240000000000011,
+          "RecalcStyleDuration": 0.001731,
+          "ScriptDuration": 0.050679000000000016,
+          "TaskDuration": 0.071129
+        }
+      },
+      {
+        "name": "50 options and 200 unmatched chips: one Enter toggle",
+        "counts": {
+          "computedStyleReads": 4,
+          "isOptionDisabled": 201,
+          "comparisons": 120800,
+          "listLabel": 4,
+          "isSelected": 600,
+          "bindControl": 3,
+          "updatePopupGeometry": 3,
+          "rectReads": 21,
+          "heightWrites": 3,
+          "overlay.updateSize": 3,
+          "overlay.updatePosition": 3,
+          "elementAdds": 2,
+          "options": 50,
+          "chips": 201,
+          "componentElements": 1171
+        },
+        "cdpDelta": {
+          "LayoutCount": 12,
+          "RecalcStyleCount": 12,
+          "LayoutDuration": 0.003529000000000001,
+          "RecalcStyleDuration": 0.00434,
+          "ScriptDuration": 0.04271,
+          "TaskDuration": 0.06727
+        }
+      },
+      {
+        "name": "250 options and 200 unmatched chips: one ArrowDown",
+        "counts": {
+          "computedStyleReads": 2,
+          "rectReads": 9,
+          "listLabel": 2,
+          "isSelected": 1500,
+          "comparisons": 300000,
+          "isOptionDisabled": 500,
+          "bindControl": 1,
+          "updatePopupGeometry": 1,
+          "heightWrites": 1,
+          "overlay.updateSize": 1,
+          "overlay.updatePosition": 1,
+          "options": 250,
+          "chips": 200,
+          "componentElements": 1765
+        },
+        "cdpDelta": {
+          "LayoutCount": 3,
+          "RecalcStyleCount": 5,
+          "LayoutDuration": 0.00041500000000000044,
+          "RecalcStyleDuration": 0.0008289999999999999,
+          "ScriptDuration": 0.042134000000000005,
+          "TaskDuration": 0.05223300000000003
+        }
+      },
+      {
+        "name": "250 options and 200 unmatched chips: one PageDown",
+        "counts": {
+          "computedStyleReads": 2,
+          "rectReads": 260,
+          "listLabel": 2,
+          "isSelected": 1500,
+          "comparisons": 300000,
+          "isOptionDisabled": 500,
+          "bindControl": 1,
+          "updatePopupGeometry": 1,
+          "heightWrites": 1,
+          "overlay.updateSize": 1,
+          "overlay.updatePosition": 1,
+          "options": 250,
+          "chips": 200,
+          "componentElements": 1765
+        },
+        "cdpDelta": {
+          "LayoutCount": 3,
+          "RecalcStyleCount": 4,
+          "LayoutDuration": 0.0004930000000000004,
+          "RecalcStyleDuration": 0.0005380000000000003,
+          "ScriptDuration": 0.048117999999999994,
+          "TaskDuration": 0.05757799999999996
+        }
+      }
+    ]
+  },
+  "productionProbe": {
+    "revision": "dca2a8a02daa0714575211f0794916d703e4de63",
+    "date": "2026-10-03T21:12:25.812Z",
+    "environment": {
+      "chromium": "153.0.8010.12",
+      "mode": "headless Chromium; Angular production acceptance app; no method spies or DOM prototype instrumentation"
+    },
+    "scenarios": [
+      {
+        "name": "open with 50 options: ten unrelated host events",
+        "delta": {
+          "LayoutCount": 30,
+          "RecalcStyleCount": 30,
+          "LayoutDuration": 0.005139000000000001,
+          "RecalcStyleDuration": 0.005387999999999999,
+          "ScriptDuration": 0.021341999999999986,
+          "TaskDuration": 0.05846000000000001
+        }
+      },
+      {
+        "name": "closed: ten unrelated host events",
+        "delta": {
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "LayoutDuration": 0,
+          "RecalcStyleDuration": 0,
+          "ScriptDuration": 0.00641899999999998,
+          "TaskDuration": 0.01898500000000003
+        }
+      }
+    ],
+    "hiddenCount": 0
+  },
+  "fileAndArtifactSizes": {
+    "files": [
+      {
+        "name": "combobox.ts",
+        "lines": 931,
+        "nonblank": 896,
+        "bytes": 33194
+      },
+      {
+        "name": "combobox.html",
+        "lines": 211,
+        "nonblank": 211,
+        "bytes": 6741
+      },
+      {
+        "name": "combobox.scss",
+        "lines": 276,
+        "nonblank": 276,
+        "bytes": 6122
+      },
+      {
+        "name": "combobox-announcer.ts",
+        "lines": 85,
+        "nonblank": 77,
+        "bytes": 2611
+      },
+      {
+        "name": "combobox-option.ts",
+        "lines": 48,
+        "nonblank": 46,
+        "bytes": 1627
+      },
+      {
+        "name": "combobox-templates.ts",
+        "lines": 52,
+        "nonblank": 48,
+        "bytes": 1648
+      },
+      {
+        "name": "i18n.ts",
+        "lines": 71,
+        "nonblank": 67,
+        "bytes": 2446
+      },
+      {
+        "name": "combobox-overlay-container.ts",
+        "lines": 14,
+        "nonblank": 12,
+        "bytes": 560
+      },
+      {
+        "name": "testing/combobox-harness.ts",
+        "lines": 65,
+        "nonblank": 62,
+        "bytes": 2778
+      },
+      {
+        "name": "types.ts",
+        "lines": 18,
+        "nonblank": 15,
+        "bytes": 488
+      },
+      {
+        "name": "public-api.ts",
+        "lines": 16,
+        "nonblank": 16,
+        "bytes": 605
+      }
+    ],
+    "ast": {
+      "properties": 90,
+      "methods": 39,
+      "constructorLines": 176
+    },
+    "artifact": {
+      "fesmBytes": 75421,
+      "fesmGzipBytes": 13960,
+      "minifiedAllExportsBytes": 59996,
+      "minifiedAllExportsGzipBytes": 12470,
+      "componentOnlyExternalDependenciesBytes": 58263,
+      "componentOnlyExternalDependenciesGzipBytes": 11870,
+      "componentOnlyContainsHarness": false
+    }
+  },
+  "layoutTraceSummary": {
+    "scenario": "Three unrelated host signal updates; development app; no method spies",
+    "layoutEvents": 9,
+    "layoutsWithJavaScriptStack": 6,
+    "layoutTotalMicroseconds": 2268,
+    "forcedStackSamples": [
+      {
+        "calls": [
+          "_getNarrowedViewportRect",
+          "apply",
+          "updatePosition",
+          "updatePopupGeometry"
+        ],
+        "count": 3
+      },
+      {
+        "calls": [
+          "_getContainerRect",
+          "apply",
+          "updatePosition",
+          "updatePopupGeometry"
+        ],
+        "count": 3
+      }
+    ]
+  },
+  "configurationProbe": {
+    "before": [
+      "ad:0"
+    ],
+    "after": [
+      "ad:0",
+      "ad:0"
+    ]
+  }
+}
