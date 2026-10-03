@@ -24,13 +24,13 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 
 - The component renders every item label, chip label, option label, selected-values summary, status string, and announcement as text. It binds with interpolation or with DOM properties such as `textContent`, `value`, and `title`, and with `[attr.*]` bindings for attribute values. The browser never parses these values as HTML (`L2-044` AC1, AC2).
 - The component code does not use `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `DomSanitizer`, or any `bypassSecurityTrust*` call. Code review enforces this rule. No test scans the code for these names, because `AGENTS.md` forbids tests of code shape. The behavioral tests below prove the outcome.
-- `ComboboxAnnouncer` passes only `string` messages to the CDK `LiveAnnouncer`. The CDK writes the message with `textContent`, so a label such as `<img src=x onerror="window.__xss=1">` appears in the live region as literal characters. The announcer never passes an element or a template (`L2-044` AC2).
+- `ComboboxAnnouncer` writes only string messages to its instance-owned live region using textContent, so a label such as `<img src=x onerror="window.__xss=1">` appears in the live region as literal characters. The announcer never passes an element or a template (`L2-044` AC2).
 - `ComboboxIds` is created once per `Combobox<T>` instance. A module-level counter supplies a `uid`, and every identifier derives from `t-combobox-{uid}`. No identifier uses item data, labels, values, or the query.
 
 | Identifier | Form | Referenced by |
 |------------|------|---------------|
 | Input | `inputId` when supplied, otherwise `t-combobox-{uid}-input` | `label for`, hint and summary references |
-| Listbox | `t-combobox-{uid}-listbox` | `aria-controls`, `aria-labelledby` of options |
+| Listbox | `t-combobox-{uid}-listbox` | Input aria-controls |
 | Option | `t-combobox-{uid}-option-{n}` | `aria-activedescendant` |
 | Hint, error, summary | `t-combobox-{uid}-hint`, `-error`, `-summary` | `aria-describedby` |
 | Chip list | `t-combobox-{uid}-chips` | Chip list container |
@@ -39,17 +39,17 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 - `aria-describedby` and `aria-controls` list only identifiers from `ComboboxIds`. No ARIA reference is built from data.
 - `Combobox<T>` passes the typed text to `ComboboxSearch` unchanged: no trimming, no case change, no encoding, and no length limit. `searchFn` receives the same string the input holds, and the component displays the text only through the input's `value` property (`L2-044` AC4). Encoding the query for a transport such as a URL is the consumer's responsibility, and the documentation page says so.
 - The `tComboboxOption`, `tComboboxChip`, and `tComboboxEmpty` templates render consumer markup that the consumer owns. The component does not sanitize template output. It passes `item`, `selected`, `active`, and `query` as data and applies no HTML interpretation. The documentation page states this boundary.
-- Behavioral proof uses `ComboboxScenario` in `src/e2e-app/`, which returns a hostile item set, and `ComboboxDemoPage` actions. The set contains one `displayWith` value of `<img src=x onerror="window.__xss=1">`, items whose ids and labels hold spaces, quotes, and angle brackets, and a page that holds two instances. Page object assertions read `window.__xss`, the literal text of each rendered chip, option, and summary, the live-region text, and every `id` in the document. The ids shall be unique and shall match `^[A-Za-z][A-Za-z0-9-]*$`.
+- Behavioral proof uses `ComboboxScenario` in `src/e2e-app/`, which returns a hostile item set, and `ComboboxDemoPage` actions. The set contains one `displayWith` value of `<img src=x onerror="window.__xss=1">`, items whose ids and labels hold spaces, quotes, and angle brackets, and a page that holds two instances. Page object assertions read `window.__xss`, the literal text of each rendered chip, option, and summary, the live-region text, and the combobox-generated ids. Those ids shall be unique and shall match `^[A-Za-z][A-Za-z0-9-]*$`.
 
 **Performance**
 
-- Typing stays on a short path. The input event handler writes the `query` signal and returns. `ComboboxSearch` observes the signal through `toObservable`, applies `debounceTime(debounceMs)` and `distinctUntilChanged`, and calls `searchFn` inside `switchMap`. A slow request never blocks the input, because the request runs outside the event handler (`L2-045` AC1).
+- Typing stays on a short path. The input event handler writes the `query` signal and returns. `ComboboxSearch` observes the signal through `toObservable`, applies `debounce(() => timer(debounceMs()))` and `distinctUntilChanged`, and calls `searchFn` inside `switchMap`. A slow request never blocks the input, because the request runs outside the event handler (`L2-045` AC1).
 - One request follows each typing burst. Ten characters typed 50 ms apart with default settings produce one call at 300 ms after the last character (`L2-045` AC2).
-- `Combobox<T>` renders options and chips with `@for` and `track` by item identity. A new page replaces the option list. A new selection adds or removes one chip subtree and leaves the others untouched.
+- `Combobox<T>` renders options and chips with `@for` and `track` by item identity. Page 0 replaces the option list; later pages append while keeping existing hosts. A new selection adds or removes one chip subtree and leaves the others untouched.
 - Each `ComboboxOption<T>` derives `selected` and `active` with `computed()`. A selection change recomputes `selected` for each displayed option once, which is at most 50 calls to `compareWith` per held value in a 50-option page. OnPush limits checking to views whose signals changed (`L2-045` AC3, AC4).
-- Arrow navigation moves `activeIndex` through the CDK `ActiveDescendantKeyManager`. Two option hosts update their bindings, one element calls `scrollIntoView({ block: 'nearest' })`, and no announcement is made per key. After 5 pages of 50 options the cost per key stays proportional to the two changed hosts, not to the list length (`L2-045` AC5).
+- Arrow navigation updates activeIndex through ActiveDescendantKeyManager. Active style changes reach the old and new hosts, and bounded panel scrollTop adjustment keeps the new option visible without scrolling ancestors. Derived active checks may evaluate across registered options; this is not a constant-time complexity guarantee. The 250-option acceptance measurement establishes the observed latency.
 - The measurement path uses `ComboboxDemoPage`. It enables CPU slowdown through a Chromium DevTools Protocol session (`Emulation.setCPUThrottlingRate`, rate 4) for the `L2-045` AC3 and AC4 runs. Timed actions return 100 durations, and an assertion helper requires at least 95 durations at or under the limit. The fixture stamps `performance.now()` when the mock `searchFn` emits, so render time runs from emission to the first frame that shows the 50th option.
-- The reference machine, the measurement method for keystroke latency, and the pass threshold arithmetic are `<TO SUPPLY>`, as the subsystem README records. The design proposes the Event Timing API for keystroke latency and `requestAnimationFrame` for render timing.
+- Performance records include commit, date, OS, CPU model, RAM, Node, Playwright and Chromium versions, power mode, and CPU throttle rate. The same machine and foreground Chromium context run the full sample without other workloads. After 10 unmeasured warm-ups, 100 samples are collected; at least 95 durations at or below the limit pass. Timing starts at the browser keydown or search emission timestamp and ends at the first requestAnimationFrame that contains the expected input or DOM state, followed by a frame opportunity. This is an automated render-latency measurement, not a certified display or screen reader latency. Fixture instrumentation belongs to the test host, not the public component API.
 
 | Criterion | Limit | Runs | Fixture state | CPU slowdown |
 |-----------|-------|------|---------------|--------------|
@@ -62,7 +62,7 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 **Zoneless operation**
 
 - `Combobox<T>` declares `changeDetection: ChangeDetectionStrategy.OnPush`. No class in the package injects `NgZone` or calls `runOutsideAngular`.
-- State lives in signals: `query`, `isOpen`, `activeIndex`, `value`, and the `ComboboxSearch` outputs. Event bindings in the template, the `ResizeObserver` callback in `ComboboxPopup`, and the `ControlValueAccessor` methods `writeValue` and `setDisabledState` each write a signal. A signal write notifies the zoneless scheduler, so no call to `markForCheck` or `detectChanges` exists.
+- State lives in signals: `query`, `isOpen`, `activeIndex`, `value`, and the `ComboboxSearch` outputs. Event bindings in the template, the `ResizeObserver` callback in `ComboboxPopup`, and the `ControlValueAccessor` methods `writeValue` and `setDisabledState` each write a signal. A signal write notifies the zoneless scheduler, so manual change detection is unnecessary for this path. Dependency internals may use NgZone; the package shall work with Angular's zoneless provider.
 - The `src/e2e-app/` configuration adds `provideZonelessChangeDetection()` and loads no zone.js polyfill. The acceptance test searches, selects, removes, and navigates by keyboard in that application (`L2-046` AC1).
 
 **Teardown**
@@ -72,9 +72,10 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 | Resource | Acquired by | Released by |
 |----------|-------------|-------------|
 | `searchFn` subscription | `ComboboxSearch` through `switchMap` | `takeUntilDestroyed` unsubscribes the outer stream, which unsubscribes the inner request (`L2-046` AC2) |
-| Debounce timer | `debounceTime` | Same unsubscribe |
-| Loading-announcement and coalescing timers | `ComboboxAnnouncer` | `onDestroy` clears each timer; a queued message is dropped |
-| Overlay pane and strategy | `ComboboxPopup` | `overlayRef.dispose()` removes the pane from the document (`L2-046` AC3) |
+| Debounce timer | `debounce` with a timer | Same unsubscribe |
+| Loading-announcement, text-reset and coalescing timers | `ComboboxAnnouncer` | `onDestroy` clears each timer; a queued message is dropped |
+| Overlay pane, dialog fallback container and tooltip | `ComboboxPopup` | `overlayRef.dispose()` removes the pane from the document (`L2-046` AC3) |
+| Instance live region | Combobox template | Removed with the component view |
 | Width observer | `ComboboxPopup` | `ResizeObserver.disconnect()` |
 | Overlay event subscriptions | `ComboboxPopup` | Disposed with the overlay and unsubscribed through `takeUntilDestroyed` |
 | Outside-click listener | CDK outside-click dispatcher | Removed when the overlay is disposed |
@@ -82,7 +83,7 @@ The feature belongs to the combobox subsystem and refines `L1-017`. It constrain
 
 - After destruction, no resize, scroll, document click, or elapsed debounce reaches component code. The acceptance test types, destroys the component before the debounce elapses, waits past `debounceMs`, and checks that `searchFn` ran zero times. It then dispatches a resize, a scroll, and a document click and checks that no page error occurs (`L2-046` AC4).
 - The fixture mounts and destroys the component through a toggle. `ComboboxDemoPage.mountAndDestroy(times)` opens the list and removes the component 100 times. It then compares the number of `.cdk-overlay-pane` elements and the document-level listeners reported by `DOMDebugger.getEventListeners` with the counts taken after one warm-up cycle (`L2-046` AC5).
-- The CDK creates its overlay container and any live-announcer element lazily and keeps them for the application. They are application-scoped, not component-owned. The baseline therefore follows one warm-up cycle, and "no DOM remains" means the component-owned nodes, namely the overlay pane and the listbox, leave the document.
+- The ordinary CDK overlay container is application-scoped and may survive a component. The combobox live region and dialog fallback container are instance-owned and are removed. Only the ordinary shared CDK container is excluded from the component-owned baseline. The baseline therefore follows one warm-up cycle, and "no DOM remains" means the component-owned nodes, namely the overlay pane and the listbox, leave the document.
 
 Production work follows `AGENTS.md`. Each slice starts from one criterion and a failing Chromium test: hostile label as text, hostile announcement, generated ids, unchanged query, two instances, each timing, zoneless operation, and each teardown case.
 
@@ -94,7 +95,7 @@ Source: [L2 detailed requirements](../../../specs/L2.md). The table quotes sourc
 |-------|--------------|-------------|
 | `L2-044` | `L1-017` | Data returned by `searchFn` and written to the value is untrusted. The component must render it as text, must not interpret it as HTML, and must not derive element ids or ARIA references from it. |
 | `L2-045` | `L1-017` | The component must stay responsive while requests are in flight, must not issue a request per keystroke, and must render a page of options promptly. |
-| `L2-046` | `L1-017` | The component must use OnPush change detection, must work with `provideZonelessChangeDetection()` and not rely on `NgZone`, and must release its requests, overlay, observers, and listeners when destroyed. |
+| `L2-046` | `L1-017` | The component must use OnPush change detection, must work with `provideZonelessChangeDetection()` and not require zone.js or application `NgZone` calls, and must release its requests, overlay, observers, and listeners when destroyed. |
 
 ## Diagrams
 

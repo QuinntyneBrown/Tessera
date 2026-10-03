@@ -53,7 +53,7 @@ The slice lives inside `Combobox<T>` and `ComboboxOption<T>`. It adds no new cla
 
 `commit(next, change)` sets `value`, notifies the form control through `onChange` (see [Integrate with forms](../integrate-forms/)), emits `selectionChange` once with `{ ...change, value: next }`, and calls `ComboboxAnnouncer`. Only the user paths `toggle`, `removeChip`, and `clearAll` call `commit`. A programmatic write through `writeValue` or the `[(value)]` binding replaces `value` without calling `commit`, so `selectionChange` does not emit (`L2-026`). The announcement text for a selection or removal belongs to [Expose state to assistive technology](../expose-to-assistive-tech/).
 
-Pointer activation uses `mousedown` with `preventDefault()` on the option, so the input keeps DOM focus. The list stays open and the query keeps its text. When `clearSearchOnSelect` is true, `commit` also sets `query` to `""`. The search feature then reloads the list according to `minSearchLength`.
+Pointer activation uses `click`, with `mousedown.preventDefault()` to retain input focus for mouse and compatibility mouse events. Touch pointerdown is not cancelled, so native list scrolling remains possible. A click after a tap calls the same toggle method and synchronously restores input focus. The list stays open. `clearSearchOnSelect` clears the query only after adding a selection, not after deselection, removal, or clear-all; the search feature applies `minSearchLength`.
 
 ### Value identity
 
@@ -73,8 +73,9 @@ The field renders `value()` in a `<ul>` of `<li>` elements in selection order. E
 
 - **Remove.** `removeChip(item)` chooses the focus destination first: the next chip's remove button, else the previous chip's remove button, else the input. It focuses that element, then calls `commit(next, { removed: item })`. Chips are tracked by item, so the destination element survives the removal, and focus is never lost to the page body.
 - **Clear-all.** The `@if (value().length > 0)` block renders the clear-all button, so it is absent for an empty value. `clearAll()` calls `commit([], {})`, which emits `selectionChange` once with `{ value: [] }` and no `removed` property, and focuses the input.
-- **Long labels.** The label has `overflow: hidden`, `text-overflow: ellipsis`, and a `max-width` of the field width. The DOM text keeps the full label, so the remove button's accessible name carries it. The tooltip on hover and focus is `<TO SUPPLY>`: a `title` attribute does not appear on keyboard focus, so the mechanism is open.
-- **Many chips.** The field is a wrapping flex container with a maximum height and `overflow-y: auto`. The input is `position: sticky` at the bottom of the scrolling field, so it stays visible and operable with 200 chips. The maximum height value is `<TO SUPPLY>` with the theme tokens in [Present the component accessibly](../present-accessibly/).
+- **Long labels.** The label uses ellipsis within the field width. The remove button keeps the full accessible name. A component-owned full-label tooltip appears on chip hover and remove-button focus. It is hoverable, persists across pointer movement into the tooltip, and dismisses on Escape before popup or query handling. It does not contain controls or enter Tab order. Its surface and text use the theme tokens. The tooltip lives inside a dialog host when present and is removed on destruction (`L2-027` criterion 9).
+
+- **Many chips.** Only the chip list scrolls, with `max-height: 8rem`, `overflow-y: auto`, and wrapping children. The input and actions are siblings below the list, so they remain visible without sticky positioning. The `--t-combobox-chip-list-max-height` token permits a consumer override. Focused chips scroll within this area without moving the page.
 
 The chip list name, the remove-button name "Remove {label}", and the clear-all name "Clear all selections" come from `COMBOBOX_I18N`. The keyboard operation of chips belongs to [Operate by keyboard](../operate-by-keyboard/).
 

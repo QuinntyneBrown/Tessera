@@ -37,11 +37,11 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 | `getChips()` | Returns the chip labels as `string[]` in selection order. |
 | `removeChip(labelOrIndex)` | Finds the chip by label or index and clicks its remove button. It rejects when no chip matches. |
 
-- The debounce is the consumer's to elapse. Under fake timers the consumer test advances 300 ms, or the configured `debounceMs`, after `search()`. Under real timers the consumer test waits the same time. Results then appear for `getOptions()` (`L2-047` AC2). Whether `search()` should wait for results itself is `<TO SUPPLY>`.
+- The debounce is the consumer's to elapse. Under fake timers the consumer test advances 300 ms, or the configured `debounceMs`, after `search()`. Under real timers the consumer test waits the same time. Results then appear for `getOptions()` (`L2-047` AC2). search does not wait for results; fake-timer consumers advance time explicitly and real-timer consumers wait for the expected result state.
 - The harness reads only the package's public surface: ARIA roles (`combobox`, `listbox`, `option`), `aria-expanded`, `aria-controls`, `aria-selected`, `aria-disabled`, and the semantic chip list. Because the listbox lives in a CDK overlay outside the host, the harness locates it with `documentRootLocatorFactory()` and the `aria-controls` identifier of its own input. This keeps two comboboxes on one page separate (`L2-047` AC5).
 - An option label is the text of the component-owned content wrapper, which excludes the decorative checkbox. A chip label is the text of the chip's label wrapper, which holds either `displayWith(item)` or custom template content. The wrappers carry package-owned class hooks that only the harness reads.
-- The harness has no filter predicate. A consumer with more than one combobox picks one with `getAllHarnesses()`. Whether to add `with()` filters is `<TO SUPPLY>`.
-- The harness spec, `src/combobox/testing/combobox-harness.spec.ts`, runs through the `ng test combobox` builder with `TestbedHarnessEnvironment` and imports `ComboboxHarness` from the package entry. A host component with a synchronous `searchFn` double and fake timers drives each `L2-047` criterion. The runner shall execute in Chromium to follow `AGENTS.md`. The runner configuration is `<TO SUPPLY>`, because the existing `scorm-player` unit tests use a jsdom runner.
+- The harness has no filter predicate. A consumer with more than one combobox picks one with `getAllHarnesses()`. No with() filters are included in v1.
+- Harness behavior is exercised in the Chromium e2e app through a fixture using TestbedHarnessEnvironment for the consumer contract or the public CDK Playwright harness environment for browser operations. Timing remains caller-controlled. No jsdom run substitutes for browser verification. The package exports ComboboxOptionState with the harness so the return type is usable by consumers.
 
 **ComboboxDemoPage and the end-to-end application**
 
@@ -59,7 +59,7 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 | `templates` | `custom` supplies option, chip, and empty templates |
 | `hostile`, `instances` | Hostile labels and two instances, as used by [Secure and perform](../secure-and-perform/) |
 
-- `ComboboxDemoPage` offers these verification helpers. `useViewport(width)` sets one of 320, 576, 768, 992, 1200, or 1920 CSS px. `useZoom(400)` applies the 320 by 256 CSS px viewport with a device scale factor of 4, as the [present accessibly](../present-accessibly/) design specifies. `enlargeTextTo200Percent()` and `applyTextSpacingOverrides()` inject the style overrides, as `PlayerPage` does. `expectNoHorizontalScroll()` and `expectNoAccessibilityViolations()` complete the set.
+- `ComboboxDemoPage` offers these verification helpers. `useViewport(width)` sets one of 320, 576, 768, 992, 1200, or 1920 CSS px. `useReflowViewport()` applies the 320 by 256 CSS px viewport, as the [present accessibly](../present-accessibly/) design specifies. `enlargeTextTo200Percent()` and `applyTextSpacingOverrides()` inject the style overrides, as `PlayerPage` does. `expectNoHorizontalScroll()` and `expectNoAccessibilityViolations()` complete the set.
 - `expectNoAccessibilityViolations()` runs `AxeBuilder` from `@axe-core/playwright` with the tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, and `wcag22aa`. It includes `t-combobox` and the CDK overlay container, because the open list renders outside the host. It asserts an empty `violations` array.
 
 **Automated accessibility verification**
@@ -80,13 +80,13 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 
 - Every slice's acceptance spec ends with `expectNoAccessibilityViolations()` in the state that slice introduced, so no component change ships without an axe check.
 - Each keyboard row of `L2-033` and `L2-034` has at least one test in `test/e2e/operate-by-keyboard.spec.ts`, which uses `ComboboxDemoPage` actions such as `pressKey`, `typeText`, and `expectActiveOption` (`L2-048` AC2).
-- The responsive tests in `test/e2e/present-accessibly.spec.ts` loop over the six widths, then run the 400% zoom, 200% text, and text-spacing cases (`L2-048` AC3).
+- The responsive tests in `test/e2e/present-accessibly.spec.ts` loop over the six widths, then run the reflow viewport, 200% text, and text-spacing cases. Real 400% browser zoom remains a separate manual check (`L2-048` AC3).
 - Test files follow the existing `test/e2e/<feature>.spec.ts` naming. Each file opens with a header comment that lists the L2 requirements it covers, and each test carries an `// L2-nnn ACn` comment as in `operate-player.spec.ts`. Review enforces the comment rule. No test parses the comments or the specifications, because `AGENTS.md` forbids such tests (`L2-048` AC4).
 - All frontend tests run in Chromium only, the single project in `playwright.config.ts`. Axe results do not replace manual verification. Axe cannot judge speech output.
 
 **Manual screen reader verification**
 
-- The verification matrix lives in a repository document at `docs/verification/combobox-screen-reader-matrix.md`. The path is proposed. The document holds one table row per combination, and each row has the columns `Combination`, `Date`, `Version`, `Result`, and `Defects`. The `Version` cell records the screen reader, browser, operating system, and `@tessera/combobox` versions (`L2-049` AC3). The exact meaning of "version" in the requirement is `<TO SUPPLY>`.
+- The verification matrix lives in a repository document at `docs/verification/combobox-screen-reader-matrix.md`. The path is proposed. The document holds one table row per combination, and each row has the columns `Combination`, `Date`, `Version`, `Result`, and `Defects`. The `Version` cell records the screen reader, browser, operating system, and `@tessera/combobox` versions (`L2-049` AC3). Each run also records the tested commit, tester, fixture, hardware keyboard configuration for mobile, and per-check observations. Not run is distinct from Pass.
 
 | Combination | Result at design time |
 |-------------|-----------------------|
@@ -111,13 +111,34 @@ The feature belongs to the combobox subsystem and refines `L1-018`. It depends o
 | g | A keyboard-only run-through works without a mouse | `L2-033`, `L2-034` |
 | h | Behavior is correct at 200% zoom, at 320 px width, in forced-colors mode, and with reduced motion | `L2-038`, `L2-039` |
 
-- The platform-specific scripts and the observed results are `<TO SUPPLY>`, as the subsystem README records. Scripts for VoiceOver on iOS and TalkBack need a decision on external-keyboard use for item g.
-- A release shall not proceed while any row reads `Not run`, or reads `Fail` with an open defect. The release procedure is `<TO SUPPLY>`.
+- The manual procedure below supplies the platform setup and observation steps. Observed results remain Not run until the production component exists. Mobile runs use both touch/screen-reader gestures and an external hardware keyboard, recording both results.
+- A release shall not proceed while any row reads `Not run`, or reads `Fail` with an open defect. Release requires all acceptance checks, zero axe violations, successful packed-package smoke verification, and a dated signed-off manual matrix with no open failures. Documentation states these as gates, not achieved results.
 - Manual runs are separate from automated tests, which run only in Chromium. A passing automated suite does not complete a manual row.
+
+**Manual run procedure**
+
+Use a production fixture with two preselected values, a 6-item page, an inactive account, a recoverable page-2 failure, a long label, and required validation. Record versions and commit before starting. Repeat the interaction in the normal host, a CDK dialog, and a native modal dialog.
+
+| Platform | Setup |
+|----------|-------|
+| Windows / NVDA, JAWS, Narrator | Start the reader, use its form-interaction mode on the named input, and use the hardware keyboard. Run high contrast through Windows accessibility settings. |
+| macOS / VoiceOver | Enable VoiceOver, enter interaction with the form control, and turn Quick Nav off for native input editing. Use the hardware keyboard and the system reduced-motion preference. |
+| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open. |
+| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior. |
+
+1. Tab or navigate to the input without opening the popup. Confirm the label, role, required state, and selected summary are read.
+2. Open with Arrow Down. Navigate selected, unselected, and disabled options. Confirm active movement does not select and each selected/disabled state is read.
+3. Type a query, wait for results, and confirm the loaded count. Try a slow request, empty result, and recoverable failure. Enter retries with the query retained; no stale message follows a newer query.
+4. Select and deselect an option. Confirm input focus, popup state, and spoken changes. Reach the limit, remove a chip, and clear all. Confirm the limit announcement and every removal.
+5. Navigate chip buttons in LTR and RTL. Inspect the long-label tooltip by hover and focus; move into it and dismiss with Escape.
+6. With no selection, leave the required field. Confirm error text, invalid state, and description. Return and correct it; the error clears.
+7. In a dialog, dismiss tooltip, popup, and query in that order with Escape. Only the next Escape reaches the dialog. Tab is never trapped by the popup.
+8. Repeat at 320 CSS px, 200% zoom, 200% text, text-spacing overrides, reduced motion, and forced colors where the platform supports it. Confirm content and all actions remain available. On desktop Chrome, also set a 1280 by 1024 window to actual 400% browser zoom; do not substitute device scale for zoom.
+9. For unavailable native settings on a mobile platform, record Not applicable with the reason and use the equivalent narrow viewport/text enlargement, preserving the interaction observations. A required supported-platform check cannot be marked Pass without execution.
 
 **Documentation and examples**
 
-- The documentation page is `src/combobox/README.md`, as `src/scorm-player/README.md` is for the player. Compiling the page and its examples through `tools/package-docs-compile` is `<TO SUPPLY>`. The page has these sections, which `L2-050` AC1 names or implies.
+- The documentation page is `src/combobox/README.md`, as `src/scorm-player/README.md` is for the player. The dev-app build compiles each runnable example. A package documentation compile task under tools/package-docs-compile shall compile the README snippets against the packed package before release. The page has these sections, which `L2-050` AC1 names or implies.
 
 | Section | Content |
 |---------|---------|

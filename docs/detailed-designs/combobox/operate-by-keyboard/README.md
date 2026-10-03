@@ -14,7 +14,7 @@
 
 **Right-to-left layout** — layout in which the inline start edge is the right edge, as in Arabic and Hebrew
 
-DOM focus rests on the input while the user navigates options. The input handles each key and moves the active option by keyboard, so the user needs no pointer. Chips sit before the input in the field, and the remove button of each chip is a second place that holds focus. The feature follows the keyboard model of the WAI-ARIA Authoring Practices combobox pattern and applies the v1 decisions of the subsystem: Arrow navigation does not wrap, and Home and End move the text cursor.
+DOM focus rests on the input while the user navigates options. The input handles each key and moves the active option by keyboard, so the user needs no pointer. Chips sit before the input in the field, and the remove button of each chip is a second place that holds focus. The feature extends the WAI-ARIA Authoring Practices combobox input-focus model with a multi-select listbox and applies the v1 decisions of the subsystem: Arrow navigation does not wrap, and Home and End move the text cursor.
 
 This feature owns key handling only. Searching, selection state, list positioning, announcements, and form integration belong to sibling features and appear here as collaborators.
 
@@ -33,7 +33,7 @@ The slice adds two key handlers to `Combobox<T>` and wires them to collaborators
 - `ComboboxOption<T>` publishes the manager's active state through `aria-activedescendant` on the input and exposes `item` and `disabled`. Enter calls `Combobox<T>.toggle(item)` for the active option ([Select values](../select-values/)). `Combobox<T>` removes the attribute when the list is closed or no option is active.
 - `ComboboxSearch<T>` supplies `status`, `hasMore`, `retry()`, and `loadNextPage()`. The keyboard layer reads the first two and calls the last two.
 - `ComboboxPopup` supplies `open()` and `close()` for the overlay. It does not subscribe to the CDK overlay `keydownEvents()`, so the input handler is the only place that interprets Escape.
-- `activateLast` is a private signal on `Combobox<T>`. Arrow Up on a closed list sets it. After the overlay renders, `activateFirstEnabled()` runs as `L2-029` criteria 5 and 6 specify. When `activateLast` is set, the component then calls `setLastItemActive()` and clears the signal, so the last option wins.
+- `openingMode` records normal, last, or none. It stays in effect through the first asynchronous response. Arrow Up chooses last; Alt+Arrow Down chooses none; other opens choose normal. A plain arrow clears this mode and navigates from the current index, or from the corresponding end when none is active. The popup feature owns these rules.
 
 **Input key map** (focus on the input):
 
@@ -41,14 +41,15 @@ The slice adds two key handlers to `Combobox<T>` and wires them to collaborators
 |-----|-------|----------|
 | Arrow Down | List closed | `open()`. The first enabled option becomes active when the options render. |
 | Arrow Down | List open | `setNextItemActive()`. The key manager does not wrap. On the last option, the active option stays, and `loadNextPage()` runs when `hasMore` is true. On the last option with no further pages, nothing changes and no request is issued. |
-| Arrow Up | List closed | Sets `activateLast`, then `open()`. The last option becomes active when the options render. |
+| Arrow Up | List closed | Sets `openingMode` to last, then `open()`. The last option becomes active when the options render. |
 | Arrow Up | List open | `setPreviousItemActive()`. On the first option, the first option stays active. |
-| Alt + Arrow Down | List closed | `open()` without calling the key manager. No option is moved by the key itself. |
+| Alt + Arrow Down | List closed | `open()` with mode none. No active descendant, including after the first response. |
 | Alt + Arrow Up | List open | `close()`. |
 | Enter | Error row shown | `onRetryActivated()`, which calls `search.retry()`, and `preventDefault()`. |
 | Enter | List open, enabled option active | `toggle(item)` for that option and `preventDefault()`, which blocks form submission. |
-| Enter | List open, no active option or a disabled one | Selects nothing and calls `preventDefault()`, so the surrounding form is not submitted. |
+| Enter | List open, no active option or a disabled one | Selects nothing and calls `preventDefault()`. With no active option and hasMore, calls loadNextPage; disabled active options do not trigger paging. |
 | Enter | List closed, error row not shown | Selects nothing. The browser default applies. |
+| Escape | Full-label tooltip visible | Dismiss tooltip and stop propagation before all other Escape handling. |
 | Escape | List open | `close()` and `stopPropagation()`. |
 | Escape | List closed, input has text | Clears `query` and calls `stopPropagation()`. |
 | Escape | List closed, input empty | Not handled. The event propagates. |
@@ -79,7 +80,7 @@ Acceptance criteria coverage:
 
 | Criterion | Where the design satisfies it |
 |-----------|-------------------------------|
-| `L2-033` 1, 2 | Arrow Down and Arrow Up rows; `activateLast` |
+| `L2-033` 1, 2 | Arrow Down and Arrow Up rows; `openingMode` |
 | `L2-033` 3 | Alt + Arrow Down and Alt + Arrow Up rows |
 | `L2-033` 4 | `withWrap(false)`; the last-option rule and `hasMore` |
 | `L2-033` 5, 6, 7 | Enter rows; `preventDefault()` while the list is open; `onRetryActivated()` for the error row |
@@ -94,7 +95,7 @@ Acceptance criteria coverage:
 | `L2-034` 4 | Tab row; DOM order; `focusout` and touched |
 | `L2-034` 5 | Start-direction Arrow row with `isRtl()` true |
 
-Two points in the requirements leave room for interpretation, and the design resolves them as follows. First, `L2-033` criterion 3 says Alt + Arrow Down leaves the active option unchanged, while `L2-029` criterion 5 makes the first enabled option active whenever the list opens. The design lets the key itself move nothing and lets the open-time rule apply. Second, the last option under Arrow Up is the last loaded option when further pages exist.
+Opening modes are specified consistently in L2-029 and L2-033. Arrow Up starts at the last loaded option, not the last option of the remote data set. Escape reaches an enclosing dialog only after the tooltip, popup, and non-empty query have been dismissed in that order. Bubbling Tab and Escape handlers on the host and popup also cover chip and popup-action focus.
 
 ## Requirements
 

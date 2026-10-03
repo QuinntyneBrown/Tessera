@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Combobox mock · Tessera</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, 'Segoe UI', Arial, sans-serif;
+        --ink: #18312e;
+        --muted: #536763;
+        --line: #7f978d;
+        --surface: #fff;
+        --canvas: #f4f7f5;
+        --accent: #126454;
+        --soft: #e4f2ec;
+        --focus: #b35c14;
+        --error: #8a1c12;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      button:disabled {
+        cursor: not-allowed;
+      }
+      :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 3px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      .topbar {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #d8e2df;
+        background: var(--surface);
+      }
+      .topbar h1 {
+        font-size: 1rem;
+      }
+      .shell {
+        max-width: 72rem;
+        margin: auto;
+        padding: 2rem 1.5rem 4rem;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font-size: 0.8rem;
+        font-weight: 750;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h2 {
+        font-size: 2rem;
+        letter-spacing: -0.035em;
+        line-height: 1.2;
+        margin: 0.5rem 0 0.75rem;
+      }
+      .intro {
+        max-width: 44rem;
+        color: var(--muted);
+      }
+      .controls {
+        min-inline-size: 0;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        border: 1px dashed var(--line);
+        border-radius: 0.5rem;
+      }
+      .controls legend {
+        max-width: 100%;
+        padding: 0 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+      .control-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      select {
+        min-width: 0;
+        max-width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 0.375rem;
+        padding: 0.5rem;
+        background: var(--surface);
+        color: var(--ink);
+      }
+      .control-row label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2.75rem;
+      }
+      input[type='checkbox'] {
+        flex: 0 0 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        accent-color: var(--accent);
+      }
+      .layout {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+      .card {
+        flex: 3 1 32rem;
+        min-width: 0;
+        padding: 1.5rem;
+        border: 1px solid #d8e2df;
+        border-radius: 0.75rem;
+        background: var(--surface);
+      }
+      .notes {
+        flex: 1 1 16rem;
+        min-width: 0;
+        padding: 1.25rem;
+      }
+      .notes h3 {
+        font-size: 1rem;
+      }
+      .notes ul {
+        padding-inline-start: 1.25rem;
+        color: var(--muted);
+      }
+      .notes li + li {
+        margin-top: 0.75rem;
+      }
+      .course {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding-bottom: 1.25rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #d8e2df;
+      }
+      .course-icon {
+        display: grid;
+        place-items: center;
+        flex: 0 0 2.75rem;
+        height: 2.75rem;
+        background: var(--soft);
+        color: var(--accent);
+        border-radius: 0.5rem;
+        font-weight: 750;
+      }
+      .course h3 {
+        font-size: 1rem;
+      }
+      .course p,
+      .hint,
+      .count {
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+      .label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .field {
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+      }
+      .field:focus-within {
+        border-color: var(--accent);
+      }
+      .field.invalid {
+        border-color: var(--error);
+      }
+      .field.disabled {
+        background: var(--canvas);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-height: 8rem;
+        overflow-y: auto;
+      }
+      .chips:not(:empty) {
+        padding: 0.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        max-width: 100%;
+        min-width: 0;
+        background: var(--soft);
+        border: 1px solid var(--line);
+        border-radius: 0.375rem;
+        padding-inline-start: 0.5rem;
+        position: relative;
+      }
+      .chip-label {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 0.875rem;
+      }
+      .chip button {
+        flex: 0 0 2rem;
+        width: 2rem;
+        min-height: 2rem;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+      }
+      .tooltip {
+        position: fixed;
+        z-index: 20;
+        max-width: min(24rem, calc(100vw - 2rem));
+        padding: 0.5rem 0.75rem;
+        background: var(--ink);
+        color: white;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        pointer-events: none;
+      }
+      .input-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .input-row input {
+        flex: 1 1 8rem;
+        min-width: 0;
+        width: 100%;
+        border: 0;
+        padding: 0.5rem;
+        color: var(--ink);
+        background: transparent;
+        min-height: 2.75rem;
+      }
+      .icon-button {
+        flex: 0 0 2.75rem;
+        min-height: 2.75rem;
+        border: 0;
+        border-radius: 0.375rem;
+        background: transparent;
+        color: var(--muted);
+      }
+      .icon-button:hover:enabled,
+      .chip button:hover:enabled {
+        background: #cde4db;
+      }
+      .hint {
+        margin-top: 0.5rem;
+      }
+      .error {
+        color: var(--error);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        border-top: 1px solid #d8e2df;
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+      }
+      .button {
+        min-height: 2.75rem;
+        border: 1px solid var(--line);
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        background: var(--surface);
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 0.875rem;
+      }
+      .primary {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .popup {
+        position: fixed;
+        z-index: 10;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        background: var(--surface);
+        box-shadow: 0 0.5rem 1rem #18312e18;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .option {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        margin: 0.25rem;
+        border: 2px solid transparent;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+      .option:hover {
+        background: var(--canvas);
+      }
+      .option[aria-selected='true'] {
+        background: var(--soft);
+      }
+      .option.active {
+        border-color: var(--accent);
+      }
+      .option[aria-disabled='true'] {
+        cursor: not-allowed;
+      }
+      .check {
+        display: grid;
+        place-items: center;
+        flex: 0 0 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.125rem;
+        border: 1px solid var(--line);
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+      }
+      [aria-selected='true'] .check {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .option-copy {
+        min-width: 0;
+      }
+      .option-name {
+        display: block;
+        font-weight: 650;
+      }
+      .option-detail {
+        display: block;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .status {
+        padding: 1rem;
+        color: var(--muted);
+        border-top: 1px solid #d8e2df;
+      }
+      .status p + button {
+        margin-top: 0.75rem;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+      @media (max-width: 40em) {
+        .shell {
+          padding: 1.25rem 0.75rem 3rem;
+        }
+        .card {
+          padding: 1rem;
+        }
+        .notes {
+          padding: 0.5rem;
+        }
+        h2 {
+          font-size: 1.75rem;
+        }
+      }
+      @media (forced-colors: active) {
+        .field,
+        .chip,
+        .popup,
+        .button,
+        select,
+        .check {
+          border-color: ButtonText;
+        }
+        .option.active {
+          border-color: Highlight;
+        }
+        [aria-selected='true'] .check {
+          forced-color-adjust: none;
+          background: Highlight;
+          color: HighlightText;
+          border-color: Highlight;
+        }
+        :focus-visible {
+          outline-color: Highlight;
+        }
+        .tooltip {
+          background: CanvasText;
+          color: Canvas;
+          border: 1px solid CanvasText;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar"><h1>Tessera · Host LMS</h1></header>
+    <main class="shell">
+      <p class="eyebrow">Component design reference</p>
+      <h2>Assign learners</h2>
+      <p class="intro">
+        Find people and add them to a course. This interactive HTML mock uses fictional learners and
+        simulated search; assignments are not saved.
+      </p>
+      <fieldset class="controls">
+        <legend>Mock states · design reference only</legend>
+        <div class="control-row">
+          <label for="scenario">Preview</label>
+          <select id="scenario">
+            <option value="normal">Results</option>
+            <option value="loading">Slow loading</option>
+            <option value="empty">No results</option>
+            <option value="error">Search error</option>
+            <option value="disabled">Disabled</option>
+            <option value="invalid">Required / invalid</option>
+            <option value="limit">Selection limit (3)</option>
+            <option value="many">200 selections</option>
+            <option value="long">Long label</option>
+          </select>
+          <label><input type="checkbox" id="rtl" /> Right-to-left</label>
+          <button type="button" class="button" id="reset">Reset</button>
+        </div>
+      </fieldset>
+      <div class="layout">
+        <form class="card" id="assignment" novalidate>
+          <div class="course">
+            <span class="course-icon" aria-hidden="true">01</span>
+            <div>
+              <h3>Workplace safety essentials</h3>
+              <p>Required learning · 35 minutes</p>
+            </div>
+          </div>
+          <div id="combobox">
+            <label class="label" for="learner-search"
+              >Learners <span aria-hidden="true">*</span></label
+            >
+            <div class="field" id="field">
+              <ul class="chips" id="chips" aria-label="Selected values"></ul>
+              <div class="input-row">
+                <input
+                  id="learner-search"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-required="true"
+                  aria-describedby="hint summary"
+                  autocomplete="off"
+                  placeholder="Search by name or email"
+                />
+                <button
+                  type="button"
+                  class="icon-button"
+                  id="clear"
+                  aria-label="Clear all selections"
+                >
+                  ×
+                </button>
+                <button
+                  type="button"
+                  class="icon-button"
+                  id="toggle"
+                  tabindex="-1"
+                  aria-label="Show learners"
+                >
+                  ⌄
+                </button>
+              </div>
+            </div>
+            <p class="hint" id="hint">Select one or more learners. Search to narrow the results.</p>
+            <p class="error" id="validation" hidden>Select at least one learner.</p>
+            <span class="sr-only" id="summary"></span>
+          </div>
+          <div class="footer">
+            <p class="count" id="count"></p>
+            <button type="submit" class="button primary" id="assign">Preview assignment</button>
+          </div>
+          <p class="hint" id="confirmation" role="status"></p>
+        </form>
+        <aside class="notes" aria-labelledby="notes-title">
+          <h3 id="notes-title">Try the interaction</h3>
+          <ul>
+            <li>Search “Morgan” or “Alex”, or open the list to browse everyone.</li>
+            <li>Use ↑ / ↓ to browse and Enter to select. Selected learners stay in the results.</li>
+            <li>Escape closes the list. Tab continues through the form.</li>
+            <li>
+              With an empty search, Backspace removes the last selection. Use ← to reach its remove
+              button.
+            </li>
+            <li>
+              Scroll to the bottom for more results. Use the preview controls to explore failure and
+              edge states.
+            </li>
+          </ul>
+          <p class="hint">
+            Mock configuration: 300 ms debounce, empty-query browsing enabled. No production Angular
+            API is implemented here.
+          </p>
+        </aside>
+      </div>
+    </main>
+    <div
+      class="popup"
+      id="popup"
+      role="region"
+      aria-label="Learner search results"
+      tabindex="0"
+      hidden
+    >
+      <div id="results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
+      <div class="status" id="status"></div>
+    </div>
+    <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+    <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const input = $('learner-search'),
+        popup = $('popup'),
+        list = $('results');
+      const names = [
+        'Ada Chen',
+        'Grace Patel',
+        'Morgan Ellis',
+        'Alex Rivera',
+        'Sam Williams',
+        'Jordan Lee',
+        'Taylor Brooks',
+        'Robin Singh',
+        'Casey Martin',
+        'Jamie Park',
+        'Avery Wilson',
+        'Riley Thompson',
+        'Drew Campbell',
+        'Cameron Reid',
+        'Quinn Flores',
+        'Morgan Blake',
+        'Alex Kim',
+        'Harper Davis',
+        'Emerson Scott',
+        'Finley Ross',
+        'Charlie Nguyen',
+        'Dakota Evans',
+        'Reese Walker',
+        'Sage Robinson',
+      ];
+      const people = names.map((name, id) => ({
+        id,
+        name,
+        email: name.toLowerCase().replaceAll(' ', '.') + '@example.com',
+        disabled: id === 8,
+      }));
+      let selected = [],
+        results = [],
+        total = 0,
+        active = -1,
+        open = false,
+        busy = false,
+        failed = false,
+        touched = false,
+        disabled = false,
+        limit = null;
+      let mode = 'normal',
+        page = 0,
+        failedPage = 0,
+        query = '',
+        version = 0,
+        timer,
+        requestTimer,
+        loadingTimer,
+        announcementTimer,
+        composing = false,
+        openAtEnd = false;
+      const pageSize = 6;
+      const has = (person) => selected.some((item) => item.id === person.id);
+      const unavailable = (person) =>
+        person.disabled || (limit !== null && selected.length >= limit && !has(person));
+      function announce(message, urgent = false) {
+        clearTimeout(announcementTimer);
+        $('live').setAttribute('aria-live', urgent ? 'assertive' : 'polite');
+        $('live').textContent = '';
+        announcementTimer = setTimeout(() => {
+          $('live').textContent = message;
+        }, 150);
+      }
+      function cancel() {
+        version++;
+        clearTimeout(timer);
+        clearTimeout(requestTimer);
+        clearTimeout(loadingTimer);
+        busy = false;
+      }
+      function validate() {
+        const invalid = touched && !selected.length;
+        $('validation').hidden = !invalid;
+        $('field').classList.toggle('invalid', invalid);
+        input.setAttribute('aria-invalid', String(invalid));
+        input.setAttribute('aria-describedby', 'hint summary' + (invalid ? ' validation' : ''));
+      }
+      function hideTooltip() {
+        $('tooltip').hidden = true;
+      }
+      function showTooltip(button, person) {
+        const tip = $('tooltip');
+        tip.textContent = person.name;
+        tip.hidden = false;
+        const rect = button.closest('li').getBoundingClientRect();
+        tip.style.left = Math.max(8, Math.min(rect.left, innerWidth - tip.offsetWidth - 8)) + 'px';
+        tip.style.top = Math.max(8, rect.top - tip.offsetHeight - 8) + 'px';
+      }
+      function renderSelection() {
+        hideTooltip();
+        $('chips').replaceChildren();
+        selected.forEach((person, index) => {
+          const chip = document.createElement('li');
+          chip.className = 'chip';
+          const label = document.createElement('span');
+          label.className = 'chip-label';
+          label.textContent = person.name;
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.textContent = '×';
+          remove.setAttribute('aria-label', 'Remove ' + person.name);
+          remove.disabled = disabled;
+          remove.addEventListener('click', () => removeChip(index));
+          remove.addEventListener('focus', () => showTooltip(remove, person));
+          remove.addEventListener('mouseenter', () => showTooltip(remove, person));
+          remove.addEventListener('blur', hideTooltip);
+          remove.addEventListener('mouseleave', hideTooltip);
+          remove.addEventListener('keydown', (event) => {
+            const previous = document.documentElement.dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+            if (['Backspace', 'Delete'].includes(event.key)) {
+              event.preventDefault();
+              removeChip(index);
+            } else if (event.key === previous) {
+              event.preventDefault();
+              $('chips').querySelectorAll('button')[Math.max(0, index - 1)]?.focus();
+            } else if (event.key === (previous === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft')) {
+              event.preventDefault();
+              const next = $('chips').querySelectorAll('button')[index + 1];
+              (next || input).focus();
+            }
+          });
+          chip.append(label, remove);
+          $('chips').append(chip);
+        });
+        $('clear').hidden = !selected.length;
+        $('clear').disabled = disabled;
+        input.disabled = disabled;
+        $('toggle').disabled = disabled;
+        $('assign').disabled = disabled;
+        $('field').classList.toggle('disabled', disabled);
+        $('count').textContent =
+          selected.length + ' learner' + (selected.length === 1 ? '' : 's') + ' selected';
+        $('summary').textContent = selected.length
+          ? selected.length + ' selected: ' + selected.map((item) => item.name).join(', ')
+          : 'No learners selected.';
+        $('hint').textContent =
+          limit === null
+            ? 'Select one or more learners. Search to narrow the results.'
+            : 'Choose up to ' + limit + ' learners. Remove a selection to choose someone else.';
+        $('confirmation').textContent = '';
+        validate();
+        position();
+      }
+      function removeChip(index) {
+        const [person] = selected.splice(index, 1);
+        renderSelection();
+        renderResults();
+        const buttons = $('chips').querySelectorAll('button');
+        (buttons[Math.min(index, buttons.length - 1)] || input).focus();
+        announce(person.name + ' removed.');
+      }
+      function togglePerson(person) {
+        if (disabled || unavailable(person)) return;
+        const existed = has(person);
+        selected = existed
+          ? selected.filter((item) => item.id !== person.id)
+          : [...selected, person];
+        renderSelection();
+        renderResults();
+        input.focus();
+        announce(
+          existed
+            ? person.name + ' removed.'
+            : person.name +
+                ' selected. ' +
+                selected.length +
+                ' selected in total.' +
+                (limit !== null && selected.length >= limit
+                  ? ' Maximum of ' + limit + ' selections reached.'
+                  : ''),
+        );
+      }
+      function syncActive() {
+        [...list.children].forEach((node, index) =>
+          node.classList.toggle('active', index === active),
+        );
+        if (open && active >= 0 && results[active])
+          input.setAttribute('aria-activedescendant', 'learner-option-' + results[active].id);
+        else input.removeAttribute('aria-activedescendant');
+      }
+      function renderResults() {
+        list.replaceChildren();
+        results.forEach((person, index) => {
+          const option = document.createElement('div');
+          option.className = 'option';
+          option.id = 'learner-option-' + person.id;
+          option.setAttribute('role', 'option');
+          option.setAttribute('aria-selected', String(has(person)));
+          option.setAttribute('aria-disabled', String(unavailable(person)));
+          option.setAttribute('aria-setsize', total);
+          option.setAttribute('aria-posinset', index + 1);
+          const check = document.createElement('span');
+          check.className = 'check';
+          check.setAttribute('aria-hidden', 'true');
+          check.textContent = has(person) ? '✓' : '';
+          const copy = document.createElement('span');
+          copy.className = 'option-copy';
+          const name = document.createElement('span');
+          name.className = 'option-name';
+          name.textContent = person.name;
+          const detail = document.createElement('span');
+          detail.className = 'option-detail';
+          detail.textContent =
+            person.email +
+            (person.disabled
+              ? ' · Account inactive'
+              : unavailable(person)
+                ? ' · Selection limit reached'
+                : '');
+          copy.append(name, detail);
+          option.append(check, copy);
+          option.addEventListener('pointerdown', (event) => {
+            event.preventDefault();
+          });
+          option.addEventListener('click', () => {
+            active = index;
+            togglePerson(person);
+          });
+          list.append(option);
+        });
+        list.setAttribute('aria-busy', String(busy));
+        $('status').replaceChildren();
+        const message = document.createElement('p');
+        message.textContent = busy
+          ? 'Loading learners…'
+          : failed
+            ? 'Learners could not be loaded. Your selections are safe.'
+            : !results.length
+              ? 'No results'
+              : results.length < total
+                ? results.length + ' of ' + total + ' learners · Scroll for more'
+                : total + ' learner' + (total === 1 ? '' : 's') + ' available';
+        $('status').append(message);
+        if (failed) {
+          const retry = document.createElement('button');
+          retry.type = 'button';
+          retry.className = 'button';
+          retry.textContent = 'Retry';
+          retry.addEventListener('click', retrySearch);
+          $('status').append(retry);
+        }
+        syncActive();
+        position();
+      }
+      function position() {
+        if (!open) return;
+        const rect = $('field').getBoundingClientRect(),
+          viewport = window.visualViewport;
+        const topEdge = viewport?.offsetTop || 0,
+          bottomEdge = topEdge + (viewport?.height || innerHeight);
+        popup.style.width = rect.width + 'px';
+        popup.style.left = rect.left + 'px';
+        const below = bottomEdge - rect.bottom - 12,
+          above = rect.top - topEdge - 12,
+          flip = below < 240 && above > below;
+        popup.style.maxHeight = Math.max(0, Math.min(360, flip ? above : below)) + 'px';
+        popup.style.top = (flip ? rect.top - popup.offsetHeight - 4 : rect.bottom + 4) + 'px';
+      }
+      function close() {
+        open = false;
+        popup.hidden = true;
+        input.setAttribute('aria-expanded', 'false');
+        input.removeAttribute('aria-controls');
+        input.removeAttribute('aria-activedescendant');
+        $('toggle').setAttribute('aria-label', 'Show learners');
+      }
+      function openList(fetch = true) {
+        if (disabled) return;
+        open = true;
+        popup.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+        input.setAttribute('aria-controls', 'results');
+        $('toggle').setAttribute('aria-label', 'Hide learners');
+        if (active < 0) active = results.findIndex((person) => !unavailable(person));
+        syncActive();
+        position();
+        if (fetch && !results.length && !busy && !failed) search(0);
+      }
+      function search(nextPage) {
+        if (disabled || (busy && nextPage > 0)) return;
+        if (nextPage === 0) cancel();
+        const stamp = version,
+          requestedQuery = input.value;
+        busy = true;
+        failed = false;
+        renderResults();
+        loadingTimer = setTimeout(() => {
+          if (open && busy) announce('Loading results.');
+        }, 1000);
+        requestTimer = setTimeout(
+          () => {
+            if (stamp !== version || disabled) return;
+            clearTimeout(loadingTimer);
+            busy = false;
+            if (mode === 'error') {
+              failed = true;
+              failedPage = nextPage;
+              renderResults();
+              if (open) announce('Results could not be loaded.', true);
+              return;
+            }
+            const matches =
+              mode === 'empty'
+                ? []
+                : people.filter((person) =>
+                    (person.name + ' ' + person.email)
+                      .toLowerCase()
+                      .includes(requestedQuery.toLowerCase()),
+                  );
+            query = requestedQuery;
+            total = matches.length;
+            const items = matches.slice(nextPage * pageSize, (nextPage + 1) * pageSize);
+            results = nextPage === 0 ? items : [...results, ...items];
+            page = nextPage;
+            if (nextPage === 0) {
+              active = openAtEnd
+                ? results.length - 1
+                : results.findIndex((person) => !unavailable(person));
+              openAtEnd = false;
+            }
+            renderResults();
+            if (open)
+              announce(
+                nextPage
+                  ? items.length + ' more results loaded.'
+                  : total
+                    ? total + ' results available.'
+                    : 'No results found.',
+              );
+          },
+          mode === 'loading' ? 5000 : 450,
+        );
+      }
+      function retrySearch() {
+        mode = 'normal';
+        $('scenario').value = 'normal';
+        input.focus();
+        search(failedPage);
+      }
+      function nextPage() {
+        if (!busy && !failed && results.length < total) search(page + 1);
+      }
+      function inputChanged() {
+        if (composing) return;
+        cancel();
+        failed = false;
+        openAtEnd = false;
+        openList(false);
+        renderResults();
+        timer = setTimeout(() => {
+          if (input.value !== query || !results.length) search(0);
+        }, 300);
+      }
+      input.addEventListener('input', inputChanged);
+      input.addEventListener('compositionstart', () => {
+        composing = true;
+        cancel();
+      });
+      input.addEventListener('compositionend', () => {
+        composing = false;
+        inputChanged();
+      });
+      input.addEventListener('keydown', (event) => {
+        if (event.isComposing) return;
+        const key = event.key;
+        if (key === 'Tab') {
+          close();
+          return;
+        }
+        if (key === 'Escape') {
+          if (open) {
+            close();
+            event.preventDefault();
+            event.stopPropagation();
+          } else if (input.value) {
+            input.value = '';
+            cancel();
+            query = '';
+            results = [];
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          return;
+        }
+        if (event.altKey && key === 'ArrowUp') {
+          event.preventDefault();
+          close();
+          return;
+        }
+        if (key === 'ArrowDown' || key === 'ArrowUp') {
+          event.preventDefault();
+          if (!open) {
+            openAtEnd = key === 'ArrowUp';
+            openList();
+            if (openAtEnd) active = results.length - 1;
+          } else if (!event.altKey) {
+            if (key === 'ArrowDown' && active === results.length - 1) nextPage();
+            active = Math.max(
+              -1,
+              Math.min(results.length - 1, Math.max(0, active + (key === 'ArrowDown' ? 1 : -1))),
+            );
+          }
+          syncActive();
+          list.children[active]?.scrollIntoView({ block: 'nearest' });
+          return;
+        }
+        if (key === 'Enter' && open) {
+          event.preventDefault();
+          if (failed) retrySearch();
+          else if (results[active]) togglePerson(results[active]);
+          return;
+        }
+        if (key === 'Backspace' && !input.value && selected.length) {
+          event.preventDefault();
+          const person = selected.pop();
+          renderSelection();
+          renderResults();
+          announce(person.name + ' removed.');
+        }
+        const towardChips = document.documentElement.dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+        if (
+          key === towardChips &&
+          input.selectionStart === 0 &&
+          input.selectionEnd === 0 &&
+          selected.length
+        ) {
+          event.preventDefault();
+          $('chips').querySelectorAll('button')[selected.length - 1].focus();
+        }
+      });
+      $('field').addEventListener('click', (event) => {
+        if (!event.target.closest('button') && !disabled) {
+          input.focus();
+          openList();
+        }
+      });
+      $('toggle').addEventListener('click', () => {
+        input.focus();
+        if (open) close();
+        else openList();
+      });
+      $('clear').addEventListener('click', () => {
+        selected = [];
+        renderSelection();
+        renderResults();
+        input.focus();
+        announce('All selections cleared.');
+      });
+      document.addEventListener('pointerdown', (event) => {
+        if (!$('combobox').contains(event.target) && !popup.contains(event.target)) close();
+      });
+      document.addEventListener('focusin', (event) => {
+        if (!$('combobox').contains(event.target) && !popup.contains(event.target)) {
+          if (open) close();
+        }
+      });
+      $('combobox').addEventListener('focusout', () => {
+        setTimeout(() => {
+          if (
+            !$('combobox').contains(document.activeElement) &&
+            !popup.contains(document.activeElement)
+          ) {
+            touched = true;
+            validate();
+          }
+        }, 0);
+      });
+      popup.addEventListener('scroll', () => {
+        if (popup.scrollTop > 0 && popup.scrollTop + popup.clientHeight >= popup.scrollHeight - 8)
+          nextPage();
+      });
+      window.addEventListener('resize', () => {
+        hideTooltip();
+        position();
+      });
+      window.addEventListener(
+        'scroll',
+        () => {
+          hideTooltip();
+          position();
+        },
+        true,
+      );
+      window.visualViewport?.addEventListener('resize', position);
+      window.visualViewport?.addEventListener('scroll', position);
+      new ResizeObserver(position).observe($('field'));
+      $('assignment').addEventListener('submit', (event) => {
+        event.preventDefault();
+        touched = true;
+        validate();
+        if (!selected.length) input.focus();
+        else {
+          close();
+          $('confirmation').textContent =
+            'Preview only: ' +
+            selected.length +
+            ' learner' +
+            (selected.length === 1 ? '' : 's') +
+            ' would be assigned to Workplace safety essentials.';
+        }
+      });
+      function scenario(value) {
+        cancel();
+        close();
+        mode = value;
+        disabled = value === 'disabled';
+        limit = value === 'limit' ? 3 : null;
+        touched = value === 'invalid';
+        input.value = '';
+        query = '';
+        results = [];
+        total = 0;
+        active = -1;
+        failed = false;
+        page = 0;
+        openAtEnd = false;
+        selected =
+          value === 'invalid'
+            ? []
+            : value === 'limit'
+              ? people.slice(0, 3)
+              : value === 'many'
+                ? Array.from({ length: 200 }, (_, id) => ({
+                    id: 1000 + id,
+                    name: 'Learner ' + (id + 1),
+                  }))
+                : value === 'long'
+                  ? [
+                      {
+                        id: 900,
+                        name: 'Alexandra Montgomery-Williams · International workplace safety and compliance team',
+                      },
+                    ]
+                  : people.slice(0, 2);
+        renderSelection();
+        renderResults();
+        if (!disabled && value !== 'invalid') {
+          input.focus();
+          openList();
+        }
+      }
+      $('scenario').addEventListener('change', () => scenario($('scenario').value));
+      $('rtl').addEventListener('change', () => {
+        document.documentElement.dir = $('rtl').checked ? 'rtl' : 'ltr';
+        position();
+      });
+      $('reset').addEventListener('click', () => {
+        $('scenario').value = 'normal';
+        $('rtl').checked = false;
+        document.documentElement.dir = 'ltr';
+        scenario('normal');
+        close();
+      });
+      selected = people.slice(0, 2);
+      renderSelection();
+      renderResults();
+    </script>
+  </body>
+</html>

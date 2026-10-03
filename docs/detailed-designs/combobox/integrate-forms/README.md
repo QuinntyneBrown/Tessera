@@ -22,7 +22,7 @@ The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the ho
 
 ### Registration
 
-`Combobox<T>` provides itself under `NG_VALUE_ACCESSOR` with `useExisting` and `forwardRef`. A constructor injection of `NgControl` would form a cycle with that provider, so the component obtains the control lazily with `Injector.get(NgControl, null)` in `ngOnInit`. The result is `null` when the application uses no Angular forms. `onChange` and `onTouched` default to no-op functions until Angular registers real ones, so the component works without a control.
+`Combobox<T>` provides itself under `NG_VALUE_ACCESSOR` with `useExisting` and `forwardRef`. A constructor injection of `NgControl` would form a cycle with that provider, so the component obtains the control lazily with `Injector.get(NgControl, null, { self: true, optional: true })` in `ngOnInit`. The result is `null` when the application uses no Angular forms. `onChange` and `onTouched` default to no-op functions until Angular registers real ones, so the component works without a control.
 
 ### ControlValueAccessor methods
 
@@ -51,13 +51,13 @@ The host element listens for `focusout`, and `ComboboxPopup` routes `focusout` f
 - When `relatedTarget` lies inside the host element or inside the overlay pane, focus moved within the component. The handler does nothing. Moves from the input to a chip remove button, to clear-all, or into the overlay therefore do not mark the control touched.
 - Otherwise focus left the whole component, and the handler calls `onTouched()` once. A `null` `relatedTarget`, such as a click on a non-focusable area, counts as leaving.
 
-Option and Retry clicks call `preventDefault()` on `mousedown`, so they move no focus. A chip removal focuses its destination before it removes the chip, so the removal produces no stray `focusout` that leaves the component. Browser behavior when the focused element is removed from the DOM is verified by an acceptance test and is `<TO SUPPLY>` until recorded.
+Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Both host and popup route focusout through this boundary check.
 
 ### Required and invalid state
 
-`required` is a boolean input. It drives `aria-required="true"` on the input. The control's `required` error comes from Angular's `RequiredValidator`, which attaches to `t-combobox[required][formControl]`, `[formControlName]`, and `[ngModel]` and reports an empty array as missing. The component adds no validator of its own. A control that uses `Validators.required` in code and no `required` attribute is invalid, but `aria-required` stays unset. Whether the component also derives `aria-required` from the control's validators is `<TO SUPPLY>`.
+`required` is a boolean input. With forms, Angular RequiredValidator or Validators.required supplies the empty-array error. `isRequired` is true when the input is true or the control has Validators.required. Without forms, required and an empty value supply local invalid state; local touched state records genuine exits. aria-required follows isRequired, using the public [AbstractControl.hasValidator API](https://angular.dev/api/forms/AbstractControl#hasValidator).
 
-Signals do not observe `AbstractControl` state, so the component bridges it. After the first render, it subscribes to `ngControl.control.events` under `takeUntilDestroyed` and increments a `controlVersion` signal on each event. `showError` is a `computed()` that reads `controlVersion` and returns `control.invalid && control.touched`. Replacing the bound control instance at runtime is `<TO SUPPLY>`.
+Signals do not observe AbstractControl state. When the same-element NgControl reports a different control instance, the bridge unsubscribes the old control and subscribes to the new control.events. Rebinding refreshes a controlVersion signal and disabled, touched, and invalid state. An after-render check detects identity replacement; control.events detects resets and validator changes. showError reads that signal and control state, or local required/touched state without forms. A form reset clears touched state; host-only model writes do not mark touched.
 
 | Control state | `aria-invalid` | Error text |
 |---------------|----------------|------------|
@@ -67,7 +67,7 @@ Signals do not observe `AbstractControl` state, so the component bridges it. Aft
 
 ### Hint and error text
 
-`hint` and `error` are string inputs. The hint renders below the field whenever it is supplied. The error text renders only while `showError()` is true. The `id` values of both elements feed `aria-describedby` and are specified in [Expose state to assistive technology](../expose-to-assistive-tech/). The `error` input supplies the text. Whether `COMBOBOX_I18N` holds a default text for the `required` error is `<TO SUPPLY>`.
+`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. Hint and rendered error ids feed aria-describedby.
 
 ### Model binding without forms
 
@@ -76,7 +76,7 @@ Signals do not observe `AbstractControl` state, so the component bridges it. Aft
 - The initial signal value renders as chips.
 - A user selection or chip removal calls `commit`, which sets `value`, and the binding updates the host signal.
 - A host write of a new array updates the chips and does not emit `selectionChange`, because only `commit` emits it.
-- With both a form control and `[(value)]` present, a control write calls `writeValue`, which sets `value`. The chips reflect it and the model updates. A host write to the signal updates the chips but does not call `onChange`, so the control keeps its previous value. Whether the control should follow a host write is `<TO SUPPLY>`.
+- With both a form control and `[(value)]`, the latest external write determines the value. writeValue updates the model without onChange. An external model array write calls control.setValue(next) once, without dirty state or selectionChange. An identity guard records the synchronized array and prevents echoes. User commit calls onChange once and records the synchronized array before the model watcher runs. Hosts supply new arrays rather than mutating an array in place.
 
 ### Test support
 

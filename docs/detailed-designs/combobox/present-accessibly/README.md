@@ -16,7 +16,7 @@
 
 **Pointer target** — area that a mouse, pen, or finger activates
 
-The feature applies WCAG 2.2 AA. The relevant success criteria are 1.4.1 (use of color), 1.4.3 and 1.4.11 (contrast), 1.4.4 (text resize), 1.4.10 (reflow), 1.4.12 (text spacing), 2.3.3 (animation), and 2.5.8 (target size). The feature has no logic beyond a few mouse handlers. Its design is the template structure, the style contract, and the rules that tie them together.
+The feature applies WCAG 2.2 AA. The relevant success criteria are 1.4.1 (use of color), 1.4.3 and 1.4.11 (contrast), 1.4.4 (text resize), 1.4.10 (reflow), 1.4.12 (text spacing), 2.3.3 (animation, an additional AAA target), and 2.5.8 (target size). The feature has no logic beyond a few mouse handlers. Its design is the template structure, the style contract, and the rules that tie them together.
 
 Keyboard operation, ARIA exposure, and list positioning belong to sibling features. The visual rules for focus indicators and for the active option follow from [Expose state to assistive technology](../expose-to-assistive-tech/).
 
@@ -37,9 +37,9 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 | Panel | `div.t-combobox-panel` in the CDK overlay | Holds the listbox and the status rows. Scrolls vertically inside the space the overlay grants. |
 | Option | `li.t-combobox-option` | Holds `span.t-combobox-checkbox` (decorative) and the content. |
 
-**Icons.** The chevron, spinner, clear, and checkmark icons are decorative, carry `aria-hidden="true"`, and draw with `currentColor`, so they follow the tokens and the system colors. The checkmark is an element or an inline SVG, never a background image, because forced-colors mode removes background images. The icon source is `<TO SUPPLY>`.
+**Icons.** Built-in inline SVG path icons use currentColor and aria-hidden for chevron, loading, clear, and checkmark. No icon package or background image is needed. Loading always has text, and a static indicator is sufficient under reduced motion.
 
-**Design tokens.** The stylesheet reads every color from `--t-combobox-*` custom properties declared on `t-combobox`. The role names below are proposed. A consumer theme overrides them without forking the component. The field maximum height of [Select values](../select-values/) has a token too, and its value is `<TO SUPPLY>` with the colors. Light and dark values are `<TO SUPPLY>`, and so is the final choice of each color. The values shall meet the contrast target in each mode.
+**Design tokens.** Light defaults: text #18312e, placeholder/disabled text #536763, surface #ffffff, border #657f73, focus #b35c14, active outline/selected mark #126454, and hover #f4f7f5. Dark defaults: text #f4f7f5, placeholder/disabled text #b6cbc3, surface #18312e, border #8fa9a0, focus #ffbf69, active outline/selected mark #8fd5ba, and hover #244b42. Checkmark backgrounds use the surface token. The chip area defaults to 8 rem and motion duration to 0 ms. Consumers may override tokens while retaining contrast targets.
 
 | Token | Applies to | Target | Forced-colors value |
 |-------|------------|--------|---------------------|
@@ -53,9 +53,9 @@ The slice is the template and the stylesheet of `Combobox<T>`, plus the pointer 
 | `--t-combobox-selected-mark` | Checkmark of a selected option | 3:1 against the checkbox background | `CanvasText` |
 | `--t-combobox-disabled-text` | Text of a disabled option | 4.5:1, so no inactive-component exemption is relied on | `GrayText` |
 | `--t-combobox-motion-duration` | Overlay and chip transitions | Not applicable | Not applicable |
-| `--t-combobox-field-max-height` | Field height before it scrolls vertically, in `rem` | Not applicable | Not applicable |
+| `--t-combobox-chip-list-max-height` | Chip-list height before it scrolls vertically, in `rem` | Not applicable | Not applicable |
 
-The token values are `<TO SUPPLY>`. This is the open theme-token decision of the subsystem page. A block under `@media (forced-colors: active)` reassigns the tokens in the right-hand column. The component code therefore needs no second set of rules for forced-colors mode (`L2-038` criterion 4). The field, chip, checkbox, and panel use real `border` declarations, because `box-shadow` is removed in forced-colors mode. A transparent border still appears there, so chips keep a `1px solid transparent` border in the normal themes. The focus indicator and the active outline use `outline`, which forced-colors mode keeps. The panel carries a border in every mode, because its elevation shadow disappears.
+The values above settle the default theme decision. A block under `@media (forced-colors: active)` reassigns the tokens in the right-hand column. The component code therefore needs no second set of rules for forced-colors mode (`L2-038` criterion 4). The field, chip, checkbox, and panel use real `border` declarations, because `box-shadow` is removed in forced-colors mode. A transparent border still appears there, so chips keep a `1px solid transparent` border in the normal themes. The focus indicator and the active outline use `outline`, which forced-colors mode keeps. The panel carries a border in every mode, because its elevation shadow disappears.
 
 **State cues beyond color (`L2-038` criterion 2).**
 
@@ -66,15 +66,15 @@ The token values are `<TO SUPPLY>`. This is the open theme-token decision of the
 | Hover | `--t-combobox-hover-bg` | Background change under `@media (hover: hover)` only |
 | Disabled | `--t-combobox-disabled-text` | Italic text and a dashed checkbox border; `aria-disabled="true"` |
 
-The disabled treatment is a default. The final choice of treatment belongs to the `<TO SUPPLY>` theme decision and shall stay distinct from the other three states.
+The disabled treatment is a default. It remains distinct from the other three states in each theme.
 
 **Reduced motion (`L2-038` criterion 3).** The base styles declare no transition and no animation. Overlay opening, overlay closing, chip entry, chip removal, and the spinner rotation are declared only inside `@media (prefers-reduced-motion: no-preference)`, with the duration read from `--t-combobox-motion-duration`. Under `reduce`, those rules do not apply, so nothing runs for longer than 0 ms and the spinner shows as a static icon. The loading row also carries text. Scrolling the active option into view is instant under every preference. Hover rules sit under `@media (hover: hover)`, so a tap on a touch screen leaves no sticky hover state.
 
 **Layout rules (`L2-039`).** One stylesheet serves every width. It has no breakpoints, and no script switches the template by width, so a resize changes styles only.
 
-- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The field is a flex container with `flex-wrap: wrap`. Its children, the chips and the input, have `min-width: 0`, so a long child shrinks rather than overflows.
+- `t-combobox` is `display: block` with `max-width: 100%` and `min-width: 0`. The chip area and input row use wrapping flex layouts. Their children have `min-width: 0`, so a long child shrinks rather than overflows.
 - The input takes `flex: 1 1` with a `rem` basis, so it falls to its own row when the chips fill a row, and it stays visible at 320 CSS px.
-- `.t-combobox-chip` has `max-width: 100%`. `.t-combobox-chip-label` has `overflow: hidden`, `text-overflow: ellipsis`, and `white-space: nowrap`. This ellipsis is the single documented truncation. The full label stays available as the text content, as the name of the remove button, and as a tooltip. The tooltip mechanism is `<TO SUPPLY>` in [Select values](../select-values/).
+- `.t-combobox-chip` has `max-width: 100%`. `.t-combobox-chip-label` has `overflow: hidden`, `text-overflow: ellipsis`, and `white-space: nowrap`. This ellipsis is the single documented truncation. The full label stays available as the text content, as the name of the remove button, and as a tooltip. The dismissible, hoverable tooltip mechanism is defined in [Select values](../select-values/).
 - Option text wraps with `overflow-wrap: anywhere`. Options and status rows never truncate.
 - Lengths use `rem` and `em`, so text and spacing scale with the user's text size. No text container sets a fixed `height` or a pixel `line-height`. Rows use `min-height` only. At 200% text and under the text-spacing overrides (line height 1.5, paragraph spacing 2, letter spacing 0.12, word spacing 0.16 times the font size), rows grow, and nothing clips or overlaps.
 - The panel has `overflow-y: auto` and a `max-height` bounded by the room the overlay grants. At 400% zoom in a 1280 by 1024 window, the viewport is 320 by 256 CSS px, and the list scrolls inside the panel. The page does not scroll horizontally. [Open and position the list](../open-and-position-list/) sizes the overlay and keeps the focused input visible.
@@ -84,12 +84,12 @@ The disabled treatment is a default. The final choice of treatment belongs to th
 
 **Pointer and touch handling (`L2-040`).**
 
-- `Combobox<T>.onKeepFocusMousedown(event)` calls `event.preventDefault()`. It is bound to `mousedown` on the panel, on the toggle button, and on the clear-all button. The option and Retry handlers named in [Select values](../select-values/) and [Integrate with forms](../integrate-forms/) are instances of this rule. Moving focus is a default action of `mousedown`, and a tap raises it as a compatibility event, so cancelling it keeps focus on the input and the on-screen keyboard stays open. The handler uses `mousedown` and not `pointerdown`, because cancelling `pointerdown` does not stop the focus change. Binding it to the panel also covers the scroll bar and the status rows.
+- `Combobox<T>.onKeepFocusMousedown(event)` prevents a default focus change on options and popup actions for mouse and compatibility events. Touch pointerdown is not cancelled, so native drag scrolling remains available. A completed touch click toggles once and synchronously restores input focus. Toggle and clear-all use this policy. Chromium touch emulation checks focus; the manual device matrix checks the real on-screen keyboard.
 - The option template binds `click` to `Combobox<T>.toggle(item)`, the single entry point specified in [Select values](../select-values/). A touch scroll raises no `click`, so dragging the list never toggles an option. The list stays open and the input keeps focus (`L2-040` criterion 1).
 - The clear-all and remove buttons bind `click` to `clearAll()` and `removeChip(item)`. Their focus rules come from `L2-027`. The toggle button's `click` behavior comes from [Open and position the list](../open-and-position-list/). Each button meets the 24 px target (`L2-040` criterion 2).
 - Outside taps use the path that outside clicks use. `ComboboxPopup.outsidePointerEvents` relays the CDK `OverlayRef` stream, and `Combobox<T>` calls `close()` unless the target lies inside the host element or the overlay pane ([Open and position the list](../open-and-position-list/)). A tap raises a `click`, and the CDK dispatcher includes a workaround for iOS Safari, so a tap on a non-interactive area closes the list (`L2-040` criterion 3).
 
-**Acceptance tests.** `ComboboxDemoPage` owns the selectors. Tests run in Chromium only. Each viewport width from the criterion is set on the page. The 400% case uses a 320 by 256 CSS px viewport with a device scale factor of 4. The 200% text case sets the root font size to 200%. The text-spacing case injects a stylesheet with the four override values. Reduced motion and forced colors use Playwright media emulation. The contrast test reads computed colors for each state against the adjacent color. The target test reads `boundingBox()` for each target. Touch tests use a context with touch enabled and `tap()`, and assert that `document.activeElement` stays the input. Manual verification of forced-colors mode, zoom, and touch screen readers belongs to [Verify and document](../verify-and-document/).
+**Acceptance tests.** `ComboboxDemoPage` owns the selectors. Tests run in Chromium only. Each viewport width from the criterion is set on the page. Automated reflow uses a 320 by 256 CSS px viewport. This is not actual browser zoom; the manual procedure also checks Chrome at real 400% zoom in a 1280 by 1024 window. The 200% text case sets the root font size to 200%. The text-spacing case injects a stylesheet with the four override values. Reduced motion and forced colors use Playwright media emulation. The contrast test reads computed colors for each state against the adjacent color. The target test reads `boundingBox()` for each target. Touch tests use a context with touch enabled and `tap()`, and assert that `document.activeElement` stays the input. Manual verification of forced-colors mode, zoom, and touch screen readers belongs to [Verify and document](../verify-and-document/).
 
 **Acceptance criteria coverage.**
 

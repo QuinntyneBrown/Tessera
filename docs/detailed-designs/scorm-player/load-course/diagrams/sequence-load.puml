@@ -43,7 +43,7 @@ else Extracted input
 end
 alt Invalid source or exceeded limit
   core --> shell : Typed loading failure; no executable content
-  shell --> actor : Name cause and offer retry
+  shell --> actor : Name the cause (e.g. which limit was exceeded); offer Retry only when error.retryable
 else Validated source
   core --> shell : ValidatedCourse
   shell -> host : prepareDelivery(context, course, signal)
