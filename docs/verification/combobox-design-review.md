@@ -4,7 +4,7 @@ Scope: L1-009–L1-018, L2-022–L2-050, all ten combobox feature designs and th
 
 ## Current review status
 
-Consecutive clean checks: **1 of 5** after the repairs below. This record shall advance only after complete reviews find no new issues; any fix resets the count. A render or isolated browser check alone does not count as a full clean review.
+Consecutive clean checks: **3 of 5** after the repairs below. This record shall advance only after complete reviews find no new issues; any fix resets the count. A render or isolated browser check alone does not count as a full clean review.
 
 ## Repairs in this round
 
@@ -42,6 +42,10 @@ Consecutive clean checks: **1 of 5** after the repairs below. This record shall 
 | Check | Review focus and evidence | Result |
 |---|---|---|
 | 1 | Cross-artifact behavior alignment; L1/L2 coverage and exact quoted requirements; all relative links; all 60 diagram renders and visual overview; eleven-state axe run and 66 state/width inspections; retry, search, focus, Escape, short-height and enlarged-text/spacing inspection | Clean |
+
+| 2 | Complete requirements/design/mock alignment review with focus on cancellation, composition, opening modes and limits; repeated eleven-state axe and 66 state/width matrix; rapid replacement kept only Ada, composition retained old results until end then showed two Morgans, Arrow Up selected last, minimum query showed zero options, limit blocked addition and allowed removal | Clean |
+
+| 3 | Complete review with focus on ARIA, naming, i18n, announcement ownership, tooltip and chip focus; repeated full matrix; tooltip Escape preserved popup, RTL moved to/from the last chip, removal focused the surviving chip, repeated selection messages stayed ordered, Tab closed normally; 29 L2 definitions and 60 source/render pairs present | Clean |
 
 ## Remaining review work
 
