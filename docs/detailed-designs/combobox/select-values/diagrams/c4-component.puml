@@ -1,17 +1,14 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Select values
-
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(combo, "Combobox<T>", "Angular component", "Owns value model, toggle, commit, removeChip, clearAll, and the chip list")
-  Component(option, "ComboboxOption<T>", "Directive", "Shows aria-selected, aria-disabled, and the checked indicator")
-  Component(chipTpl, "ComboboxChipTemplate", "Directive on ng-template", "Supplies optional chip content")
-  Component(announcer, "ComboboxAnnouncer", "Class", "Announces selection changes and the limit message")
-  Component(i18n, "COMBOBOX_I18N", "Injection token", "Supplies chip, button, and limit strings")
+title Components - select values
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns value, comparison, toggle, commit, removeChip and clearAll")
+  Component(option, "ComboboxOption", "Directive", "Binds selected and disabled inputs; owns ARIA state")
+  Component(slot, "ComboboxChipTemplate<T>", "Template directive", "Supplies optional chip content")
+  Component(ann, "ComboboxAnnouncer", "Text queue", "Preserves formatted selection and limit messages")
 }
-Rel(option, combo, "Calls toggle(item); reads isSelected and isOptionDisabled", "COMBOBOX_PARENT")
-Rel(combo, chipTpl, "Renders chip content from")
-Rel(combo, announcer, "Announces after each commit and at the limit")
-Rel(announcer, i18n, "Reads strings from")
+Rel(combo, option, "Binds selected and disabled state")
+Rel(combo, slot, "Reads contentChild and renders template")
+Rel(combo, ann, "Calls selection(text) after user commit")
 @enduml

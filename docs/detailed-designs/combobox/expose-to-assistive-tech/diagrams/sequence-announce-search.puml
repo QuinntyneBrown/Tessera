@@ -1,77 +1,49 @@
 @startuml
-title UML sequence behaviour - Announce search outcomes
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "Screen reader user" as user
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combobox
-  participant "ComboboxSearch<T>" as search
-  participant "ComboboxAnnouncer" as announcer
+title Announce search outcomes
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
+end box
+box "Frontend - Announcement queue" #E0F2FE
+  participant "ComboboxAnnouncer" as ann
+end box
+box "Frontend - Component template" #E0F2FE
   participant "Instance live region" as live
 end box
-box "Frontend - Consumer data source" #E0F2FE
-  participant "searchFn" as data
+box "Frontend - Consumer source" #E0F2FE
+  participant "searchFn" as src
 end box
 
-user -> combobox : Type characters 50 ms apart
-combobox -> search : query changes
-search -> data : searchFn(query, page) after debounce
-combobox -> search : Observe status becomes loading
-combobox -> combobox : Start 1 s loading timer (L2-036 criterion 4)
 
-alt Request completes within 1 s
-  data --> search : Page of items
-  search --> combobox : pageLoaded(page 0, count n); status idle
-  combobox -> combobox : Clear loading timer
-  alt List open and n above 0
-    combobox -> announcer : announceResults(n) (L2-036 criterion 2)
-  else List open and n is 0
-    combobox -> announcer : announceNoResults()
-  else List closed
-    combobox -> combobox : No announcement (L2-023)
-  end
-  announcer -> announcer : Replace pending search-status message (L2-036 criterion 3)
-  announcer -> live : announce(final message, polite) after 150 ms; discard if closed or query changed
-  live --> user : Reads the results message once
-else Request takes longer than 1 s
-  combobox -> announcer : announceLoading() once
-  announcer -> live : announce("Loading results.", polite)
-  live --> user : Reads the loading message
-  data --> search : Page of items
-  search --> combobox : pageLoaded(page 0, count n)
-  combobox -> announcer : announceResults(n)
-  announcer -> live : announce(results message, polite)
-else Request fails
-  data --> search : Error
-  search --> combobox : status error; error row shown
-  combobox -> announcer : announceFailure() (L2-036 criterion 5)
-  announcer -> announcer : Discard pending search-status messages
-  announcer -> live : announce("Results could not be loaded.", assertive)
-  live --> user : Interrupts with the failure message
+cb -> src : Request page; start 1 s loading timer
+alt Timer runs while still pending and open
+  cb -> ann : search(localised loading text)
 end
-
-user -> combobox : Scroll, arrow past the last option, or activate Load more
-combobox -> search : loadNextPage()
-search -> data : searchFn(query, page + 1)
-data --> search : Page of items
-search --> combobox : pageLoaded(page above 0, count n)
-combobox -> announcer : announceMoreLoaded(n) (L2-036 criterion 9)
-announcer -> live : Write singular/plural loaded-count message as textContent
-note over announcer, live
-  Query changes and close discard queued search messages.
-  Selection messages survive coalescing and failures.
-  Every live region belongs to exactly one component.
-end note
+alt Page delivered while open
+  src --> cb : First page or appended page
+  cb -> ann : search(singular/plural loaded count or empty message)
+else Failure while open
+  src --> cb : Error
+  cb -> ann : failure(localised error text)
+  ann -> ann : Discard search text; preserve selection queue
+else Response while closed
+  src --> cb : Page or error
+  cb -> cb : Store state without reopening or announcing
+end
+ann -> ann : Polite text waits 150 ms quiet; failure bypasses quiet
+ann -> live : Set priority; clear text; insert after 32 ms (L2-036)
+live --> user : Expose atomic message to assistive technology
+opt Edit, composition, close, disable or configuration change
+  cb -> ann : cancelSearch(), including pending write
+end
 @enduml

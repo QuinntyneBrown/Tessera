@@ -1,75 +1,43 @@
 @startuml
-title UML sequence behaviour - Result states, retry, and paging
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Result states, retry and paging
 actor "Application user" as user
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
-  participant "ComboboxSearch<T>" as search
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Consumer data source" #E0F2FE
-  participant "searchFn" as fn
-end box
-box "Backend - Consumer API" #D1FADF
-  participant "Search endpoint" as api
+  participant "searchFn" as src
 end box
 
-search -> fn : searchFn(query, 0)
-search --> combo : status loading
-combo -> combo : Keep previous results, show loading row, set aria-busy true (L2-024)
-fn -> api : Request page
-alt page has items
-  api --> fn : Page with items
-  fn --> search : ComboboxPage
-  search -> search : Replace results, pageIndex 0 (L2-025)
-  search --> combo : results, status idle
-  combo -> combo : Remove loading row and aria-busy (L2-024)
-  combo -> combo : Announce results only while the list is open (L2-023)
-else empty page
-  fn --> search : ComboboxPage with no items
-  search --> combo : empty results, status idle
-  combo -> combo : Show No results row or tComboboxEmpty content (L2-024)
-else request fails
-  fn --> search : error notification
-  search -> search : catchError inside inner stream (L2-024)
-  search --> combo : status error, results kept
-  combo -> combo : Show error row with Retry, keep typed text (L2-024)
-  user -> combo : Activate Retry or press Enter in the input (L2-024)
-  combo -> search : retry()
-  search -> fn : searchFn(same query, same page)
+
+cb -> src : Request query/page; status loading (L2-024)
+cb --> user : Previous options and loading state remain visible
+alt Page delivered
+  src --> cb : items, total and hasMore
+  cb -> cb : Replace page 0 or append later page; record pageIndex
+  cb --> user : Idle results or empty state; aria-busy false
+else Error, synchronous throw or empty completion
+  src --> cb : Recoverable error
+  cb -> cb : Inner catchError sets error; results unchanged
+  cb --> user : Error row with Retry
+  user -> cb : Retry button or input Enter
+  cb -> src : Repeat matching lastRequest (L2-024)
 end
-opt hasMore is true
-  user -> combo : Scroll to end, press Arrow Down on last option, or activate Load more
-  combo -> search : loadNextPage()
-  alt status is not idle, query is pending, first page absent, or hasMore is false
-    search -> search : Ignore, no duplicate request (L2-025)
-  else idle
-    search -> fn : searchFn(query, pageIndex + 1)
-    fn -> api : Request next page
-    api --> fn : Next page
-    fn --> search : ComboboxPage
-    search -> search : Append items, update total and hasMore (L2-025)
-    search --> combo : appended results
-    combo --> user : Active option stays; next Arrow Down reaches first appended option
-  end
+user -> cb : Scroll end, last-option Arrow/Page Down, or Load more
+alt Idle, hasMore, completed current query, enabled and not composing/pending
+  cb -> src : Request pageIndex + 1 (L2-025)
+  src --> cb : Page
+  cb -> cb : Append; preserve active index
+else Guard fails
+  cb --> user : No duplicate or obsolete page request
 end
-note over combo, search
-  Load more and Retry are status actions outside role=listbox.
-  Neither enters the popup Tab sequence or acts as an option.
-  A failed next page keeps loaded options and requires Retry.
-  Retry appends that same page; it never replaces page zero.
-  Empty pages do not trigger an automatic paging loop.
-end note
 @enduml

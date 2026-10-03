@@ -2,7 +2,7 @@
 
 ## Overview
 
-`@tessera/combobox` is Tessera's proposed second package. It is designed to provide `t-combobox`, a form control that lets a user search a remote data source by typing, select many results from a popup list, and see each selection as a removable chip.
+`@tessera/combobox` provides `t-combobox`, a browser-only Angular form control for searching a consumer data source and selecting multiple values as removable chips.
 
 **Combobox** — text input paired with a popup list of options, using combobox input-focus conventions with a multi-select listbox extension
 
@@ -12,7 +12,7 @@
 
 **Live region** — visually hidden element whose text changes assistive technology reads aloud
 
-The component serves data sets too large to load up front, such as assigning users to a course by typing part of a name. The production acceptance criteria require Angular form integration and keyboard and screen reader operation. Those results are not established by this design. The consuming application supplies a visible label and a `searchFn`; the component supplies every other accessibility behavior.
+The component serves data sets too large to load up front, such as assigning users to a course by typing part of a name. The design covers Angular forms, keyboard interaction, and assistive-technology exposure. The consuming application supplies an accessible name and a `searchFn`; the component owns option semantics, focus management, and announcements. Consumer templates supply accessible content within the component-owned hosts.
 
 The requirements are in [L1](../../specs/L1.md) (`L1-009` to `L1-018`) and [L2](../../specs/L2.md) (`L2-022` to `L2-050`). These repository specifications are the source of truth. The [HTML mock](../../mocks/combobox/index.html) and its [guide](../../mocks/combobox/README.md) illustrate interactions without implementing Angular contracts.
 
@@ -35,45 +35,38 @@ Ten vertical features cover the full L2 requirement set for the combobox:
 
 The package runs entirely in the host application's browser. It has no backend of its own. Data comes from the consumer's `searchFn`, which may call any server or in-memory source. Server-side rendering is not supported.
 
-The package has no secondary entry points. Its proposed source layout follows `AGENTS.md`, mirrors `src/scorm-player/`, and uses Angular CLI and ng-packagr. The package depends on `@angular/cdk` for the overlay, the active-descendant key manager, and the component-harness base.
+The package has no secondary entry points. Its source layout follows `AGENTS.md`, mirrors `src/scorm-player/`, and uses Angular CLI and ng-packagr. The package depends on `@angular/cdk` for the overlay, the active-descendant key manager, and the component-harness base.
 
-Shared building blocks. `src/combobox/` holds the first implementation slices, recorded in [the implementation record](../../verification/combobox-implementation.md); everything below that those slices do not yet provide remains proposed:
+The package keeps interaction and data state in one component. Small collaborators own option semantics, announcement queueing, template slots, and fallback overlay placement.
 
-| Name | Kind | Responsibility |
-|------|------|----------------|
-| `Combobox<T>` | Standalone OnPush component, selector `t-combobox` | Owns the template, the `query`, `isOpen`, and `activeIndex` signals, and the `value` model; implements `ControlValueAccessor` through `NG_VALUE_ACCESSOR` and reads the injected `NgControl` for invalid and touched state |
-| `ComboboxSearch<T>` | Component-scoped class | Runs the asynchronous search pipeline: `toObservable(query)`, `debounce` with a dynamic timer, completed-query deduplication, and `switchMap(searchFn)` with `catchError` inside the inner stream; appends pages through a page trigger and `scan`; exposes `results`, `status` (`idle`, `loading`, or `error`), `hasMore`, `total`, `replaceCount` (increments when a first-page response replaces the results), `pageLoaded` (emits `{ page, count }` for each response that belongs to the current query), `retry()`, `loadNextPage()`, and `cancel()` |
-| `ComboboxOption<T>` | Directive | Owns the `role="option"` host element and its ARIA attributes; implements CDK `Highlightable`; registers with its parent through the `COMBOBOX_PARENT` `InjectionToken` |
-| `ComboboxPopup` | Class | Wraps CDK `Overlay` with a `FlexibleConnectedPositionStrategy` and the reposition scroll strategy; keeps the overlay width equal to the field width with a `ResizeObserver` |
-| `ComboboxAnnouncer` | Class | Owns one live region inside the component host; coalesces search messages and preserves selection messages; reads every string from `COMBOBOX_I18N` |
-| `COMBOBOX_I18N`, `ComboboxStrings`, `DEFAULT_COMBOBOX_STRINGS` | Injection token, interface, constant | Supply every owned string with English defaults |
-| `ComboboxOptionTemplate`, `ComboboxChipTemplate`, `ComboboxEmptyTemplate` | Directives on `ng-template` | Select the `tComboboxOption`, `tComboboxChip`, and `tComboboxEmpty` slots; supply content only |
-| `ComboboxPage<T>` | Interface | Result of one `searchFn` call: `items`, `hasMore`, and optional `total` |
-| `ComboboxSelectionChange<T>` | Interface | Payload of `selectionChange`: optional `added`, optional `removed`, and `value` |
-| `ComboboxHarness` | CDK `ComponentHarness` in `src/combobox/testing/` | Lets consumer tests operate the component without depending on its DOM |
-| `ComboboxDemoPage` | Playwright page object in `test/e2e/pages/` | Owns every selector and interaction for the e2e combobox screen; named to avoid colliding with the `ComboboxPage<T>` data type |
+| Building block | Responsibility |
+|----------------|----------------|
+| `Combobox<T>` | Standalone OnPush component; owns search, value/model/forms, keyboard handling, popup and tooltip references, and template bindings |
+| `ComboboxOption` | Internal non-generic `Highlightable` directive; owns option ID, ARIA state, active styling, and listbox scrolling |
+| `ComboboxAnnouncer` | Internal text queue with message/priority signals; the component template owns the instance live-region DOM |
+| `ComboboxOverlayContainer` | Component-scoped CDK fallback container; keeps non-popover content inside the nearest open native dialog |
+| Three template directives | `ComboboxOptionTemplate`, `ComboboxChipTemplate`, and `ComboboxEmptyTemplate` expose typed content slots |
+| `COMBOBOX_I18N` and `ComboboxStrings` | Partial string overrides merged by the component over English defaults |
+| Page, search, and selection types | `ComboboxPage<T>`, `ComboboxSearchFn<T>`, and `ComboboxSelectionChange<T>` define consumer data and event contracts |
+| `ComboboxHarness` and `ComboboxOptionState` | Root-exported consumer test API and option-state type |
 
-Component state uses signals. Derived state, such as the selected identifiers, the remaining selection capacity, and the `aria-describedby` list, uses `computed()`. Cleanup uses `takeUntilDestroyed` and `DestroyRef.onDestroy`. Instance identifiers are generated once and stay stable for the instance's lifetime.
+Signal state drives the Angular view. RxJS Subjects carry debounced queries, request descriptors, and immediate invalidation. `viewChildren` discovers option hosts directly. `DestroyRef` and `takeUntilDestroyed` release component-owned resources.
 
 Public example usages live in `src/components-examples/tessera/combobox/`, a demonstration page in `src/dev-app/`, and the public API golden in `goldens/combobox/`.
 
 These v1 decisions come from the requirements: selected options are not pinned to the top of the list, Home and End move the text cursor, the component has no "Select all results" action, and results are not cached per query. Free-text option creation, grouped options, virtual scrolling, and single-select mode are out of scope.
 
-The design uses the [APG combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) focus and editing conventions with a [multi-select listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/). This is an extension of APG's single-select combobox example, not evidence of conformance. The manual release matrix shall verify it.
+The design uses the [APG combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/) focus and editing conventions with a [multi-select listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/). This extends APG's single-select combobox example. The manual release matrix records verification of the resulting interaction pattern.
 
-The feature pages settle the design decisions: a 150 ms announcement window, a component-owned live region, built-in inline SVG icons, light and dark tokens, an 8 rem scrolling chip area, dismissible full-label tooltips, explicit Load more, and dialog-aware overlays. No production accessibility or performance result is claimed. The verification page defines the measurement conditions and manual procedure; observed results remain `Not run` until a production component exists.
+The feature pages describe the search, selection, form, overlay, keyboard, localisation, presentation, and lifecycle contracts. Automated evidence and measured performance are recorded separately in the [implementation record](../../verification/combobox-implementation.md) and [performance evidence](../../verification/combobox-performance.md).
 
-Production work follows `AGENTS.md`: one Given-When-Then criterion, one failing acceptance test, the least production change, then relevant regression checks. Frontend acceptance tests use Chromium Playwright and `ComboboxDemoPage`. Automated accessibility checks accompany every component change. Manual verification covers JAWS, NVDA, VoiceOver, TalkBack, and Narrator on their supported platforms.
-
-A practical dependency order is: search, select, open and position, forms, keyboard, assistive technology, presentation, customization, hardening, then verification and documentation. Accessible behavior participates in every slice.
-
-These artifacts do not implement production code or add architecture tests. They do not claim completed accessibility verification.
+The [manual release matrix](../../verification/combobox-screen-reader-matrix.md) remains Not run for screen-reader speech, real on-screen keyboards, and actual browser zoom. These designs explain the product's behavior and its release conditions; they do not certify those pending checks.
 
 ## Requirements
 
 Each feature page lists its L2 requirements with their exact source wording. This table maps every combobox L2 requirement to its L1 parent and primary feature.
 
-| L2 ID | Refines (L1) | Primary feature |
+| L2 ID | Refines (L1) | Requirement |
 |-------|--------------|-----------------|
 | `L2-022` | `L1-009` | Typing in the input must trigger a search through the consumer's `searchFn(query, page)` after the `debounceMs` pause, subject to `minSearchLength`. Identical consecutive queries must not re-fetch. A search must not fire while an input method editor (IME) composition is in progress. |
 | `L2-023` | `L1-009` | A new query must cancel the in-flight request, and a response for an outdated query must never replace newer results. Disabling the component must cancel any in-flight request. |

@@ -1,64 +1,44 @@
 @startuml
-title UML sequence behaviour - Trigger and cancel a search
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Trigger and cancel a search
 actor "Application user" as user
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
-  participant "ComboboxSearch<T>" as search
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Consumer data source" #E0F2FE
-  participant "searchFn" as fn
-end box
-box "Backend - Consumer API" #D1FADF
-  participant "Search endpoint" as api
+  participant "searchFn" as src
 end box
 
-user -> combo : Type "a"
-alt IME composition in progress
-  combo -> combo : Cancel request and invalidate pending status; wait for compositionend (L2-022)
-else not composing
-  combo -> search : Invalidate generation and unsubscribe immediately; set query signal
+
+user -> cb : Edit input text (L2-022)
+cb -> cb : Set query; mark pending; invalidate subscription immediately
+opt Request in flight
+  cb -> src : Unsubscribe before debounce (L2-023)
 end
-search -> search : Debounce debounceMs; deduplicate completed query (L2-022)
-search --> combo : Emit searchChange once (L2-022)
-alt query shorter than minSearchLength
-  search -> search : Clear results, active option, hasMore; show minimum-length instruction; no call (L2-022)
-else query long enough
-  search -> fn : searchFn("a", 0), status loading
-  fn -> api : Request page
+alt IME composing
+  cb -> cb : Update visible text; wait for compositionend
+else Normal text or completed composition
+  cb -> cb : queries Subject debounces with current delay
+  cb --> user : searchChange for a changed committed text
+  alt Below minimum
+    cb -> cb : Clear results, total and paging state; show instruction
+  else Eligible and not already completed
+    cb -> src : defer(searchFn(query, 0)); take first page
+    src --> cb : ComboboxPage
+    cb -> cb : Replace results and record completed query
+  end
 end
-user -> combo : Type "b" while "a" is in flight
-combo -> search : Set query "ab"
-search -> search : Immediately invalidate generation; block paging (L2-023)
-search -> fn : Unsubscribe "a" request before debounce (L2-023)
-opt Source supports transport cancellation
-  fn -> api : Abort "a" request
+opt Disabled or configuration changed
+  cb -> src : Invalidate subscription
+  cb -> cb : Cancel pending query and search announcements
 end
-search -> search : Debounce completes (L2-022)
-search -> fn : searchFn("ab", 0)
-fn -> api : Request page
-api --> fn : "ab" page
-fn --> search : ComboboxPage for "ab"
-note over search
-  A late "a" response never reaches the reducer:
-  no state change, no announcement (L2-023)
-end note
-search --> combo : results and status idle
-combo --> user : Render options for "ab"
-user -> combo : Component becomes disabled while loading
-combo -> search : cancel() (L2-023)
-search -> fn : Unsubscribe in-flight request
 @enduml

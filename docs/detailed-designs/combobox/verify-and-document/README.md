@@ -2,7 +2,7 @@
 
 ## Overview
 
-`t-combobox` ships with the means to test it, to prove its accessibility, and to adopt it. This feature describes those means: a harness for consumers' tests, automated accessibility checks, a manual screen reader procedure with a record, and a documentation page with runnable examples. It describes tooling and documents. It makes no claim that any verification has taken place.
+`t-combobox` ships with the means to test it, to prove its accessibility, and to adopt it. This feature describes those means: a harness for consumers' tests, automated accessibility checks, a manual screen reader procedure with a record, and a documentation page with runnable examples. Automated observations and pending manual release checks are recorded separately from the product design.
 
 **Component harness** — class that wraps one component's DOM behind a stable test API, built on the CDK `ComponentHarness`
 
@@ -18,158 +18,59 @@
 
 Automated tests cannot judge what a screen reader says, so the design pairs two kinds of verification. Chromium Playwright tests cover keyboard behavior, layout, and axe-core rules on every change. Manual runs with five screen readers cover speech output and are recorded in the repository. The harness serves consumers, who write tests against the component without knowing its markup.
 
-The feature belongs to the combobox subsystem and refines `L1-018`. It depends on every other slice, because each slice ships its acceptance tests through the same page object and the same axe check.
+The feature belongs to the combobox subsystem and refines `L1-018`. It covers all component features through a shared page object and accessibility-checking method.
 
 ## Description
 
-**ComboboxHarness**
-
-- `ComboboxHarness` extends the CDK `ComponentHarness` with host selector `t-combobox`. It lives in `src/combobox/testing/combobox-harness.ts`, and `public-api.ts` re-exports it, so a consumer imports it from `@tessera/combobox`, as the `scorm-player` harness does. The package has no secondary entry point.
-- `ComboboxOptionState` is a plain data type with `label: string`, `selected: boolean`, and `disabled: boolean`.
+**Consumer harness.** `ComboboxHarness` extends CDK `ComponentHarness` in `src/combobox/testing/combobox-harness.ts`. The package root exports it and `ComboboxOptionState`; there is no testing secondary entry point. `ComboboxOptionState` contains `label`, `selected`, and `disabled`.
 
 | Method | Behavior |
 |--------|----------|
-| `open()` | Clicks the field when the list is closed. It does nothing when the list is open. |
-| `isOpen()` | Returns true when the input has `aria-expanded="true"`. |
-| `search(text)` | Focuses the input, clears it, and sends the characters as key events, which open the list. It follows the selected harness environment's stabilization policy; the harness itself does not advance time or wait for search results. |
-| `getOptions()` | Returns a `ComboboxOptionState[]` for the rendered options in order. |
-| `toggleOption(labelOrIndex)` | Opens the list when closed, finds the option by label or zero-based index, and clicks it. It rejects with a message that names the missing label or index. |
-| `getChips()` | Returns the chip labels as `string[]` in selection order. |
-| `removeChip(labelOrIndex)` | Finds the chip by label or index and clicks its remove button. It rejects when no chip matches. |
+| `open()` | Click the input when closed; no action when open |
+| `isOpen()` | Read the input's expanded state |
+| `search(text)` | Focus and clear the input, then send non-empty text as key events |
+| `getOptions()` | Return trimmed option-host text and selected/disabled state in order |
+| `toggleOption(labelOrIndex)` | Open, find a label or zero-based integer index, and click; reject a missing target |
+| `getChips()` | Return trimmed chip-label-wrapper text in selection order |
+| `removeChip(labelOrIndex)` | Click the matched remove button; reject a missing target |
 
-- Timing follows the harness environment. In the Chromium TestBed contract fixture, `manualChangeDetection()` encloses timing-sensitive harness actions and reads; the fixture explicitly detects changes, advances fake time or awaits real time, and renders the expected state before inspection. Default Testbed stabilization can flush fake timers or await stability, so `search()` alone does not guarantee return before debounce. Loading-state verification uses the Playwright page object, not default harness stabilization. See the [CDK Testbed implementation](https://github.com/angular/components/blob/main/src/cdk/testing/testbed/testbed-harness-environment.ts) and [manual change detection API](https://github.com/angular/components/blob/main/src/cdk/testing/change-detection.ts).
-- The harness uses package-owned DOM hooks and semantic attributes: ARIA roles (`combobox`, `listbox`, `option`), `aria-expanded`, `aria-controls`, `aria-selected`, `aria-disabled`, and the semantic chip list. The listbox is a CDK popover inserted after the field inside the host (`L2-030` criterion 7), but without the Popover API it falls back to an overlay container outside the host. The harness therefore locates it with `documentRootLocatorFactory()` and the `aria-controls` identifier of its own input. This keeps two comboboxes on one page separate (`L2-047` AC5).
-- An option label is the text of the component-owned content wrapper, which excludes the decorative checkbox. A chip label is the text of the chip's label wrapper, which holds either `displayWith(item)` or custom template content. The wrappers carry package-owned class hooks that only the harness reads.
-- The harness has no filter predicate. A consumer with more than one combobox picks one with `getAllHarnesses()`. No with() filters are included in v1.
-- Harness behavior is exercised in a browser-only TestBed fixture served by the Chromium e2e app. The fixture creates a `ComponentFixture`, obtains `TestbedHarnessEnvironment.loader(fixture)`, and exposes typed contract operations through a test-only bridge. `ComboboxDemoPage` invokes that bridge with Playwright and owns all selectors. The fixture initializes Angular's browser testing environment before creating TestBed and destroys its fixture on teardown. No invented CDK Playwright adapter or jsdom run substitutes for this check. `ComboboxOptionState` is exported with the harness.
+The harness reads semantic attributes and package-owned DOM hooks. It never calls private component members. It locates the listbox at document root through its own input's `aria-controls`, covering inline and fallback placement and multiple instances. Option labels include custom content within the option host; chip labels include custom chip content. No filter predicate is supplied.
 
-**ComboboxDemoPage and the end-to-end application**
+Search timing follows the selected harness environment. The harness does not advance timers or wait explicitly for results. Timing-sensitive consumer tests control debounce and rendering through CDK `manualChangeDetection` or their environment's stabilization policy.
 
-- `ComboboxDemoPage` in `test/e2e/pages/combobox-demo-page.ts` owns every selector and interaction for the combobox screen in `src/e2e-app/`. Tests contain no selector. Its name avoids a clash with the `ComboboxPage<T>` data type.
-- `ComboboxHostFixture` in `src/e2e-app/` hosts the component for tests. It reads a `ComboboxScenario` from the query string and configures the component and its mock `searchFn` from it. It uses `createMockUserSearch` from the examples folder, so one mock serves the examples, the dev app, and the tests.
-- `ComboboxScenario` is a plain object that `ComboboxDemoPage.open(scenario)` serializes into the query string. Each slice adds the fields it needs. This slice and the neighbouring slices use these fields.
+**Automated verification.** `ComboboxDemoPage` in `test/e2e/pages/combobox-demo-page.ts` owns selectors and interactions. `open(scenario)` serializes a `Record<string, string | number | boolean>` into query parameters. `ComboboxFixture` in `src/e2e-app/src/app/combobox-fixture.ts` reads these parameters, hosts the production component, and provides its own controllable search observable. The acceptance source is separate from the examples' mock.
 
-| Field | Effect |
-|-------|--------|
-| `searchDelayMs` | Latency of the mock `searchFn` |
-| `pageSize`, `pageCount` | Page size and number of pages before `hasMore` turns false |
-| `failure` | `always`, `first-request`, or `next-page` |
-| `valueSize` | Number of items in the initial `value` |
-| `maxSelections`, `required`, `disabled`, `rtl`, `dialog` | Component or host configuration |
-| `templates` | `custom` supplies option, chip, and empty templates |
-| `hostile`, `instances` | Hostile labels and two instances, as used by [Secure and perform](../secure-and-perform/) |
+The harness contract runs through `runHarnessContract()` in `combobox-harness-contract.ts`, using a real browser TestBed fixture and `TestbedHarnessEnvironment`. `test/e2e/combobox-harness.spec.ts` invokes it through the page object. The contract uses explicit change detection and timing and destroys its fixture afterward.
 
-- `ComboboxDemoPage` offers these verification helpers. `useViewport(width)` sets one of 320, 576, 768, 992, 1200, or 1920 CSS px. `useReflowViewport()` applies the 320 by 256 CSS px viewport, as the [present accessibly](../present-accessibly/) design specifies. `enlargeTextTo200Percent()` and `applyTextSpacingOverrides()` inject the style overrides, as `PlayerPage` does. `expectNoHorizontalScroll()` and `expectNoAccessibilityViolations()` complete the set.
-- `expectNoAccessibilityViolations()` runs `AxeBuilder` from `@axe-core/playwright` with the tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, and `wcag22aa`. It includes `t-combobox`, which contains the open list as an inline popover in Chromium (`L2-030` criterion 7). It asserts an empty `violations` array.
+Chromium is the only automated frontend browser. `expectNoAccessibilityViolations()` runs `AxeBuilder` over the page with `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, and `wcag22aa` tags. It also checks captured page and console errors. Feature tests cover closed, result, loading, empty, error, required/touched, disabled, maximum-reached, and custom-template states. They contain requirement comments and use the page object for selectors.
 
-**Automated accessibility verification**
+| Verification area | Acceptance files |
+|-------------------|------------------|
+| Search and paging | `combobox.spec.ts`, `combobox-paging.spec.ts`, `combobox-configuration.spec.ts` |
+| Selection and forms | `combobox-selection.spec.ts`, `combobox-forms.spec.ts` |
+| Keyboard, announcements, popup | `combobox-keyboard.spec.ts`, `combobox-announcements.spec.ts`, `combobox-popup.spec.ts`, `combobox-positioning.spec.ts` |
+| Presentation and input | `combobox-presentation.spec.ts`, `combobox-touch.spec.ts`, `combobox-tooltip.spec.ts` |
+| Customisation and hardening | `combobox-customization.spec.ts`, `combobox-security.spec.ts`, `combobox-lifecycle.spec.ts` |
+| Consumer adoption | `combobox-harness.spec.ts`, `combobox-examples.spec.ts`, `combobox-packed.spec.ts` |
+| Measured responsiveness | `combobox-performance.spec.ts`, isolated with one worker |
 
-- `ComboboxState` is a union of nine names. `ComboboxDemoPage.enterState(state)` opens a scenario and drives the screen into that state. `test/e2e/verify-and-document.spec.ts` runs one test per state and calls `expectNoAccessibilityViolations()` (`L2-048` AC1).
+Responsive checks cover 320, 576, 768, 992, 1200, and 1920 CSS px, a 320 by 256 reflow viewport, 200% text, and WCAG text-spacing overrides. Page-object helpers include `useViewport(width, height)`, `enlargeText()`, `applyTextSpacing()`, and `expectResponsiveField()`. A reflow viewport does not establish actual browser zoom.
 
-| State | Scenario and actions |
-|-------|----------------------|
-| `closed` | Default scenario, no interaction |
-| `open-with-results` | Type "ad" and wait for the list |
-| `loading` | `searchDelayMs` of 5 s, type "ad", assert the loading row |
-| `empty` | Type a query the mock answers with an empty page |
-| `error` | `failure: always`, type "ad", assert the error row |
-| `invalid` | `required`, focus the field and leave it |
-| `disabled` | `disabled` |
-| `max-reached` | `maxSelections: 2`, select two options |
-| `custom-templates` | `templates: custom`, open with results and one chip |
+`pnpm e2e` excludes render-latency samples; `pnpm e2e:performance` runs the isolated measurements. After a library build, `pnpm e2e:packed` installs the tarball into a separate consumer, compiles the README adoption snippets, and runs Chromium acceptance checks without repository aliases or manual CDK stylesheet setup. `pnpm api:check` compares built exports against both package goldens. The [implementation record](../../../verification/combobox-implementation.md) and [performance record](../../../verification/combobox-performance.md) hold observed results separately from the design contract.
 
-- Every slice's acceptance spec ends with `expectNoAccessibilityViolations()` in the state that slice introduced, so no component change ships without an axe check.
-- Each keyboard row of `L2-033` and `L2-034` has at least one test in `test/e2e/operate-by-keyboard.spec.ts`, which uses `ComboboxDemoPage` actions such as `pressKey`, `typeText`, and `expectActiveOption` (`L2-048` AC2).
-- The responsive tests in `test/e2e/present-accessibly.spec.ts` loop over the six widths, then run the reflow viewport, 200% text, and text-spacing cases. Real 400% browser zoom remains a separate manual check (`L2-048` AC3).
-- Test files follow the existing `test/e2e/<feature>.spec.ts` naming. Each file opens with a header comment that lists the L2 requirements it covers, and each test carries an `// L2-nnn ACn` comment as in `operate-player.spec.ts`. Review enforces the comment rule. No test parses the comments or the specifications, because `AGENTS.md` forbids such tests (`L2-048` AC4).
-- All frontend tests run in Chromium only, the single project in `playwright.config.ts`. Axe results do not replace manual verification. Axe cannot judge speech output.
+**Manual release verification.** The [screen reader matrix](../../../verification/combobox-screen-reader-matrix.md) records combination, date, versions, result, defects, and sign-off. Required combinations are NVDA/Chrome and JAWS/Chrome on Windows, VoiceOver/Safari on macOS and iOS, TalkBack/Chrome on Android, and Narrator/Edge on Windows. No Firefox automated or manual run is part of this matrix.
 
-**Manual screen reader verification**
+Each run records tester, revision including local changes, fixture, device, AT/browser/OS/package versions, and keyboard setup. The checklist covers label/role/selection speech, expanded state, loaded counts, selected and disabled options, ordered selection/removal announcements, errors, required state, keyboard-only interaction, RTL, and tooltip-first dismissal. Normal, CDK dialog, and native dialog hosts are included. Mobile runs check swipe reading order and actual on-screen keyboard retention, then repeat keyboard operation with a hardware keyboard.
 
-- The verification matrix lives in a repository document at `docs/verification/combobox-screen-reader-matrix.md`. The path is proposed. The document holds one table row per combination, and each row has the columns `Combination`, `Date`, `Version`, `Result`, and `Defects`. The `Version` cell records the screen reader, browser, operating system, and `@tessera/combobox` versions (`L2-049` AC3). Each run also records the tested commit, tester, fixture, hardware keyboard configuration for mobile, and per-check observations. Not run is distinct from Pass.
+Layout verification includes 320 CSS px, actual 200% zoom, 200% text, text spacing, forced colors, and reduced motion where supported. Desktop Chrome additionally uses a real 1280 by 1024 window at actual 400% browser zoom. Unsupported platform settings carry a reasoned Not applicable result; required supported checks retain Not run until executed.
 
-| Combination | Result at design time |
-|-------------|-----------------------|
-| NVDA with Firefox | Not run |
-| NVDA with Chrome | Not run |
-| JAWS with Chrome | Not run |
-| VoiceOver with Safari on macOS | Not run |
-| VoiceOver with Safari on iOS | Not run |
-| TalkBack with Chrome on Android | Not run |
-| Narrator with Edge on Windows | Not run |
+The current matrix records these manual gates as Not run. Release requires all `L2-022` to `L2-050` acceptance criteria, zero axe violations, zoneless operation, packed-package checks, and a dated signed-off manual matrix with no open failures. Automated passes do not complete manual rows.
 
-- Each combination follows one checklist. A tester records pass or fail for each item and links a defect for each failure (`L2-049` AC2).
+**Documentation and examples.** `src/combobox/README.md` documents installation, label requirements, inputs/outputs, forms/model binding, slots, i18n keys, keyboard behavior, accessibility, security boundaries, harness use, and release conditions. `tools/package-docs-compile/combobox.mjs` compiles its TypeScript and HTML adoption snippets in the packed consumer.
 
-| Item | Observation | Related requirement |
-|------|-------------|---------------------|
-| a | Label, role, and current selection are read on focus | `L2-035`, `L2-036` AC10 |
-| b | Expanded and collapsed state is announced | `L2-035` AC1 |
-| c | The result count is announced after typing | `L2-036` AC2 |
-| d | Each option is read with its selected state while arrowing | `L2-035` AC7 |
-| e | Selecting and removing are announced | `L2-036` AC6, AC7 |
-| f | Error and required state are announced | `L2-031` AC7, `L2-036` AC5 |
-| g | A keyboard-only run-through works without a mouse | `L2-033`, `L2-034` |
-| h | Behavior is correct at 200% zoom, at 320 px width, in forced-colors mode, and with reduced motion | `L2-038`, `L2-039` |
+`ComboboxExamples` in `src/components-examples/tessera/combobox/combobox-examples.ts` contains five runnable sections: reactive forms, template-driven forms, two-way model, custom content, and paging. It uses `ExampleLearner`, `EXAMPLE_LEARNERS`, and `createMockUserSearch(pageSize = 20)` from `mock-user-search.ts`. The in-memory source filters learner names, slices pages, supplies total/hasMore, and applies a 150 ms observable delay. The paging section uses page size three. The reactive example demonstrates binding without declaring required validation.
 
-- The manual procedure below supplies the platform setup and observation steps. Observed results remain Not run until the production component exists. Mobile runs use both touch/screen-reader gestures and an external hardware keyboard, recording both results.
-- A release shall not proceed while any row reads `Not run`, or reads `Fail` with an open defect. Release requires all acceptance checks, zero axe violations, successful packed-package smoke verification, and a dated signed-off manual matrix with no open failures. Documentation states these as gates, not achieved results.
-- Manual runs are separate from automated tests, which run only in Chromium. A passing automated suite does not complete a manual row.
-
-**Manual run procedure**
-
-Use a production fixture with two preselected values, a 6-item page, an inactive account, a recoverable page-2 failure, a long label, and required validation. Record versions and commit before starting. Repeat the interaction in the normal host, a CDK dialog, and a native modal dialog.
-
-| Platform | Setup |
-|----------|-------|
-| Windows / NVDA, JAWS, Narrator | Start the reader, use its form-interaction mode on the named input, and use the hardware keyboard. Run high contrast through Windows accessibility settings. |
-| macOS / VoiceOver | Enable VoiceOver, enter interaction with the form control, and turn Quick Nav off for native input editing. Use the hardware keyboard and the system reduced-motion preference. |
-| iOS / VoiceOver | Enable VoiceOver. Navigate to the input and use normal activation and text-entry gestures, then repeat using an external keyboard. Record whether a touch selection keeps the on-screen keyboard open, and whether swiping forward from the input with the list open reaches the first option (`L2-030` criterion 7). |
-| Android / TalkBack | Enable TalkBack. Navigate to and activate the input, enter text, and select by normal reader gestures, then repeat using an external keyboard. Record the on-screen keyboard behavior, and whether swiping forward from the input with the list open reaches the first option. |
-
-1. Tab or navigate to the input without opening the popup. Confirm the label, role, required state, and selected summary are read.
-2. Open with Arrow Down. Navigate selected, unselected, and disabled options. Confirm active movement does not select and each selected/disabled state is read.
-3. Type a query, wait for results, and confirm the loaded count. Try a slow request, empty result, and recoverable failure. Enter retries with the query retained; no stale message follows a newer query.
-4. Select and deselect an option. Confirm input focus, popup state, and spoken changes. Reach the limit, remove a chip, and clear all. Confirm the limit announcement and every removal.
-5. Navigate chip buttons in LTR and RTL. Inspect the long-label tooltip by hover and focus; move into it and dismiss with Escape.
-6. With no selection, leave the required field. Confirm error text, invalid state, and description. Return and correct it; the error clears.
-7. In a dialog, dismiss tooltip, popup, and query in that order with Escape. Only the next Escape reaches the dialog. Tab is never trapped by the popup.
-8. Repeat at 320 CSS px, 200% zoom, 200% text, text-spacing overrides, reduced motion, and forced colors where the platform supports it. Confirm content and all actions remain available. On desktop Chrome, also set a 1280 by 1024 window to actual 400% browser zoom; do not substitute device scale for zoom.
-9. For unavailable native settings on a mobile platform, record Not applicable with the reason and use the equivalent narrow viewport/text enlargement, preserving the interaction observations. A required supported-platform check cannot be marked Pass without execution.
-
-**Documentation and examples**
-
-- The documentation page is `src/combobox/README.md`, as `src/scorm-player/README.md` is for the player. The dev-app build compiles each runnable example. A package documentation compile task under tools/package-docs-compile shall compile the README snippets against the packed package before release. The page has these sections, which `L2-050` AC1 names or implies.
-
-| Section | Content |
-|---------|---------|
-| Installation and use | Import, minimal template, required `searchFn` |
-| Label requirement | A visible `<label for>` bound through `inputId`, or `ariaLabel`; the development-time error otherwise |
-| Inputs and outputs | The tables from [Customize, localise, and publish the API](../customize-and-localise/) |
-| Forms and `[(value)]` | Reactive, template-driven, and two-way use |
-| Template slots | The three slots, their contexts, and the consumer's responsibility for slot markup |
-| Localisation | `COMBOBOX_I18N`, the string keys, and placeholders |
-| Keyboard map | Every row of `L2-033` and `L2-034` |
-| Accessibility behavior | Roles, announcements, focus rules, and zoom, touch, and forced-colors support |
-| Testing | `ComboboxHarness` usage |
-| Security notes | Text rendering and query encoding |
-| Definition of done | The statement below |
-
-- The definition-of-done section states the conditions: all `L2-022` to `L2-050` acceptance criteria pass, axe reports zero violations, the manual matrix is signed off, and the component works under zoneless change detection (`L2-050` AC4). The page states conditions. It does not assert that they hold. The matrix records sign-off.
-- `src/components-examples/tessera/combobox/` holds five example components and a shared mock. The folder's `index.ts` exports them, as the `scorm-player` examples folder does (`L2-050` AC2).
-
-| File | Demonstrates |
-|------|--------------|
-| `combobox-reactive-forms-example.ts` | `FormControl` with `required` and an error message |
-| `combobox-template-driven-example.ts` | `ngModel` |
-| `combobox-two-way-example.ts` | `[(value)]` bound to a signal |
-| `combobox-custom-templates-example.ts` | `tComboboxOption`, `tComboboxChip`, and `tComboboxEmpty` |
-| `combobox-paging-example.ts` | `hasMore` and `total` across pages |
-| `mock-user-search.ts` | `createMockUserSearch(options)`, a `searchFn` factory with delay, page size, and optional failure |
-
-- Each example is a standalone OnPush component that follows the existing `tsr-` selector convention. The `ng build dev-app` build compiles all of them, which satisfies "when they are built".
-- `ComboboxDevPage` in `src/dev-app/src/app/` adds a combobox section to the existing single-page dev app. It renders the examples with `createMockUserSearch`, so the page demonstrates the component with a mock `searchFn` (`L2-050` AC3).
-
-Production work follows `AGENTS.md`. The first slices are the harness criteria in order, then the nine axe states, then the examples build and the dev app page. Each slice has one failing test before any production change.
+The dev app's `App` renders `<tsr-combobox-examples>` beside the player example. The acceptance app also renders these examples for adoption checks. One shared examples component supplies all five adoption sections.
 
 ## Requirements
 
@@ -196,7 +97,7 @@ The component view shows the harness, the page object, the fixture, the spec fil
 
 ![C4 components: Verify and document](diagrams/c4-component.png)
 
-The class view records the harness API, the page object helpers, the scenario fields, and the structure of a matrix record.
+The class view records the harness API, page object, parameterized acceptance fixture, browser TestBed bridge, and examples component.
 
 ![Class structure: Verify and document](diagrams/class-structure.png)
 
@@ -204,6 +105,6 @@ A consumer test operates the combobox through the harness, which finds the listb
 
 ![Sequence diagram: Operate the combobox from a consumer test](diagrams/sequence-consumer-harness.png)
 
-A Playwright test enters a state through `ComboboxDemoPage` and runs axe over the host, which contains the open list. Responsive and keyboard checks use the same page object.
+A Playwright test enters a state through `ComboboxDemoPage` and runs axe over the page, including the open list. Responsive and keyboard checks use the same page object.
 
 ![Sequence diagram: Run automated accessibility verification](diagrams/sequence-axe-verification.png)

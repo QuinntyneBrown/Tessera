@@ -2,7 +2,7 @@
 
 ## Overview
 
-`t-combobox` shows its options in a popup list below the input. The list opens when the user asks for it, close predictably, and sit next to the field without hiding what the user types. This feature covers when the list opens and closes, which option is active when it opens, and where and how wide the list renders.
+`t-combobox` shows its options in a popup list next to the field. The list opens on request, closes predictably, and keeps the typed input visible. This feature covers opening and closing, initial active-option state, popup position, and width.
 
 **Popup list** — panel of options that appears next to the field while the combobox is open
 
@@ -16,55 +16,29 @@ The list renders in an overlay so that no ancestor's `overflow` or stacking cont
 
 ## Description
 
-The slice is frontend-only. `Combobox<T>` decides when to open and close. `ComboboxPopup` places the list. The CDK supplies the overlay and the key manager.
+`Combobox<T>` owns `isOpen`, `activeIndex`, `opened`, `closed`, and a lazily created CDK `OverlayRef`. It attaches its panel template through `TemplatePortal` and retains the overlay reference across open/close cycles. `ComboboxOverlayContainer` supplies the component-scoped fallback container.
 
-### Opening and closing
+**Opening and closing.** Typing, paste, and composed input open the list through `changeQuery`. Arrow Down opens in normal mode, Arrow Up in last mode, and Alt+Arrow Down in none mode. A field click calls `focusAndOpen`; the toggle calls `togglePopup`. Both focus the input. Focus alone has no opening handler.
 
-`Combobox<T>` owns the `isOpen` signal, the `opened` and `closed` outputs, and the methods `open()` and `close()`. Each method returns without effect when the state already matches, so `opened` and `closed` each emit once per transition.
+`open()` ignores an already open or disabled component and emits `opened` once per transition. `close()` ignores an already closed component, clears active state and navigation intent, cancels queued search announcements, stops geometry tracking, detaches the panel, and emits `closed` once. It preserves the query and selections. An in-flight request remains subscribed after close.
 
-| Trigger | Handler | Result |
-|---------|---------|--------|
-| Printable character, paste, or IME input | `input` event | `open()` |
-| Arrow Down, Arrow Up, or Alt+Arrow Down | `keydown` on the input | `open()` |
-| Click on the field or the toggle button | `click` | Focus the input, then `open()` |
-| Focus arrives by Tab or by script | none | Nothing; no focus handler calls `open()` |
+Escape, Alt+Arrow Up, Tab, Shift+Tab, an outside pointer event, toggle activation, and disable close the list. `OverlayRef.outsidePointerEvents()` excludes pane interactions; its subscriber additionally ignores targets inside the component host. The host's bubbling `onHostKeydown` handles dismissal from the input, chips, and clear-all. Fallback panes route key and focus events to the same handlers only when outside the host.
 
-| Trigger | Handler | Result |
-|---------|---------|--------|
-| Escape on an open list | `keydown` on the input | `close()` |
-| Alt+Arrow Up | `keydown` on the input | `close()` |
-| Tab or Shift+Tab | Bubbling `keydown` on host or popup | `close()`; no `preventDefault()`, so focus moves naturally |
-| Click outside the component | `ComboboxPopup.outsidePointerEvents` | `close()` |
-| Component becomes disabled | effect on `isDisabled()` | `close()`; the search feature cancels the request in the same step |
+Tab retains browser focus behavior and is never prevented. Closing itself moves no focus. Escape from a chip preserves chip focus; Escape from a popup action focuses the input before close. A visible full-label tooltip receives Escape first. No backdrop, focus trap, or `aria-modal` belongs to the popup.
 
-An outside click is a click whose target lies outside the overlay pane and outside the host element. A click on a chip, a button, or the field is inside the component and does not close the list. Escape on a closed list and the full key map belong to [Operate by keyboard](../operate-by-keyboard/); the Arrow Up rule that activates the last option belongs there as well.
+**Option discovery and activation.** `viewChildren(ComboboxOption)` discovers component-owned hosts. The directive is non-generic and implements CDK `Highlightable`; the template supplies its selected, disabled, label, total, and position inputs. The view query supplies the manager's option collection.
 
-The toggle button is a `<button tabindex="-1">` named Show options when closed and Hide options when open. A click toggles the list and focuses the input. Its `mousedown` prevents a mouse focus change. On a touch click the handler focuses the input synchronously. All names come from the i18n contract.
+An `afterEveryRender` callback rebuilds `ActiveDescendantKeyManager<ComboboxOption>` when the option collection changes. `withWrap(false)` stops navigation at either end; `skipPredicate(() => false)` retains disabled options. The manager's `change` stream updates `activeIndex`. Opening and page 0 delivery set `needsActivation`. Normal mode chooses the first enabled option or none; last mode chooses the last loaded option, including a disabled one; none mode clears the active item. The opening mode survives the first asynchronous response. A plain arrow key restores normal mode. Appended pages preserve the index.
 
-`close()` sets `isOpen` to false, calls `ComboboxPopup.close()`, and emits `closed`. It calls no `focus()` method, so closing itself does not move focus. Tab and outside interactions follow browser focus behavior; disabling may also move focus. Escape from a chip preserves that chip focus; Escape from a popup action returns focus to the input. The overlay has no backdrop, no focus trap, and no `aria-modal` attribute, so focus moves freely between the input and the overlay content.
+**Positioning.** `FlexibleConnectedPositionStrategy` connects to the field with `withPopoverLocation('inline')`, `withPush(false)`, `withFlexibleDimensions(true)`, and `withGrowAfterOpen(true)`. The scroll strategy repositions. Preferred positions join the panel's top to the field's bottom, or its bottom to the field's top. Width always comes from the field's bounding box.
 
-### Active option
+`updatePopupGeometry()` first reveals the input within the visual viewport using instant scrolling when needed. It measures available room above and below, status-row height, and root font size. The preferred maximum is 24 rem. When the full field leaves less than 4 rem plus status height, connected-position offsets align the panel vertically with the input row while retaining full field width. The panel may cover chips in this fallback, but keeps the input clear. More room above selects the upper position when the desired height does not fit below. The chosen height is bounded by available space with a 2 CSS px allowance.
 
-`ComboboxOption<T>` directives register with `Combobox<T>` through `COMBOBOX_PARENT` and implement CDK `Highlightable`. `Combobox<T>` wraps the registered options in an `ActiveDescendantKeyManager` without a wrap and without a skip predicate, so arrow keys reach disabled options. The component mirrors the manager's active index in the `activeIndex` signal.
+A `ResizeObserver` watches the field. Capture-phase document scroll, window resize, visual-viewport resize, and the open-state render callback also refresh geometry. Scrolls inside the pane are ignored by the capture handler. CDK repositioning supplies its own scroll/viewport handling. Closing disconnects the observer and removes the explicit listeners; destruction disposes the overlay and key manager.
 
-`activateFirstEnabled()` chooses the first enabled registered option, or `-1` when all are disabled. Opening records a mode: normal, last, or none. Normal opening and page 0 replacement activate the first enabled option; Arrow Up opening activates the last loaded option, even when disabled; Alt+Arrow Down opening leaves no active option. The mode survives the initial asynchronous response and clears on a plain arrow key. Arrow Down from no active option starts at the first loaded option; Arrow Up starts at the last. Appended pages preserve the active option. Active items scroll inside the panel without scrolling the document.
+**Reading order and dialogs.** The CDK popover host is inserted directly after the field and enters the browser top layer. The resulting DOM order places the options after the input and before validation/hint text. Native and CDK dialog ancestry is retained. Without Popover API support, `ComboboxOverlayContainer` appends its container inside the nearest open native dialog, or leaves the ordinary CDK placement outside a dialog. This fallback lacks the inline reading order. No application-wide container is moved.
 
-### Popup
-
-`ComboboxPopup` wraps the CDK `Overlay`. Its members are `open(origin, template)`, `close()`, `dispose()`, `updatePosition()`, and the `outsidePointerEvents` Observable.
-
-- **Overlay configuration.** `hasBackdrop` is false. The scroll strategy is `scrollStrategies.reposition()`. The position strategy is a `FlexibleConnectedPositionStrategy` attached to the origin element.
-- **Positions.** Two positions in preference order: the overlay's top edge at the field's bottom edge, then the overlay's bottom edge at the field's top edge. Neither position overlaps the field. `withPush(false)` prevents the strategy from sliding the list over the field, and `withFlexibleDimensions(true)` shrinks the list to the available space, so the input stays visible at every supported viewport size (WCAG 2.2 SC 2.4.11, `L2-030`). When the space below is too small, the strategy chooses the position with the larger visible area, which is above when more space exists above.
-- **Very short viewports.** The preferred panel maximum uses relative units (24 rem), bounded by the visual viewport. Available-room checks account for the rendered status area plus a visible option portion (4 rem), rather than a fixed pixel threshold. If the full field leaves insufficient room for an option and the status actions, the vertical origin becomes the input row while the width remains the full field width. The popup may cover chips but shall not cover the focused input. Opening or reflow shall bring the focused input into the visual viewport first, with instant document scrolling when necessary. The controlled listbox scrolls independently; non-option status actions remain outside it. Keyboard navigation adjusts only the listbox scroll position.
-- **Width.** The overlay width equals the field's bounding width, set when the overlay opens. A `ResizeObserver` on the origin element calls `updateSize({ width })` and `updatePosition()` when the field changes size, through a window resize or a container resize. The observer disconnects on `close()`.
-- **Scrolling.** The reposition strategy follows the document and any `cdkScrollable`. The CDK `ScrollDispatcher` does not report a scroll in an arbitrary ancestor. While the list is open, `ComboboxPopup` therefore also listens for `scroll` in the capture phase on `document` and calls `updatePosition()`. The overlay stays attached to the field whichever ancestor scrolls. The capture handler ignores events from inside the panel to avoid reposition loops.
-- **Viewport resize.** The position strategy reapplies on each `ViewportRuler` change.
-- **Destruction.** `Combobox<T>` registers `popup.dispose()` with `DestroyRef.onDestroy`. `dispose()` removes the overlay pane from the DOM even when the list is open.
-- **DOM placement and dialogs.** The overlay is a CDK popover: `usePopover` is true, the CDK default, and the position strategy calls `withPopoverLocation('inline')`. The CDK therefore inserts the overlay host directly after the origin field, inside the component host, and the reading order is label, field, list, error, and hint (`L2-030` criterion 7). Safari does not support `aria-owns`, and VoiceOver on iOS moves by swiping in DOM order, so a list appended to the end of the document could not be reached from the input. The popover still enters the top layer, so it keeps the dialog's DOM ancestry, appears above dialog content, and receives pointer events (`L2-030` criterion 6). The decision is recorded in [ADR-0001](../../../adr/frontend/0001-render-combobox-panel-as-inline-popover.md). Without the Popover API, a component-scoped OverlayContainer attaches inside the closest open native dialog, or uses the ordinary CDK container outside a dialog; that fallback loses the inline reading order. The CDK reads the insertion point from the origin each time the overlay attaches, so the field stays the origin: the short-viewport fallback expresses the input-row anchor as an `offsetY` on the connected position instead of calling `setOrigin()`, which would move the list inside the field. No application-wide container is moved. Both CDK and native dialog fixtures verify pointer interaction, Escape, and announcements. The pinned CDK public API shall be verified before its ATDD slice; the [upstream overlay implementation](https://github.com/angular/components/blob/main/src/cdk/overlay/overlay.ts) is the current reference.
-
-### Test support
-
-`ComboboxDemoPage` owns the selectors for the field, the toggle button, and the listbox, and `ComboboxHarness` exposes `open()`. Acceptance tests run in Chromium at each supported viewport width, with a dialog host, and with a scrolled ancestor.
+Fallback panes receive the host's `--t-combobox-*` properties, font, and direction when attached. Inline panes inherit them through DOM ancestry. The placement decision is recorded in [ADR-0001](../../../adr/frontend/0001-render-combobox-panel-as-inline-popover.md). Manual screen reader reading order remains a release check.
 
 ## Requirements
 
@@ -85,11 +59,11 @@ The container view shows the overlay and key manager coming from the Angular CDK
 
 ![Containers for opening and positioning the list](diagrams/c4-container.png)
 
-The component view shows `Combobox<T>` driving `ComboboxPopup` and the key manager, and `ComboboxPopup` using the CDK overlay.
+The component view shows `Combobox<T>` owning the overlay and key manager, with a scoped container for fallback dialog placement.
 
 ![Components for opening and positioning the list](diagrams/c4-component.png)
 
-The class view records the open state, the popup members, and the CDK types the slice uses.
+The class view records the open state, the component-owned overlay members, and the CDK types used by the feature.
 
 ![Class structure for opening and positioning the list](diagrams/class-structure.png)
 

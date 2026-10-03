@@ -10,11 +10,11 @@ Its second package, `@tessera/combobox`, provides an asynchronous multi-select c
 
 The `scorm-player` subsystem follows the capability grouping in [L1 requirements](../specs/L1.md) and [L2 requirements](../specs/L2.md). The flat specification folder contains no predefined subsystem folders.
 
-These designs describe proposed components. The repository currently contains requirements and an HTML mock, with no production library. The mock supplies a visual reference; it does not define protocol, persistence, or sequencing behavior.
+The combobox designs describe the implemented browser package. The SCORM designs include capabilities beyond the current implementation; its delivery scope is recorded in [implementation status](implementation-status.md). HTML mocks provide visual references independently of production behavior.
 
 ## Description
 
-Eight vertical features cover the full L2 requirement set:
+Eight player features cover `L2-001` to `L2-021`. Ten [combobox features](combobox/) cover `L2-022` to `L2-050`:
 
 | Feature | Capability |
 |---------|------------|

@@ -2,7 +2,7 @@
 
 This records how far the production implementation has come against the [detailed designs](README.md),
 the decisions made where a design said `<TO SUPPLY>`, and where the implementation departs from a design.
-The designs themselves are unchanged.
+The [combobox designs](combobox/) describe its implemented contracts. The status sections below concern the SCORM player.
 
 ## Covered
 

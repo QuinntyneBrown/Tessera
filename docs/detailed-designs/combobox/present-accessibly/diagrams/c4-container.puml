@@ -13,7 +13,7 @@ System_Boundary(browser, "Host Angular application in the browser") {
 System_Ext(data, "Consumer data source", "Serves option pages to searchFn")
 
 Rel(user, app, "Taps and clicks", "Pointer, touch")
-Rel(platform, pkg, "Applies media features to the stylesheet of", "prefers-reduced-motion, forced-colors, hover")
+Rel(platform, pkg, "Applies media features to the stylesheet of", "prefers-color-scheme, forced-colors, hover, pointer")
 Rel(app, pkg, "Hosts t-combobox from", "Angular template")
 Rel(pkg, cdk, "Opens the panel and receives outside taps through")
 Rel(pkg, data, "Loads option pages through", "searchFn")

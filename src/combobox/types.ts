@@ -9,3 +9,10 @@ export interface ComboboxPage<T> {
 
 /** Application-owned asynchronous data source. */
 export type ComboboxSearchFn<T> = (query: string, page: number) => Observable<ComboboxPage<T>>;
+
+/** One user selection operation and its resulting value. */
+export interface ComboboxSelectionChange<T> {
+  added?: T;
+  removed?: T;
+  value: T[];
+}

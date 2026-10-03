@@ -1,7 +1,10 @@
 # Tessera documentation
 
-Tessera is in the design stage. The documents below describe the planned SCORM
-player and its implementation constraints.
+Tessera includes a SCORM player and an asynchronous multi-select combobox.
+Requirements and detailed designs below are the source of intended behavior.
+
+The [combobox adoption guide](../src/combobox/README.md), [implementation evidence](verification/combobox-implementation.md),
+and [pending manual release matrix](verification/combobox-screen-reader-matrix.md) describe its current status.
 
 ## Requirements
 

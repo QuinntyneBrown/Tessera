@@ -1,57 +1,41 @@
 @startuml
-title UML sequence behaviour - Adapt to viewport, motion, and color settings
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "User" as user
-box "Frontend - Browser" #E0F2FE
-  participant "Style engine" as style
-  participant "ResizeObserver" as observer
+title Adapt to viewport and color settings
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combobox
-  participant "ComboboxPopup" as popup
+box "Frontend - Browser" #E0F2FE
+  participant "CSS engine / viewport" as style
+  participant "ResizeObserver" as observer
 end box
 box "Frontend - Angular CDK" #E0F2FE
   participant "OverlayRef" as overlay
 end box
 
-user -> style : Resize the window, zoom to 400 percent, enlarge text, or apply text spacing
-style -> combobox : Reflow field: chips wrap, input drops to its own row (L2-039 criteria 1 to 4)
-note right of combobox : No script switches the template by width.\nvalue, query, isOpen, and DOM nodes are unchanged.
-style -> observer : Field width changed
-observer -> popup : Resize callback
-popup -> overlay : Set overlay width to the field width; updatePosition()
-overlay --> popup : Panel repositioned; controlled listbox scrolls inside granted height
-popup --> user : List stays open; selection, typed text, and focused input preserved (L2-039 criterion 6)
 
-user -> style : Set prefers-reduced-motion to reduce
-alt Preference is no-preference
-  style -> combobox : Apply transitions from the no-preference block, using --t-combobox-motion-duration
-else Preference is reduce
-  style -> combobox : No transition or animation rule applies; spinner is static (L2-038 criterion 3)
-end
-combobox --> user : Overlay opens, closes, and chips change with the allowed motion
-
-user -> style : Turn on forced-colors mode
-style -> combobox : forced-colors block reassigns tokens to system colors (L2-038 criterion 4)
-combobox --> user : Borders, outlines, checkmarks, and icons draw in CanvasText, ButtonText, Highlight, and GrayText
-
-user -> combobox : Hover over or tap an option
-alt Hover media feature available
-  style -> combobox : Apply hover background
-else No hover capability
-  style -> combobox : No hover rule applies; no sticky hover after a tap
-end
+user -> style : Change viewport, zoom, text size or spacing
+style -> cb : Wrapping field and bounded chip list reflow (L2-039)
+style -> observer : Field dimensions change
+observer -> cb : Geometry update
+cb -> overlay : Full field width; bounded height; input-row offsets if needed
+overlay --> user : Input clear; listbox scrolls within panel
+user -> style : Dark theme or forced colors
+style -> cb : Apply palette or system-color tokens (L2-038)
+cb --> user : Borders, outline and checkmark remain distinct
+user -> style : Reduced-motion preference
+style --> user : No animations or transitions under either preference
+note over cb
+  State and input focus persist. Actual zoom is verified manually;
+  automated 320 by 256 viewport establishes reflow only.
+end note
 @enduml

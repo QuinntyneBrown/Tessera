@@ -1,0 +1,172 @@
+{
+  "duration": 243.521,
+  "width": 1280,
+  "height": 720,
+  "chromium": "153.0.8010.12",
+  "audio": {
+    "channels": 1,
+    "rate": 48000,
+    "duration": 243.4335,
+    "rms": 0.13681589652944787,
+    "peak": 0.886857271194458
+  },
+  "bytes": 10203914,
+  "posterAt": 47.44900000000001,
+  "chapters": [
+    {
+      "title": "1. Search and select",
+      "at": 19.581000000000014
+    },
+    {
+      "title": "2. Keyboard and removal",
+      "at": 64.47800000000001
+    },
+    {
+      "title": "3. Angular binding patterns",
+      "at": 114.17700000000002
+    },
+    {
+      "title": "4. Custom content",
+      "at": 143.961
+    },
+    {
+      "title": "5. Paged results",
+      "at": 176.18100000000004
+    }
+  ],
+  "speech": [
+    {
+      "id": "opening",
+      "at": 0.006000000000014211,
+      "duration": 17.71655328798186,
+      "text": "This is Tessera's multi-select combobox. In this walkthrough, we will search for learners, use the keyboard, remove selections, and explore forms, custom content, and paging. These are the real component examples, using synthetic learner data."
+    },
+    {
+      "id": "search",
+      "at": 23.590000000000014,
+      "duration": 11.712244897959184,
+      "text": "Typing the letter A returns eleven matching learners. The example source filters names and adds a short delay. The combobox waits for the typing pause before calling that source."
+    },
+    {
+      "id": "select",
+      "at": 36.40900000000001,
+      "duration": 12.362222222222222,
+      "text": "Selecting Ada and Grace creates two removable chips. Both options stay in the list with checked indicators. The panel remains open, and keyboard focus stays in the search input."
+    },
+    {
+      "id": "retain",
+      "at": 50.731000000000016,
+      "duration": 12.867074829931973,
+      "text": "Searching for Linus replaces the results, while Ada and Grace stay selected. Adding Linus updates the reactive form value below the field. Search text and selected values are separate."
+    },
+    {
+      "id": "chips",
+      "at": 68.58100000000002,
+      "duration": 15.42702947845805,
+      "text": "With an empty input, Arrow Left reaches the last chip. Delete removes Linus and moves focus to Grace, the surviving neighbor. Arrow Right returns focus to the input. The reactive value now contains Ada and Grace."
+    },
+    {
+      "id": "keys",
+      "at": 86.06200000000001,
+      "duration": 15.466938775510204,
+      "text": "Arrow Down makes Grace active. Space removes Grace, then Enter adds it back. The active outline and checked selection indicator represent different states. Throughout result navigation, the input keeps focus."
+    },
+    {
+      "id": "clear",
+      "at": 102.57100000000001,
+      "duration": 10.93718820861678,
+      "text": "Escape closes the panel without discarding the selected learners. Clear all then removes both selections, empties the form value, and returns focus to the input."
+    },
+    {
+      "id": "forms",
+      "at": 118.83000000000001,
+      "duration": 12.262312925170068,
+      "text": "The same component also works with template-driven forms. Here, choosing Sam updates the displayed template value. The example binds through Angular's N G Model directive."
+    },
+    {
+      "id": "model",
+      "at": 133.41500000000002,
+      "duration": 9.867437641723356,
+      "text": "In the two-way model example, choosing Morgan updates the signal-backed value. Applications can use this binding when they do not need a form control."
+    },
+    {
+      "id": "custom",
+      "at": 148.279,
+      "duration": 13.22702947845805,
+      "text": "Custom templates add a team name to each result and render selected names in bold. Grace appears with the Learning team. The component still owns the option semantics, checked indicator, and removal button."
+    },
+    {
+      "id": "empty",
+      "at": 163.608,
+      "duration": 11.722403628117913,
+      "text": "A query with no matches displays the custom empty message, including the text we entered. Existing chips remain available, so an empty search does not erase the selection."
+    },
+    {
+      "id": "paging",
+      "at": 180.11400000000003,
+      "duration": 10.782585034013605,
+      "text": "This example returns only three learners per page. The initial results are Ada, Grace, and Morgan. Load more results is a separate action below the list."
+    },
+    {
+      "id": "append",
+      "at": 191.80200000000002,
+      "duration": 10.387800453514739,
+      "text": "Load more appends Sam, Tamara, and Arun. The earlier results stay in place. The source controls page size and whether another page exists."
+    },
+    {
+      "id": "arrows",
+      "at": 204.07,
+      "duration": 16.906349206349205,
+      "text": "Keyboard users can also load more by navigating to the end of the list. Bringing the last row into view triggers another page here. The list grows to nine learners, and the next Arrow Down makes Bea active. Enter selects Bea and creates a chip."
+    },
+    {
+      "id": "ending",
+      "at": 221.83300000000003,
+      "duration": 19.476145124716552,
+      "text": "We have demonstrated search, multi-selection, keyboard operation, removal, three binding patterns, custom content, and paging. Automated checks cover these workflows. Manual screen reader, real zoom, and touch keyboard verification remain pending before release."
+    }
+  ],
+  "environment": {
+    "date": "2026-10-03T14:38:45.127Z",
+    "voice": "Microsoft Zira Desktop",
+    "node": "v22.23.2",
+    "port": "4321",
+    "revision": "4f4ea1c34302c480d86d8258285db1cd875c77b9",
+    "dirty": true
+  },
+  "tools": {
+    "playwright": "1.63.0",
+    "chromium": "153.0.8010.12",
+    "windows": "10.0.26200",
+    "ffmpeg": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers"
+  },
+  "offset": 1.4210854715202004e-14,
+  "reviewStatus": {
+    "reviewer": "Codex",
+    "date": "2026-10-03T14:48:42.0721937Z",
+    "method": "Encoded WebM played from beginning to end in Chromium at 1x; decoded opening, ending, every chapter and important outcome frames visually inspected.",
+    "playback": {
+      "rate": 1,
+      "elapsed": 243.70580000001192,
+      "playedUntil": 243.521,
+      "frames": 6089,
+      "waiting": 1,
+      "regressions": 0,
+      "quality": {
+        "totalVideoFrames": 6089,
+        "droppedVideoFrames": 0,
+        "corruptedVideoFrames": 0
+      }
+    },
+    "observations": [
+      "All recording assertions passed; one continuous successful take, no scene splicing.",
+      "1280 x 720; spoken Microsoft Zira Desktop narration and readable outcome captions.",
+      "Audio decoded as mono 48 kHz, full duration, nonzero RMS and no clipped peaks.",
+      "Title cards clear of native popovers; selection, active state, custom empty content and binding values visible.",
+      "Poster extracted from the final encoded video; chapter times verified against encoded title cards.",
+      "Pacing reviewed at normal speed; no dropped or corrupted video frames.",
+      "Paging uses the actual viewport-dependent scroll-end trigger; earlier attempts remain unpublished."
+    ],
+    "documentationDiscrepancy": "Root README contains historical design-stage status text; footage demonstrates the implemented component."
+  }
+}

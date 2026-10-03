@@ -1,64 +1,43 @@
 @startuml
-title UML sequence behaviour - Release resources on destroy
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-participant "Host view" as host
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox" as cb
-  participant "ComboboxSearch" as search
-  participant "ComboboxPopup" as popup
-  participant "ComboboxAnnouncer" as ann
+title Release resources on destroy
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - Angular CDK" #E0F2FE
-  participant "OverlayRef" as cdk
+box "Frontend - Angular/CDK" #E0F2FE
+  participant "DestroyRef and view lifecycle" as destroy
+  participant "Popup and tooltip OverlayRef" as overlay
 end box
-box "Frontend - Consumer data source" #E0F2FE
+box "Frontend - Consumer source" #E0F2FE
   participant "searchFn subscription" as src
 end box
-participant "Document and window" as doc
+box "Frontend - Announcement queue" #E0F2FE
+  participant "ComboboxAnnouncer" as ann
+end box
 
+
+user -> destroy : Remove host component
+destroy -> cb : Destroy view; complete takeUntilDestroyed streams (L2-046)
+cb -> src : Unsubscribe current source; finalize clears loading timer
+cb -> cb : Clear tooltip timer; stop tracking; unsubscribe control events
+cb -> overlay : Dispose attached or detached popup and tooltip
+overlay --> cb : Panes and dispatcher ownership released
+cb -> cb : Destroy active-descendant key manager
+destroy -> ann : Clear quiet and write timers
+destroy --> user : Host bindings, live region and scoped fallback container removed
 note over cb
-  The list is open, a request is in flight,
-  and a debounce timer is pending.
-end note
-host -> cb : Destroy the component (L2-046)
-cb -> cb : DestroyRef.onDestroy callbacks run
-cb -> search : takeUntilDestroyed completes the pipeline
-alt Request in flight
-  search -> src : Unsubscribe the inner request (L2-046 AC2)
-else No request
-  search --> cb : Nothing to cancel
-end
-search --> cb : Pending debounce timer cleared
-cb -> popup : dispose()
-alt List open
-  popup -> cdk : overlayRef.dispose() removes pane and listbox (L2-046 AC3)
-  popup -> popup : ResizeObserver.disconnect() (L2-046 AC3)
-  cdk -> doc : Remove outside-click listener
-else List closed
-  popup --> cb : No overlay exists
-end
-cb -> ann : dispose()
-ann --> cb : Loading and coalescing timers cleared; queued messages and owned live-region DOM removed
-cb --> host : Host/document listeners, tooltip and scoped dialog fallback container removed
-doc -> doc : Later resize, scroll, document click, or timer
-note right of doc
-  No component handler runs and no error is
-  thrown (L2-046 AC4). Repeating the cycle
-  100 times leaves the overlay panes and
-  document listeners at their warm-up baseline;
-  the shared application overlay container may remain (L2-046 AC5).
+  Query pipeline teardown clears debounce.
+  Later scroll/resize/click has no component handler.
+  Shared application CDK resources may remain at warm-up baseline.
 end note
 @enduml

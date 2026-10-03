@@ -18,7 +18,7 @@ This feature owns the contract between `Combobox<T>` and Angular forms. The cont
 
 ## Description
 
-The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the host application supply the control side.
+`Combobox<T>` implements the value accessor and bridges the current Angular control to signal state. The host supplies validators and the control update policy.
 
 ### Registration
 
@@ -33,31 +33,31 @@ The slice lives in `Combobox<T>`. It adds no new class. Angular Forms and the ho
 | `registerOnTouched(fn)` | Stores `fn` as `onTouched` |
 | `setDisabledState(isDisabled)` | Sets the `formDisabled` signal |
 
-`commit(next, change)` from [Select values](../select-values/) calls `onChange(next)` once per user change. With the default updateOn: change, Angular then sets the control value to the new `T[]`, emits `valueChanges` once, and marks the control dirty. For blur or submit, Angular commits that pending change at its configured boundary; the component shall not force an earlier commit. A programmatic write marks nothing dirty because `writeValue` bypasses `commit`.
+`commit(next, change)` from [Select values](../select-values/) calls `onChange(next)` once per user change. With the default `updateOn: 'change'`, Angular then sets the control value to the new `T[]`, emits `valueChanges` once, and marks the control dirty. For blur or submit, Angular commits that pending change at its configured boundary. A programmatic write marks nothing dirty because `writeValue` bypasses `commit`.
 
 ### Disabled state
 
 `isDisabled` is a `computed()` that is true when the `disabled` input or `formDisabled` is true. `FormControl.disable()` and `setDisabledState(true)` set `formDisabled` to true; `enable()` and `setDisabledState(false)` set it to false.
 
 - The template binds `[disabled]="isDisabled()"` on the input, on every chip remove button, on clear-all, and on the toggle button.
-- An effect on `isDisabled()` calls `close()`, which [Open and position the list](../open-and-position-list/) defines, and `ComboboxSearch<T>.cancel()`, which [Search options](../search-options/) defines.
+- An effect on `isDisabled()` calls `close()`, defined in [Open and position the list](../open-and-position-list/), and triggers immediate request invalidation and pending-query cancellation, which [Search options](../search-options/) defines.
 - `toggle`, `removeChip`, and `clearAll` return without effect while `isDisabled()` is true, so no interaction changes the value.
 - Because the controls bind to a computed signal, re-enabling makes the input and buttons operable again on the next render.
 
 ### Touched
 
-The host element listens for `focusout`. In the inline popover placement the overlay pane lies inside the host, so its `focusout` reaches the same listener by bubbling. Only in the fallback placement, when the pane lies outside the host, does `ComboboxPopup` route `focusout` from the pane to that handler, so each event is handled once. The handler reads `event.relatedTarget`.
+The host element listens for `focusout`. In the inline popover placement the overlay pane lies inside the host, so its `focusout` reaches the same listener by bubbling. Only in the fallback placement, when the pane lies outside the host, does `Combobox<T>` route `focusout` from the pane to that handler, so each event is handled once. The handler reads `event.relatedTarget`.
 
 - When `relatedTarget` lies inside the host element or inside the overlay pane, focus moved within the component. The handler does nothing. Moves from the input to a chip remove button, to clear-all, or into the overlay therefore do not mark the control touched.
 - Otherwise focus left the whole component, and the handler calls `onTouched()` once. A `null` `relatedTarget`, such as a click on a non-focusable area, counts as leaving.
 
-Option and Retry mouse presses prevent a default focus change; their click handlers retain input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, not once forever: resets and `updateOn: blur` still receive later exits. Every focusout, whether it bubbles to the host or is routed from a fallback pane, passes through this boundary check once.
+Option and Retry mouse presses prevent a default focus change. Option click restores input focus; Retry retains existing input focus. Chip removal focuses a surviving destination before the tracked chip is removed. Touched is reported once per genuine exit, including after resets. Every focusout, whether it bubbles to the host or is routed from a fallback pane, passes through this boundary check once.
 
 ### Required and invalid state
 
-`required` is a boolean input. With forms, Angular RequiredValidator or Validators.required supplies the empty-array error. `isRequired` is true when the input is true or the control has Validators.required. Without forms, required and an empty value supply local invalid state; local touched state records genuine exits. aria-required follows isRequired, using the public [AbstractControl.hasValidator API](https://angular.dev/api/forms/AbstractControl#hasValidator).
+`required` is a boolean input. With forms, Angular `RequiredValidator` for a bound required directive, or host `Validators.required`, supplies the empty-array error. The component does not register an `NG_VALIDATORS` provider. `isRequired` is true when the input is true or the control has Validators.required. Without forms, required and an empty value supply local invalid state; local touched state records genuine exits. `aria-required` follows `isRequired`, which calls `AbstractControl.hasValidator(Validators.required)`.
 
-Signals do not observe AbstractControl state. When the same-element NgControl reports a different control instance, the bridge unsubscribes the old control and subscribes to the new control.events. Rebinding refreshes a controlVersion signal and disabled, touched, and invalid state. An after-render check detects identity replacement; control.events detects resets and validator changes. showError reads that signal and control state, or local required/touched state without forms. A form reset clears touched state; host-only model writes do not mark touched.
+Signals do not observe AbstractControl state. When the same-element NgControl reports a different control instance, the bridge unsubscribes the old control and subscribes to the new control.events. Rebinding refreshes a controlVersion signal and disabled, touched, and invalid state. An after-render check detects identity replacement; `control.events` detects emitted resets and validation changes. Suppressed form events do not trigger the bridge. showError reads that signal and control state, or local required/touched state without forms. A form reset clears the control's touched state; host-only model writes do not mark touched.
 
 | Control state | `aria-invalid` | Error text |
 |---------------|----------------|------------|
@@ -67,7 +67,7 @@ Signals do not observe AbstractControl state. When the same-element NgControl re
 
 ### Hint and error text
 
-`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders directly below the field and before the hint, prefixed by a decorative error icon in the `--t-combobox-error` token; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors need consumer error text. The rendered error id and the hint id feed aria-describedby in that order (`L2-031` criterion 9, `L2-035` criterion 5). The order and the icon follow the Fluent 2 Field pattern, which places validation text nearest the control.
+`hint` and `error` default to empty strings. A non-empty hint renders below the field. While showError is true, supplied error text renders directly below the field and before the hint, prefixed by a decorative error icon in the `--t-combobox-error` token; an empty required value with no supplied text uses the i18n requiredError default. Other validator errors use consumer-supplied error text; an invalid state without text renders no error paragraph. The rendered error id and the hint id feed aria-describedby in that order (`L2-031` criterion 9, `L2-035` criterion 5). Validation text sits nearest the control; a hint follows it.
 
 ### Model binding without forms
 
@@ -77,10 +77,6 @@ Signals do not observe AbstractControl state. When the same-element NgControl re
 - A user selection or chip removal calls `commit`, which sets `value`, and the binding updates the host signal.
 - A host write of a new array updates the chips and does not emit `selectionChange`, because only `commit` emits it.
 - With both a form control and `[(value)]`, the latest external write determines the value. writeValue updates the model without onChange. An external model array write calls control.setValue(next) once, without dirty state or selectionChange. An identity guard records the synchronized array and prevents echoes. User commit calls onChange once and records the synchronized array before the model watcher runs. Hosts supply new arrays rather than mutating an array in place.
-
-### Test support
-
-`ComboboxHarness` exposes chips and option states to consumer tests. `ComboboxDemoPage` verifies disabled controls and rendered error text. Acceptance tests bind a `FormControl`, a `ngModel`, and a `[(value)]` signal in turn, and they use `ComboboxDemoPage` for every selector.
 
 ## Requirements
 

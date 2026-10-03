@@ -1,53 +1,41 @@
 @startuml
-title UML sequence behaviour - Touched and validation state
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Touched and validation state
 actor "Application user" as user
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Angular Forms" #E0F2FE
-  participant "FormControl and RequiredValidator" as fc
+  participant "Current AbstractControl" as fc
 end box
 
-combo -> fc : Resolve NgControl lazily with self optional; subscribe to its current control.events
-note over combo
-  required true, value empty, not touched:
-  aria-required true, aria-invalid not true,
-  no error text (L2-031)
-end note
-alt focus moves inside the component
-  user -> combo : Focus moves from input to chip remove button, clear-all, or overlay
-  combo -> combo : focusout relatedTarget is inside host or overlay: ignore (L2-031)
-  combo --> user : Control stays untouched (L2-031)
-else focus leaves the whole component
-  user -> combo : Focus moves outside host and overlay
-  combo -> combo : focusout relatedTarget is outside: leaving (L2-031)
-  combo -> fc : onTouched() once per genuine focus exit (L2-031)
-  fc -> fc : Mark touched; RequiredValidator reports required error (L2-031)
-  fc --> combo : TouchedChangeEvent and StatusChangeEvent
-  combo -> combo : controlVersion increments; showError true
-  combo --> user : aria-invalid true; error text and icon shown below the field, before the hint (L2-031)
+
+cb -> fc : Resolve NgControl in ngOnInit; bind current control after render
+fc --> cb : events update controlVersion and disabled state
+user -> cb : focusout
+alt relatedTarget inside host or popup pane
+  cb -> cb : Leave touched unchanged (L2-031)
+else Genuine exit, including null target
+  cb -> cb : localTouched true
+  cb -> fc : onTouched once per exit
+  fc --> cb : Current touched and invalid state
+  cb --> user : Invalid state; error before hint when text exists
 end
-note over combo, fc
-  required input or hasValidator(Validators.required) derives aria-required.
-  Standalone required uses local touched state and default error string.
-  Control replacement unsubscribes the old control and resets derived state.
-  Reset clears local touched; later focus exits can mark touched again.
-end note
-opt hint supplied
-  combo --> user : Hint shown below the field (L2-031)
+opt Control replaced or reset
+  cb -> fc : Rebind identity; unsubscribe old events
+  fc --> cb : Refresh touched, invalid, disabled and required state
 end
+note over cb
+  Without forms, local touched plus required/empty value drives errors.
+  Form reset clears form touched; it does not reset localTouched.
+end note
 @enduml

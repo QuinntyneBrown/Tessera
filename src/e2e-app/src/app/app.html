@@ -1,5 +1,11 @@
-@if (comboboxMode) {
-  <tsr-combobox-fixture />
+@if (examplesMode) {
+  <tsr-combobox-examples />
+} @else if (comboboxMode) {
+  @if (cdkDialog) {
+    <tsr-combobox-dialog-fixture />
+  } @else {
+    <tsr-combobox-fixture />
+  }
 } @else {
   @if (zipMode) {
     <label>

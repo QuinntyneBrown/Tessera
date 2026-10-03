@@ -1,5 +1,4 @@
 @startuml
-title Class structure - Search options
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,73 +9,37 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-
-enum SearchStatus {
-  idle
-  loading
-  error
-}
-
-class "Combobox<T>" as Combobox {
-  +query: WritableSignal<string>
-  +isComposing: WritableSignal<boolean>
-  +searchFn: (query: string, page: number) => Observable<ComboboxPage<T>>
-  +debounceMs: number = 300
-  +minSearchLength: number = 1
-  +searchChange: OutputEmitterRef<string>
-  +onInput(text: string): void
-  +onCompositionEnd(text: string): void
-  +onRetryActivated(): void
-}
-
-class "ComboboxSearch<T>" as ComboboxSearch {
-  +results: Signal<T[]>
-  +status: Signal<SearchStatus>
-  +hasMore: Signal<boolean>
-  +total: Signal<number | undefined>
-  +replaceCount: Signal<number>
-  +pageLoaded: Observable<PageLoaded>
-  -generation: number
-  -pendingQuery: boolean
-  -completedQuery: string | null
+title Class structure - search options
+class "Combobox<T>" as Combo {
+  #query: WritableSignal<string>
+  #results: WritableSignal<T[]>
+  #status: WritableSignal<idle | loading | error>
+  #hasMore: WritableSignal<boolean>
+  #total: WritableSignal<number | null>
+  -queries: Subject<string | null>
+  -requests: Subject<{query: string, page: number}>
+  -invalidated: Subject<void>
   -pageIndex: number
-  -lastRequest: SearchRequest
-  +retry(): void
-  +loadNextPage(): void
-  +cancel(): void
+  -completedQuery: string | undefined
+  -committedQuery: string | undefined
+  -queryPending: boolean
+  #retry(): void
+  #loadMore(): void
+  -changeQuery(text: string, open: boolean): void
 }
-
-class PageLoaded {
-  +page: number
-  +count: number
-}
-
-class SearchRequest {
-  +query: string
-  +page: number
-}
-
-class "ComboboxPage<T>" as ComboboxPage {
+interface "ComboboxPage<T>" as Page {
   +items: T[]
   +hasMore: boolean
   +total?: number
 }
-
-class "ComboboxOption<T>" as ComboboxOption {
-  +item: T
-  +ariaSetSize: number | null
-  +ariaPosInSet: number | null
+class "ComboboxSearchFn<T>" as Source <<function type>> {
+  +(query: string, page: number): Observable<ComboboxPage<T>>
 }
-
-class ComboboxEmptyTemplate {
-  +query: string
+class ComboboxOption {
+  +total: InputSignal<number | null>
+  +position: InputSignal<number>
 }
-
-Combobox "1" *-- "1" ComboboxSearch : owns
-ComboboxSearch ..> SearchRequest : emits
-ComboboxSearch ..> ComboboxPage : reduces
-ComboboxSearch --> SearchStatus : has
-Combobox "1" --> "*" ComboboxOption : renders
-Combobox ..> ComboboxEmptyTemplate : renders when no results
-ComboboxSearch ..> PageLoaded : emits
+Combo ..> Source : required input
+Source ..> Page : emits first page
+Combo "1" --> "*" ComboboxOption : binds metadata
 @enduml

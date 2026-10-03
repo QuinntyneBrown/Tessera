@@ -1,105 +1,46 @@
 @startuml
-title UML sequence behaviour - Navigate and select options by keyboard
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "Keyboard user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host dialog" as dialog
-  participant "Form" as form
-end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combobox
-  participant "ComboboxSearch<T>" as search
-  participant "ComboboxOption<T>" as option
-  participant "ComboboxPopup" as popup
+title Navigate and select by keyboard
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Angular CDK" #E0F2FE
-  participant "ActiveDescendantKeyManager" as manager
+  participant "ActiveDescendantKeyManager" as keys
 end box
 
-user -> combobox : Arrow Down in the input (list closed)
-combobox -> popup : open() (L2-033 criterion 1)
-popup --> combobox : Overlay attached
-combobox -> manager : activateFirstEnabled() after render (L2-029)
-combobox --> user : aria-expanded true; aria-activedescendant set
 
-note over combobox, manager
-  Closed Arrow Up activates the last loaded option.
-  Alt+Arrow Down opens with no active option.
-  The opening intent also applies to the first async page.
-end note
-
-user -> combobox : Arrow Down (list open)
-alt Not the last option
-  combobox -> manager : setNextItemActive() without wrap
-  manager -> option : setActiveStyles()
-  combobox --> user : aria-activedescendant names the next option
-else Last option and hasMore
-  combobox -> search : loadNextPage()
-  search --> combobox : Appended page (L2-025)
-  combobox --> user : Active option stays on the last option
-else Last option and no more pages
-  combobox --> user : No request; active option unchanged (L2-033 criterion 4)
+user -> cb : Arrow Down/Up while closed
+cb -> cb : Open normal/last mode; Alt Down uses none
+cb -> keys : Set active item after render (L2-033)
+user -> cb : Plain vertical arrow while open
+alt Arrow Down at last option and hasMore
+  cb -> cb : loadMore(); preserve active item
+else Other plain arrow
+  cb -> keys : onKeydown(event); no wrap or disabled skip
 end
-combobox -> combobox : keyboardNavigating = true
-
-user -> combobox : Page Down or Page Up (list open)
-combobox -> combobox : preventDefault(); keyboardNavigating = true
-combobox -> manager : setActiveItem(active +/- visiblePageSize()), clamped, no wrap (L2-033 criterion 16)
-opt Page Down on the last option and hasMore
-  combobox -> search : loadNextPage() (L2-025)
+user -> cb : Page Down/Up
+cb -> keys : Clamp by fully visible row count, at least one
+user -> cb : Enter or Space
+alt Enter in error
+  cb -> cb : retry(); prevent submission
+else Enter with active option, or Space with navigationIntent
+  cb -> cb : toggle(results[activeIndex]); disabled item ignored
+else Open Enter without active option
+  cb -> cb : guarded loadMore(); prevent submission
+else Text editing or closed Enter
+  cb --> user : Native text insertion or submission
 end
-
-user -> combobox : Space
-alt keyboardNavigating and enabled option active
-  combobox -> combobox : toggle(item); preventDefault(); no space inserted (L2-033 criterion 15)
-else keyboardNavigating and disabled option active
-  combobox -> combobox : preventDefault(); nothing selected
-else Typed or moved the caret since navigating
-  combobox -> combobox : Not handled; the browser inserts a space
-end
-
-user -> combobox : Enter
-alt Error row shown
-  combobox -> search : retry() (L2-033 criterion 7)
-  combobox -> combobox : preventDefault()
-else Enabled option active
-  combobox -> combobox : toggle(item) of the active option (L2-033 criterion 5)
-  combobox -> combobox : preventDefault(); form not submitted
-  combobox --> user : Focus stays on the input
-else No active option, hasMore, and paging eligible
-  combobox -> search : loadNextPage()
-  combobox -> combobox : preventDefault()
-else No active option or disabled option
-  combobox -> combobox : Select nothing; preventDefault() while open (L2-033 criterion 6)
-  combobox -x form : Submission blocked
-else List closed
-  combobox -> form : Not handled; implicit submission applies (L2-033 criterion 6)
-end
-
-user -> combobox : Escape
-alt Full-label tooltip visible
-  combobox -> combobox : Hide tooltip; stopPropagation(); keep list and query
-else List open
-  combobox -> popup : close() (L2-033 criterion 8)
-  combobox -> combobox : stopPropagation()
-  combobox -x dialog : Event not delivered; dialog stays open (L2-033 criterion 9)
-else List closed and input has text
-  combobox -> combobox : Clear query; stopPropagation()
-else List closed and input empty
-  combobox -> dialog : Event propagates; dialog receives Escape
-end
-combobox --> user : DOM focus remains on the input
+user -> cb : Escape
+cb -> cb : Tooltip, then popup, then non-empty input text
+cb --> user : Consume handled Escape; otherwise containing dialog receives it
 @enduml

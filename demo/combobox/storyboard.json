@@ -1,0 +1,77 @@
+[
+  {
+    "id": "opening",
+    "caption": "Tessera combobox · Search, select, and keep control",
+    "speech": "This is Tessera's multi-select combobox. In this walkthrough, we will search for learners, use the keyboard, remove selections, and explore forms, custom content, and paging. These are the real component examples, using synthetic learner data."
+  },
+  {
+    "id": "search",
+    "caption": "Search results arrive after the typing pause",
+    "speech": "Typing the letter A returns eleven matching learners. The example source filters names and adds a short delay. The combobox waits for the typing pause before calling that source."
+  },
+  {
+    "id": "select",
+    "caption": "Ada and Grace selected · The list stays open",
+    "speech": "Selecting Ada and Grace creates two removable chips. Both options stay in the list with checked indicators. The panel remains open, and keyboard focus stays in the search input."
+  },
+  {
+    "id": "retain",
+    "caption": "A new search preserves the existing selections",
+    "speech": "Searching for Linus replaces the results, while Ada and Grace stay selected. Adding Linus updates the reactive form value below the field. Search text and selected values are separate."
+  },
+  {
+    "id": "chips",
+    "caption": "Arrow Left reaches a chip · Delete removes it",
+    "speech": "With an empty input, Arrow Left reaches the last chip. Delete removes Linus and moves focus to Grace, the surviving neighbor. Arrow Right returns focus to the input. The reactive value now contains Ada and Grace."
+  },
+  {
+    "id": "keys",
+    "caption": "Arrow keys navigate · Space toggles the active option",
+    "speech": "Arrow Down makes Grace active. Space removes Grace, then Enter adds it back. The active outline and checked selection indicator represent different states. Throughout result navigation, the input keeps focus."
+  },
+  {
+    "id": "clear",
+    "caption": "Escape closes the list · Clear all empties the value",
+    "speech": "Escape closes the panel without discarding the selected learners. Clear all then removes both selections, empties the form value, and returns focus to the input."
+  },
+  {
+    "id": "forms",
+    "caption": "Template-driven forms receive the selected value",
+    "speech": "The same component also works with template-driven forms. Here, choosing Sam updates the displayed template value. The example binds through Angular's N G Model directive."
+  },
+  {
+    "id": "model",
+    "caption": "Two-way model binding works without a form control",
+    "speech": "In the two-way model example, choosing Morgan updates the signal-backed value. Applications can use this binding when they do not need a form control."
+  },
+  {
+    "id": "custom",
+    "caption": "Custom content adds a team name and a bold chip",
+    "speech": "Custom templates add a team name to each result and render selected names in bold. Grace appears with the Learning team. The component still owns the option semantics, checked indicator, and removal button."
+  },
+  {
+    "id": "empty",
+    "caption": "The custom empty message includes the current query",
+    "speech": "A query with no matches displays the custom empty message, including the text we entered. Existing chips remain available, so an empty search does not erase the selection."
+  },
+  {
+    "id": "paging",
+    "caption": "The first page contains three learners",
+    "speech": "This example returns only three learners per page. The initial results are Ada, Grace, and Morgan. Load more results is a separate action below the list."
+  },
+  {
+    "id": "append",
+    "caption": "Load more appends results to the current list",
+    "speech": "Load more appends Sam, Tamara, and Arun. The earlier results stay in place. The source controls page size and whether another page exists."
+  },
+  {
+    "id": "arrows",
+    "caption": "Keyboard navigation reaches the end and loads another page",
+    "speech": "Keyboard users can also load more by navigating to the end of the list. Bringing the last row into view triggers another page here. The list grows to nine learners, and the next Arrow Down makes Bea active. Enter selects Bea and creates a chip."
+  },
+  {
+    "id": "ending",
+    "caption": "Real component examples · Manual accessibility sign-off pending",
+    "speech": "We have demonstrated search, multi-selection, keyboard operation, removal, three binding patterns, custom content, and paging. Automated checks cover these workflows. Manual screen reader, real zoom, and touch keyboard verification remain pending before release."
+  }
+]

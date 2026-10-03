@@ -1,5 +1,7 @@
 # Combobox design review
 
+This historical record covers the specifications, designs, and HTML mock. The subsequent [implementation and design review](combobox-implementation-design-review.md) compares the production component with the corrected designs.
+
 Scope: L1-009–L1-018, L2-022–L2-050, all ten combobox feature designs and their 60 diagram sources/images, and the standalone HTML mock. Production implementation and release certification are outside this artifact review.
 
 ## Current review status

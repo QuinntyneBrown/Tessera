@@ -20,61 +20,36 @@ The component has no backend of its own. `searchFn` may call a server or an in-m
 
 ## Description
 
-The slice is frontend-only and has four building blocks.
+`Combobox<T>` owns the entire search flow. Its `query`, `results`, `status`, `hasMore`, and `total` signals drive the template. `ComboboxPage<T>` carries `items`, `hasMore`, and optional `total`. `ComboboxSearchFn<T>` names the consumer's `(query, page) => Observable<ComboboxPage<T>>` contract.
 
-- `Combobox<T>` owns the `query` signal, input handlers, and list template. The input value changes during IME composition, but partial text never enters the search pipeline. `compositionstart` cancels pending debounce and requests. `compositionend` commits the composed text after the debounce (`L2-022`). The template binds `aria-busy` on the listbox.
+**Query commitment.** `onInput(event)` passes the input value unchanged to `changeQuery(text)`. Each edit updates the query, opens the list, marks the query pending, clears navigation intent, and cancels queued search announcements. The `invalidated` Subject unsubscribes the current request immediately, before debounce. The `queries` Subject feeds `debounce(() => timer(debounceMs()))`; the default pause is 300 ms. A committed text different from `committedQuery` emits `searchChange` once, even below the minimum length. Construction alone emits no text-change event.
 
-- `ComboboxSearch<T>` is a component-scoped class that runs the asynchronous pipeline. Its inputs are the `query` signal, `debounceMs` (default 300), `minSearchLength` (default 1), and `searchFn`. Its outputs are the signals `results`, `status`, `hasMore`, `total`, and `replaceCount` (a counter that increments each time a page 0 response replaces the results, which [Open and position the list](../open-and-position-list/) reads), and the observable `pageLoaded`, which emits `{ page, count }` once for each response that belongs to the current query and which [Expose state to assistive technology](../expose-to-assistive-tech/) reads to choose the results announcement, and the methods `retry()`, `loadNextPage()`, and `cancel()`.
-- `ComboboxOption<T>` is the option directive. This slice adds the `aria-setsize` and `aria-posinset` bindings to it.
-- `ComboboxPage<T>` is the interface a page carries: `items`, `hasMore`, and optional `total`.
+`compositionstart` cancels the request and replaces a pending query with a null sentinel. Intermediate IME input updates the visible text but does not enqueue a search. `compositionend` routes the final input value through the normal debounce. The null sentinel also cancels a pending typing search on disable or configuration change.
 
-### Search pipeline
+After debounce, text shorter than `minSearchLength` clears results, paging state, and `total`. The default minimum is one character. The template shows the localised `searchPrompt` instead of the empty-state content. The option collection becomes empty and the active-descendant reference disappears. Chips remain unchanged.
 
-The pipeline has two stages.
+**Request lifecycle.** The `requests` Subject carries query/page descriptors into `switchMap`. Each request sets status to `loading` and calls `defer(() => searchFn()(query, page))`. `take(1)` consumes the first page; `throwIfEmpty()` converts completion without a page into an error. `takeUntil(invalidated)` rejects delivery from a cancelled subscription. This subscription boundary protects newer results during the debounce pause.
 
-1. **Query stage.** The input handler invalidates the request generation immediately on any edit, before debounce. `toObservable(query)` feeds `debounce(() => timer(debounceMs()))`, reading the current delay for each change. A completed query with current results suppresses identical re-fetches; cancelled requests and failures remain retryable. The initial empty query produces neither a request nor `searchChange`. Every debounced text change emits `searchChange` once, including a below-minimum query. Configuration changes re-evaluate eligibility without emitting a text-change event.
+A page 0 response replaces `results`; later pages append. A successful response records `completedQuery`, `pageIndex`, `hasMore`, and `total`. `catchError` inside the request handles observable errors, synchronous throws, and empty completion. It sets status to `error` and leaves loaded results available. `finalize` clears the request's loading timer and returns a loading status to `idle`. The outer stream remains available for later searches.
 
-2. **Request stage.** A merged stream carries four kinds of request: a new query at page 0, a next page, a retry, and a cancel. `switchMap` subscribes to `defer(() => searchFn(query, page))` for the latest request and unsubscribes the previous inner Observable first. `catchError` sits inside the inner stream and converts a failure, including a synchronous throw from `searchFn`, into an error result. The outer stream therefore survives every failure and later searches still run (`L2-024`).
+| State | Presentation |
+|-------|--------------|
+| `loading` | Previous options remain, a spinner and Loading row appear, and the listbox has `aria-busy="true"` |
+| `idle`, eligible query, no items | No results, or `tComboboxEmpty` content with `{ query }`; the listbox has `aria-busy="false"` |
+| `error` | The loading-error message and Retry appear beside the retained option list; the listbox has `aria-busy="false"` |
+| Below minimum | The minimum-search instruction appears; the debounced commitment clears old options |
 
-A debounced query shorter than `minSearchLength` cancels requests, clears results, `total`, `hasMore`, and the active descendant, and returns status to `idle`. A localisable `searchPrompt` instruction replaces No results. Chips remain. Paging is blocked from the first edit until a successful page 0 for that exact query.
+Status rows and paging actions sit outside the listbox. They never enter the option collection. All owned text comes from `COMBOBOX_I18N`.
 
-With `minSearchLength` set to 0, opening an empty field requests page 0 without a typing debounce. An unchanged completed query reuses its current results on reopen; no per-query cache exists. Re-enabling after cancellation permits the same query to be requested again. Search configuration or `searchFn` changes cancel the current generation and invalidate current results. Each search request consumes the first page emission and completes (`take(1)`); a source completing without a page becomes a recoverable error.
+**Retry and paging.** `retry()` repeats `lastRequest` only for an enabled, non-composing component with no pending query, an error status, and matching current text. Enter in an open error state calls the same method as the Retry button.
 
-### Cancellation and stale responses
+`loadMore()` requests `pageIndex + 1` only when status is `idle`, `hasMore` is true, and `completedQuery` matches the current query. Disabled state, composition, or a pending edit blocks it. The method restores input focus after enqueueing. Its triggers are the Load more results button, a scroll within 8 CSS px of the end of an overflowing list, Arrow Down or Page Down at the last option, and Enter without an active option. Appending preserves the active option. A failed page retains the last successful index, so Retry repeats and appends the failed page. Empty pages never cause an automatic request loop.
 
-`switchMap` unsubscribes the previous request. A generation token also rejects responses as soon as the input changes, while the next query is still debouncing. A request descriptor holds the query and page; paging and Retry use that descriptor, never a mixture of typed text and older results. Disabled state cancels immediately. Current responses arriving after close may update stored results but shall not reopen or announce. Invalidating a generation clears its pending status announcements.
+Load more results renders whenever `hasMore` is true, with `tabindex="-1"`. It is disabled outside `idle`; request guards also block it during debounce or composition. Optional `total` supplies each option's `aria-setsize`, with a one-based `aria-posinset`; absent total removes both attributes.
 
-### State and rows
+**Reopening and configuration.** Opening with `minSearchLength` zero requests an empty query immediately. Reopening an unchanged successful query reuses current results. There is no cache of previous queries. Cancellation does not mark an unfinished query complete, so it remains requestable after re-enable. Changes to `searchFn`, `debounceMs`, `minSearchLength`, or `maxSelections` invalidate requests and results; an open, eligible field requests page 0 immediately. Configuration changes emit no `searchChange`.
 
-`status` is `idle`, `loading`, or `error`. A `scan` reducer builds `results`: a page 0 response replaces the array, a later page appends to it, and an error leaves it unchanged. The previous results therefore stay visible while a new request is in flight (`L2-024`).
-
-| State | Row shown | Listbox | Notes |
-|-------|-----------|---------|-------|
-| `loading` | Loading row, previous results above it | `aria-busy="true"` | The attribute is removed when the request completes |
-| `idle`, zero items | "No results" row | `aria-busy` removed | Default text "No results", or the content of a `tComboboxEmpty` template with context `{ query }` |
-| `error` | Error row with a Retry button | `aria-busy` removed | Typed text and loaded options remain; no exception reaches the application's `ErrorHandler` |
-
-The status rows are plain elements rendered beside the option list, not `role="option"` elements. No `ComboboxOption` registers for them, so the key manager never counts them and Arrow keys never activate them. Row text comes from `COMBOBOX_I18N`. The string keys are defined in [Customize, localise, and publish the API](../customize-and-localise/).
-
-`retry()` re-emits the last request with the same query and page. Pointer activation of the Retry button calls it. The Enter handler of `Combobox<T>` calls it while `status` is `error`, because Tab closes the list (v1 decision; key map in [Operate by keyboard](../operate-by-keyboard/)). On success the results replace the error row. A new query after a failure runs normally.
-
-### Paging
-
-`ComboboxSearch<T>` tracks `pageIndex`, the highest successfully loaded page. `loadNextPage()` returns without effect when `status` is not `idle`, the query is pending, or `hasMore` is false, which prevents a duplicate request for an in-flight page. Otherwise it requests `pageIndex + 1` for the current query. Three triggers call it:
-
-- The listbox scroll handler calls it when the scroll position reaches the end of the list. The end-of-list tolerance is 8 CSS px.
-- The Load more results action calls it on pointer activation or Enter with no active option.
-- The Arrow Down handler calls it when the active option is the last option and `hasMore` is true. The active option stays on the last option while the page loads. After the page arrives, the next Arrow Down activates the first appended option. When `hasMore` is false, Arrow Down issues no request and changes nothing.
-
-A failed next-page request sets `status` to `error` and does not change `pageIndex`. The error row appears below the loaded options, which remain. Retry requests the same page. A new query resets `pageIndex` to 0 when its first page arrives and replaces the list.
-
-When a page reports `total`, each `ComboboxOption` sets `aria-setsize` to `total` and `aria-posinset` to its 1-based position. When `total` is absent, neither attribute is set.
-
-An explicit Load more results action is rendered whenever `hasMore` is true. It sits outside the listbox, has `tabindex="-1"`, and keeps input focus on activation. It is disabled while loading. Pointer users can page even when the list does not overflow. Keyboard users use Arrow Down at the last loaded option, or Enter when there is no active option. An empty page does not trigger an automatic request loop.
-
-### Test support
-
-`ComboboxDemoPage` owns every selector and interaction for acceptance tests of this slice. Tests use fake timers for debounce and cancellation, and a `searchFn` double whose responses resolve in a chosen order.
+Closing detaches the list without cancelling an active request. Its response may update stored results, but does not reopen the list or announce while closed. Each response calls `ComboboxAnnouncer` directly from `Combobox<T>` when open.
 
 ## Requirements
 
@@ -97,11 +72,11 @@ The container view places `@tessera/combobox` in the host application's browser.
 
 ![Containers for searching options](diagrams/c4-container.png)
 
-The component view shows `Combobox<T>` feeding the query to `ComboboxSearch<T>`, which calls `searchFn` and returns results and status to the template and options.
+The component view shows `Combobox<T>` owning search subscriptions and binding page metadata to its option hosts.
 
 ![Components for searching options](diagrams/c4-component.png)
 
-The class view records the signals, methods, and the page and status types of the slice.
+The class view records the signals, methods, and page and status types used by the feature.
 
 ![Class structure for searching options](diagrams/class-structure.png)
 

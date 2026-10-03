@@ -16,6 +16,7 @@ state while the host LMS controls identity, authorization, delivery, and storage
 | Package | Purpose |
 | --- | --- |
 | `@tessera/scorm-player` | Embed SCORM learning content in an Angular LMS |
+| [`@tessera/combobox`](src/combobox/README.md) | Search and select multiple remote values with keyboard-operable chips |
 
 ## SCORM player
 

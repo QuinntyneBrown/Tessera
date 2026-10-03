@@ -1,22 +1,14 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Open and position the list
-
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(combo, "Combobox<T>", "Angular component", "Owns isOpen, activeIndex, opened, closed, open, and close")
-  Component(popup, "ComboboxPopup", "Class", "Wraps the overlay; syncs width and position")
-  Component(option, "ComboboxOption<T>", "Directive", "Implements Highlightable; reports disabled state")
+title Components - open and position list
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns OverlayRef, position strategy, geometry tracking and opening mode")
+  Component(option, "ComboboxOption", "Highlightable directive", "Discovered through viewChildren; reports disabled state")
+  Component(fallback, "ComboboxOverlayContainer", "CDK container subclass", "Places non-popover fallback in the nearest open native dialog")
 }
-Container_Boundary(cdk, "Angular CDK") {
-  Component(overlay, "Overlay and FlexibleConnectedPositionStrategy", "CDK overlay", "Renders the pane below or above the field")
-  Component(scroll, "ScrollDispatcher and ViewportRuler", "CDK scrolling", "Report scroll and viewport changes")
-  Component(keys, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option")
-}
-Rel(combo, popup, "open, close, dispose")
-Rel(popup, overlay, "Attaches, sizes, and repositions")
-Rel(overlay, scroll, "Listens for scroll and resize")
-Rel(popup, combo, "Emits outsidePointerEvents")
-Rel(combo, keys, "Applies normal, last, or none opening mode")
-Rel(keys, option, "Highlights", "Highlightable")
+Rel(combo, option, "Discovers hosts and applies opening mode")
+Rel(combo, fallback, "Provides component-scoped fallback")
+Container_Ext(cdk, "Angular CDK", "Browser library", "Overlay and ActiveDescendantKeyManager")
+Rel(combo, cdk, "Uses overlay and/or active-descendant APIs")
 @enduml

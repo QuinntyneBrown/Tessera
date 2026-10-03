@@ -1,5 +1,4 @@
 @startuml
-title Class structure - Integrate with forms
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,59 +9,39 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-
-interface ControlValueAccessor <<Angular Forms>> {
-  +writeValue(value: any): void
-  +registerOnChange(fn: Function): void
-  +registerOnTouched(fn: Function): void
-  +setDisabledState(isDisabled: boolean): void
+title Class structure - integrate forms
+interface ControlValueAccessor {
+  +writeValue(value): void
+  +registerOnChange(fn): void
+  +registerOnTouched(fn): void
+  +setDisabledState(disabled: boolean): void
 }
-
-class "Combobox<T>" as Combobox {
+class "Combobox<T>" as Combo {
   +value: ModelSignal<T[]>
-  +disabled: boolean
-  +required: boolean
-  +hint: string
-  +error: string
-  -formDisabled: WritableSignal<boolean>
-  -controlVersion: WritableSignal<number>
+  -synchronizedValue: T[] | undefined
   -ngControl: NgControl | null
-  -onChange: (value: T[]) => void
-  -onTouched: () => void
-  +isDisabled: Signal<boolean>
-  +showError: Signal<boolean>
+  -boundControl: AbstractControl | null
+  -controlVersion: WritableSignal<number>
+  #localTouched: WritableSignal<boolean>
+  #isRequired: Signal<boolean>
+  #showError: Signal<boolean>
   +writeValue(value: T[] | null): void
-  +registerOnChange(fn: (value: T[]) => void): void
-  +registerOnTouched(fn: () => void): void
-  +setDisabledState(isDisabled: boolean): void
-  +onFocusOut(event: FocusEvent): void
-  -commit(next: T[], change: ComboboxChange<T>): void
+  +setDisabledState(disabled: boolean): void
+  #onFocusout(event: FocusEvent): void
+  -bindControl(): void
 }
-
 class NgControl <<Angular Forms>> {
-  +control: AbstractControl
-  +valueAccessor: ControlValueAccessor
+  +control: AbstractControl | null
 }
-
-class FormControl <<Angular Forms>> {
-  +value: any
-  +dirty: boolean
+class AbstractControl <<Angular Forms>> {
+  +events: Observable<ControlEvent>
   +touched: boolean
   +invalid: boolean
-  +events: Observable<ControlEvent>
+  +disabled: boolean
+  +setValue(value): void
 }
-
-class RequiredValidator <<Angular Forms>> {
-  +required: boolean
-  +validate(control: AbstractControl): ValidationErrors | null
-}
-
-class NG_VALUE_ACCESSOR <<InjectionToken>>
-
-Combobox ..|> ControlValueAccessor : implements
-Combobox ..> NG_VALUE_ACCESSOR : provides itself under
-Combobox --> NgControl : reads lazily
-NgControl --> FormControl : wraps
-NgControl --> ControlValueAccessor : writes to and listens to
-RequiredValidator ..> FormControl : validates
+Combo ..|> ControlValueAccessor
+Combo --> NgControl : resolves lazily
+NgControl --> AbstractControl : current control
+Combo --> AbstractControl : subscribes and rebinds
 @enduml

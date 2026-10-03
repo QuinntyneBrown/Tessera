@@ -1,18 +1,14 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Search options
-
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(combo, "Combobox<T>", "Angular component", "Owns query signal, IME handling, status rows, and searchChange")
-  Component(search, "ComboboxSearch<T>", "Component-scoped class", "Debounces, cancels, pages, and reduces results and status")
-  Component(option, "ComboboxOption<T>", "Directive", "Binds aria-setsize and aria-posinset")
-  Component(announcer, "ComboboxAnnouncer", "Class", "Announces results only while the list is open")
+title Components - search options
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns query and request Subjects, result signals, retry and loadMore")
+  Component(option, "ComboboxOption", "Highlightable directive", "Binds total and one-based position from the template")
+  Component(ann, "ComboboxAnnouncer", "Text queue", "Receives formatted search outcomes while open")
 }
-Container_Ext(source, "Consumer searchFn", "Host function", "Returns Observable of ComboboxPage")
-Rel(combo, search, "Sets query; calls retry, loadNextPage, cancel")
-Rel(search, source, "Subscribes to searchFn(query, page)")
-Rel(search, combo, "Exposes results, status, hasMore, total")
-Rel(combo, option, "Renders one option per result")
-Rel(combo, announcer, "Announces new results while open")
+Rel(combo, option, "Binds page state and option inputs")
+Rel(combo, ann, "Queues formatted outcomes")
+Container_Ext(source, "Consumer searchFn", "Host function", "Observable page source; no package backend")
+Rel(combo, source, "Subscribes through defer, switchMap and immediate invalidation")
 @enduml

@@ -12,7 +12,7 @@ System_Boundary(app, "Host Angular application") {
   Container(cdk, "@angular/cdk", "Angular library", "Overlay and key manager")
 }
 System_Ext(source, "Consumer data source", "Returns untrusted items")
-Container(e2e, "e2e-app", "Angular application, provideZonelessChangeDetection", "Hosts ComboboxScenario fixtures with hostile data and timing controls")
+Container(e2e, "e2e-app", "Angular application, provideZonelessChangeDetection", "Hosts parameterized ComboboxFixture scenarios with hostile data and timing controls")
 Container(tests, "Playwright acceptance tests", "Playwright, Chromium, CDP", "Run ComboboxDemoPage timing, injection, and teardown checks")
 Rel(user, hostcode, "Uses", "Browser")
 Rel(hostcode, pkg, "Binds inputs and templates of", "Angular template")

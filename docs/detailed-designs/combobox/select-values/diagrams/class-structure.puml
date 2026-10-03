@@ -1,5 +1,4 @@
 @startuml
-title Class structure - Select values
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,58 +9,32 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-
-class "Combobox<T>" as Combobox {
+title Class structure - select values
+class "Combobox<T>" as Combo {
   +value: ModelSignal<T[]>
-  +displayWith: (item: T) => string
-  +compareWith: (a: T, b: T) => boolean
-  +optionDisabled: (item: T) => boolean
-  +maxSelections: number | null
-  +clearSearchOnSelect: boolean
-  +selectionChange: OutputEmitterRef<ComboboxSelectionChange<T>>
-  +canSelectMore: Signal<boolean>
-  +isSelected(item: T): boolean
-  +isOptionDisabled(item: T): boolean
-  +toggle(item: T): void
-  +removeChip(item: T): void
-  +clearAll(): void
-  -commit(next: T[], change: ComboboxChange<T>): void
+  +compareWith: InputSignal<(a: T, b: T) => boolean>
+  +displayWith: InputSignal<(item: T) => string>
+  +maxSelections: InputSignal<number | null>
+  #canSelectMore: Signal<boolean>
+  #toggle(item: T): void
+  #removeChip(index: number): void
+  #clearAll(): void
+  -commit(next: T[], change: {added?: T, removed?: T}): void
 }
-
-class "ComboboxSelectionChange<T>" as ComboboxSelectionChange {
+interface "ComboboxSelectionChange<T>" as Change {
   +added?: T
   +removed?: T
   +value: T[]
 }
-
-class "ComboboxOption<T>" as ComboboxOption {
-  +item: T
-  +selected: Signal<boolean>
-  +disabled: Signal<boolean>
-  +ariaSelected: string
-  +ariaDisabled: string | null
+class ComboboxOption {
+  +selected: InputSignal<boolean>
+  +isDisabled: InputSignal<boolean>
+  +disabled: boolean <<getter>>
 }
-
-class ComboboxChipTemplate {
-  +implicit: T
-}
-
 class ComboboxAnnouncer {
-  +announceSelected(label: string, count: number): void
-  +announceRemoved(label: string): void
-  +announceMaxReached(max: number): void
+  +selection(text: string): void
 }
-
-interface COMBOBOX_PARENT <<InjectionToken>> {
-  +toggle(item: T): void
-  +isSelected(item: T): boolean
-  +isOptionDisabled(item: T): boolean
-}
-
-Combobox ..> ComboboxSelectionChange : emits
-Combobox "1" --> "*" ComboboxOption : renders
-Combobox ..> ComboboxChipTemplate : renders chip content
-Combobox --> ComboboxAnnouncer : announces through
-ComboboxOption ..> COMBOBOX_PARENT : reads and calls
-Combobox ..|> COMBOBOX_PARENT : provides
+Combo ..> Change : emits for user changes
+Combo "1" --> "*" ComboboxOption : binds state
+Combo "1" *-- "1" ComboboxAnnouncer : owns queue
 @enduml

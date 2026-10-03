@@ -1,26 +1,16 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Secure and perform
-
-System_Ext(source, "Consumer data source", "Returns untrusted items")
-Container(core, "Angular core", "Signals, DestroyRef, zoneless scheduler", "Runs destroy callbacks and schedules rendering")
-Container(cdk, "@angular/cdk", "Angular library", "Overlay and ActiveDescendantKeyManager")
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(cb, "Combobox<T>", "Standalone OnPush component", "Binds text only; owns signals; registers teardown")
-  Component(ids, "ComboboxIds", "Class", "Generates every instance identifier from a per-instance uid")
-  Component(search, "ComboboxSearch<T>", "Component-scoped class", "Debounces, deduplicates, and cancels searches; passes the query unchanged")
-  Component(opt, "ComboboxOption<T>", "Directive", "Takes a unique id from the parent and renders its label as text")
-  Component(popup, "ComboboxPopup", "Class", "Owns the overlay and the width observer; disposes both")
-  Component(ann, "ComboboxAnnouncer", "Class", "Passes string messages only; owns a host live region and clears timers and DOM on destroy")
+title Components - secure and perform
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "OnPush component", "Owns component ID counter, request subscriptions, overlay and control cleanup")
+  Component(option, "ComboboxOption", "Directive", "Owns independent generated option ID and active signal")
+  Component(ann, "ComboboxAnnouncer", "Text queue", "Owns quiet and write timers; signals render as text")
+  Component(fallback, "ComboboxOverlayContainer", "Scoped container", "Inherited container teardown")
 }
-Rel(cb, ids, "Creates once per instance")
-Rel(cb, search, "Writes query to; reads results from")
-Rel(search, source, "Calls searchFn on; unsubscribes on destroy", "Observable")
-Rel(cb, opt, "Renders each option with")
-Rel(opt, ids, "Requests nextOptionId from")
-Rel(cb, popup, "Opens and disposes")
-Rel(popup, cdk, "Creates overlay and observer with")
-Rel(cb, ann, "Requests announcements from")
-Rel(cb, core, "Registers DestroyRef callbacks with")
+Rel(combo, option, "Binds text data and ARIA states")
+Rel(combo, ann, "Passes formatted text")
+Rel(combo, fallback, "Provides instance-scoped fallback")
+Container_Ext(cdk, "Angular CDK", "Browser library", "Overlay and ActiveDescendantKeyManager")
+Rel(combo, cdk, "Uses overlay and/or active-descendant APIs")
 @enduml

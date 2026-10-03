@@ -1,68 +1,36 @@
 @startuml
-title UML sequence behaviour - Write and change the value
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Write and change the form value
 actor "Application user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host component" as host
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - Angular Forms" #E0F2FE
-  participant "FormControl" as fc
-end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
+box "Frontend - Angular Forms and host" #E0F2FE
+  participant "Control / model binding" as fc
 end box
 
-alt bound to a form control
-  host -> fc : setValue(array) or setValue(null)
-  fc -> combo : writeValue(value)
-  combo -> combo : value.set(value or empty array); chips render (L2-031)
-  note right of combo
-    writeValue never calls onChange
-    and never emits selectionChange
-  end note
-  user -> combo : Select or remove an item
-  combo -> combo : commit(next)
-  combo -> fc : onChange(next T[]) (L2-031)
-  fc -> fc : For updateOn change: set value, mark dirty, emit once (L2-031)
-  note over fc, combo
-    For updateOn blur or submit, Angular commits at that boundary.
-    The accessor does not force an earlier commit.
-  end note
-  host -> fc : disable()
-  fc -> combo : setDisabledState(true)
-  combo -> combo : isDisabled true: disable input, chip buttons, clear-all, toggle; close list (L2-031)
-  host -> fc : enable()
-  fc -> combo : setDisabledState(false)
-  combo --> user : Input and buttons operable again (L2-031)
-else bound with [(value)] and no form control
-  host -> combo : Signal holds two items
-  combo --> user : Two chips render (L2-032)
-  user -> combo : Select or remove an item
-  combo -> combo : commit(next) sets value
-  combo --> host : valueChange updates the bound signal (L2-032)
-  host -> combo : Signal set to a new array
-  combo --> user : Chips update; selectionChange does not emit (L2-032)
+
+fc -> cb : writeValue(array or null)
+cb -> cb : Remember synchronized array; null becomes [] (L2-031)
+cb --> user : Chips update without user-change event
+user -> cb : Toggle or remove a value
+cb -> cb : Remember array before model watcher; set value
+cb -> fc : onChange(next) and selectionChange (L2-031)
+fc -> fc : Commit at configured change, blur or submit boundary
+opt External model array with forms present
+  fc -> cb : New model value
+  cb -> fc : Identity-guarded setValue once; no dirty or selectionChange
 end
-opt both a form control and [(value)] present
-  fc -> combo : writeValue(value)
-  combo -> combo : value.set(...) updates chips and the model (L2-032)
-  combo --> host : valueChange updates the bound signal (L2-032)
-  host -> combo : External model write with a new array
-  combo -> combo : Remember synchronized array before watcher runs
-  combo -> fc : setValue(next) once; keep pristine/touched state unchanged
-  combo --> host : No selectionChange and no echo (L2-032 AC5)
+opt No forms
+  cb --> fc : valueChange updates two-way model (L2-032)
 end
 @enduml

@@ -14,116 +14,56 @@
 
 **Active descendant** — option that the input names through `aria-activedescendant` while DOM focus stays on the input
 
-The feature covers three concerns. The first is the roles, states, and properties of the combobox input with its documented multi-select extension (`L2-035`). The second is the messages the component writes to a live region (`L2-036`). The third is the focus rules that keep DOM focus on the input and keep the active option visible (`L2-037`). The consuming application supplies a visible label. The component supplies everything else, and the component owns the `role="option"` host so that a consumer template cannot break the pattern.
+The feature covers three concerns. The first is the roles, states, and properties of the combobox input with its documented multi-select extension (`L2-035`). The second is the messages the component writes to a live region (`L2-036`). The third is the focus rules that keep DOM focus on the input and keep the active option visible (`L2-037`). The consuming application supplies an accessible name and accessible template content. The component owns the input and `role="option"` hosts, their ARIA attributes, focus management, and announcements.
 
 Key handling, searching, selection state, and visual styling belong to sibling features. They appear here as the sources of the state this feature exposes.
 
 ## Description
 
-The slice adds ARIA bindings to `Combobox<T>` and `ComboboxOption<T>`, an announcement policy to `ComboboxAnnouncer`, and focus rules to the input, the option, and the popup.
+`Combobox<T>` binds input, listbox, chip-list, button, summary, and live-region semantics in `combobox.html`. `ComboboxOption` owns each option's role, generated identifier, ARIA state, and active class. Consumer slots supply content inside these hosts.
 
-- `Combobox<T>` binds the ARIA attributes of the input, the listbox, the chip list, and the buttons in its template. Derived values use `computed()`: `activeOptionId`, `describedBy`, `selectedSummary`, and `labelledBy`. Identifiers come from `ComboboxIds` ([Secure and perform](../secure-and-perform/)), so every id has the form `t-combobox-{uid}-{part}`, is created once per instance, and never derives from item data (`L2-044`).
-- `ComboboxOption<T>` owns the option host element. It sets its attributes through directive `host` metadata. A consumer template renders inside the host through `ngTemplateOutlet` and has no access to the host's attributes (`L2-035` criterion 9).
-- `ComboboxAnnouncer` owns one visually hidden live region inside the component host, outside the popup. The template renders it before any announcement. It writes textContent with aria-atomic, polite by default and assertive for failure. A region inside a modal dialog stays in its accessible subtree. Instance ownership prevents other controls overwriting it and permits all timers and DOM to be released on destruction. It does not use application-scoped CDK LiveAnnouncer.
-- `ComboboxSearch<T>` supplies `status`. This feature proposes one addition to its surface in [Search options](../search-options/): the observable `pageLoaded`, which emits `{ page, count }` once for each response that belongs to the current query. `count` is the length of that page's `items`. Outdated responses never emit (`L2-023`). `Combobox<T>` subscribes with `takeUntilDestroyed`.
-- `ActiveDescendantKeyManager<ComboboxOption<T>>` tracks the active option. Its `change` stream drives `activeIndex`, which `activeOptionId` reads.
+**Names and relationships.** The consumer supplies a visible `<label for>` associated with `inputId`, or an `ariaLabel`. `listLabel()` uses `ariaLabel` when truthy; otherwise it joins the trimmed text of the input's associated native labels. The listbox uses this text through `aria-label`. The component does not assign IDs to consumer labels or use `aria-labelledby` on the listbox.
 
-**Input.**
+In development mode, `afterNextRender` checks that `listLabel().trim()` is non-empty. Failure throws `Combobox: an accessible name is required. Supply a visible label through inputId or ariaLabel.` The check runs once after the initial render. Production builds omit this diagnostic; the consumer still supplies the accessible name.
 
-| Attribute | Binding |
-|-----------|---------|
-| `role` | `combobox` |
-| `aria-autocomplete` | `list` |
-| `autocomplete` | `off` |
-| `aria-expanded` | `"true"` while `isOpen()`, otherwise `"false"` |
-| `id` | The `inputId` input; a generated `t-combobox-{uid}-input` when absent |
-| `aria-label` | The `ariaLabel` input, present only when it is non-empty |
-| `aria-controls` | The listbox id, present only while the listbox is rendered |
-| `aria-activedescendant` | `activeOptionId()`, which is the active option's id while the list is open, and absent when no option is active or the list is closed |
-| `aria-describedby` | `describedBy()`: the error id while the error is shown, the hint id, and the summary id while at least one value is selected, so the error is read first |
+| Element | Semantics |
+|---------|-----------|
+| Input | `role="combobox"`, `aria-autocomplete="list"`, native `autocomplete="off"`, and explicit true/false expanded, required, and invalid states |
+| Input relationships | `aria-controls` references the list only while open; `aria-activedescendant` references the active host only while open and an option exists |
+| Input description | Error ID when visible with text, then hint ID when supplied, then selected-summary ID when selections exist; no empty reference list |
+| Listbox | `role="listbox"`, `aria-multiselectable="true"`, label text through `aria-label`, and explicit true/false `aria-busy` |
+| Option | `role="option"`, generated ID, explicit true/false `aria-selected` and `aria-disabled`; optional set size and one-based position |
+| Chips | Native list labelled Selected values; an empty list remains in the template and CSS hides it |
+| Chip remove button | Remove {label}, using the full `displayWith(item)` label |
+| Clear-all | Visible localised Clear all selections text, rendered only with a non-empty value |
+| Toggle | Localised Show options or Hide options name; `tabindex="-1"` |
 
-The visible name comes from the consumer's `<label for>` and the `inputId` input. Without a visible label and without `ariaLabel`, the component reports a development-time error. The check runs once in `afterNextRender` when `isDevMode()` is true. It looks for a `label[for]` that matches the input id in the host's root node. It logs a documented message through `console.error` and never throws, so a missing label cannot break a running page. The documented diagnostic is `[t-combobox] Supply a visible label associated with inputId or a non-empty ariaLabel.` The adoption page described in [Verify and document](../verify-and-document/) explains both fixes.
+`summary` computes the localised `selectedSummary` text from count and labels joined by `labelSeparator`. The hidden summary renders only with selections. IDs use a component counter for input, list, hint, error, summary, and tooltip, plus an independent option counter. The formats are detailed in [Secure and perform](../secure-and-perform/).
 
-The summary is a visually hidden element with a generated id. Its text comes from the `selectedSummary` string, which takes the count and the labels joined by `labelSeparator`, for example "3 selected: Ada, Grace, Linus". Each label is `displayWith(item)` written as text. The element is not rendered while no value is selected, so `describedBy()` omits its id. The input therefore announces the summary when it receives focus (`L2-036` criterion 10). The hint and error elements, and the `aria-required` and `aria-invalid` attributes, follow [Integrate with forms](../integrate-forms/).
+**Announcement ownership.** Each component creates one `ComboboxAnnouncer` with its `DestroyRef`. The announcer owns `message` and `priority` signals and queued text; the component template owns the single visually hidden live-region element outside the popup. It exists before messages are inserted and has `aria-atomic="true"`. `Combobox<T>` resolves and formats all localised messages before calling `search(text)`, `selection(text)`, or `failure(text)`. The announcer neither injects strings nor creates DOM.
 
-**Listbox, options, and chips.**
+| Event | Message policy |
+|-------|----------------|
+| First page | Loaded page count, with singular/plural keys; an empty page uses No results found. |
+| Appended page with items | Appended item count, with singular/plural keys |
+| Request still pending after 1 s | Loading results., queued only if the popup is open at the timer callback |
+| Request failure | Results could not be loaded., assertive |
+| User addition | {label} selected. {n} selected in total., with a singular-total key |
+| Deselection or chip removal | {label} removed. |
+| Clear-all | All selections cleared. |
+| Limit reached | Maximum of {max} selections reached., after an addition reaches the limit and on opening at the limit |
 
-| Element | Attributes |
-|---------|------------|
-| Listbox (`ul`) | `role="listbox"`, `aria-multiselectable="true"`, `aria-busy="true"` only while `search.status()` is `loading`, and a name from the visible label |
-| Option host (`li`) | `role="option"`, generated `id`, `aria-selected` of `"true"` or `"false"` on every option, `aria-disabled="true"` only when disabled |
-| Decorative checkbox | `aria-hidden="true"`, inside the option host before the consumer content |
-| Chip list (`ul`) | `aria-label` from `chipListLabel`, default "Selected values"; rendered only while a value exists |
-| Chip remove button | Name "Remove {label}" from `removeChip` through `aria-label`, with `{label}` replaced by `displayWith(item)` |
-| Clear-all button | Name "Clear all selections" from `clearAll` |
-| Toggle button | `tabindex="-1"`; name from `showOptions` or `hideOptions`, defined in [Customize, localise, and publish the API](../customize-and-localise/) |
+Search success and failure call the announcer only while open. Programmatic value writes announce nothing. A loading timer belongs to each request and clears in `finalize`, including cancellation or destruction. Closing discards queued search messages but leaves the request and its timer running; the timer checks open state before queueing. An empty appended page has no loaded-count announcement.
 
-The listbox name uses `aria-labelledby`. `Combobox<T>.labelledBy()` finds the `label[for]` element on each open. If that element has no id, the component assigns a generated one. When no visible label exists, the listbox takes the `ariaLabel` text through `aria-label`. The component writes the id only when it is missing, and it never rewrites a consumer's id.
+**Queue policy.** A 150 ms quiet window coalesces search text to the most recent message and preserves selection messages in order. A flush joins the search message followed by selection messages with spaces. `cancelSearch()` removes pending search text, including a scheduled write, while retaining selections. Query edits, composition, configuration changes, close, and disable call it.
 
-The option id comes from `ComboboxIds.nextOptionId()`, which the directive calls once in its constructor through the `COMBOBOX_PARENT` token. The counter never reuses a value, so an id stays unique and stable for as long as its option element exists. Disabled options carry `aria-disabled="true"` and remain in the key manager's item list, so Arrow keys reach them. They cannot be selected, because `Combobox<T>.toggle(item)` returns for a disabled option ([Select values](../select-values/)). The status rows have no `role="option"` and register no `ComboboxOption`.
+Each write clears the region and sets priority, then inserts text after 32 ms so repeated text can be announced after a rendered empty state. Failure bypasses the quiet window, cancels search text, and writes assertively through the same 32 ms step. Selections already waiting for insertion return to the polite queue. Destruction clears both timers; the Angular view removes the region. These timings describe DOM updates; observed speech timing remains subject to manual verification.
 
-**Live announcements.** `ComboboxAnnouncer` exposes one method per message and reads its text from the resolved strings whose keys [Customize, localise, and publish the API](../customize-and-localise/) defines. Placeholders `{n}`, `{label}`, and `{max}` are replaced from current values.
+**Focus and visibility.** The key manager's `change` stream updates `activeIndex`; `activeOptionId` reads the current option's ID. Disabled options remain navigable but cannot toggle. `ComboboxOption.setActiveStyles()` compares option and listbox bounds and adjusts only listbox `scrollTop`. Pointer activation restores input focus synchronously, and option mousedown prevents a mouse focus change.
 
-| Event | Default message and key | Raised by | Politeness |
-|-------|-----------------|-----------|------------|
-| First page with items | "{n} results available." (`announceResults`) | `pageLoaded` with `page` 0 and `count` above 0, while the list is open | polite |
-| First page without items | "No results found." (`announceNoResults`) | `pageLoaded` with `page` 0 and `count` 0, while the list is open | polite |
-| Request longer than 1 second | "Loading results." (`announceLoading`) | A 1 s timer started when `status` becomes `loading` | polite |
-| Request failed | "Results could not be loaded." (`resultsError`) | `status` becomes `error`, while the list is open | assertive |
-| Option selected | "{label} selected. {n} selected in total." (`announceSelected`) | `commit` after adding a value | polite |
-| Option or chip removed | "{label} removed." (`announceRemoved`) | `commit` after removing a value, from `toggle`, `removeChip`, or Backspace | polite |
-| Clear-all | "All selections cleared." (`announceCleared`) | `commit` from `clearAll` | polite |
-| Limit reached | "Maximum of {max} selections reached." (`announceMaxReached`) | `commit` when the new value count equals `maxSelections`, and each time the list opens while the limit holds ([Select values](../select-values/)) | polite |
-| Next page appended | "{n} more results loaded." (`announceMoreLoaded`) | `pageLoaded` with `page` above 0 and `count` above 0, while the list is open | polite |
+The field uses `:has(.t-combobox-input:focus-visible)` for its outline; buttons use `:focus-visible`. Active outline, selected checkmark, and hover background remain distinct. Popup options have no Tab stops, status actions have `tabindex="-1"`, and Tab follows browser order. Tooltip-first Escape, chip focus, popup-action focus restoration, and disabled-state exceptions follow [Operate by keyboard](../operate-by-keyboard/).
 
-Rules for the table:
-
-- `{n}` for results is `count` of the first page. `{n}` for the selection total is `value().length` after the change.
-- The loading timer is cleared when `status` leaves `loading`, when the list closes, and when the component is destroyed. A request that completes within 1 s therefore produces no loading message. One loading period produces at most one message, even when consecutive requests keep `status` at `loading`.
-- Only user actions raise selection messages. A programmatic write to `value` raises none, which matches the rule that it does not emit `selectionChange` (`L2-026`).
-- A response that arrives while the list is closed raises no results message (`L2-023`).
-
-**Coalescing.** The live region replaces its text on each write, so two calls in quick succession would lose the first message. `ComboboxAnnouncer` therefore holds a pending list and flushes it after a quiet window. The quiet window is 150 ms. Closing, editing, composition, disabling, or destruction drops pending status messages. Selection messages remain in arrival order until flushed. Every scheduled status flush checks its current request generation and open state. Two message classes follow different rules:
-
-- A search-status message (results, no results, loading, more results) replaces any pending search-status message. Rapid typing therefore yields one results message for the final results (`L2-036` criterion 3). The search debounce and `switchMap` already deliver only the final results, and this rule is a second guard.
-- A selection message (selected, removed, cleared, limit reached) is appended to the pending list. Selecting the last allowed option raises "Ada selected. 3 selected in total." and "Maximum of 3 selections reached." in one window, and the flush joins both in arrival order with a space. Every genuine selection event remains in order, even when its text repeats. This rule settles how the limit message coalesces with the selection message, which [Select values](../select-values/) leaves to this feature.
-- The assertive failure message flushes at once, discards pending search-status messages, and writes the failure with assertive politeness on the next task after clearing the region. Pending selection messages follow politely rather than overwriting the failure in the same task.
-
-All text reaches the region through `textContent`, so a label that contains markup appears as literal text (`L2-044`).
-
-**Focus management.**
-
-- With input focus and an enabled component, option navigation, selection, opening, and closing keep input focus. Closing from chips and popup actions follows L2-029 criterion 10; browser focus behavior applies when disabling. Options and status rows are not focusable and have no `tabindex`. The Retry button in the error row has `tabindex="-1"`, because Tab closes the list and keyboard users retry with Enter. `ComboboxPopup` never calls `focus()`, and no focus-trap directive is attached (`L2-037` criteria 1 and 5).
-- The listbox panel and its options call `preventDefault()` on `mousedown`, so a pointer press does not move focus. [Present the component accessibly](../present-accessibly/) owns the pointer handlers. Completed option activation shall retain input focus; touch emulation and the real-device procedure verify the required keyboard behavior.
-- The overlay carries no `aria-modal`, and Tab from the input closes the list and follows the browser's order, as specified in [Operate by keyboard](../operate-by-keyboard/).
-- `ComboboxOption.setActiveStyles()` adds the active class and scrolls the option into view. It compares the option and controlled listbox bounds and changes only the listbox scrollTop by the necessary delta. This avoids scrolling the document or another ancestor. The listbox sets no `scroll-behavior`, so scrolling is instant under every motion preference (`L2-037` criterion 2).
-- The active, selected, and hover treatments use three separate hooks: the active class from `setActiveStyles()`, the `aria-selected` attribute with the checkmark, and the `:hover` pseudo-class. Hover does not change the active option. [Present the component accessibly](../present-accessibly/) assigns the visual cues (`L2-037` criterion 4).
-- The field wrapper shows the focus indicator through `:has(.t-combobox-input:focus)`, and the chip remove buttons and clear-all show it through `:focus-visible`, so exactly one indicator is visible at a time. The theme tokens in that feature supply the colors and contrast targets (`L2-037` criterion 3).
-
-**Acceptance criteria coverage.**
-
-| Criterion | Where the design satisfies it |
-|-----------|-------------------------------|
-| `L2-035` 1 | Input table; the `inputId` and `ariaLabel` rules |
-| `L2-035` 2 | Development-time check in `afterNextRender` |
-| `L2-035` 3, 4 | `aria-controls` and `aria-activedescendant` rows |
-| `L2-035` 5 | `describedBy()` and the summary element |
-| `L2-035` 6 | Listbox row; `labelledBy()` |
-| `L2-035` 7 | Option rows; `ComboboxIds.nextOptionId()`; `aria-disabled`; disabled options not skipped |
-| `L2-035` 8 | Chip list, remove button, and clear-all rows |
-| `L2-035` 9 | Option host `host` metadata; `ngTemplateOutlet` |
-| `L2-036` 1 | Instance region rendered before the first message |
-| `L2-036` 2, 9 | `pageLoaded` rows of the announcement table |
-| `L2-036` 3 | Search-status replacement rule |
-| `L2-036` 4 | 1 s loading timer |
-| `L2-036` 5 | Assertive failure message |
-| `L2-036` 6, 7, 8 | Selection messages raised by `commit`; appending rule |
-| `L2-036` 10 | Summary through `aria-describedby` |
-| `L2-037` 1, 5 | Focus rules; `tabindex="-1"` on Retry; no focus trap |
-| `L2-037` 2 | `setActiveStyles()` scroll rule |
-| `L2-037` 3, 4 | Focus indicator hooks and the three state hooks |
-
-The string contract supplies singular and plural counts and Show options / Hide options names. Manual verification includes CDK and native modal dialog hosts, particularly whether announcements remain exposed in the modal subtree.
+The design combines combobox input focus with a multi-select listbox. It does not establish screen reader compatibility by itself. The [manual release matrix](../../../verification/combobox-screen-reader-matrix.md) records speech, dialog exposure, and touch reading order separately from automated checks.
 
 ## Requirements
 
@@ -149,7 +89,7 @@ The component view shows which parts write ARIA state and which parts raise anno
 
 ![C4 components: Expose state to assistive technology](diagrams/c4-component.png)
 
-The class view records the derived ARIA values on `Combobox<T>`, the announcer's messages, and the proposed `pageLoaded` stream.
+The class view records derived ARIA values, option state, the signal-backed message queue, and template ownership of the live region.
 
 ![Class structure: Expose state to assistive technology](diagrams/class-structure.png)
 

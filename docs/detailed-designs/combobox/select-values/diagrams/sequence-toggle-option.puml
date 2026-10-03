@@ -1,55 +1,42 @@
 @startuml
-title UML sequence behaviour - Toggle an option
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Toggle an option
 actor "Application user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host component" as host
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "ComboboxOption<T>" as option
-  participant "Combobox<T>" as combo
-  participant "ComboboxAnnouncer" as announcer
-  participant "Instance live region" as live
+box "Frontend - Host application" #E0F2FE
+  participant "Bound value/form" as host
+end box
+box "Frontend - Package announcement queue" #E0F2FE
+  participant "ComboboxAnnouncer" as ann
 end box
 
-user -> option : Click option or press Enter on it
-option -> option : mousedown preventDefault keeps focus on the input (L2-026)
-option -> combo : toggle(item)
-alt option disabled by optionDisabled or by the limit
-  combo --> option : Ignore; value unchanged, no selectionChange (L2-026)
-else enabled
-  combo -> combo : Find item in value with compareWith (L2-028)
-  alt item not in value
-    combo -> combo : commit(value plus item, added) (L2-026)
-    combo --> option : aria-selected true, checked indicator shown
-  else item in value
-    combo -> combo : commit(value without item, removed) (L2-026)
-    combo --> option : aria-selected false
+
+user -> cb : Pointer click or input keyboard activation
+alt Disabled component or option
+  cb --> user : No value change or selection event
+else Enabled
+  cb -> cb : Find item using compareWith (L2-028)
+  cb -> cb : Add result item or remove stored instance
+  cb -> host : value update, onChange and selectionChange once (L2-026)
+  cb -> ann : selection(formatted addition or removal)
+  opt Addition reaches limit
+    cb -> ann : selection(formatted maximum message)
   end
-  combo -> host : Emit selectionChange once with added or removed and the new value (L2-026)
-  combo -> announcer : Announce selection or removal
-  announcer -> live : announce(message)
-  opt maxSelections reached
-    combo -> combo : canSelectMore false; unselected options aria-disabled true (L2-028)
-    combo -> announcer : announceMaxReached(max)
-    announcer -> live : Maximum of {max} selections reached (L2-028)
+  cb -> cb : Focus input; retain popup
+  opt Addition and clearSearchOnSelect
+    cb -> cb : changeQuery empty text
   end
-  opt Item added and clearSearchOnSelect is true
-    combo -> combo : Set query to empty; search reloads by minSearchLength (L2-026)
-  end
-  combo --> user : List stays open, focus stays on the input, search text follows clearSearchOnSelect (L2-026)
+  cb --> user : Chips and option state reflect new value
 end
 @enduml

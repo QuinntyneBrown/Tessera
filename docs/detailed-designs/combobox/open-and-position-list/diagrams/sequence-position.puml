@@ -1,71 +1,44 @@
 @startuml
-title UML sequence behaviour - Position the list
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Position and resize the list
 actor "Application user" as user
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
-  participant "ComboboxPopup" as popup
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Angular CDK" #E0F2FE
-  participant "OverlayRef" as overlay
-  participant "ScrollDispatcher and ViewportRuler" as scroll
+  participant "OverlayRef / connected position" as overlay
 end box
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Field, ancestors, and dialog" as page
+box "Frontend - Browser" #E0F2FE
+  participant "Field / visual viewport" as browser
 end box
 
-combo -> popup : open(origin, template)
-popup -> overlay : create with FlexibleConnectedPositionStrategy, usePopover true, withPopoverLocation inline, reposition, no backdrop
-overlay -> page : Insert popover host directly after the field (L2-030)
-note over popup, page
-  DOM order is label, field, list, error, hint, so VoiceOver
-  on iOS reaches the options after the input. The top layer
-  keeps the dialog ancestry. Without the Popover API, use
-  a component-scoped container inside the open dialog.
-end note
-popup -> overlay : updateSize(width = field width) (L2-030)
-popup -> page : Observe field size with ResizeObserver
-alt enough room below the field
-  overlay -> page : Place pane below the field (L2-030)
-else not enough room below and more room above
-  overlay -> page : Flip pane above the field (L2-030)
+
+cb -> overlay : Connect to field; inline popover; reposition strategy
+overlay -> browser : Insert host after field; enter top layer (L2-030)
+cb -> browser : Reveal input if outside visual viewport
+browser --> cb : Field, row, status and viewport bounds
+cb -> cb : Choose room above/below; short-height row offsets
+cb -> overlay : Set field width and bounded panel height; update position
+overlay --> user : Popup keeps input clear
+loop Open-state resize, ancestor scroll or render
+  browser -> cb : Observer, document capture, window/visualViewport event
+  cb -> overlay : Refresh geometry (ignore scroll inside pane)
 end
-note right of overlay
-  Push disabled and dimensions flexible:
-  the pane shrinks and never covers the input (L2-030).
-  In a short viewport, first reveal the focused input;
-  use the input row vertical origin and full field width.
-  Scroll the controlled listbox, with status actions outside.
-end note
-page --> user : Pane above the dialog content and receiving pointer events (L2-030)
-== While open ==
-alt window or container resize
-  page --> popup : ResizeObserver callback
-  popup -> overlay : updateSize(width = field width) and updatePosition() (L2-030)
-else viewport resize
-  scroll --> overlay : ViewportRuler change
-  overlay -> overlay : Reapply position (L2-030)
-else ancestor scroll
-  page --> popup : scroll event in capture phase on document
-  popup -> overlay : updatePosition() (L2-030)
-  scroll --> overlay : Document or cdkScrollable scroll
+opt Close or destroy
+  cb -> browser : Disconnect field observer and remove explicit listeners
+  cb -> overlay : Detach on close; dispose on destroy
 end
-== Destroy ==
-combo -> popup : dispose() on DestroyRef.onDestroy
-popup -> overlay : dispose()
-overlay -> page : Remove pane from the DOM (L2-030)
-popup -> popup : Disconnect observer and remove scroll listener
+note over cb, browser
+  Without popovers, scoped container stays in nearest open native dialog.
+  Fallback loses inline reading order; theme copied at attachment.
+end note
 @enduml

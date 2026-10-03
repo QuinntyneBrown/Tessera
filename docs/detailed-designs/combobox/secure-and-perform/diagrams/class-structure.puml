@@ -1,76 +1,43 @@
 @startuml
-title Class structure - Secure and perform
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
-  BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
-  FontColor #101828
-  BackgroundColor #F9FAFB
-}
 skinparam class {
   BorderColor #344054
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-class "Combobox<T>" as Combobox {
-  +changeDetection: OnPush
-  +query: WritableSignal of string
-  +isOpen: WritableSignal of boolean
-  +activeIndex: WritableSignal of number
-  +ids: ComboboxIds
+title Class structure - secure and perform
+class "Combobox<T>" as Combo {
+  -uid: number
   -destroyRef: DestroyRef
-  -registerTeardown(): void
+  -popup: OverlayRef | undefined
+  -tooltip: OverlayRef | undefined
+  -widthObserver: ResizeObserver | undefined
+  -controlSubscription: Subscription | undefined
+  -stopPopupTracking(): void
+  -hideTooltip(): void
 }
-class ComboboxIds {
-  +uid: number
-  +input: string
-  +listbox: string
-  +hint: string
-  +error: string
-  +summary: string
-  +chips: string
-  +nextOptionId(): string
-}
-interface ComboboxParent <<COMBOBOX_PARENT>> {
-  +nextOptionId(): string
-}
-class "ComboboxSearch<T>" as ComboboxSearch {
-  +results: Signal of T[]
-  +status: Signal of idle or loading or error
-  +retry(): void
-  +loadNextPage(): void
-  -subscription: Subscription
-}
-class "ComboboxOption<T>" as ComboboxOption {
+class ComboboxOption {
   +id: string
-  +item: T
-  +label: string
-}
-class ComboboxPopup {
-  -overlayRef: OverlayRef
-  -widthObserver: ResizeObserver
-  +open(): void
-  +close(): void
-  +dispose(): void
+  +active: WritableSignal<boolean>
 }
 class ComboboxAnnouncer {
-  -timers: Set of timer handle
-  +announce(text: string, politeness: polite or assertive): void
+  -quietTimer: timer handle | undefined
+  -writeTimer: timer handle | undefined
+  +message: WritableSignal<string>
+}
+class DestroyRef <<Angular>> {
+  +onDestroy(callback): void
+}
+class OverlayRef <<CDK>> {
   +dispose(): void
 }
-Combobox "1" *-- "1" ComboboxIds : generates once
-Combobox "1" *-- "1" ComboboxSearch
-Combobox "1" *-- "0..1" ComboboxPopup
-Combobox "1" *-- "1" ComboboxAnnouncer
-Combobox "1" *-- "*" ComboboxOption : renders
-Combobox ..|> ComboboxParent
-Combobox ..> ComboboxIds : delegates nextOptionId to
-ComboboxOption ..> ComboboxParent : requests id from
+Combo ..> DestroyRef : subscribes and registers cleanup
+Combo "1" *-- "0..2" OverlayRef : popup and tooltip
+Combo "1" *-- "1" ComboboxAnnouncer
+ComboboxAnnouncer ..> DestroyRef : clears timers
+Combo "1" --> "*" ComboboxOption : independent generated IDs
 @enduml

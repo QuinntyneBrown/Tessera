@@ -1,34 +1,22 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Verify and document
-
-Container(pkgcore, "t-combobox", "Angular component", "The component under test")
-Container(examples, "Combobox examples", "Angular standalone components", "Five examples and createMockUserSearch")
-Container_Boundary(pkg, "@tessera/combobox testing") {
-  Component(harness, "ComboboxHarness", "CDK ComponentHarness", "open, isOpen, search, getOptions, toggleOption, getChips, removeChip")
-  Component(harnessspec, "combobox-harness.spec.ts", "Vitest spec", "Drives each L2-047 criterion through TestbedHarnessEnvironment")
+title Components - verify and document
+Container_Boundary(pkg, "@tessera/combobox") {
+  Component(harness, "ComboboxHarness", "CDK ComponentHarness", "Root-exported consumer interactions and state reads")
 }
-Container_Boundary(e2e, "e2e-app") {
-  Component(fixture, "ComboboxHostFixture", "Angular component", "Reads ComboboxScenario from the query string and configures the host")
+Container_Boundary(tests, "Playwright in Chromium") {
+  Component(page, "ComboboxDemoPage", "Playwright page object", "Owns selectors, fixture parameters, axe and measurements")
 }
-Container_Boundary(tests, "Playwright acceptance tests") {
-  Component(page, "ComboboxDemoPage", "Playwright page object", "Owns selectors; opens scenarios; sets viewport, zoom, and text overrides; runs axe")
-  Component(axe, "AxeBuilder", "@axe-core/playwright", "Scans t-combobox, including its inline popover list")
-  Component(specs, "Feature spec files", "Playwright test files", "One header comment and one L2 comment per test")
+Container_Boundary(app, "Acceptance application in Chromium") {
+  Component(fixture, "ComboboxFixture", "Angular acceptance host", "Provides independent configurable source and hosts component")
+  Component(contract, "runHarnessContract", "Browser TestBed bridge", "Exercises real harness with explicit timing")
 }
-Container_Boundary(docs, "Documentation") {
-  Component(page_doc, "Documentation page", "Markdown", "Inputs, outputs, slots, keys, accessibility, definition of done")
-  Component(matrix, "Verification matrix", "Markdown table", "Combination, date, version, result, defects")
+Container_Boundary(records, "Product documentation") {
+  Component(docs, "README and verification records", "Markdown", "Adoption contract, measured evidence and pending manual matrix")
 }
-Rel(harnessspec, harness, "Calls")
-Rel(harness, pkgcore, "Operates through ARIA roles and states")
-Rel(specs, page, "Call intent methods on")
-Rel(page, fixture, "Opens with a scenario")
-Rel(page, axe, "Runs")
-Rel(fixture, pkgcore, "Hosts")
-Rel(axe, pkgcore, "Scans")
-Rel(page_doc, examples, "Links to")
-Rel(page_doc, harness, "Describes")
-Rel(matrix, page_doc, "Is linked from")
+Rel(page, fixture, "Opens parameterized scenario and operates screen")
+Rel(fixture, contract, "Runs TestBed harness contract")
+Rel(contract, harness, "Calls public harness methods")
+Rel(docs, harness, "Documents consumer testing")
 @enduml

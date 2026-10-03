@@ -1,68 +1,37 @@
 @startuml
-title UML sequence behaviour - Remove and move between chips by keyboard
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "Keyboard user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host form control" as host
+title Remove and navigate chips
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combobox
-  participant "ComboboxAnnouncer" as announcer
-  participant "Instance live region" as live
+box "Frontend - Host form" #E0F2FE
+  participant "Value and touched callbacks" as fc
 end box
 
-user -> combobox : Backspace in an empty input
-combobox -> combobox : commit(next, removed last chip) (L2-033 criterion 11)
-combobox -> host : selectionChange with removed and value
-combobox -> announcer : Announce removed message
-announcer -> live : announce(message)
-combobox --> user : Focus stays on the input
 
-user -> combobox : Arrow key toward the start, cursor at start
-combobox -> combobox : isRtl() selects Arrow Left (LTR) or Arrow Right (RTL) (L2-033 criterion 12, L2-034 criterion 5)
-combobox -> combobox : focusChip(last)
-combobox --> user : Focus on the last remove button
-
-user -> combobox : Arrow key on a remove button
-alt Previous direction
-  combobox -> combobox : focusChip(index - 1); no movement on the first chip (L2-034 criteria 2 and 3)
-else Next direction on a chip before the last
-  combobox -> combobox : focusChip(index + 1)
-else Next direction on the last chip
-  combobox -> combobox : focusInput()
-end
-
-user -> combobox : Enter, Space, Backspace, or Delete on a remove button
-combobox -> combobox : removeChip(item) (L2-034 criterion 1)
-alt A chip follows
-  combobox -> combobox : Focus the next remove button before removal (L2-027)
-else No next chip but a previous chip exists
-  combobox -> combobox : Focus the previous remove button
-else No chips remain
-  combobox -> combobox : focusInput()
-end
-combobox -> host : commit(next, removed item); selectionChange with removed and value
-combobox -> announcer : Announce removed message
-announcer -> live : announce(message)
-
-user -> combobox : Tab on a remove button
-alt Next focusable element is inside the component
-  combobox --> user : Browser moves focus to the next chip or the input
-else Focus moves out of the component
-  combobox -> host : onTouched() from the focusout handler (L2-034 criterion 4)
-  combobox --> user : Focus leaves; control marked touched
+user -> cb : Backspace with empty query
+cb -> cb : Commit without last item; keep input focus (L2-033)
+cb -> fc : Report user removal
+user -> cb : Inline-start arrow at input caret zero
+cb -> cb : Read computed direction; focus last remove button
+user -> cb : Horizontal arrow on chip
+cb -> cb : Focus previous/next; last forward returns to input (L2-034)
+user -> cb : Enter, Space, Delete or Backspace on chip
+cb -> cb : preventDefault; focus surviving destination; removeChip(index)
+cb -> fc : User change once
+user -> cb : Tab or Shift+Tab
+cb -> cb : Close popup without preventing native Tab
+opt Focus leaves host and pane
+  cb -> fc : onTouched once per exit
 end
 @enduml

@@ -1,23 +1,16 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Present the component accessibly
-
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(combobox, "Combobox of T", "Angular component", "Template parts; onKeepFocusMousedown; click handlers call toggle, clearAll, removeChip")
-  Component(styles, "combobox.scss", "Component styles", "Layout rules, design tokens, and media-feature blocks")
-  Component(option, "ComboboxOption of T", "Directive", "Option host with checkbox and active class")
-  Component(popup, "ComboboxPopup", "Class", "Overlay panel; width follows the field through ResizeObserver")
-  Component(icons, "Icon source", "Built-in inline SVG", "Chevron, spinner, dismiss, checkmark, and error")
+title Components - present accessibly
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "Angular component", "Owns template, click handlers and overlay geometry")
+  Component(styles, "combobox.scss", "Stylesheet", "Defines wrapping, ellipsis, tokens, system colors and static motion")
+  Component(option, "ComboboxOption", "Directive", "Owns option state and active outline")
+  Component(fallback, "ComboboxOverlayContainer", "CDK container subclass", "Keeps fallback content in native dialog")
 }
-Container_Boundary(cdk, "Angular CDK") {
-  Component(overlay, "OverlayRef", "CDK overlay", "Positions the panel and emits outsidePointerEvents")
-}
-
-Rel(combobox, styles, "Is styled by")
-Rel(combobox, option, "Renders options with")
-Rel(combobox, popup, "Opens and closes")
-Rel(combobox, icons, "Draws decorative icons from")
-Rel(popup, overlay, "Creates and updates")
-Rel(overlay, popup, "Emits outside taps to")
+Rel(combo, styles, "Uses layout and theme properties")
+Rel(combo, option, "Binds state and renders decorative SVG")
+Rel(combo, fallback, "Provides fallback placement")
+Container_Ext(cdk, "Angular CDK", "Browser library", "Overlay and ActiveDescendantKeyManager")
+Rel(combo, cdk, "Uses overlay and/or active-descendant APIs")
 @enduml

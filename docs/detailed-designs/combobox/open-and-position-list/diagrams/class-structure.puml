@@ -1,5 +1,4 @@
 @startuml
-title Class structure - Open and position the list
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,66 +9,44 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-
-class "Combobox<T>" as Combobox {
-  +isOpen: WritableSignal<boolean>
-  +activeIndex: WritableSignal<number>
-  +opened: OutputEmitterRef<void>
-  +closed: OutputEmitterRef<void>
-  +open(): void
-  +close(): void
-  +onKeydown(event: KeyboardEvent): void
-  +onFieldClick(): void
-  +onToggleClick(): void
-  -activateFirstEnabled(): void
+title Class structure - open and position list
+class "Combobox<T>" as Combo {
+  #isOpen: WritableSignal<boolean>
+  #activeIndex: WritableSignal<number>
+  -openingMode: normal | last | none
+  -needsActivation: boolean
+  -popup: OverlayRef | undefined
+  -popupPosition: FlexibleConnectedPositionStrategy | undefined
+  -widthObserver: ResizeObserver | undefined
+  #open(mode: normal | last | none): void
+  #close(): void
+  -updatePopupGeometry(): void
+  -stopPopupTracking(): void
 }
-
-class ComboboxPopup {
-  -overlayRef: OverlayRef
-  -resizeObserver: ResizeObserver
-  +outsidePointerEvents: Observable<MouseEvent>
-  +open(origin: HTMLElement, template: TemplateRef): void
-  +close(): void
-  +updatePosition(): void
-  +dispose(): void
-}
-
-class "ComboboxSearch<T>" as ComboboxSearch {
-  +results: Signal<T[]>
-  +replaceCount: Signal<number>
-}
-
-class "ComboboxOption<T>" as ComboboxOption {
-  +disabled: Signal<boolean>
-  +setActiveStyles(): void
-  +setInactiveStyles(): void
-  +getLabel(): string
-}
-
-class "ActiveDescendantKeyManager<ComboboxOption>" as KeyManager <<CDK>> {
-  +activeItemIndex: number | null
-  +setActiveItem(index: number): void
-}
-
-class Overlay <<CDK>>
 class OverlayRef <<CDK>> {
+  +attach(portal: Portal): void
+  +detach(): void
   +updateSize(size: OverlaySizeConfig): void
   +updatePosition(): void
   +dispose(): void
 }
 class FlexibleConnectedPositionStrategy <<CDK>> {
   +withPositions(positions: ConnectedPosition[]): this
-  +withPush(canPush: boolean): this
-  +withFlexibleDimensions(flexible: boolean): this
-  +withPopoverLocation(location: 'inline'): this
+  +withPopoverLocation(location: inline): this
 }
-
-Combobox "1" *-- "1" ComboboxPopup : owns
-Combobox "1" *-- "1" KeyManager : owns
-Combobox "1" --> "*" ComboboxOption : registers
-Combobox ..> ComboboxSearch : reads replaceCount
-KeyManager o-- "*" ComboboxOption : manages
-ComboboxPopup ..> Overlay : creates overlay with
-ComboboxPopup "1" --> "1" OverlayRef : holds
+class "ActiveDescendantKeyManager<ComboboxOption>" as Keys <<CDK>>
+class ComboboxOption {
+  +disabled: boolean <<getter>>
+  +setActiveStyles(): void
+}
+class OverlayContainer <<CDK>>
+class ComboboxOverlayContainer {
+  #_createContainer(): void
+}
+Combo "1" *-- "0..1" OverlayRef
 OverlayRef --> FlexibleConnectedPositionStrategy : positions with
+Combo "1" *-- "0..1" Keys
+Keys o-- "*" ComboboxOption : tracks discovered hosts
+OverlayContainer <|-- ComboboxOverlayContainer
+Combo ..> ComboboxOverlayContainer : scoped provider
 @enduml

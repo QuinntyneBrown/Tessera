@@ -1,48 +1,35 @@
 @startuml
-title UML sequence behaviour - Remove chips and write a value
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Remove chips and write values
 actor "Application user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host component" as host
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
-  participant "Chip list and input" as dom
+box "Frontend - Host application" #E0F2FE
+  participant "Bound value/form" as host
 end box
 
-alt user activates a chip remove button
-  user -> combo : Activate remove button of chip i
-  combo -> combo : Choose destination: next chip button, else previous chip button, else input (L2-027)
-  combo -> dom : Focus destination before removal (L2-027)
-  combo -> combo : commit(value without item, removed) (L2-027)
-  combo -> host : Emit selectionChange with removed item and new value (L2-027)
-  combo --> user : Chip removed; focus on destination
-else user activates clear-all
-  user -> combo : Activate clear-all button
-  combo -> combo : commit(empty array) (L2-027)
-  combo -> host : Emit selectionChange once with value empty (L2-027)
-  combo -> dom : Focus the input (L2-027)
-  combo --> user : No chips; clear-all button not rendered (L2-027)
+
+alt Chip removal
+  user -> cb : removeChip(index)
+  cb -> cb : Focus next button, else previous, else input
+  cb -> host : Commit value without indexed item; selectionChange (L2-027)
+else Clear-all
+  user -> cb : clearAll()
+  cb -> cb : Hide tooltip; focus input before commit
+  cb -> host : Commit []; event has value only (L2-027)
+else Programmatic write
+  host -> cb : writeValue or new model array
+  cb -> cb : Render chips directly from value
+  cb --> host : No selectionChange or selection announcement
 end
-== Programmatic write ==
-host -> combo : writeValue or value signal set to items never returned by searchFn
-combo -> combo : Replace value without commit (L2-026)
-combo -> dom : Render one chip per item using displayWith (L2-027)
-note over combo
-  selectionChange does not emit
-  for a programmatic change (L2-026)
-end note
 @enduml

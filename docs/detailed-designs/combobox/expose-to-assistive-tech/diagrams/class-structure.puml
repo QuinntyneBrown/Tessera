@@ -1,5 +1,4 @@
 @startuml
-' --- shared skin header ---
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,90 +9,39 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-' --------------------------
-title Class structure - Expose state to assistive technology
-
-class "Combobox<T>" as Combobox {
-  +inputId: InputSignal<string>
-  +ariaLabel: InputSignal<string | null>
-  +hint: InputSignal<string>
-  +error: InputSignal<string>
-  +isOpen: Signal<boolean>
-  +activeIndex: Signal<number>
-  -uid: number
-  +listboxId: string
-  +summaryId: string
-  +activeOptionId: Signal<string | null>
-  +describedBy: Signal<string | null>
-  +selectedSummary: Signal<string>
-  +labelledBy(): string | null
-  +toggle(item: T): void
-  -assertAccessibleName(): void
+title Class structure - expose to assistive tech
+class "Combobox<T>" as Combo {
+  #listId: string
+  #summaryId: string
+  #summary: Signal<string>
+  #activeOptionId: Signal<string | null>
+  #describedBy: Signal<string | null>
+  #listLabel(): string
+  #format(key: keyof ComboboxStrings, values: Record<string, unknown>): string
 }
-
-class "ComboboxOption<T>" as ComboboxOption {
+class ComboboxOption {
   +id: string
-  +item: T
-  +disabled: boolean
-  +selected: boolean
-  +setActiveStyles(): void
-  +setInactiveStyles(): void
+  +selected: InputSignal<boolean>
+  +isDisabled: InputSignal<boolean>
+  +active: WritableSignal<boolean>
 }
-
 class ComboboxAnnouncer {
-  -pending: Message[]
-  -windowMs: number = 150
-  +announceResults(count: number): void
-  +announceNoResults(): void
-  +announceLoading(): void
-  +announceFailure(): void
-  +announceSelected(label: string, total: number): void
-  +announceRemoved(label: string): void
-  +announceCleared(): void
-  +announceMaxReached(max: number): void
-  +announceMoreLoaded(count: number): void
-  -enqueue(message: string, kind: status | selection): void
-  -flush(): void
-  +discardSearchStatus(): void
-  +dispose(): void
+  +message: WritableSignal<string>
+  +priority: WritableSignal<polite | assertive>
+  -searchMessage: string | undefined
+  -selections: string[]
+  +search(text: string): void
+  +selection(text: string): void
+  +failure(text: string): void
+  +cancelSearch(): void
 }
-
-class Message {
-  +text: string
-  +kind: status | selection
+class "combobox.html live region" as Region <<template>> {
+  aria-live: announcer.priority()
+  aria-atomic: true
+  text: announcer.message()
 }
-
-class "ComboboxSearch<T>" as ComboboxSearch {
-  +status: Signal<idle | loading | error>
-  +pageLoaded: Observable<PageLoaded> <<proposed>>
-}
-
-class PageLoaded {
-  +page: number
-  +count: number
-}
-
-interface ComboboxStrings {
-  +message strings with n, label, and max placeholders
-  +names for chip list, remove, and clear-all
-}
-
-class "ActiveDescendantKeyManager<ComboboxOption<T>>" as KeyManager <<CDK>> {
-  +activeItem: ComboboxOption<T>
-  +change: Subject<number>
-}
-
-class InstanceLiveRegion <<DOM>> {
-  +writeText(message: string, politeness: polite | assertive): void
-}
-
-Combobox "1" o-- "*" ComboboxOption : registers through COMBOBOX_PARENT
-Combobox ..> ComboboxSearch : reads status; subscribes to pageLoaded
-Combobox ..> ComboboxAnnouncer : requests announcements
-Combobox "1" *-- "1" KeyManager : activeIndex follows change
-ComboboxSearch ..> PageLoaded : emits
-ComboboxAnnouncer *-- "*" Message : pending
-ComboboxAnnouncer ..> ComboboxStrings : reads through COMBOBOX_I18N
-ComboboxAnnouncer "1" *-- "1" InstanceLiveRegion : flushes to
-KeyManager --> "*" ComboboxOption : tracks
+Combo "1" --> "*" ComboboxOption : viewChildren
+Combo "1" *-- "1" ComboboxAnnouncer
+Combo "1" *-- "1" Region : view owns DOM
+Region ..> ComboboxAnnouncer : binds signals
 @enduml

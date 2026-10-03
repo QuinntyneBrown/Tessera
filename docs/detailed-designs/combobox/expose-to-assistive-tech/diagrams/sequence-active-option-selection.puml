@@ -1,64 +1,45 @@
 @startuml
-title UML sequence behaviour - Expose the active option and announce selection changes
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "Screen reader user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host form control" as host
+title Expose active option and selection
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combobox
-  participant "ComboboxOption<T>" as option
-  participant "ComboboxAnnouncer" as announcer
+box "Frontend - Announcement queue" #E0F2FE
+  participant "ComboboxAnnouncer" as ann
+end box
+box "Frontend - Component template" #E0F2FE
   participant "Instance live region" as live
 end box
 box "Frontend - Angular CDK" #E0F2FE
-  participant "ActiveDescendantKeyManager" as manager
+  participant "ActiveDescendantKeyManager" as keys
 end box
 
-user -> combobox : Arrow Down in the input
-combobox -> manager : setNextItemActive()
-manager -> option : setActiveStyles()
-option -> option : Add active class; adjust only the listbox scrollTop by option bounds (L2-037 criterion 2)
-manager --> combobox : change(index)
-combobox -> combobox : activeOptionId() = option id; set aria-activedescendant (L2-035 criterion 4)
-combobox --> user : Screen reader reads the active option; focus stays on the input (L2-037 criterion 1)
 
-user -> combobox : Enter on the active option
-combobox -> combobox : toggle(item) (L2-026)
-alt Option enabled
-  combobox -> host : commit(next, change) updates value; selectionChange
-  combobox -> combobox : aria-selected true; summary text recomputed (L2-035 criteria 5 and 7)
-  combobox -> announcer : announceSelected(label, total) (L2-036 criterion 6)
-  opt Value count equals maxSelections
-    combobox -> announcer : announceMaxReached(max) (L2-036 criterion 8)
-  end
-  announcer -> announcer : Append both messages to the pending list
-  announcer -> live : announce(joined message, polite) after the quiet window
-  live --> user : Reads "Ada selected. 3 selected in total. Maximum of 3 selections reached."
-else Option disabled
-  combobox -> combobox : toggle(item) returns; aria-disabled stays true
-  combobox --> user : Nothing announced
+user -> cb : Navigate an option
+cb -> keys : Move active item without moving DOM focus
+keys --> cb : change(index)
+cb -> cb : activeOptionId reads generated option ID (L2-035)
+cb --> user : Input references highlighted option; only listbox scrolls
+user -> cb : Toggle enabled active option
+cb -> cb : Commit value; update ARIA selection and summary
+cb -> ann : selection(formatted selected/removed message)
+opt Added item reaches maximum
+  cb -> ann : selection(formatted maximum message)
 end
-
-user -> combobox : Backspace in the empty input, or Enter on a remove button
-combobox -> host : commit(next, change) updates value; selectionChange
-combobox -> announcer : announceRemoved(label) (L2-036 criterion 7)
-announcer -> live : announce("label removed.", polite)
-
-user -> combobox : Tab from the input
-combobox -> combobox : Close list; remove aria-controls and aria-activedescendant (L2-035 criteria 3 and 4)
-combobox --> user : Focus moves on; not trapped in the overlay (L2-037 criterion 5)
+ann -> ann : Preserve selection order; join after 150 ms quiet
+ann -> live : Clear then insert joined message after 32 ms
+live --> user : Selection and limit text available as one polite update
+user -> cb : Tab
+cb -> cb : Close; remove controls and active-descendant references
+cb --> user : Native focus movement; no popup trap (L2-037)
 @enduml

@@ -1,54 +1,40 @@
 @startuml
-title UML sequence behaviour - Resolve and apply localised strings
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "End user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Application providers" as host
+title Resolve and apply localised strings
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox" as cb
-  participant "String functions" as fn
+box "Frontend - Announcement queue" #E0F2FE
   participant "ComboboxAnnouncer" as ann
+end box
+box "Frontend - Component template" #E0F2FE
   participant "Instance live region" as live
 end box
+box "Frontend - Host providers" #E0F2FE
+  participant "COMBOBOX_I18N overrides" as host
+end box
 
-host -> cb : Provide COMBOBOX_I18N with a partial override (L2-041)
-cb -> fn : resolveComboboxStrings(injected override)
-fn --> cb : DEFAULT_COMBOBOX_STRINGS merged with override
-cb -> ann : Create announcer
-ann -> fn : resolveComboboxStrings(injected override)
-fn --> ann : Same merged strings
-cb --> user : Render names and rows from strings (L2-041 AC1, AC2)
-alt Override supplies the string
-  cb --> user : Replacement text, no English default shown (L2-041 AC2)
-else Override omits the string
-  cb --> user : English default text (L2-041 AC4)
-end
-user -> cb : Select option "Ada", total becomes 3
-cb -> ann : announceSelected(label, n)
-ann -> fn : formatComboboxString(announceSelected, label and n)
-alt Template contains placeholders with values
-  fn --> ann : Placeholders replaced in one pass (L2-041 AC3)
-else Placeholder has no value
-  fn --> ann : Placeholder left as written
-end
-ann -> live : announce(text, polite)
-live --> user : Read the text from the visually hidden live region
-note right of fn
-  A label that contains {max} is not
-  expanded again. The result is text only.
+
+host -> cb : Supply partial ComboboxStrings (L2-041)
+cb -> cb : Merge once over DEFAULT_COMBOBOX_STRINGS
+cb --> user : Owned names and rows use resolved strings
+user -> cb : Select an item
+cb -> cb : Select singular/plural key; format placeholders once
+cb -> ann : selection(already formatted text)
+ann -> live : Signal-backed text update after queue timing
+live --> user : Localised announcement text
+note over cb
+  Unknown placeholders remain literal; substituted labels are not expanded again.
+  A locale change recreates the instance with new providers.
 end note
 @enduml

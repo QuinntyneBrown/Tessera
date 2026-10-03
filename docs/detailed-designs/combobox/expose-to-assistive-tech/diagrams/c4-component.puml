@@ -1,27 +1,16 @@
 @startuml
 !include <C4/C4_Component>
 LAYOUT_WITH_LEGEND()
-title Components - Expose state to assistive technology
-
-Container_Boundary(pkg, "@tessera/combobox") {
-  Component(combobox, "Combobox of T", "Angular component", "Binds ARIA attributes; derives describedBy, activeOptionId, and labelledBy")
-  Component(option, "ComboboxOption of T", "Directive", "Owns the role option host, its id, and its ARIA attributes")
-  Component(search, "ComboboxSearch of T", "Class", "Supplies status and the pageLoaded stream")
-  Component(popup, "ComboboxPopup", "Class", "Attaches the listbox overlay without moving focus")
-  Component(announcer, "ComboboxAnnouncer", "Class", "Formats, coalesces, and flushes announcements")
-  Component(live, "Instance live region", "Host DOM", "One region inside this component; polite by default, assertive for failures")
-  Component(i18n, "COMBOBOX_I18N", "Injection token", "Supplies every message and name")
+title Components - expose to assistive tech
+Container_Boundary(pkg, "Host Angular application in the browser") {
+  Component(combo, "Combobox<T>", "Angular component", "Binds ARIA, derives summary and listLabel, formats messages")
+  Component(option, "ComboboxOption", "Directive", "Owns role, independent ID counter, states and active styles")
+  Component(ann, "ComboboxAnnouncer", "Signal-backed queue", "Coalesces search text; preserves selections; sets message and priority")
+  Component(live, "Instance live region", "Component template", "Binds announcer signals; exists outside popup before messages")
 }
-Container_Boundary(cdk, "Angular CDK") {
-  Component(keymanager, "ActiveDescendantKeyManager", "CDK a11y", "Tracks the active option")
-}
-
-Rel(combobox, option, "Registers options through COMBOBOX_PARENT")
-Rel(combobox, search, "Reads status; subscribes to pageLoaded")
-Rel(combobox, popup, "Opens and closes the listbox")
-Rel(combobox, announcer, "Requests announcements")
-Rel(combobox, keymanager, "Reads the active option from")
-Rel(keymanager, option, "Sets active styles on")
-Rel(announcer, i18n, "Reads message strings from")
-Rel(announcer, live, "Writes textContent with polite or assertive")
+Rel(combo, option, "Discovers hosts; binds selected, disabled, label and page metadata")
+Rel(combo, ann, "Calls search, selection, failure and cancelSearch")
+Rel(ann, live, "Supplies message and priority signals")
+Container_Ext(cdk, "Angular CDK", "Browser library", "Overlay and ActiveDescendantKeyManager")
+Rel(combo, cdk, "Uses overlay and/or active-descendant APIs")
 @enduml

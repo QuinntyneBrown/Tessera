@@ -1,9 +1,211 @@
-<input
-  [id]="inputId()"
-  role="combobox"
-  aria-autocomplete="list"
-  aria-expanded="false"
-  autocomplete="off"
-  [attr.aria-label]="ariaLabel() || null"
-  (input)="onInput($event)"
-/>
+<div
+  #field
+  class="t-combobox-field"
+  [class.t-combobox-disabled]="isDisabled()"
+  [class.t-combobox-invalid]="showError()"
+  (click)="focusAndOpen()"
+>
+  <ul class="t-combobox-chips" [attr.aria-label]="strings.chipListLabel">
+    @for (item of value(); track item; let index = $index) {
+      <li
+        #chip
+        class="t-combobox-chip"
+        (mouseenter)="showTooltip(chip, index, true)"
+        (mouseleave)="leaveChip()"
+      >
+        <span class="t-combobox-chip-label">
+          @if (chipTemplate(); as slot) {
+            <ng-container
+              [ngTemplateOutlet]="slot.template"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+          } @else {
+            {{ displayWith()(item) }}
+          }
+        </span>
+        <button
+          #removeButton
+          type="button"
+          [disabled]="isDisabled()"
+          [attr.aria-label]="format('removeChip', { label: displayWith()(item) })"
+          (focus)="showTooltip(chip, index)"
+          (blur)="queueTooltipDismissal()"
+          (click)="removeChip(index); $event.stopPropagation()"
+          (keydown)="onChipKeydown($event, index)"
+        >
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
+            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" />
+          </svg>
+        </button>
+      </li>
+    }
+  </ul>
+  <div class="t-combobox-input-row">
+    <input
+      #textInput
+      class="t-combobox-input"
+      [id]="inputId()"
+      [value]="query()"
+      [disabled]="isDisabled()"
+      role="combobox"
+      aria-autocomplete="list"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="isOpen() ? listId : null"
+      [attr.aria-activedescendant]="activeOptionId()"
+      [attr.aria-required]="isRequired()"
+      [attr.aria-invalid]="showError()"
+      [attr.aria-describedby]="describedBy()"
+      [placeholder]="placeholder()"
+      autocomplete="off"
+      [attr.aria-label]="ariaLabel() || null"
+      (input)="onInput($event)"
+      (compositionstart)="onCompositionStart()"
+      (compositionend)="onCompositionEnd($event)"
+      (keydown)="onKeydown($event)"
+      (pointerdown)="onCursorMove()"
+    />
+    @if (status() === 'loading') {
+      <svg class="t-combobox-spinner" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-dasharray="24 14" />
+      </svg>
+    }
+    <button
+      class="t-combobox-toggle"
+      type="button"
+      tabindex="-1"
+      [disabled]="isDisabled()"
+      [attr.aria-label]="isOpen() ? strings.hideOptions : strings.showOptions"
+      (mousedown)="$event.preventDefault()"
+      (click)="togglePopup(); $event.stopPropagation()"
+    >
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
+        <path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </button>
+  </div>
+</div>
+@if (showError() && errorText()) {
+  <p class="t-combobox-error" [id]="errorId">
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" />
+      <path d="M8 4v5m0 2v1" stroke="currentColor" stroke-width="2" /></svg
+    >{{ errorText() }}
+  </p>
+}
+@if (hint() || value().length) {
+  <div class="t-combobox-below">
+    @if (hint()) {
+      <p [id]="hintId">{{ hint() }}</p>
+    }
+    @if (value().length) {
+      <button class="t-combobox-clear" type="button" [disabled]="isDisabled()" (click)="clearAll()">
+        {{ strings.clearAll }}
+      </button>
+    }
+  </div>
+}
+@if (value().length) {
+  <span class="t-combobox-visually-hidden" [id]="summaryId">{{ summary() }}</span>
+}
+<ng-template #panel>
+  <div class="t-combobox-panel">
+    <ul
+      [id]="listId"
+      role="listbox"
+      aria-multiselectable="true"
+      [attr.aria-busy]="status() === 'loading'"
+      [attr.aria-label]="listLabel()"
+      (scroll)="onListScroll($event)"
+    >
+      @for (item of results(); track $index; let index = $index) {
+        <li
+          tComboboxOptionHost
+          #option="tComboboxOptionHost"
+          [total]="total()"
+          [position]="index + 1"
+          [selected]="isSelected(item)"
+          [isDisabled]="isOptionDisabled(item)"
+          [label]="displayWith()(item)"
+          (mousedown)="$event.preventDefault()"
+          (click)="toggle(item)"
+        >
+          <svg
+            class="t-combobox-checkbox"
+            [class.t-combobox-checked]="isSelected(item)"
+            aria-hidden="true"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+          >
+            @if (isSelected(item)) {
+              <path d="M4 8l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2" />
+            }</svg
+          ><span class="t-combobox-option-content">
+            @if (optionTemplate(); as slot) {
+              <ng-container
+                [ngTemplateOutlet]="slot.template"
+                [ngTemplateOutletContext]="{
+                  $implicit: item,
+                  selected: isSelected(item),
+                  active: option.active(),
+                }"
+              />
+            } @else {
+              {{ displayWith()(item) }}
+            }
+          </span>
+        </li>
+      }
+    </ul>
+    @if (status() === 'loading') {
+      <div>{{ strings.loading }}</div>
+    }
+    @if (hasMore()) {
+      <button
+        type="button"
+        tabindex="-1"
+        [disabled]="status() !== 'idle'"
+        (mousedown)="$event.preventDefault()"
+        (click)="loadMore()"
+      >
+        {{ strings.loadMore }}
+      </button>
+    }
+    @if (query().length < minSearchLength()) {
+      <div>{{ format('searchPrompt', { min: minSearchLength() }) }}</div>
+    } @else if (status() === 'idle' && results().length === 0) {
+      <div>
+        @if (emptyTemplate(); as slot) {
+          <ng-container
+            [ngTemplateOutlet]="slot.template"
+            [ngTemplateOutletContext]="{ query: query() }"
+          />
+        } @else {
+          {{ strings.noResults }}
+        }
+      </div>
+    }
+    @if (status() === 'error') {
+      <div>
+        {{ strings.resultsError }}
+        <button type="button" tabindex="-1" (mousedown)="$event.preventDefault()" (click)="retry()">
+          {{ strings.retry }}
+        </button>
+      </div>
+    }
+  </div>
+</ng-template>
+<div class="t-combobox-visually-hidden" [attr.aria-live]="announcer.priority()" aria-atomic="true">
+  {{ announcer.message() }}
+</div>
+<ng-template #tooltipTemplate
+  ><div
+    class="t-combobox-tooltip"
+    role="tooltip"
+    [id]="tooltipId"
+    (mouseenter)="hoverTooltip(true)"
+    (mouseleave)="hoverTooltip(false)"
+  >
+    {{ tooltipText() }}
+  </div></ng-template
+>

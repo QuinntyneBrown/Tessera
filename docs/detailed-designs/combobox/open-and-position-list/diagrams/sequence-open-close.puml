@@ -1,63 +1,45 @@
 @startuml
-title UML sequence behaviour - Open and close the list
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
+title Open and close the list
 actor "Application user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Host component" as host
-end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox<T>" as combo
-  participant "ComboboxPopup" as popup
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
 box "Frontend - Angular CDK" #E0F2FE
+  participant "OverlayRef" as overlay
   participant "ActiveDescendantKeyManager" as keys
 end box
 
-alt focus arrives by Tab or script
-  user -> combo : Focus the input
-  combo --> user : List stays closed (L2-029)
-else type, Arrow Down, Arrow Up, Alt+Arrow Down, or click field or toggle
-  user -> combo : Open trigger
-  combo -> combo : open(); return if already open
-  combo -> popup : open(origin, template)
-  popup --> combo : Overlay attached
-  combo -> keys : Apply openingMode: normal first enabled, Arrow Up last, Alt Down none (L2-029)
-  note right of keys
-    No enabled option: setActiveItem(-1),
-    no aria-activedescendant (L2-029)
-  end note
-  combo -> host : Emit opened once (L2-029)
+
+alt Focus alone
+  user -> cb : Focus input
+  cb --> user : Popup remains closed (L2-029)
+else Opening trigger
+  user -> cb : Type, Arrow Up/Down, Alt Down, field or toggle click
+  cb -> overlay : Create lazily; attach TemplatePortal
+  overlay --> cb : Panel attached inline after field
+  cb -> keys : After render apply normal, last or none mode
+  cb --> user : opened once; no focus trap
 end
-== New results while open ==
-combo -> combo : Page 0 response replaces results (replaceCount changes)
-combo -> keys : Apply preserved openingMode on initial page, otherwise first enabled (L2-029)
-note over combo
-  An appended page keeps the active option
+opt First page arrives
+  cb -> keys : needsActivation applies preserved opening mode
+end
+user -> cb : Escape, Alt Up, Tab, outside pointer, toggle or disable
+cb -> cb : Clear active state and queued search messages; stop tracking
+cb -> overlay : Detach panel; retain reusable reference
+overlay --> cb : Detached
+cb --> user : closed once; browser focus behavior retained (L2-029)
+note over cb
+  Tooltip Escape has priority. Popup-action Escape focuses input.
+  Chip Escape preserves chip focus. Tab is never prevented.
 end note
-== Close ==
-alt Escape, Alt+Arrow Up, Tab, or toggle click while open
-  user -> combo : Key press
-else click outside the component
-  user -> popup : Click outside overlay and host
-  popup --> combo : outsidePointerEvents
-else component becomes disabled
-  host -> combo : Disabled state set (L2-029)
-end
-combo -> combo : close(); return if already closed
-combo -> popup : close()
-combo -> host : Emit closed once (L2-029)
-combo --> user : Closing does not move focus; Tab, outside interaction, or disabling may do so (L2-029)
 @enduml

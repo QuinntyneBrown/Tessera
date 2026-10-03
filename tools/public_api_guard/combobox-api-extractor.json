@@ -1,0 +1,10 @@
+{
+  "extends": "./api-extractor.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/combobox/types/tessera-combobox.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/goldens/combobox/",
+    "reportFileName": "index.api.md",
+    "reportTempFolder": "<projectFolder>/dist/combobox-api-report/"
+  }
+}

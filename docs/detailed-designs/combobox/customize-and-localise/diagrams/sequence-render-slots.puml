@@ -1,58 +1,42 @@
 @startuml
-title UML sequence behaviour - Render custom option, chip, and empty content
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
-skinparam roundcorner 12
+skinparam roundcorner 8
 skinparam defaultFontName Arial
 skinparam ArrowColor #344054
-skinparam rectangle {
+skinparam class {
   BorderColor #344054
-  FontColor #101828
-}
-skinparam package {
-  BorderColor #667085
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-actor "End user" as user
-box "Frontend - Host Angular application" #E0F2FE
-  participant "Consumer ng-template" as tpl
+title Render typed content slots
+actor "Application user" as user
+box "Frontend - Package" #E0F2FE
+  participant "Combobox<T>" as cb
 end box
-box "Frontend - @tessera/combobox" #E0F2FE
-  participant "Combobox" as cb
-  participant "ComboboxOption" as opt
-  participant "ComboboxAnnouncer" as ann
+box "Frontend - Consumer templates" #E0F2FE
+  participant "Option / chip / empty ng-template" as tpl
 end box
 
-cb -> cb : contentChild finds tComboboxOption, tComboboxChip, tComboboxEmpty
-user -> cb : Search completes
-alt Page has items
-  loop Each result item
-    cb -> opt : Create li role option host with unique id (L2-035 AC9)
-    alt tComboboxOption supplied
-      opt -> tpl : ngTemplateOutlet with item, selected, active (L2-042 AC1)
-      tpl --> opt : Content placed in wrapper inside the host
-    else No option template
-      opt --> cb : Render displayWith(item) as text (L2-042 AC4)
-    end
-  end
-  user -> cb : Press Arrow Down or toggle an option
-  cb -> opt : Update selected and active signals
-  opt -> tpl : Context recomputed; selected and active update (L2-042 AC1)
-else Page is empty
-  alt tComboboxEmpty supplied
-    cb -> tpl : Render in status row with query (L2-042 AC3)
-  else No empty template
-    cb --> user : Show noResults string (L2-024 AC3)
-  end
-  cb -> ann : announceNoResults
-  ann --> user : "No results found." announced (L2-042 AC3)
+
+cb -> cb : contentChild discovers three template directives
+alt Results with option slot
+  cb -> tpl : ngTemplateOutlet: item, isSelected(item), option.active() (L2-042)
+  tpl --> cb : Content inside component-owned option host
+else Results without slot
+  cb --> user : displayWith(item) rendered as text
+else Empty result with empty slot
+  cb -> tpl : ngTemplateOutlet: query
+  tpl --> cb : Status content; empty announcement remains component-owned
 end
-user -> cb : Select option, selected value appears as chip
-alt tComboboxChip supplied
-  cb -> tpl : Render chip content with item (L2-042 AC2)
-else No chip template
-  cb --> user : Render displayWith(item) as text (L2-042 AC4)
+user -> cb : Toggle or navigate
+cb -> tpl : Render context with current selected/active state
+opt Selected values with chip slot
+  cb -> tpl : ngTemplateOutlet: implicit item
+  tpl --> cb : Label content; remove button remains outside slot
 end
-cb --> user : Remove button, its name, and key handling stay component-owned (L2-042 AC2)
+note over cb, tpl
+  Non-interactive content only; consumer owns template markup.
+  Component owns roles, IDs, names and interactions.
+end note
 @enduml

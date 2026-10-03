@@ -1,5 +1,4 @@
 @startuml
-' --- shared skin header ---
 skinparam backgroundColor #FFFFFF
 skinparam shadowing false
 skinparam roundcorner 8
@@ -10,97 +9,34 @@ skinparam class {
   FontColor #101828
   BackgroundColor #F9FAFB
 }
-' --------------------------
-title Class structure - Present the component accessibly
-
-class "Combobox<T>" as Combobox {
-  +value: ModelSignal<T[]>
-  +query: Signal<string>
-  +isOpen: Signal<boolean>
-  +onKeepFocusMousedown(event: MouseEvent): void
-  +toggle(item: T): void
-  +clearAll(): void
-  +removeChip(item: T): void
-  +focusInput(): void
+title Class structure - present accessibly
+class "Combobox<T>" as Combo {
+  #toggle(item: T): void
+  #removeChip(index: number): void
+  #clearAll(): void
+  #showTooltip(chip: HTMLElement, index: number, hover: boolean): void
+  -updatePopupGeometry(): void
 }
-
-class "ComboboxOption<T>" as ComboboxOption {
-  +id: string
-  +disabled: boolean
-  +selected: boolean
-  +item: T
+class "combobox.html" as Template <<template>> {
+  field: wrapping div
+  chips: ul with native remove buttons
+  inputRow: input, static SVG spinner, toggle
+  panel: listbox with sibling status actions
+  icons: inline decorative SVG
 }
-
-class ComboboxPopup {
-  +open(origin: HTMLElement, template: TemplateRef): void
-  +close(): void
-  +outsidePointerEvents: Observable<MouseEvent>
-  -observeFieldWidth(): void
+class "combobox.scss" as Styles <<stylesheet>> {
+  chipListMaxHeight: 8rem default
+  minimumTargets: 24 CSS px
+  coarsePointerButtons: 2.75rem
+  motion: no animation or transition
+  darkTheme: prefers-color-scheme
+  forcedColors: system-color tokens
 }
-
-class "OverlayRef" as OverlayRef <<CDK>> {
-  +outsidePointerEvents(): Observable<MouseEvent>
-  +updatePosition(): void
+class ComboboxOption {
+  +active: WritableSignal<boolean>
+  +selected: InputSignal<boolean>
 }
-
-class ComboboxTemplate <<template>> {
-  +field: div.t-combobox-field
-  +chipList: ul.t-combobox-chips
-  +chip: li.t-combobox-chip
-  +chipLabel: span.t-combobox-chip-label
-  +chipRemove: button.t-combobox-chip-remove
-  +inputRow: div.t-combobox-input-row
-  +input: input.t-combobox-input
-  +spinner: span.t-combobox-spinner
-  +clearAll: button.t-combobox-clear
-  +toggle: button.t-combobox-toggle
-  +panel: div.t-combobox-panel
-  +option: li.t-combobox-option
-  +checkbox: span.t-combobox-checkbox
-  +error: p.t-combobox-error
-  +hintRow: div.t-combobox-below
-}
-
-class ComboboxStyles <<scss>> {
-  +flexWrapField: layout rule
-  +chipEllipsis: layout rule
-  +minTarget: 24px by 24px
-  +relativeUnits: rem and em
-  +reducedMotionBlock: no-preference gate
-  +forcedColorsBlock: system colors
-  +hoverBlock: hover media feature
-}
-
-class ComboboxTokens <<CSS custom properties>> {
-  +--t-combobox-text: #18312e / dark #f4f7f5
-  +--t-combobox-placeholder: #536763 / dark #b6cbc3
-  +--t-combobox-surface: #ffffff / dark #18312e
-  +--t-combobox-chip-bg: #e4f2ec / dark #244b42
-  +--t-combobox-border: #657f73 / dark #8fa9a0
-  +--t-combobox-focus-ring: #b35c14 / dark #ffbf69
-  +--t-combobox-active-outline: #126454 / dark #8fd5ba
-  +--t-combobox-hover-bg: #f4f7f5 / dark #244b42
-  +--t-combobox-selected-mark: #126454 / dark #8fd5ba, checkbox fill
-  +--t-combobox-disabled-text: #536763 / dark #b6cbc3
-  +--t-combobox-error: #8a1c12 / dark #ffb4a8
-  +--t-combobox-motion-duration: 0ms
-  +--t-combobox-chip-list-max-height: 8rem
-}
-
-class IconSource <<built-in inline SVG>> {
-  +chevron
-  +spinner
-  +dismiss
-  +checkmark
-  +error
-}
-
-Combobox "1" *-- "1" ComboboxTemplate : renders
-Combobox "1" o-- "*" ComboboxOption : renders
-Combobox ..> ComboboxPopup : open and close
-ComboboxPopup --> OverlayRef : creates
-OverlayRef ..> ComboboxPopup : outsidePointerEvents relayed to close the list
-ComboboxTemplate ..> ComboboxStyles : styled by
-ComboboxStyles --> ComboboxTokens : reads
-ComboboxTemplate ..> IconSource : draws from
+Combo ..> Template : renders and handles events
+Template ..> Styles : styled by
+Combo "1" --> "*" ComboboxOption : binds state
 @enduml
