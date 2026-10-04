@@ -36,6 +36,7 @@ SCORM runtime behavior.
 
 ## Contributor resources
 
+- [Manual screen reader verification](verification/manual-screen-reader-verification.md): setup, fixture scenarios, keyboard and mobile procedures, expected behavior, and evidence recording.
 - [Contributing](../CONTRIBUTING.md): contribution workflow, ATDD, and verification.
 - [Project rules](../AGENTS.md): repository layout and implementation constraints.
 - [Security](../SECURITY.md): private vulnerability reporting and integration boundaries.
