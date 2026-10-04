@@ -74,3 +74,21 @@ The first full regression attempt was stopped after discovering that the course 
 Non-blocking build warnings remain: combobox component styles are 5.19 kB against a 4 kB warning threshold (below the 8 kB error threshold); the e2e app's initial bundle is 510.90 kB against a 500 kB warning threshold (below the 1 MB error threshold). Existing budgets are unchanged.
 
 Manual screen-reader verification, real on-screen keyboards and actual browser zoom are **Not run**. See [the pending matrix](combobox-screen-reader-matrix.md). This record does not certify release readiness.
+
+## PR #2 host-layout review fix — 2026-10-04
+
+One ATDD slice extends L2-030 with AC8: given a focused field and open list, expanding or collapsing host content above the unchanged-size field must preserve popup alignment, query, selection, and input focus.
+
+Before changing production code, `TESSERA_E2E_PORT=4210 corepack pnpm exec playwright test test/e2e/combobox-positioning.spec.ts --grep "host content expansion" --workers=1` failed at the geometry assertion immediately after expansion. The fixture adds 100 CSS px above the field through a host signal; the page object dispatches the host event without moving input focus. The same test passes after the fix, including collapse, retained input/selection, and axe checks.
+
+The open-state render callback now schedules a geometry check through the existing animation-frame scheduler. This intentionally retains measurements after application renders because host layout changes do not necessarily change a combobox signal or the field's size. The existing geometry key prevents unchanged panel styles, overlay size, and CDK positioning from being written again. Frame coalescing and close/destroy cancellation remain in place.
+
+Validation:
+
+- All nine Chromium positioning scenarios pass, including the existing unrelated-host-render layout-count check with its original threshold.
+- The full Chromium acceptance run with four workers passed 191 of 193 cases; the missing-search-input page load and short-viewport case timed out. Both pass in an isolated `playwright test --last-failed --workers=1` run with unchanged assertions and timeouts. All 193 cases have therefore passed across these runs; the initial full run was not clean.
+- All five isolated performance scenarios pass with `corepack pnpm e2e:performance`, including four sets of 100 latency samples at their existing thresholds.
+- `corepack pnpm build`, `corepack pnpm api:check`, `corepack pnpm lint`, and `git diff --check` pass.
+- The default SCORM unit runner failed to start its fork workers before any tests executed. All 96 tests across nine files pass with `corepack pnpm exec ng test scorm-player --watch=false --runner-config=tmp/pr2-vitest.config.mjs`, using a temporary config exporting `{ test: { pool: 'threads', maxWorkers: 1 } }`. The temporary config is not committed; no tests or checked-in runner settings changed.
+
+Manual screen-reader verification remains **Not run** because it could not be performed in this tool session. The [manual matrix](combobox-screen-reader-matrix.md) includes the host-layout scenario for the required platform checks. The manual accessibility gate remains open.
