@@ -8,7 +8,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   afterEveryRender,
-  afterRenderEffect,
   afterNextRender,
   computed,
   contentChild,
@@ -311,6 +310,9 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     });
     afterEveryRender(() => {
       this.bindControl();
+      // Host content can move the field without changing its size or component signals.
+      // Coalesce measurements; unchanged geometry skips CDK positioning writes.
+      this.schedulePopupGeometry();
       const options = this.options();
       if (options !== this.optionSnapshot) {
         const previous = this.activeIndex();
@@ -332,16 +334,6 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
               : options.findIndex((option) => !option.disabled),
         );
       }
-    });
-    afterRenderEffect(() => {
-      const isOpen = this.isOpen();
-      this.results();
-      this.hasMore();
-      this.status();
-      this.query();
-      this.value();
-      this.activeIndex();
-      if (isOpen) this.schedulePopupGeometry();
     });
     this.queries
       .pipe(

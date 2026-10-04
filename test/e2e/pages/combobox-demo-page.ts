@@ -463,6 +463,12 @@ export class ComboboxDemoPage {
     }, width);
   }
 
+  async toggleHostBanner(): Promise<void> {
+    await this.page.locator('main').evaluate((main) => {
+      main.dispatchEvent(new Event('host-layout-change'));
+    });
+  }
+
   async scrollAncestor(): Promise<void> {
     await this.page.locator('.fixture-container').evaluate((element) => {
       element.scrollTop = 60;

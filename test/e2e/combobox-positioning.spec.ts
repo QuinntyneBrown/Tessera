@@ -45,6 +45,24 @@ test('tracks container and viewport resizes without losing text, selection or fo
   await box.expectNoAccessibilityViolations();
 });
 
+test('follows host content expansion and collapse without resizing the field', async ({ page }) => {
+  // L2-030 AC8: Given a focused field with an open list, when host content above it
+  // expands and collapses without resizing the field, then alignment and input state persist.
+  const box = new ComboboxDemoPage(page);
+  await box.open({ results: 'normal', hostLayout: true });
+  await box.typeText('ad');
+  await box.expectOptions(['Ada', 'Grace', 'Linus']);
+  await box.toggleOption('Ada');
+  await box.expectPopupGeometry();
+  await box.toggleHostBanner();
+  await box.expectPopupGeometry();
+  await box.expectInputAndSelectionRetained();
+  await box.toggleHostBanner();
+  await box.expectPopupGeometry();
+  await box.expectInputAndSelectionRetained();
+  await box.expectNoAccessibilityViolations();
+});
+
 test('avoids popup layout work for unrelated host renders', async ({ page }) => {
   // Given an open popup with settled geometry, when unrelated host state renders repeatedly,
   // then the popup remains aligned without repeating browser layout work.

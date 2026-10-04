@@ -63,8 +63,12 @@ import { Observable } from 'rxjs';
         [attr.dir]="parameters.get('direction') || 'ltr'"
         (keydown)="recordEscape($event)"
         (host-update)="renderUnrelatedHostUpdates()"
+        (host-layout-change)="toggleHostBanner()"
       >
         <h1>Assign learners</h1>
+        @if (parameters.get('hostLayout') === 'true') {
+          <button type="button" (click)="toggleHostBanner()">Toggle host banner</button>
+        }
         <button type="button" (click)="setDisabled(true)">Disable field</button>
         <button type="button" (click)="setDisabled(false)">Enable field</button>
         <button type="button" (click)="control.reset(null)">Reset form</button>
@@ -78,6 +82,9 @@ import { Observable } from 'rxjs';
         <button type="button" (click)="runHarness()">Run harness contract</button>
         <output aria-label="Harness contract">{{ json(harnessReport()) }}</output>
         @if (mounted()) {
+          @if (parameters.get('hostLayout') === 'true') {
+            <div aria-hidden="true" [style.height.px]="hostBannerVisible() ? 100 : 0"></div>
+          }
           <div
             class="fixture-container"
             [style.width]="
@@ -213,6 +220,7 @@ export class ComboboxFixture {
   readonly events = signal<string[]>([]);
   readonly submissions = signal(0);
   readonly hostUpdates = signal(0);
+  readonly hostBannerVisible = signal(false);
   readonly mounted = signal(true);
   readonly harnessReport = signal<unknown>(null);
   async runHarness(): Promise<void> {
@@ -379,6 +387,10 @@ export class ComboboxFixture {
     changes: 0,
   });
   readonly json = JSON.stringify;
+  toggleHostBanner(): void {
+    this.hostBannerVisible.update((visible) => !visible);
+  }
+
   async renderUnrelatedHostUpdates(): Promise<void> {
     for (let i = 0; i < 10; i++) {
       this.hostUpdates.update((count) => count + 1);
