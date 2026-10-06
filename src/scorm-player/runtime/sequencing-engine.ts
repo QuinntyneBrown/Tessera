@@ -21,6 +21,14 @@ export type NavigationDecision =
 
 export const NO_TRACKING: SequencingTracking = { activities: {} };
 
+/** Which navigation requests the rules would allow from an activity, as `adl.nav.request_valid` reports. */
+export interface NavigationValidity {
+  readonly continue: boolean;
+  readonly previous: boolean;
+  /** By activity id; activities the learner may not choose are false. */
+  readonly choice: Readonly<Record<string, boolean>>;
+}
+
 /** A three-valued result: undefined is unknown, which never makes a rule apply. */
 type Truth = boolean | undefined;
 
@@ -122,6 +130,18 @@ export class SequencingEngine {
       }),
     };
     return { activities: { ...this.tracking.activities, [id]: activity }, globals };
+  }
+
+  validity(currentId: string): NavigationValidity {
+    const choice: Record<string, boolean> = {};
+    for (const node of this.nodes.values()) {
+      if (node.activity) choice[node.id] = !this.unavailableReason(currentId, node.id);
+    }
+    return {
+      continue: this.next(currentId).kind === 'launch',
+      previous: this.previous(currentId).kind === 'launch',
+      choice,
+    };
   }
 
   /** Processes the `adl.nav.request` a SCO left when its session ended; null when there is none to act on. */

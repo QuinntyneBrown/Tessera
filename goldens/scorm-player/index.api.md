@@ -147,6 +147,15 @@ export type NavigationDecision = {
     readonly suspended: boolean;
 };
 
+// @public
+export interface NavigationValidity {
+    readonly choice: Readonly<Record<string, boolean>>;
+    // (undocumented)
+    readonly continue: boolean;
+    // (undocumented)
+    readonly previous: boolean;
+}
+
 // @public (undocumented)
 export const NO_TRACKING: SequencingTracking;
 
@@ -445,6 +454,8 @@ export class SequencingEngine {
     // (undocumented)
     readonly tree: CourseNode;
     unavailableReason(currentId: string | null, targetId: string): string | null;
+    // (undocumented)
+    validity(currentId: string): NavigationValidity;
 }
 
 // @public (undocumented)

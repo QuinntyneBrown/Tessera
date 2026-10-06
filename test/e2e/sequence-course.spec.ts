@@ -210,3 +210,21 @@ test('keeps a forward-only course moving forward and a closed section open until
   await player.chooseActivity('Drill two');
   await player.expectCurrentActivity('Drill two');
 });
+
+// L2-009 AC1, AC2 (navigation request validity)
+test('tells a SCO which navigation requests the sequencing rules would allow', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-flow-2004' });
+
+  const results = await player.runScoCalls([
+    ['Initialize', ''],
+    ['GetValue', 'adl.nav.request_valid.continue'],
+    ['GetValue', 'adl.nav.request_valid.previous'],
+    ['GetValue', 'adl.nav.request_valid.choice.{target=lesson3}'],
+    ['GetValue', 'adl.nav.request_valid.jump.{target=lesson3}'],
+    ['SetValue', 'adl.nav.request_valid.continue', 'true'],
+    ['GetLastError'],
+  ]);
+
+  expect(results).toEqual(['true', 'true', 'false', 'false', 'true', 'false', '404']);
+});

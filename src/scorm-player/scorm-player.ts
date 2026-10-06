@@ -132,7 +132,13 @@ export class ScormPlayer {
               correlationToken: this.token(),
             }),
         });
-        this.launcher.launch(request.activity, request.edition, request.delivery, request.state);
+        this.launcher.launch(
+          request.activity,
+          request.edition,
+          request.delivery,
+          request.state,
+          request.edition === '1.2' ? null : this.engine()!.validity(request.activity.id),
+        );
       });
     });
     effect((onCleanup) => {

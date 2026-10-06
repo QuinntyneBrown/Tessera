@@ -19,7 +19,7 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   const message = event.data;
   if (message.kind === 'prepare') {
     if (message.sco) {
-      session = createSession(message.edition);
+      session = createSession(message.edition, message.navigation);
       if (message.state) session.restore({ ...message.state });
       const post = (operation: RuntimeOperation) => send({ v: 1, kind: 'operation', operation });
       if (session instanceof RuntimeSession) {

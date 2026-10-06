@@ -257,4 +257,30 @@ describe('SCORM 2004 data model', () => {
       expect(read(session, 'cmi.entry')).toEqual(['', '0']);
     });
   });
+
+  describe('navigation request validity', () => {
+    const navigation = { continue: true, previous: false, choice: { a: true, b: false } };
+
+    it('reports what the sequencer allowed at launch', () => {
+      const session = new Scorm2004Session('2004-4th', navigation);
+      session.initialize('');
+
+      expect(read(session, 'adl.nav.request_valid.continue')).toEqual(['true', '0']);
+      expect(read(session, 'adl.nav.request_valid.previous')).toEqual(['false', '0']);
+      expect(read(session, 'adl.nav.request_valid.choice.{target=b}')).toEqual(['false', '0']);
+      expect(read(session, 'adl.nav.request_valid.choice.{target=zz}')).toEqual(['false', '0']);
+      expect(read(session, 'adl.nav.request_valid.jump.{target=b}')).toEqual(['true', '0']);
+    });
+
+    it('reports unknown when the sequencer supplied nothing', () => {
+      expect(read(running(), 'adl.nav.request_valid.continue')).toEqual(['unknown', '0']);
+    });
+
+    it('has no jump validity before the 4th Edition', () => {
+      const session = new Scorm2004Session('2004-3rd', navigation);
+      session.initialize('');
+
+      expect(read(session, 'adl.nav.request_valid.jump.{target=a}')).toEqual(['', '401']);
+    });
+  });
 });

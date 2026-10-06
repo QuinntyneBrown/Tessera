@@ -1,6 +1,7 @@
 import { Activity, ScormEdition, DeliveryDescriptor } from '../types';
 import { HostMessage, parseWrapperMessage, RuntimeOperation } from './bridge-protocol';
 import { createSession, ScormSession } from './sessions';
+import { NavigationValidity } from './sequencing-engine';
 
 const FLUSH_TIMEOUT_MS = 5000;
 
@@ -45,6 +46,7 @@ export class ActivityLauncher {
     edition: ScormEdition,
     delivery: DeliveryDescriptor,
     state: Record<string, string> | null,
+    navigation: NavigationValidity | null = null,
   ): void {
     this.activity = activity;
     this.session = createSession(edition);
@@ -57,7 +59,14 @@ export class ActivityLauncher {
     frame.style.cssText = 'display:block;inline-size:100%;block-size:28.75rem;border:0';
     frame.src = delivery.wrapperUrl;
     frame.addEventListener('load', () =>
-      this.post({ v: 1, kind: 'prepare', edition, sco: activity.resource.kind === 'sco', state }),
+      this.post({
+        v: 1,
+        kind: 'prepare',
+        edition,
+        sco: activity.resource.kind === 'sco',
+        state,
+        navigation,
+      }),
     );
     this.container.replaceChildren(frame);
     this.frame = frame;

@@ -1,4 +1,5 @@
 import { ScormEdition } from '../types';
+import { NavigationValidity } from './sequencing-engine';
 
 export const BRIDGE_PROTOCOL_VERSION = 1;
 export const MAX_MESSAGE_BYTES = 64 * 1024;
@@ -12,6 +13,8 @@ export type HostMessage =
       readonly sco: boolean;
       /** Values saved for this SCO by an earlier session, if any. */
       readonly state: Readonly<Record<string, string>> | null;
+      /** SCORM 2004: the navigation requests valid from this activity when it launches. */
+      readonly navigation: NavigationValidity | null;
     }
   | { readonly v: 1; readonly kind: 'start'; readonly url: string }
   /** Asks the wrapper to confirm that every earlier message has been delivered. */

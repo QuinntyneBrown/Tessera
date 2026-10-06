@@ -2,6 +2,7 @@ import { ScormEdition } from '../types';
 import { SessionState } from './runtime-session';
 import { normalize } from './scorm12-rules';
 import { checkResponse, isArray2004, ruleFor2004 } from './scorm2004-rules';
+import { NavigationValidity } from './sequencing-engine';
 
 const ERROR_STRINGS: Record<string, string> = {
   '0': 'No Error',
@@ -32,6 +33,8 @@ const ERROR_STRINGS: Record<string, string> = {
   '408': 'Data Model Dependency Not Established',
 };
 
+const VALID = 'adl.nav.request_valid.';
+
 /** The error for a call made before initialization or after termination, by call. */
 const OUT_OF_SESSION = {
   terminate: ['112', '113'],
@@ -48,7 +51,11 @@ export class Scorm2004Session {
   state: SessionState = 'not-initialized';
   lastError = '0';
 
-  constructor(private readonly edition: ScormEdition) {}
+  constructor(
+    private readonly edition: ScormEdition,
+    /** What the sequencer allowed when the SCO launched; reads report "unknown" without it. */
+    private readonly navigation: NavigationValidity | null = null,
+  ) {}
 
   initialize(argument: string): string {
     if (this.state === 'initialized') return this.fail('103');
@@ -73,6 +80,7 @@ export class Scorm2004Session {
 
   getValue(element: string): string {
     if (this.state !== 'initialized') return this.outOfSession('getValue', '');
+    if (element.startsWith(VALID)) return this.requestValid(element.slice(VALID.length));
     const { key, indexes } = normalize(element);
     const parent = key.slice(0, key.lastIndexOf('.'));
     if (key.endsWith('._count')) {
@@ -117,6 +125,7 @@ export class Scorm2004Session {
   }
 
   private write(element: string, value: string): string {
+    if (element.startsWith(VALID)) return this.fail('404');
     const { key, indexes } = normalize(element);
     if (key === 'cmi._version' || key.endsWith('._children') || key.endsWith('._count')) {
       const parent = key.slice(0, key.lastIndexOf('.'));
@@ -149,6 +158,20 @@ export class Scorm2004Session {
       if (index === (this.counts.get(path) ?? 0)) this.counts.set(path, index + 1);
     }
     return this.succeed();
+  }
+
+  /** `adl.nav.request_valid.continue`, `.previous`, `.choice.{target=ID}` and, in the 4th Edition, `.jump.{target=ID}`. */
+  private requestValid(request: string): string {
+    const known = (valid: boolean | undefined) =>
+      this.succeed(valid === undefined ? 'unknown' : String(valid));
+    if (request === 'continue') return known(this.navigation?.continue);
+    if (request === 'previous') return known(this.navigation?.previous);
+    const target = /^(choice|jump)\.\{target=([^}]+)\}$/.exec(request);
+    if (!target || (target[1] === 'jump' && this.edition !== '2004-4th'))
+      return this.fail('401', '');
+    if (!this.navigation) return known(undefined);
+    const exists = target[2] in this.navigation.choice;
+    return known(target[1] === 'jump' ? exists : exists && this.navigation.choice[target[2]]);
   }
 
   /** Objective identifiers are unique within the SCO. */
