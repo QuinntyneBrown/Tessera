@@ -16,7 +16,12 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivityLauncher } from './runtime/activity-launcher';
-import { NavigationDecision, SequencingEngine } from './runtime/sequencing-engine';
+import {
+  NavigationDecision,
+  NO_TRACKING,
+  SequencingEngine,
+  Tracking,
+} from './runtime/sequencing-engine';
 import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
 import { PersistenceCoordinator } from './runtime/persistence-coordinator';
@@ -68,9 +73,10 @@ export class ScormPlayer {
     persistence: 'Progress not saved',
   };
   protected readonly activity = signal<Activity | null>(null);
+  private readonly tracking = signal<Tracking>(NO_TRACKING);
   private readonly engine = computed(() => {
     const course = this.course();
-    return course && new SequencingEngine(course.tree);
+    return course && new SequencingEngine(course.tree, this.tracking());
   });
   protected readonly previousDecision = computed(() => this.flowDecision(-1));
   protected readonly nextDecision = computed(() => this.flowDecision(1));
@@ -188,7 +194,8 @@ export class ScormPlayer {
               course.activities.find((a) => start.kind === 'launch' && a.id === start.id);
             this.loading.set(false);
             if (!first) return;
-            this.activity.set(first);
+            this.tracking.set(NO_TRACKING);
+            this.deliver(first);
             this.launchRequest.set({
               activity: this.launchable(first),
               edition: course.edition,
@@ -236,6 +243,12 @@ export class ScormPlayer {
     this.persistence.submit(snapshot);
   }
 
+  /** Makes the activity current, recording the attempt it begins. */
+  private deliver(activity: Activity): void {
+    this.tracking.set(this.engine()!.delivered(this.activity()?.id ?? null, activity.id));
+    this.activity.set(activity);
+  }
+
   /** Acts on the navigation request a SCORM 2004 SCO left when its session ended. */
   private follow(activity: Activity, request: string | undefined): void {
     const decision = request && this.engine()!.request(activity.id, request);
@@ -280,7 +293,7 @@ export class ScormPlayer {
         correlationToken: this.token(),
       });
     }
-    this.activity.set(activity);
+    this.deliver(activity);
     this.outlineExpanded.set(false);
     const moveFocus = by === 'learner' || focusWasInActivity;
     this.navigationStatus.set(moveFocus ? '' : `Now showing ${activity.title}.`);

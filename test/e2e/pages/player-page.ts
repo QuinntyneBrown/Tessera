@@ -467,13 +467,8 @@ export class PlayerPage {
     const button = this.outline.getByRole('button', { name: title });
     await expect(button).toHaveAttribute('aria-disabled', 'true');
     await expect(button).toHaveAccessibleDescription(reason);
-    await expect(
-      this.outline
-        .getByRole('listitem')
-        .filter({ has: this.page.getByRole('button', { name: title }) })
-        .last()
-        .getByText(reason, { exact: true }),
-    ).toBeVisible();
+    const describedBy = await button.getAttribute('aria-describedby');
+    await expect(this.page.locator(`[id="${describedBy}"]`)).toBeVisible();
   }
 
   async expectActivityAvailable(title: string): Promise<void> {
@@ -543,7 +538,8 @@ export class PlayerPage {
     await button.focus();
     await expect(button).toBeFocused();
     await expect(button).toHaveAccessibleDescription(reason);
-    await expect(this.page.getByText(reason, { exact: true })).toBeVisible();
+    const describedBy = await button.getAttribute('aria-describedby');
+    await expect(this.page.locator(`[id="${describedBy}"]`)).toBeVisible();
   }
 
   async expectPreviousBlocked(reason: string): Promise<void> {

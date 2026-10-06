@@ -109,3 +109,40 @@ describe('SequencingEngine SCO navigation requests', () => {
     expect(engine.request('a', '{target=zzz}choice')).toBeNull();
   });
 });
+
+describe('SequencingEngine attempt limits', () => {
+  const limited = (id: string, attemptLimit: number): CourseNode => ({
+    ...leaf(id),
+    sequencing: { controlMode: FREE, attemptLimit },
+  });
+  const tree = module('root', [limited('a', 1), leaf('b')]);
+  const reason = 'You have used every attempt at this activity.';
+
+  it('counts an attempt on each delivery, and on each module newly entered', () => {
+    const nested = module('root', [module('m', [leaf('a'), leaf('b')])]);
+    const once = new SequencingEngine(nested).delivered(null, 'a');
+    const twice = new SequencingEngine(nested, once).delivered('a', 'b');
+
+    expect(once.activities).toEqual({
+      root: { attempts: 1 },
+      m: { attempts: 1 },
+      a: { attempts: 1 },
+    });
+    expect(twice.activities).toEqual({
+      root: { attempts: 1 },
+      m: { attempts: 1 },
+      a: { attempts: 1 },
+      b: { attempts: 1 },
+    });
+  });
+
+  it('allows an activity until its limit is used, then denies choice and flow into it', () => {
+    const fresh = new SequencingEngine(tree);
+    expect(fresh.unavailableReason('b', 'a')).toBeNull();
+
+    const used = new SequencingEngine(tree, fresh.delivered(null, 'a'));
+
+    expect(used.unavailableReason('b', 'a')).toBe(reason);
+    expect(used.previous('b')).toEqual({ kind: 'denied', reason });
+  });
+});

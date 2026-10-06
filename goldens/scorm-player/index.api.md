@@ -28,6 +28,12 @@ export interface ActivityResource {
     readonly url: string;
 }
 
+// @public (undocumented)
+export interface ActivityTracking {
+    // (undocumented)
+    readonly attempts: number;
+}
+
 // @public
 export interface AttemptContext {
     // (undocumented)
@@ -137,6 +143,9 @@ export type NavigationDecision = {
     readonly kind: 'end';
     readonly suspended: boolean;
 };
+
+// @public (undocumented)
+export const NO_TRACKING: Tracking;
 
 // @public (undocumented)
 export interface PackageLimits {
@@ -316,15 +325,17 @@ export interface ScoSnapshot {
 
 // @public
 export interface SequencingDefinition {
+    readonly attemptLimit?: number;
     // (undocumented)
     readonly controlMode: ControlMode;
 }
 
 // @public
 export class SequencingEngine {
-    constructor(tree: CourseNode);
+    constructor(tree: CourseNode, tracking?: Tracking);
     // (undocumented)
     choose(currentId: string | null, targetId: string): NavigationDecision;
+    delivered(currentId: string | null, targetId: string): Tracking;
     // (undocumented)
     next(currentId: string): NavigationDecision;
     // (undocumented)
@@ -338,6 +349,12 @@ export class SequencingEngine {
 export interface SequencingState {
     // (undocumented)
     readonly currentActivityId: string;
+}
+
+// @public
+export interface Tracking {
+    // (undocumented)
+    readonly activities: Readonly<Record<string, ActivityTracking>>;
 }
 
 // @public

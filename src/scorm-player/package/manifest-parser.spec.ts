@@ -84,7 +84,9 @@ describe('parseManifest for a SCORM 2004 organization', () => {
         <item identifier="a" identifierref="r"><title>A</title></item>
         <imsss:sequencing><imsss:controlMode choice="false" flow="true"/></imsss:sequencing>
       </item>
-      <item identifier="b" identifierref="r"><title>B</title></item>
+      <item identifier="b" identifierref="r"><title>B</title>
+        <imsss:sequencing><imsss:limitConditions attemptLimit="2"/></imsss:sequencing>
+      </item>
     </organization>
   </organizations>
   <resources><resource identifier="r" type="webcontent" adlcp:scormType="sco" href="a.html"/></resources>
@@ -115,5 +117,12 @@ describe('parseManifest for a SCORM 2004 organization', () => {
       flow: false,
       forwardOnly: false,
     });
+  });
+
+  it('reads an attempt limit, and treats its absence as unlimited', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.tree.children[1].sequencing.attemptLimit).toBe(2);
+    expect(course.tree.children[0].sequencing.attemptLimit).toBeUndefined();
   });
 });

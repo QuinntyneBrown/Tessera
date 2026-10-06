@@ -65,6 +65,8 @@ export interface ControlMode {
 /** The sequencing rules a course declares for one activity. */
 export interface SequencingDefinition {
   readonly controlMode: ControlMode;
+  /** How many attempts the learner may make on the activity; unlimited when absent. */
+  readonly attemptLimit?: number;
 }
 
 /** One activity in the course's organization: a launchable item or a module of child activities. */

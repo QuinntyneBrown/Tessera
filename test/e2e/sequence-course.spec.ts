@@ -68,3 +68,20 @@ test('processes navigation requests that a SCO makes when its session ends', asy
   await player.expectNoActivityContent();
   await player.expectNoAccessibilityViolations();
 });
+
+// L2-006 AC3 (attempt limit), L2-005 AC3
+test('makes an activity unavailable once its attempt limit is used', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-limit-2004' });
+  await player.expectCurrentActivity('Final quiz');
+
+  await player.next();
+
+  await player.expectCurrentActivity('Summary');
+  const reason = 'You have used every attempt at this activity.';
+  await player.expectActivityUnavailable('Final quiz', reason);
+  await player.expectPreviousBlocked(reason);
+  await player.chooseActivity('Final quiz');
+  await player.expectCurrentActivity('Summary');
+  await player.expectNoAccessibilityViolations();
+});

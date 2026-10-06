@@ -18,7 +18,9 @@ export function parseSequencing(
   edition: ScormEdition,
 ): SequencingDefinition {
   const controlMode = child(element, 'controlMode');
+  const attemptLimit = Number(child(element, 'limitConditions')?.getAttribute('attemptLimit') ?? 0);
   return {
+    ...(attemptLimit > 0 && { attemptLimit }),
     controlMode: {
       choice: flag(controlMode, 'choice', true),
       choiceExit: flag(controlMode, 'choiceExit', true),

@@ -9,10 +9,22 @@ export type NavigationDecision =
   /** The attempt on the course ends; suspended when the learner may resume it later. */
   | { readonly kind: 'end'; readonly suspended: boolean };
 
+/** What the learner has done in the course so far, as sequencing needs it. */
+export interface Tracking {
+  readonly activities: Readonly<Record<string, ActivityTracking>>;
+}
+
+export interface ActivityTracking {
+  readonly attempts: number;
+}
+
+export const NO_TRACKING: Tracking = { activities: {} };
+
 const FIRST = 'This is the first activity.';
 const LAST = 'This is the last activity.';
 const NO_FLOW = 'Choose the next activity from the course outline.';
 const NO_CHOICE = 'Take this course in order using Next.';
+const LIMIT = 'You have used every attempt at this activity.';
 
 /**
  * Applies a course's sequencing rules to navigation requests. SCORM 1.2 courses arrive with free choice
@@ -22,7 +34,10 @@ export class SequencingEngine {
   private readonly parents = new Map<CourseNode, CourseNode>();
   private readonly nodes = new Map<string, CourseNode>();
 
-  constructor(private readonly tree: CourseNode) {
+  constructor(
+    private readonly tree: CourseNode,
+    private readonly tracking: Tracking = NO_TRACKING,
+  ) {
     const index = (node: CourseNode): void => {
       this.nodes.set(node.id, node);
       for (const child of node.children) {
@@ -58,6 +73,18 @@ export class SequencingEngine {
     return reason ? { kind: 'denied', reason } : { kind: 'launch', id: targetId };
   }
 
+  /** The tracking after launching the target: it and every activity newly entered on the way begin an attempt. */
+  delivered(currentId: string | null, targetId: string): Tracking {
+    const active = new Set(currentId ? this.path(this.node(currentId)) : []);
+    const activities = { ...this.tracking.activities };
+    for (const node of this.path(this.node(targetId))) {
+      if (node.id === targetId || !active.has(node)) {
+        activities[node.id] = { attempts: this.attempts(node) + 1 };
+      }
+    }
+    return { activities };
+  }
+
   /** Processes the `adl.nav.request` a SCO left when its session ended; null when there is none to act on. */
   request(currentId: string, request: string): NavigationDecision | null {
     const target = /^\{target=([^}]+)\}(choice|jump)$/.exec(request);
@@ -87,10 +114,29 @@ export class SequencingEngine {
 
   /** Why the learner cannot choose the target now, or null when they can. */
   unavailableReason(_currentId: string | null, targetId: string): string | null {
-    for (let node = this.node(targetId); this.parents.has(node); node = this.parents.get(node)!) {
+    for (const node of this.path(this.node(targetId)).slice(1)) {
       if (!this.parents.get(node)!.sequencing.controlMode.choice) return NO_CHOICE;
+      const blocked = this.check(node);
+      if (blocked) return blocked;
     }
     return null;
+  }
+
+  /** Why the rules stop the activity being delivered, whichever way it is reached; null when nothing does. */
+  private check(node: CourseNode): string | null {
+    const limit = node.sequencing.attemptLimit;
+    return limit !== undefined && this.attempts(node) >= limit ? LIMIT : null;
+  }
+
+  private attempts(node: CourseNode): number {
+    return this.tracking.activities[node.id]?.attempts ?? 0;
+  }
+
+  /** The activities from the root down to `node`, inclusive. */
+  private path(node: CourseNode): CourseNode[] {
+    const path = [node];
+    while (this.parents.has(path[0])) path.unshift(this.parents.get(path[0])!);
+    return path;
   }
 
   /** Moves from `from` to the next (1) or previous (-1) activity the rules deliver. */
@@ -114,6 +160,8 @@ export class SequencingEngine {
 
   /** The first (or, going back, last) activity inside `node`, or null when it holds none. */
   private enter(node: CourseNode, direction: 1 | -1): NavigationDecision | null {
+    const blocked = this.check(node);
+    if (blocked) return { kind: 'denied', reason: blocked };
     if (node.activity) return { kind: 'launch', id: node.id };
     if (!node.sequencing.controlMode.flow) return { kind: 'denied', reason: NO_FLOW };
     const children = direction > 0 ? node.children : [...node.children].reverse();
