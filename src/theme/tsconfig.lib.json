@@ -1,14 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../out-tsc/combobox",
+    "outDir": "../../out-tsc/theme",
     "declaration": true,
     "declarationMap": true,
     "types": [],
-    "paths": {
-      "@tessera/theme": ["../../dist/theme/types/tessera-theme.d.ts"]
-    }
+    "resolveJsonModule": true
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.json"],
   "exclude": ["**/*.spec.ts"]
 }

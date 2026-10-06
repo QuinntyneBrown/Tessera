@@ -55,7 +55,13 @@ export class PlayerPage {
         return route.abort('connectionrefused');
       });
     }
-    await this.page.goto(`/?${new URLSearchParams(query as Record<string, string>)}`);
+    const courseOrigin = process.env['TESSERA_COURSE_ORIGIN'];
+    await this.page.goto(
+      `/?${new URLSearchParams({
+        ...query,
+        ...(courseOrigin ? { courseOrigin } : {}),
+      } as Record<string, string>)}`,
+    );
   }
 
   /** Opens the host with a built ZIP package (see tools/build-packages.mjs) chosen as the course. */

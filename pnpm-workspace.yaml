@@ -1,4 +1,5 @@
 packages:
+  - src/theme
   - src/scorm-player
   - src/combobox
 allowBuilds:

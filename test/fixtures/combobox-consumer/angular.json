@@ -12,7 +12,8 @@
             "browser": "main.ts",
             "index": "index.html",
             "tsConfig": "tsconfig.json",
-            "outputPath": "dist"
+            "outputPath": "dist",
+            "inlineStyleLanguage": "scss"
           }
         },
         "serve": {

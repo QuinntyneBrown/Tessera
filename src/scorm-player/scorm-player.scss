@@ -1,19 +1,141 @@
+@use '../theme/styles/tokens' as theme;
+@include theme.defaults(
+  (
+    'borderRadiusSmall',
+    'colorBrandStroke1',
+    'colorNeutralBackground1',
+    'colorNeutralBackground1Hover',
+    'colorNeutralBackground1Pressed',
+    'colorNeutralForeground1',
+    'colorNeutralForeground2',
+    'colorNeutralForegroundDisabled',
+    'colorNeutralStrokeAccessible',
+    'colorPaletteRedForeground1',
+    'colorScheme',
+    'colorStrokeFocus2',
+    'fontFamilyBase',
+    'fontSizeBase300',
+    'fontSizeBase500',
+    'fontSizeBase600',
+    'fontWeightSemibold',
+    'lineHeightBase300',
+    'spacingHorizontalL',
+    'spacingHorizontalXL',
+    'spacingVerticalL',
+    'spacingVerticalM',
+    'spacingVerticalS',
+    'strokeWidthThick',
+    'strokeWidthThin'
+  )
+);
+
 :host {
   display: block;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  color: theme.token('colorNeutralForeground1');
+  background: theme.token('colorNeutralBackground1');
+  font-family: theme.token('fontFamilyBase');
+  font-size: theme.token('fontSizeBase300');
+  line-height: theme.token('lineHeightBase300');
+  color-scheme: theme.token('colorScheme');
+  overflow-wrap: anywhere;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-weight: theme.token('fontWeightSemibold');
+  margin-block: theme.token('spacingVerticalL');
+}
+
+h1 {
+  font-size: theme.token('fontSizeBase600');
+}
+
+h2 {
+  font-size: theme.token('fontSizeBase500');
+}
+
+p {
+  margin-block: theme.token('spacingVerticalM');
+}
+
+[role='status'] {
+  color: theme.token('colorNeutralForeground2');
+}
+
+[role='alert'] {
+  color: theme.token('colorPaletteRedForeground1');
 }
 
 button {
   min-block-size: 2.75rem;
   min-inline-size: 2.75rem;
-  padding: 0.5rem 1rem;
+  max-inline-size: 100%;
+  padding: theme.token('spacingVerticalS') theme.token('spacingHorizontalL');
+  border: theme.token('strokeWidthThin') solid theme.token('colorNeutralStrokeAccessible');
+  border-radius: theme.token('borderRadiusSmall');
   font: inherit;
+  color: theme.token('colorNeutralForeground1');
+  background: theme.token('colorNeutralBackground1');
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  &:hover {
+    background: theme.token('colorNeutralBackground1Hover');
+  }
+  &:active {
+    background: theme.token('colorNeutralBackground1Pressed');
+  }
+  &:focus-visible {
+    outline: theme.token('strokeWidthThick') solid theme.token('colorStrokeFocus2');
+    outline-offset: -2px;
+  }
+  &[aria-current='step'] {
+    border-color: theme.token('colorBrandStroke1');
+    font-weight: theme.token('fontWeightSemibold');
+  }
+  &[aria-disabled='true'] {
+    color: theme.token('colorNeutralForegroundDisabled');
+    cursor: default;
+  }
 }
 
 .layout {
   display: grid;
-  gap: 1.5rem;
+  gap: theme.token('spacingHorizontalXL');
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
+}
+
+@media (forced-colors: active) {
+  :host {
+    color: CanvasText;
+    background: Canvas;
+  }
+  [role='status'],
+  [role='alert'] {
+    color: CanvasText;
+  }
+  button {
+    color: ButtonText;
+    background: Canvas;
+    border-color: ButtonText;
+    &[aria-current='step'] {
+      border-color: Highlight;
+    }
+    &[aria-disabled='true'] {
+      color: GrayText;
+    }
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
 }
 
 .sidebar,
