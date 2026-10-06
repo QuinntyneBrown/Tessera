@@ -2,6 +2,8 @@
 
 Status: **Not run; release gate remains open.** Automated Chromium tests do not establish screen-reader speech, real on-screen keyboard behavior, or actual browser zoom. No manual result is inferred from an axe pass.
 
+Follow the [manual screen reader verification guide](manual-screen-reader-verification.md) for setup, scenario URLs, expected behavior, the host-layout stimulus, and evidence templates.
+
 The NVDA Firefox entry from the reviewed design is omitted to honor the user's Chromium-only frontend-testing instruction. Automated runs use Chromium only. Platform-specific manual VoiceOver and Narrator combinations remain pending release verification; none were executed by this implementation.
 
 | Combination | Date | Versions (AT / browser / OS / package) | Result | Defects |
@@ -28,6 +30,6 @@ For each run record the commit (including local changes), tester, date, package/
 9. Repeat at 320 CSS px and actual 200% zoom, forced colors and reduced motion. Check visible focus and no lost functions. Apply 200% text and WCAG spacing overrides separately.
 10. On touch screen readers, swipe forward from the input with its list open. Confirm options are reached in reading order. Tap options, chips, clear-all and toggle; check the real on-screen keyboard is retained during option selection. Drag to scroll without selecting.
 11. Set a real Chrome window to 1280 × 1024 and actual browser zoom to 400% using browser controls. Record both window size and zoom; verify no horizontal page scrolling, input visibility, independent list scrolling, all actions and preserved state across resize. A 320 × 256 CSS viewport or device scale is not this check.
-12. For the PR #2 host-layout regression, use `/?screen=combobox&results=normal&hostLayout=true`. Type `ad`, select Ada, and leave the list open. Activate Toggle host banner to expand and collapse the space above the field. Return to the input by keyboard after each activation; confirm the list follows the field without covering the input, the query and selection remain, and option navigation and selection speech still work. Record this check for each applicable screen-reader combination; it remains **Not run**.
+12. For the PR #2 host-layout regression, use `/?screen=combobox&results=normal&hostLayout=true`. Type `ad`, select Ada, and leave the list open with input focus. Follow the guide's [delayed host-event procedure](manual-screen-reader-verification.md#verify-the-pr-2-host-layout-regression) to expand and collapse the space without dismissing the list by reaching an external button. Confirm the popup follows without covering the input, the query and selection remain, and option navigation and selection speech still work. Record this check for each applicable screen-reader combination; it remains **Not run**.
 
 Tester / commit / sign-off: **Pending**.
