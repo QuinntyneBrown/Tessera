@@ -22,6 +22,8 @@ export interface HostScenario {
   failFirstActivityRequest?: boolean;
 }
 
+export type OutlineItem = string | [string, OutlineItem[]];
+
 /** The player screen: owns every selector and interaction. */
 export class PlayerPage {
   private courseRequests = 0;
@@ -267,6 +269,20 @@ export class PlayerPage {
   async expectActivities(titles: string[]): Promise<void> {
     const outline = this.page.getByRole('navigation', { name: 'Course outline' });
     await expect(outline.getByRole('listitem')).toHaveText(titles);
+  }
+
+  /** The outline as nested lists: a title is a launchable activity, `[title, children]` a module. */
+  async expectOutline(items: OutlineItem[]): Promise<void> {
+    const yaml = (entries: OutlineItem[], indent: string): string =>
+      `${indent}- list:\n` +
+      entries
+        .map((entry) =>
+          typeof entry === 'string'
+            ? `${indent}  - listitem:\n${indent}    - button "${entry}"\n`
+            : `${indent}  - listitem:\n${indent}    - text: ${entry[0]}\n${yaml(entry[1], `${indent}    `)}`,
+        )
+        .join('');
+    await expect(this.outline.getByRole('list').first()).toMatchAriaSnapshot(yaml(items, ''));
   }
 
   private get activityFrame() {

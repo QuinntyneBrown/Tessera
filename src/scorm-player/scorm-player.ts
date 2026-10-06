@@ -13,6 +13,7 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { ActivityLauncher } from './runtime/activity-launcher';
 import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
@@ -43,6 +44,7 @@ import {
 
 @Component({
   selector: 'tsr-scorm-player',
+  imports: [NgTemplateOutlet],
   templateUrl: './scorm-player.html',
   styleUrl: './scorm-player.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

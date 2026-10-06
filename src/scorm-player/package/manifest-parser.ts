@@ -1,4 +1,5 @@
-import { Activity, ValidatedCourse } from '../types';
+import { Activity, CourseNode, ValidatedCourse } from '../types';
+import { parseSequencing } from './sequencing-parser';
 import { CourseLoadError } from './course-load-error';
 import { detectEdition } from './edition';
 import { ResourceResolver } from './resource-resolver';
@@ -44,26 +45,35 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
     ]),
   );
 
-  const activities: Activity[] = descendants(organization, 'item').map((item) => {
-    const resource = resources.get(item.getAttribute('identifierref'))!;
+  const node = (element: Element): CourseNode => {
+    const items = children(element, 'item');
+    const resource = resources.get(element.getAttribute('identifierref'));
+    const id = element.getAttribute('identifier')!;
+    const title = children(element, 'title')[0].textContent!.trim();
+    const sequencing = parseSequencing(children(element, 'sequencing')[0], edition);
+    if (items.length > 0 || !resource) {
+      return { id, title, children: items.map(node), sequencing };
+    }
     // SCORM 1.2 spells the attribute adlcp:scormtype; SCORM 2004 spells it adlcp:scormType.
     const scormType = Array.from(resource.attributes).find(
       (attribute) => attribute.localName.toLowerCase() === 'scormtype',
     )?.value;
-    return {
-      id: item.getAttribute('identifier')!,
-      title: children(item, 'title')[0].textContent!.trim(),
+    const activity: Activity = {
+      id,
+      title,
       resource: {
         kind: scormType === 'sco' ? 'sco' : 'asset',
         url: resolver.resolve(resource.getAttribute('href')!).href,
       },
     };
-  });
-
-  return {
-    edition,
-    root: root.href,
-    title: children(organization, 'title')[0].textContent!.trim(),
-    activities,
+    return { id, title, activity, children: [], sequencing };
   };
+  const tree = node(organization);
+  const activities: Activity[] = [];
+  const collect = (each: CourseNode): void => {
+    if (each.activity) activities.push(each.activity);
+    each.children.forEach(collect);
+  };
+  collect(tree);
+  return { edition, root: root.href, title: tree.title, activities, tree };
 }

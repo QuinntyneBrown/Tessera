@@ -54,10 +54,36 @@ export interface Activity {
   readonly resource: ActivityResource;
 }
 
+/** How learners may move within an activity's children (SCORM 2004 control modes). */
+export interface ControlMode {
+  readonly choice: boolean;
+  readonly choiceExit: boolean;
+  readonly flow: boolean;
+  readonly forwardOnly: boolean;
+}
+
+/** The sequencing rules a course declares for one activity. */
+export interface SequencingDefinition {
+  readonly controlMode: ControlMode;
+}
+
+/** One activity in the course's organization: a launchable item or a module of child activities. */
+export interface CourseNode {
+  readonly id: string;
+  readonly title: string;
+  /** Set for a launchable item; a module has children instead. */
+  readonly activity?: Activity;
+  readonly children: readonly CourseNode[];
+  readonly sequencing: SequencingDefinition;
+}
+
 export interface ValidatedCourse {
   readonly edition: ScormEdition;
   readonly title: string;
+  /** The launchable activities in course order. */
   readonly activities: readonly Activity[];
+  /** The organization as a tree; its root is the course itself. */
+  readonly tree: CourseNode;
   /** The root the activity URLs are relative to. */
   readonly root: string;
   /** For a ZIP package, its validated files by path; the host serves them. An extracted course has none. */

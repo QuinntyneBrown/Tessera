@@ -71,3 +71,49 @@ describe('parseManifest', () => {
     expect(() => parseManifest(xml, ROOT)).toThrowError(/could not be identified/);
   });
 });
+
+describe('parseManifest for a SCORM 2004 organization', () => {
+  const manifest2004 = `<?xml version="1.0"?>
+<manifest identifier="m" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3" xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata><schema>ADL SCORM</schema><schemaversion>2004 4th Edition</schemaversion></metadata>
+  <organizations default="org">
+    <organization identifier="org">
+      <title>Course</title>
+      <item identifier="module"><title>Module</title>
+        <item identifier="a" identifierref="r"><title>A</title></item>
+        <imsss:sequencing><imsss:controlMode choice="false" flow="true"/></imsss:sequencing>
+      </item>
+      <item identifier="b" identifierref="r"><title>B</title></item>
+    </organization>
+  </organizations>
+  <resources><resource identifier="r" type="webcontent" adlcp:scormType="sco" href="a.html"/></resources>
+</manifest>`;
+
+  it('keeps modules as tree nodes and lists the launchable items in course order', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.activities.map((activity) => activity.id)).toEqual(['a', 'b']);
+    expect(course.tree.children.map((node) => [node.id, node.children.length])).toEqual([
+      ['module', 1],
+      ['b', 0],
+    ]);
+  });
+
+  it('reads control modes and applies the SCORM 2004 defaults to the rest', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.tree.children[0].sequencing.controlMode).toEqual({
+      choice: false,
+      choiceExit: true,
+      flow: true,
+      forwardOnly: false,
+    });
+    expect(course.tree.sequencing.controlMode).toEqual({
+      choice: true,
+      choiceExit: true,
+      flow: false,
+      forwardOnly: false,
+    });
+  });
+});

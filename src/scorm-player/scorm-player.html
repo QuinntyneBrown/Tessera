@@ -49,19 +49,10 @@
         (keydown.escape)="collapseOutline()"
       >
         <h2>Course outline</h2>
-        <ol>
-          @for (item of course.activities; track item.id) {
-            <li>
-              <button
-                type="button"
-                [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
-                (click)="open(item)"
-              >
-                {{ item.title }}
-              </button>
-            </li>
-          }
-        </ol>
+        <ng-container
+          [ngTemplateOutlet]="outlineList"
+          [ngTemplateOutletContext]="{ $implicit: course.tree.children }"
+        />
       </nav>
     </div>
     <div class="player">
@@ -109,3 +100,27 @@
     </div>
   </div>
 }
+
+<ng-template #outlineList let-nodes>
+  <ol role="list">
+    @for (node of nodes; track node.id) {
+      <li>
+        @if (node.activity; as item) {
+          <button
+            type="button"
+            [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
+            (click)="open(item)"
+          >
+            {{ item.title }}
+          </button>
+        } @else {
+          <span>{{ node.title }}</span>
+          <ng-container
+            [ngTemplateOutlet]="outlineList"
+            [ngTemplateOutletContext]="{ $implicit: node.children }"
+          />
+        }
+      </li>
+    }
+  </ol>
+</ng-template>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="seq-flow-2004" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Guided course</title>
+      <item identifier="module1">
+        <title>Module one</title>
+        <item identifier="lesson1" identifierref="res1"><title>Lesson one</title></item>
+        <item identifier="lesson2" identifierref="res2"><title>Lesson two</title></item>
+        <imsss:sequencing>
+          <imsss:controlMode choice="false" flow="true" />
+        </imsss:sequencing>
+      </item>
+      <item identifier="lesson3" identifierref="res3"><title>Lesson three</title></item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="false" flow="true" />
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html"><file href="sco.html" /></resource>
+    <resource identifier="res2" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=2"><file href="sco.html" /></resource>
+    <resource identifier="res3" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=3"><file href="sco.html" /></resource>
+  </resources>
+</manifest>

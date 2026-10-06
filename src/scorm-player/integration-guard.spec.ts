@@ -77,10 +77,14 @@ describe('checkDelivery', () => {
 });
 
 describe('checkSnapshot', () => {
+  const DEFAULT_SEQUENCING = {
+    controlMode: { choice: true, choiceExit: true, flow: true, forwardOnly: false },
+  };
   const course = {
     edition: '1.2',
     title: 'Demo',
     activities: [],
+    tree: { id: 'org', title: 'Demo', children: [], sequencing: DEFAULT_SEQUENCING },
     root: 'https://course.test/',
   } as const;
   const snapshot = {

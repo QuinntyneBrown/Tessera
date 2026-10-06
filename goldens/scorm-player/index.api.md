@@ -52,6 +52,31 @@ export interface AttemptSnapshot {
 }
 
 // @public
+export interface ControlMode {
+    // (undocumented)
+    readonly choice: boolean;
+    // (undocumented)
+    readonly choiceExit: boolean;
+    // (undocumented)
+    readonly flow: boolean;
+    // (undocumented)
+    readonly forwardOnly: boolean;
+}
+
+// @public
+export interface CourseNode {
+    readonly activity?: Activity;
+    // (undocumented)
+    readonly children: readonly CourseNode[];
+    // (undocumented)
+    readonly id: string;
+    // (undocumented)
+    readonly sequencing: SequencingDefinition;
+    // (undocumented)
+    readonly title: string;
+}
+
+// @public
 export interface CourseOutcome {
     // (undocumented)
     readonly completion: string | Unknown;
@@ -263,6 +288,12 @@ export interface ScoSnapshot {
     readonly values: Readonly<Record<string, string>>;
 }
 
+// @public
+export interface SequencingDefinition {
+    // (undocumented)
+    readonly controlMode: ControlMode;
+}
+
 // @public (undocumented)
 export interface SequencingState {
     // (undocumented)
@@ -274,7 +305,6 @@ export type Unknown = 'unknown';
 
 // @public (undocumented)
 export interface ValidatedCourse {
-    // (undocumented)
     readonly activities: readonly Activity[];
     // (undocumented)
     readonly edition: ScormEdition;
@@ -282,6 +312,7 @@ export interface ValidatedCourse {
     readonly root: string;
     // (undocumented)
     readonly title: string;
+    readonly tree: CourseNode;
 }
 
 // (No @packageDocumentation comment for this package)
