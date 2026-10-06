@@ -464,3 +464,28 @@ describe('SequencingEngine rollup', () => {
     expect(engine.hidden('b')).toBe(true);
   });
 });
+
+describe('SequencingEngine forward-only and choice-exit controls', () => {
+  const tree = module(
+    'root',
+    [leaf('a'), module('m', [leaf('b'), leaf('c')], { choiceExit: false }), leaf('d')],
+    { forwardOnly: true },
+  );
+  const engine = new SequencingEngine(tree);
+  const forwardOnly = 'This course only moves forward.';
+  const closed = 'Finish this section before leaving it.';
+
+  it('denies Previous within a forward-only module', () => {
+    expect(engine.previous('b')).toEqual({ kind: 'denied', reason: forwardOnly });
+  });
+
+  it('denies choosing an earlier activity of a forward-only module', () => {
+    expect(engine.unavailableReason('b', 'a')).toBe(forwardOnly);
+    expect(engine.unavailableReason('a', 'd')).toBeNull();
+  });
+
+  it('denies choosing outside a module that does not allow choice exit, but not inside it', () => {
+    expect(engine.unavailableReason('b', 'd')).toBe(closed);
+    expect(engine.unavailableReason('b', 'c')).toBeNull();
+  });
+});

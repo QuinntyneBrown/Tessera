@@ -191,3 +191,22 @@ test('starts a new attempt on a SCO that exited normally, and resumes one that s
   ]);
   expect(resumed).toEqual(['true', 'resume', 'page 6']);
 });
+
+// L2-006 AC1 (forward-only and choice-exit controls)
+test('keeps a forward-only course moving forward and a closed section open until it is finished', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-forward-2004' });
+  await player.next();
+  await player.expectCurrentActivity('Drill one');
+
+  const forwardOnly = 'This course only moves forward.';
+  await player.expectPreviousBlocked(forwardOnly);
+  await player.expectActivityUnavailable('Introduction', forwardOnly);
+  await player.expectActivityUnavailable('Wrap-up', 'Finish this section before leaving it.');
+  await player.expectActivityAvailable('Drill two');
+
+  await player.chooseActivity('Drill two');
+  await player.expectCurrentActivity('Drill two');
+});

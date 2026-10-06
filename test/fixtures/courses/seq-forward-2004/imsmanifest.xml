@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="seq-forward-2004" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Forward-only course</title>
+      <item identifier="intro" identifierref="res1"><title>Introduction</title></item>
+      <item identifier="practice">
+        <title>Practice</title>
+        <item identifier="drill1" identifierref="res2"><title>Drill one</title></item>
+        <item identifier="drill2" identifierref="res3"><title>Drill two</title></item>
+        <imsss:sequencing>
+          <imsss:controlMode choice="true" choiceExit="false" flow="true" />
+        </imsss:sequencing>
+      </item>
+      <item identifier="wrapup" identifierref="res4"><title>Wrap-up</title></item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true" forwardOnly="true" />
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html"><file href="sco.html" /></resource>
+    <resource identifier="res2" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=2"><file href="sco.html" /></resource>
+    <resource identifier="res3" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=3"><file href="sco.html" /></resource>
+    <resource identifier="res4" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=4"><file href="sco.html" /></resource>
+  </resources>
+</manifest>

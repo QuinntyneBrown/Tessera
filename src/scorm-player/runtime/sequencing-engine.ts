@@ -28,6 +28,8 @@ const FIRST = 'This is the first activity.';
 const LAST = 'This is the last activity.';
 const NO_FLOW = 'Choose the next activity from the course outline.';
 const NO_CHOICE = 'Take this course in order using Next.';
+const FORWARD_ONLY = 'This course only moves forward.';
+const CLOSED = 'Finish this section before leaving it.';
 const LIMIT = 'You have used every attempt at this activity.';
 const DISABLED = 'This activity is locked until its prerequisites are met.';
 
@@ -150,8 +152,22 @@ export class SequencingEngine {
   }
 
   /** Why the learner cannot choose the target now, or null when they can. */
-  unavailableReason(_currentId: string | null, targetId: string): string | null {
-    for (const node of this.path(this.node(targetId)).slice(1)) {
+  unavailableReason(currentId: string | null, targetId: string): string | null {
+    const target = this.path(this.node(targetId));
+    if (currentId) {
+      const current = this.path(this.node(currentId));
+      const common = target.findIndex((node, depth) => current[depth] !== node) - 1;
+      const shared = common < 0 ? Math.min(target.length, current.length) - 1 : common;
+      const ancestor = target[shared];
+      const from = ancestor.children.indexOf(current[shared + 1]);
+      const to = ancestor.children.indexOf(target[shared + 1]);
+      if (ancestor.sequencing.controlMode.forwardOnly && to < from) return FORWARD_ONLY;
+      // Leaving: every activity being left must allow choice exit.
+      if (current.slice(shared + 1, -1).some((node) => !node.sequencing.controlMode.choiceExit)) {
+        return CLOSED;
+      }
+    }
+    for (const node of target.slice(1)) {
       if (!this.parents.get(node)!.sequencing.controlMode.choice) return NO_CHOICE;
       if (this.applies(node, 'hiddenFromChoice')) return DISABLED;
       const blocked = this.check(node);
@@ -399,6 +415,9 @@ export class SequencingEngine {
       const parent = this.parents.get(node);
       if (!parent) return { kind: 'denied', reason: direction > 0 ? LAST : FIRST };
       if (!parent.sequencing.controlMode.flow) return { kind: 'denied', reason: NO_FLOW };
+      if (direction < 0 && parent.sequencing.controlMode.forwardOnly) {
+        return { kind: 'denied', reason: FORWARD_ONLY };
+      }
       if (direction > 0 && this.applies(node, 'stopForwardTraversal')) {
         return { kind: 'denied', reason: DISABLED };
       }
