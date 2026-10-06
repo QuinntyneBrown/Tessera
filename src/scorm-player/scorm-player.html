@@ -99,29 +99,31 @@
 <ng-template #outlineList let-nodes>
   <ol role="list">
     @for (node of nodes; track node.id) {
-      <li>
-        @if (node.activity; as item) {
-          @let reason = unavailableReason(item);
-          <button
-            type="button"
-            [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
-            [attr.aria-disabled]="reason ? 'true' : null"
-            [attr.aria-describedby]="reason ? 'reason-' + item.id : null"
-            (click)="choose(item)"
-          >
-            {{ item.title }}
-          </button>
-          @if (reason) {
-            <span class="reason" [id]="'reason-' + item.id">{{ reason }}</span>
+      @if (!node.activity || !hidden(node.activity)) {
+        <li>
+          @if (node.activity; as item) {
+            @let reason = unavailableReason(item);
+            <button
+              type="button"
+              [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
+              [attr.aria-disabled]="reason ? 'true' : null"
+              [attr.aria-describedby]="reason ? 'reason-' + item.id : null"
+              (click)="choose(item)"
+            >
+              {{ item.title }}
+            </button>
+            @if (reason) {
+              <span class="reason" [id]="'reason-' + item.id">{{ reason }}</span>
+            }
+          } @else {
+            <span>{{ node.title }}</span>
+            <ng-container
+              [ngTemplateOutlet]="outlineList"
+              [ngTemplateOutletContext]="{ $implicit: node.children }"
+            />
           }
-        } @else {
-          <span>{{ node.title }}</span>
-          <ng-container
-            [ngTemplateOutlet]="outlineList"
-            [ngTemplateOutletContext]="{ $implicit: node.children }"
-          />
-        }
-      </li>
+        </li>
+      }
     }
   </ol>
 </ng-template>

@@ -79,6 +79,8 @@ describe('checkDelivery', () => {
 describe('checkSnapshot', () => {
   const DEFAULT_SEQUENCING = {
     controlMode: { choice: true, choiceExit: true, flow: true, forwardOnly: false },
+    preconditions: [],
+    objectives: [],
   };
   const course = {
     edition: '1.2',

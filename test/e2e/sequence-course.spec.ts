@@ -85,3 +85,24 @@ test('makes an activity unavailable once its attempt limit is used', async ({ pa
   await player.expectCurrentActivity('Summary');
   await player.expectNoAccessibilityViolations();
 });
+
+// L2-006 AC3 (objective prerequisite)
+test('keeps an activity locked until the objective it depends on is satisfied', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-prereq-2004' });
+  const reason = 'This activity is locked until its prerequisites are met.';
+  await player.expectActivityUnavailable('Quiz', reason);
+  await player.expectNextBlocked(reason);
+
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.success_status', 'passed'],
+    ['Commit', ''],
+  ]);
+
+  await player.expectActivityAvailable('Quiz');
+  await player.next();
+  await player.expectCurrentActivity('Quiz');
+});

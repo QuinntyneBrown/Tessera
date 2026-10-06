@@ -62,11 +62,48 @@ export interface ControlMode {
   readonly forwardOnly: boolean;
 }
 
+/** One condition of a sequencing rule, optionally about one of the activity's objectives. */
+export interface RuleCondition {
+  readonly condition: string;
+  /** The `not` operator. */
+  readonly negate: boolean;
+  /** The objective the condition is about; the primary objective when absent. */
+  readonly objective?: string;
+  readonly measureThreshold?: number;
+}
+
+/** A precondition rule: when its conditions hold, its action applies before the activity is delivered. */
+export interface PreconditionRule {
+  readonly combination: 'all' | 'any';
+  readonly conditions: readonly RuleCondition[];
+  readonly action: 'skip' | 'disabled' | 'hiddenFromChoice' | 'stopForwardTraversal';
+}
+
+/** How a local objective reads from and writes to a global (shared) objective. */
+export interface ObjectiveMap {
+  readonly target: string;
+  readonly readSatisfied: boolean;
+  readonly readMeasure: boolean;
+  readonly writeSatisfied: boolean;
+  readonly writeMeasure: boolean;
+}
+
+export interface ObjectiveDefinition {
+  readonly id: string;
+  readonly primary: boolean;
+  readonly satisfiedByMeasure: boolean;
+  readonly minNormalizedMeasure: number;
+  readonly maps: readonly ObjectiveMap[];
+}
+
 /** The sequencing rules a course declares for one activity. */
 export interface SequencingDefinition {
   readonly controlMode: ControlMode;
   /** How many attempts the learner may make on the activity; unlimited when absent. */
   readonly attemptLimit?: number;
+  readonly preconditions: readonly PreconditionRule[];
+  /** The activity's objectives, primary first. */
+  readonly objectives: readonly ObjectiveDefinition[];
 }
 
 /** One activity in the course's organization: a launchable item or a module of child activities. */

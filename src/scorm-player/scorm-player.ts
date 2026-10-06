@@ -213,6 +213,9 @@ export class ScormPlayer {
 
   private save(activity: Activity, values: Record<string, string>): void {
     this.scoStates[activity.id] = { values };
+    if (this.course()!.edition !== '1.2') {
+      this.tracking.set(this.engine()!.reported(activity.id, values));
+    }
     this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, {
       onAcknowledged: ({ snapshot, revision }, upToDate) => {
         this.saveStatus.set(upToDate ? 'Progress saved' : 'Saving progress');
@@ -313,6 +316,10 @@ export class ScormPlayer {
   /** Opens the chosen activity when the course rules allow it; otherwise nothing happens. */
   protected choose(activity: Activity): void {
     if (!this.unavailableReason(activity)) void this.open(activity);
+  }
+
+  protected hidden(activity: Activity): boolean {
+    return this.engine()!.hidden(activity.id);
   }
 
   protected unavailableReason(activity: Activity): string | null {

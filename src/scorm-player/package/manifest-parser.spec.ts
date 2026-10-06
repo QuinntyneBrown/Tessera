@@ -125,4 +125,58 @@ describe('parseManifest for a SCORM 2004 organization', () => {
     expect(course.tree.children[1].sequencing.attemptLimit).toBe(2);
     expect(course.tree.children[0].sequencing.attemptLimit).toBeUndefined();
   });
+
+  it('reads precondition rules and objectives with their global maps', () => {
+    const xml = manifest2004.replace(
+      '<imsss:limitConditions attemptLimit="2"/>',
+      `<imsss:sequencingRules>
+        <imsss:preConditionRule>
+          <imsss:ruleConditions conditionCombination="any">
+            <imsss:ruleCondition referencedObjective="pre" operator="not" condition="satisfied"/>
+            <imsss:ruleCondition condition="objectiveMeasureGreaterThan" measureThreshold="0.5"/>
+          </imsss:ruleConditions>
+          <imsss:ruleAction action="disabled"/>
+        </imsss:preConditionRule>
+      </imsss:sequencingRules>
+      <imsss:objectives>
+        <imsss:primaryObjective objectiveID="main" satisfiedByMeasure="true">
+          <imsss:minNormalizedMeasure>0.75</imsss:minNormalizedMeasure>
+        </imsss:primaryObjective>
+        <imsss:objective objectiveID="pre">
+          <imsss:mapInfo targetObjectiveID="g" writeSatisfiedStatus="true"/>
+        </imsss:objective>
+      </imsss:objectives>`,
+    );
+
+    const { sequencing } = parseManifest(xml, ROOT).tree.children[1];
+
+    expect(sequencing.preconditions).toEqual([
+      {
+        combination: 'any',
+        conditions: [
+          { condition: 'satisfied', negate: true, objective: 'pre' },
+          { condition: 'objectiveMeasureGreaterThan', negate: false, measureThreshold: 0.5 },
+        ],
+        action: 'disabled',
+      },
+    ]);
+    expect(sequencing.objectives).toEqual([
+      { id: 'main', primary: true, satisfiedByMeasure: true, minNormalizedMeasure: 0.75, maps: [] },
+      {
+        id: 'pre',
+        primary: false,
+        satisfiedByMeasure: false,
+        minNormalizedMeasure: 1,
+        maps: [
+          {
+            target: 'g',
+            readSatisfied: true,
+            readMeasure: true,
+            writeSatisfied: true,
+            writeMeasure: false,
+          },
+        ],
+      },
+    ]);
+  });
 });

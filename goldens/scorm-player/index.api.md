@@ -28,10 +28,13 @@ export interface ActivityResource {
     readonly url: string;
 }
 
-// @public (undocumented)
+// @public
 export interface ActivityTracking {
     // (undocumented)
     readonly attempts: number;
+    // (undocumented)
+    readonly completion?: 'completed' | 'incomplete';
+    readonly objectives?: Readonly<Record<string, ObjectiveTracking>>;
 }
 
 // @public
@@ -148,6 +151,42 @@ export type NavigationDecision = {
 export const NO_TRACKING: Tracking;
 
 // @public (undocumented)
+export interface ObjectiveDefinition {
+    // (undocumented)
+    readonly id: string;
+    // (undocumented)
+    readonly maps: readonly ObjectiveMap[];
+    // (undocumented)
+    readonly minNormalizedMeasure: number;
+    // (undocumented)
+    readonly primary: boolean;
+    // (undocumented)
+    readonly satisfiedByMeasure: boolean;
+}
+
+// @public
+export interface ObjectiveMap {
+    // (undocumented)
+    readonly readMeasure: boolean;
+    // (undocumented)
+    readonly readSatisfied: boolean;
+    // (undocumented)
+    readonly target: string;
+    // (undocumented)
+    readonly writeMeasure: boolean;
+    // (undocumented)
+    readonly writeSatisfied: boolean;
+}
+
+// @public
+export interface ObjectiveTracking {
+    // (undocumented)
+    readonly measure?: number;
+    // (undocumented)
+    readonly satisfied?: boolean;
+}
+
+// @public (undocumented)
 export interface PackageLimits {
     // (undocumented)
     readonly archiveBytes: number;
@@ -189,6 +228,26 @@ export type PlayerEvent = {
     readonly kind: 'exit';
     readonly saved: boolean;
 };
+
+// @public
+export interface PreconditionRule {
+    // (undocumented)
+    readonly action: 'skip' | 'disabled' | 'hiddenFromChoice' | 'stopForwardTraversal';
+    // (undocumented)
+    readonly combination: 'all' | 'any';
+    // (undocumented)
+    readonly conditions: readonly RuleCondition[];
+}
+
+// @public
+export interface RuleCondition {
+    // (undocumented)
+    readonly condition: string;
+    // (undocumented)
+    readonly measureThreshold?: number;
+    readonly negate: boolean;
+    readonly objective?: string;
+}
 
 // @public (undocumented)
 export interface SaveAck {
@@ -250,6 +309,8 @@ export class ScormPlayer {
         runtime: string;
         persistence: string;
     };
+    // (undocumented)
+    protected hidden(activity: Activity): boolean;
     // (undocumented)
     readonly host: InputSignal<HostIntegration | undefined>;
     // (undocumented)
@@ -328,6 +389,9 @@ export interface SequencingDefinition {
     readonly attemptLimit?: number;
     // (undocumented)
     readonly controlMode: ControlMode;
+    readonly objectives: readonly ObjectiveDefinition[];
+    // (undocumented)
+    readonly preconditions: readonly PreconditionRule[];
 }
 
 // @public
@@ -336,10 +400,12 @@ export class SequencingEngine {
     // (undocumented)
     choose(currentId: string | null, targetId: string): NavigationDecision;
     delivered(currentId: string | null, targetId: string): Tracking;
+    hidden(id: string): boolean;
     // (undocumented)
     next(currentId: string): NavigationDecision;
     // (undocumented)
     previous(currentId: string): NavigationDecision;
+    reported(id: string, values: Readonly<Record<string, string>>): Tracking;
     request(currentId: string, request: string): NavigationDecision | null;
     start(): NavigationDecision;
     unavailableReason(_currentId: string | null, targetId: string): string | null;
@@ -355,6 +421,7 @@ export interface SequencingState {
 export interface Tracking {
     // (undocumented)
     readonly activities: Readonly<Record<string, ActivityTracking>>;
+    readonly globals?: Readonly<Record<string, ObjectiveTracking>>;
 }
 
 // @public
