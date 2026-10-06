@@ -84,6 +84,54 @@ export class PlayerPage {
     ).toHaveText(JSON.stringify(result), { timeout: 20_000 });
   }
 
+  /**
+   * Loads the player `runs` times with a warm bundle under CPU slowdown and returns, per run, the
+   * milliseconds from navigation start to the first frame showing the shell with its loading status
+   * (or, if loading finished first, the loaded course).
+   */
+  async measureShellRender({ runs, cpuSlowdown }: { runs: number; cpuSlowdown: number }) {
+    await this.page.addInitScript(() => {
+      const observer = new MutationObserver(() => {
+        const shown = document.querySelector(
+          'tsr-scorm-player [aria-labelledby="loading-heading"], tsr-scorm-player h1',
+        );
+        if (!shown) return;
+        observer.disconnect();
+        requestAnimationFrame(() => {
+          (window as unknown as { shellShownAt: number }).shellShownAt = performance.now();
+        });
+      });
+      observer.observe(document, { childList: true, subtree: true });
+    });
+    const url = `/?${new URLSearchParams({ course: 'single-sco-12' })}`;
+    await this.page.goto(url);
+    await expect(this.page.getByRole('heading', { level: 1 })).toBeVisible();
+    const cdp = await this.page.context().newCDPSession(this.page);
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: cpuSlowdown });
+    const durations: number[] = [];
+    for (let run = 0; run < runs; run++) {
+      await this.page.goto(url);
+      const handle = await this.page.waitForFunction(
+        () => (window as unknown as { shellShownAt?: number }).shellShownAt,
+        undefined,
+        { timeout: 30_000 },
+      );
+      durations.push(Math.round((await handle.jsonValue()) as number));
+    }
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    return durations;
+  }
+
+  expectShellTimings(
+    durations: number[],
+    { limitMs, required }: { limitMs: number; required: number },
+  ): void {
+    const within = durations.filter((duration) => duration <= limitMs).length;
+    expect(within, `runs within ${limitMs} ms (of ${durations.length})`).toBeGreaterThanOrEqual(
+      required,
+    );
+  }
+
   async expectLoadingShown(): Promise<void> {
     await expect(this.page.getByRole('status').filter({ hasText: 'Loading course' })).toBeVisible();
   }
