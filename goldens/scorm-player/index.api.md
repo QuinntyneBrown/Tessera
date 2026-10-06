@@ -444,7 +444,7 @@ export class SequencingEngine {
     status(id: string): RollupStatus;
     // (undocumented)
     readonly tree: CourseNode;
-    unavailableReason(_currentId: string | null, targetId: string): string | null;
+    unavailableReason(currentId: string | null, targetId: string): string | null;
 }
 
 // @public (undocumented)
