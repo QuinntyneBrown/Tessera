@@ -190,7 +190,7 @@ export class ScormPlayer {
               course.activities.find((a) => start.kind === 'launch' && a.id === start.id);
             this.loading.set(false);
             if (!first) return;
-            this.tracking.set(NO_TRACKING);
+            this.tracking.set(snapshot?.sequencing.tracking ?? NO_TRACKING);
             this.deliver(first);
             this.launchRequest.set({
               activity: this.launchable(first),
@@ -245,9 +245,16 @@ export class ScormPlayer {
     this.persistence.submit(snapshot);
   }
 
-  /** Makes the activity current, recording the attempt it begins. */
+  /**
+   * Makes the activity current. In SCORM 2004 this begins a new attempt with fresh run-time data, unless
+   * the SCO suspended its last one, which then resumes; SCORM 1.2 SCOs keep their data.
+   */
   private deliver(activity: Activity): void {
-    this.tracking.set(this.engine()!.delivered(this.activity()?.id ?? null, activity.id));
+    const suspended = this.scoStates[activity.id]?.values['cmi.exit'] === 'suspend';
+    if (this.course()!.edition === '1.2' || !suspended) {
+      this.tracking.set(this.engine()!.delivered(this.activity()?.id ?? null, activity.id));
+      if (this.course()!.edition !== '1.2') delete this.scoStates[activity.id];
+    }
     this.activity.set(activity);
   }
 

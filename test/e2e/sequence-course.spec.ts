@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { PlayerPage } from './pages/player-page';
 
 // L2-001 AC1, L2-006
@@ -138,4 +138,56 @@ test('rolls lesson results up into the course outcome without inventing one', as
     score: 'unknown',
     progress: 'unknown',
   });
+});
+
+// L2-011 AC1 (sequencing state)
+test('resumes at the saved activity with the saved attempts still counted', async ({ page }) => {
+  const player = new PlayerPage(page);
+
+  await player.open({ course: 'seq-limit-2004', snapshot: 'quiz-taken' });
+
+  await player.expectCurrentActivity('Summary');
+  await player.expectActivityUnavailable(
+    'Final quiz',
+    'You have used every attempt at this activity.',
+  );
+});
+
+// L2-011 AC1, AC2 (SCORM 2004 attempts)
+test('starts a new attempt on a SCO that exited normally, and resumes one that suspended', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-rollup-2004' });
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.location', 'page 4'],
+    ['SetValue', 'cmi.exit', 'normal'],
+    ['Terminate', ''],
+  ]);
+  await player.next();
+  await player.expectCurrentActivity('Lesson two');
+  await player.previous();
+  await player.expectCurrentActivity('Lesson one');
+
+  const fresh = await player.runScoCalls([
+    ['Initialize', ''],
+    ['GetValue', 'cmi.entry'],
+    ['GetValue', 'cmi.location'],
+    ['SetValue', 'cmi.location', 'page 6'],
+    ['SetValue', 'cmi.exit', 'suspend'],
+    ['Terminate', ''],
+  ]);
+  expect(fresh).toEqual(['true', 'ab-initio', '', 'true', 'true', 'true']);
+
+  await player.next();
+  await player.expectCurrentActivity('Lesson two');
+  await player.previous();
+  await player.expectCurrentActivity('Lesson one');
+  const resumed = await player.runScoCalls([
+    ['Initialize', ''],
+    ['GetValue', 'cmi.entry'],
+    ['GetValue', 'cmi.location'],
+  ]);
+  expect(resumed).toEqual(['true', 'resume', 'page 6']);
 });

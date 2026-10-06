@@ -88,6 +88,22 @@ function savedSnapshot(
   };
 }
 
+/** For the single-attempt quiz course: the quiz has been taken and the learner moved on to the summary. */
+function quizTakenSnapshot(context: AttemptContext): AttemptSnapshot {
+  return {
+    schemaVersion: 1,
+    context,
+    edition: '2004-3rd',
+    scoStates: {},
+    sequencing: {
+      currentActivityId: 'summary',
+      tracking: {
+        activities: { org1: { attempts: 1 }, quiz: { attempts: 1 }, summary: { attempts: 1 } },
+      },
+    },
+  };
+}
+
 /** Serves a ZIP package's validated files from the course origin, as an LMS would. */
 async function uploadFiles(
   context: AttemptContext,
@@ -144,6 +160,7 @@ export function hostFixtureFor(
                 throw new Error('storage unavailable');
               }
               const edition = /2004-(2nd|3rd|4th)/.exec(courseName)?.[0] as ScormEdition;
+              if (snapshot === 'quiz-taken') return quizTakenSnapshot(context);
               return snapshot
                 ? savedSnapshot(context, snapshot === 'foreign', edition ?? '1.2')
                 : null;
