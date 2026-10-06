@@ -106,3 +106,36 @@ test('keeps an activity locked until the objective it depends on is satisfied', 
   await player.next();
   await player.expectCurrentActivity('Quiz');
 });
+
+// L2-006 AC3 (rollup), L2-012 AC2, AC3
+test('rolls lesson results up into the course outcome without inventing one', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-rollup-2004' });
+
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.completion_status', 'completed'],
+    ['SetValue', 'cmi.success_status', 'passed'],
+    ['Commit', ''],
+  ]);
+  await player.expectOutcomeShown({ completion: 'Not yet known', success: 'Not yet known' });
+  await player.expectNoProgressPercentage();
+
+  await player.next();
+  await player.expectCurrentActivity('Lesson two');
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.completion_status', 'completed'],
+    ['SetValue', 'cmi.success_status', 'failed'],
+    ['Commit', ''],
+  ]);
+
+  await player.expectOutcomeShown({ completion: 'completed', success: 'failed' });
+  await player.expectLastHostOutcome({
+    status: 'unknown',
+    completion: 'completed',
+    success: 'failed',
+    score: 'unknown',
+    progress: 'unknown',
+  });
+});

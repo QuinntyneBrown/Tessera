@@ -21,8 +21,36 @@ export interface ScoSnapshot {
   readonly values: Readonly<Record<string, string>>;
 }
 
+/** What the learner has done in the course so far, as sequencing needs it. */
+export interface SequencingTracking {
+  readonly activities: Readonly<Record<string, ActivityTracking>>;
+  /** Global (shared) objectives, by target objective id. */
+  readonly globals?: Readonly<Record<string, ObjectiveTracking>>;
+}
+
+/** An objective's status; a field is absent while it is unknown. */
+export interface ObjectiveTracking {
+  readonly satisfied?: boolean;
+  readonly measure?: number;
+}
+
+/** An activity's current attempt: its count, and for a launchable item what its SCO has reported. */
+export interface ActivityTracking {
+  readonly attempts: number;
+  readonly completion?: 'completed' | 'incomplete';
+  /** Local objectives by objective id. */
+  readonly objectives?: Readonly<Record<string, ObjectiveTracking>>;
+}
+
+/** An activity's status as rollup derives it; a field is absent while it is unknown. */
+export interface RollupStatus extends ObjectiveTracking {
+  readonly completion?: 'completed' | 'incomplete';
+}
+
 export interface SequencingState {
   readonly currentActivityId: string;
+  /** Attempts and reported results that sequencing and rollup work from; absent for SCORM 1.2. */
+  readonly tracking?: SequencingTracking;
 }
 
 /** Versioned saved state for one course revision and host-authorized attempt. */
@@ -79,6 +107,27 @@ export interface PreconditionRule {
   readonly action: 'skip' | 'disabled' | 'hiddenFromChoice' | 'stopForwardTraversal';
 }
 
+/** A rollup rule: when enough children meet its conditions, its action sets the parent's status. */
+export interface RollupRule {
+  readonly childActivitySet: 'all' | 'any' | 'none' | 'atLeastCount' | 'atLeastPercent';
+  readonly minimumCount: number;
+  /** A fraction from 0 to 1. */
+  readonly minimumPercent: number;
+  readonly combination: 'all' | 'any';
+  readonly conditions: readonly RuleCondition[];
+  readonly action: 'satisfied' | 'notSatisfied' | 'completed' | 'incomplete';
+}
+
+/** How an activity contributes to, and derives its status from, rollup. */
+export interface RollupDefinition {
+  readonly rules: readonly RollupRule[];
+  /** Whether the activity's satisfaction counts towards its parent's. */
+  readonly objectiveSatisfied: boolean;
+  /** Whether the activity's completion counts towards its parent's. */
+  readonly progressCompletion: boolean;
+  readonly objectiveMeasureWeight: number;
+}
+
 /** How a local objective reads from and writes to a global (shared) objective. */
 export interface ObjectiveMap {
   readonly target: string;
@@ -104,6 +153,7 @@ export interface SequencingDefinition {
   readonly preconditions: readonly PreconditionRule[];
   /** The activity's objectives, primary first. */
   readonly objectives: readonly ObjectiveDefinition[];
+  readonly rollup: RollupDefinition;
 }
 
 /** One activity in the course's organization: a launchable item or a module of child activities. */

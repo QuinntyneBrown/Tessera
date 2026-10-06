@@ -1,6 +1,8 @@
 import {
   ObjectiveDefinition,
   PreconditionRule,
+  RollupDefinition,
+  RollupRule,
   RuleCondition,
   ScormEdition,
   SequencingDefinition,
@@ -39,6 +41,34 @@ export function parseSequencing(
     },
     preconditions: all(child(element, 'sequencingRules'), 'preConditionRule').map(precondition),
     objectives: objectives(child(element, 'objectives')),
+    rollup: rollup(child(element, 'rollupRules')),
+  };
+}
+
+function rollup(element: Element | undefined): RollupDefinition {
+  return {
+    rules: all(element, 'rollupRule').map(rollupRule),
+    objectiveSatisfied: flag(element, 'rollupObjectiveSatisfied', true),
+    progressCompletion: flag(element, 'rollupProgressCompletion', true),
+    objectiveMeasureWeight: Number(element?.getAttribute('objectiveMeasureWeight') ?? 1),
+  };
+}
+
+function rollupRule(rule: Element): RollupRule {
+  const rollupConditions = child(rule, 'rollupConditions');
+  return {
+    childActivitySet: (rule.getAttribute('childActivitySet') ??
+      'all') as RollupRule['childActivitySet'],
+    minimumCount: Number(rule.getAttribute('minimumCount') ?? 0),
+    minimumPercent: Number(rule.getAttribute('minimumPercent') ?? 0),
+    // Unlike precondition rules, rollup conditions combine with "any" by default.
+    combination: rollupConditions?.getAttribute('conditionCombination') === 'all' ? 'all' : 'any',
+    conditions: all(rollupConditions, 'rollupCondition').map((condition) => ({
+      condition: condition.getAttribute('condition') ?? '',
+      negate: condition.getAttribute('operator') === 'not',
+    })),
+    action: (child(rule, 'rollupAction')?.getAttribute('action') ??
+      'satisfied') as RollupRule['action'],
   };
 }
 

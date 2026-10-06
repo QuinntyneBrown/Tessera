@@ -16,12 +16,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivityLauncher } from './runtime/activity-launcher';
-import {
-  NavigationDecision,
-  NO_TRACKING,
-  SequencingEngine,
-  Tracking,
-} from './runtime/sequencing-engine';
+import { NavigationDecision, NO_TRACKING, SequencingEngine } from './runtime/sequencing-engine';
 import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
 import { PersistenceCoordinator } from './runtime/persistence-coordinator';
@@ -47,6 +42,7 @@ import {
   ScormEdition,
   ScoSnapshot,
   CourseOutcome,
+  SequencingTracking,
 } from './types';
 
 @Component({
@@ -73,7 +69,7 @@ export class ScormPlayer {
     persistence: 'Progress not saved',
   };
   protected readonly activity = signal<Activity | null>(null);
-  private readonly tracking = signal<Tracking>(NO_TRACKING);
+  private readonly tracking = signal<SequencingTracking>(NO_TRACKING);
   private readonly engine = computed(() => {
     const course = this.course();
     return course && new SequencingEngine(course.tree, this.tracking());
@@ -187,7 +183,7 @@ export class ScormPlayer {
             const mismatch = snapshot && checkSnapshot(snapshot, this.attempt()!, course);
             if (mismatch) return this.fail(mismatch);
             this.scoStates = { ...snapshot?.scoStates };
-            this.outcome.set(snapshot ? deriveOutcome(snapshot) : null);
+            this.outcome.set(snapshot ? deriveOutcome(snapshot, course.tree) : null);
             const start = this.engine()!.start();
             const first =
               course.activities.find((a) => a.id === snapshot?.sequencing.currentActivityId) ??
@@ -221,7 +217,7 @@ export class ScormPlayer {
         this.saveStatus.set(upToDate ? 'Progress saved' : 'Saving progress');
         if (this.error()?.category === 'persistence') this.error.set(null);
         this.event.emit({ kind: 'save', status: 'saved', revision });
-        this.event.emit({ kind: 'outcome', outcome: deriveOutcome(snapshot) });
+        this.event.emit({ kind: 'outcome', outcome: deriveOutcome(snapshot, this.course()!.tree) });
       },
       onFailed: () => {
         this.saveStatus.set('Progress not saved');
@@ -240,9 +236,12 @@ export class ScormPlayer {
       context: this.attempt()!,
       edition: this.course()!.edition,
       scoStates: { ...this.scoStates },
-      sequencing: { currentActivityId: activity.id },
+      sequencing: {
+        currentActivityId: activity.id,
+        ...(this.course()!.edition !== '1.2' && { tracking: this.tracking() }),
+      },
     };
-    this.outcome.set(deriveOutcome(snapshot));
+    this.outcome.set(deriveOutcome(snapshot, this.course()!.tree));
     this.persistence.submit(snapshot);
   }
 

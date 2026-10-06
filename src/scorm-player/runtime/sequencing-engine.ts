@@ -1,4 +1,14 @@
-import { CourseNode, ObjectiveDefinition, PreconditionRule, RuleCondition } from '../types';
+import {
+  ActivityTracking,
+  CourseNode,
+  ObjectiveTracking,
+  RollupStatus,
+  SequencingTracking,
+  ObjectiveDefinition,
+  PreconditionRule,
+  RollupRule,
+  RuleCondition,
+} from '../types';
 
 /** What a navigation request leads to: an activity to launch, or a refusal with its reason as text. */
 export type NavigationDecision =
@@ -9,31 +19,10 @@ export type NavigationDecision =
   /** The attempt on the course ends; suspended when the learner may resume it later. */
   | { readonly kind: 'end'; readonly suspended: boolean };
 
-/** What the learner has done in the course so far, as sequencing needs it. */
-export interface Tracking {
-  readonly activities: Readonly<Record<string, ActivityTracking>>;
-  /** Global (shared) objectives, by target objective id. */
-  readonly globals?: Readonly<Record<string, ObjectiveTracking>>;
-}
-
-/** An objective's status; a field is absent while it is unknown. */
-export interface ObjectiveTracking {
-  readonly satisfied?: boolean;
-  readonly measure?: number;
-}
-
-/** An activity's current attempt: its count, and for a launchable item what its SCO has reported. */
-export interface ActivityTracking {
-  readonly attempts: number;
-  readonly completion?: 'completed' | 'incomplete';
-  /** Local objectives by objective id. */
-  readonly objectives?: Readonly<Record<string, ObjectiveTracking>>;
-}
+export const NO_TRACKING: SequencingTracking = { activities: {} };
 
 /** A three-valued result: undefined is unknown, which never makes a rule apply. */
 type Truth = boolean | undefined;
-
-export const NO_TRACKING: Tracking = { activities: {} };
 
 const FIRST = 'This is the first activity.';
 const LAST = 'This is the last activity.';
@@ -49,10 +38,12 @@ const DISABLED = 'This activity is locked until its prerequisites are met.';
 export class SequencingEngine {
   private readonly parents = new Map<CourseNode, CourseNode>();
   private readonly nodes = new Map<string, CourseNode>();
+  /** Global objectives being derived, so a module that reads what it writes cannot recurse forever. */
+  private readonly resolving = new Set<string>();
 
   constructor(
-    private readonly tree: CourseNode,
-    private readonly tracking: Tracking = NO_TRACKING,
+    readonly tree: CourseNode,
+    private readonly tracking: SequencingTracking = NO_TRACKING,
   ) {
     const index = (node: CourseNode): void => {
       this.nodes.set(node.id, node);
@@ -90,7 +81,7 @@ export class SequencingEngine {
   }
 
   /** The tracking after launching the target: it and every activity newly entered on the way begin an attempt. */
-  delivered(currentId: string | null, targetId: string): Tracking {
+  delivered(currentId: string | null, targetId: string): SequencingTracking {
     const active = new Set(currentId ? this.path(this.node(currentId)) : []);
     const activities = { ...this.tracking.activities };
     for (const node of this.path(this.node(targetId))) {
@@ -102,11 +93,11 @@ export class SequencingEngine {
   }
 
   /** The tracking after a SCORM 2004 SCO reports its run-time values: completion and objectives. */
-  reported(id: string, values: Readonly<Record<string, string>>): Tracking {
+  reported(id: string, values: Readonly<Record<string, string>>): SequencingTracking {
     const node = this.node(id);
     const objectives: Record<string, ObjectiveTracking> = {};
     const globals = { ...this.tracking.globals };
-    for (const objective of node.sequencing.objectives) {
+    for (const objective of objectivesOf(node)) {
       const prefix = objective.primary ? 'cmi' : this.runtimeObjective(values, objective.id);
       if (!prefix) continue;
       const status = objectiveStatus(values, prefix, objective);
@@ -235,24 +226,152 @@ export class SequencingEngine {
     }
   }
 
+  /** The activity's status: for an item, what its SCO reported; for a module, rolled up from its children. */
+  status(id: string): RollupStatus {
+    const node = this.node(id);
+    return { ...this.objective(node, undefined), ...this.progress(node) };
+  }
+
   /** An objective's status, read from its global objective where the course maps it. */
   private objective(node: CourseNode, id: string | undefined): ObjectiveTracking {
-    const definition = node.sequencing.objectives.find((each) =>
+    const definition = objectivesOf(node).find((each) =>
       id === undefined ? each.primary : each.id === id,
     );
-    if (!definition) return {};
-    const local = this.tracking.activities[node.id]?.objectives?.[definition.id] ?? {};
+    const local =
+      node.activity || (definition && !definition.primary)
+        ? (this.tracking.activities[node.id]?.objectives?.[definition?.id ?? ''] ?? {})
+        : this.rolledUpObjective(node);
     const status = { ...local };
-    for (const map of definition.maps) {
-      const global = this.tracking.globals?.[map.target];
-      if (map.readSatisfied && global?.satisfied !== undefined) status.satisfied = global.satisfied;
-      if (map.readMeasure && global?.measure !== undefined) status.measure = global.measure;
+    for (const map of definition?.maps ?? []) {
+      const global = this.global(map.target);
+      if (map.readSatisfied && global.satisfied !== undefined) status.satisfied = global.satisfied;
+      if (map.readMeasure && global.measure !== undefined) status.measure = global.measure;
     }
     return status;
   }
 
   private completion(node: CourseNode): 'completed' | 'incomplete' | undefined {
-    return this.tracking.activities[node.id]?.completion;
+    return this.progress(node).completion;
+  }
+
+  private progress(node: CourseNode): { completion?: 'completed' | 'incomplete' } {
+    const completion = node.activity
+      ? this.tracking.activities[node.id]?.completion
+      : this.rolledUpCompletion(node);
+    return completion ? { completion } : {};
+  }
+
+  /** A global objective: as SCOs wrote it, or as the rollup of a module that writes it. */
+  private global(target: string): ObjectiveTracking {
+    const status = { ...this.tracking.globals?.[target] };
+    if (this.resolving.has(target)) return status;
+    this.resolving.add(target);
+    for (const node of this.nodes.values()) {
+      const primary = node.sequencing.objectives.find((each) => each.primary);
+      const map = primary?.maps.find((each) => each.target === target);
+      if (node.activity || !map) continue;
+      const rolled = this.rolledUpObjective(node);
+      if (map.writeSatisfied && rolled.satisfied !== undefined) status.satisfied = rolled.satisfied;
+      if (map.writeMeasure && rolled.measure !== undefined) status.measure = rolled.measure;
+    }
+    this.resolving.delete(target);
+    return status;
+  }
+
+  /** A module's measure (weighted average) and satisfaction: by measure, by its rules, or by default. */
+  private rolledUpObjective(node: CourseNode): ObjectiveTracking {
+    let counted = 0;
+    let total = 0;
+    let valid = false;
+    for (const child of node.children) {
+      const weight = child.sequencing.rollup.objectiveMeasureWeight;
+      if (weight <= 0) continue;
+      counted += weight;
+      const measure = this.objective(child, undefined).measure;
+      if (measure !== undefined) {
+        total += measure * weight;
+        valid = true;
+      }
+    }
+    const measure = valid && counted > 0 ? total / counted : undefined;
+    const primary = node.sequencing.objectives.find((each) => each.primary);
+    const satisfied =
+      primary?.satisfiedByMeasure && measure !== undefined
+        ? measure >= primary.minNormalizedMeasure
+        : this.rolledUp(node, 'satisfied', 'notSatisfied', (child) => {
+            return this.objective(child, undefined).satisfied;
+          });
+    return {
+      ...(satisfied !== undefined && { satisfied }),
+      ...(measure !== undefined && { measure }),
+    };
+  }
+
+  private rolledUpCompletion(node: CourseNode): 'completed' | 'incomplete' | undefined {
+    const completed = this.rolledUp(node, 'completed', 'incomplete', (child) => {
+      const completion = this.completion(child);
+      return completion === undefined ? undefined : completion === 'completed';
+    });
+    return completed === undefined ? undefined : completed ? 'completed' : 'incomplete';
+  }
+
+  /**
+   * Rolls one status up from the children that contribute to it. With rules for it, a holding positive
+   * rule wins, then a holding negative one, else the status is unknown. Without rules, the ADL default
+   * applies: negative if any child is known negative, positive if every child is known positive.
+   */
+  private rolledUp(
+    node: CourseNode,
+    positive: RollupRule['action'],
+    negative: RollupRule['action'],
+    childStatus: (child: CourseNode) => Truth,
+  ): Truth {
+    const satisfaction = positive === 'satisfied';
+    const contributors = node.children.filter((child) =>
+      satisfaction
+        ? child.sequencing.rollup.objectiveSatisfied
+        : child.sequencing.rollup.progressCompletion,
+    );
+    const rules = node.sequencing.rollup.rules;
+    if (rules.some((rule) => rule.action === positive || rule.action === negative)) {
+      const holds = (action: RollupRule['action']) =>
+        rules.some((rule) => rule.action === action && this.rollupRuleHolds(rule, contributors));
+      return holds(positive) ? true : holds(negative) ? false : undefined;
+    }
+    if (contributors.length === 0) return undefined;
+    const statuses = contributors.map(childStatus);
+    if (statuses.includes(false)) return false;
+    return statuses.every((status) => status === true) ? true : undefined;
+  }
+
+  private rollupRuleHolds(rule: RollupRule, children: readonly CourseNode[]): boolean {
+    const results = children.map((child) => {
+      const each = rule.conditions.map((condition) => {
+        const result = this.condition(child, condition);
+        return condition.negate && result !== undefined ? !result : result;
+      });
+      if (rule.combination === 'all') {
+        return each.includes(false) ? false : each.every((result) => result === true) || undefined;
+      }
+      return each.includes(true)
+        ? true
+        : each.every((result) => result === false)
+          ? false
+          : undefined;
+    });
+    const held = results.filter((result) => result === true).length;
+    switch (rule.childActivitySet) {
+      case 'all':
+        return results.length > 0 && held === results.length;
+      case 'any':
+        return held > 0;
+      case 'none':
+        return results.length > 0 && results.every((result) => result === false);
+      case 'atLeastCount':
+        return held >= rule.minimumCount;
+      case 'atLeastPercent':
+        return results.length > 0 && held / results.length >= rule.minimumPercent;
+    }
   }
 
   /** The `cmi.objectives.n` prefix the SCO used for the objective, if it reported it. */
@@ -314,6 +433,20 @@ export class SequencingEngine {
   private node(id: string): CourseNode {
     return this.nodes.get(id)!;
   }
+}
+
+/** An activity's objectives, primary first; an activity that declares no primary objective has an implicit one. */
+function objectivesOf(node: CourseNode): readonly ObjectiveDefinition[] {
+  const declared = node.sequencing.objectives;
+  if (declared.some((objective) => objective.primary)) return declared;
+  const implicit = {
+    id: '',
+    primary: true,
+    satisfiedByMeasure: false,
+    minNormalizedMeasure: 1,
+    maps: [],
+  };
+  return [implicit, ...declared];
 }
 
 /** What the SCO reported for one objective: its success status, scaled score, and satisfaction by measure. */

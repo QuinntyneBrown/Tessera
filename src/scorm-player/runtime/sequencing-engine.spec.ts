@@ -4,7 +4,18 @@ import { SequencingEngine } from './sequencing-engine';
 const FREE: ControlMode = { choice: true, choiceExit: true, flow: true, forwardOnly: false };
 
 function rules(definition: Partial<SequencingDefinition> = {}): SequencingDefinition {
-  return { controlMode: FREE, preconditions: [], objectives: [], ...definition };
+  return {
+    controlMode: FREE,
+    preconditions: [],
+    objectives: [],
+    rollup: {
+      rules: [],
+      objectiveSatisfied: true,
+      progressCompletion: true,
+      objectiveMeasureWeight: 1,
+    },
+    ...definition,
+  };
 }
 
 function leaf(id: string): CourseNode {
@@ -304,5 +315,152 @@ describe('SequencingEngine preconditions and objectives', () => {
       completion: 'completed',
       objectives: { quiz: {}, prerequisite: { satisfied: true } },
     });
+  });
+});
+
+describe('SequencingEngine rollup', () => {
+  const report = (engine: SequencingEngine, id: string, values: Record<string, string>) =>
+    new SequencingEngine(engine.tree, engine.reported(id, values));
+  const tree = module('root', [module('m', [leaf('a'), leaf('b')]), leaf('c')]);
+
+  it('leaves a module unknown until every child is known', () => {
+    const engine = report(new SequencingEngine(tree), 'a', {
+      'cmi.completion_status': 'completed',
+      'cmi.success_status': 'passed',
+    });
+
+    expect(engine.status('m')).toEqual({});
+    expect(engine.status('a')).toEqual({ completion: 'completed', satisfied: true });
+  });
+
+  it('is complete and satisfied when every child is, through every level', () => {
+    let engine = new SequencingEngine(tree);
+    for (const id of ['a', 'b', 'c']) {
+      engine = report(engine, id, {
+        'cmi.completion_status': 'completed',
+        'cmi.success_status': 'passed',
+      });
+    }
+
+    expect(engine.status('root')).toEqual({ completion: 'completed', satisfied: true });
+  });
+
+  it('is incomplete and not satisfied as soon as one known child is', () => {
+    const engine = report(new SequencingEngine(tree), 'b', {
+      'cmi.completion_status': 'incomplete',
+      'cmi.success_status': 'failed',
+    });
+
+    expect(engine.status('root')).toEqual({ completion: 'incomplete', satisfied: false });
+  });
+
+  it('averages children measures by weight, counting children without a measure', () => {
+    const weighted = module('root', [
+      leaf('a'),
+      {
+        ...leaf('b'),
+        sequencing: rules({ rollup: { ...rules().rollup, objectiveMeasureWeight: 3 } }),
+      },
+    ]);
+    const engine = report(new SequencingEngine(weighted), 'b', { 'cmi.score.scaled': '0.8' });
+
+    expect(engine.status('root').measure).toBeCloseTo(0.6);
+  });
+
+  it('applies rollup rules instead of the default when the module defines them', () => {
+    const atLeastOne = module('root', [leaf('a'), leaf('b')]);
+    const withRule: CourseNode = {
+      ...atLeastOne,
+      sequencing: rules({
+        rollup: {
+          ...rules().rollup,
+          rules: [
+            {
+              childActivitySet: 'atLeastCount',
+              minimumCount: 1,
+              minimumPercent: 0,
+              combination: 'any',
+              conditions: [{ condition: 'satisfied', negate: false }],
+              action: 'satisfied',
+            },
+          ],
+        },
+      }),
+    };
+    const engine = report(new SequencingEngine(withRule), 'a', { 'cmi.success_status': 'passed' });
+
+    expect(engine.status('root').satisfied).toBe(true);
+    expect(engine.status('root').completion).toBeUndefined();
+  });
+
+  it('excludes children that do not contribute to rollup', () => {
+    const optional = {
+      ...leaf('b'),
+      sequencing: rules({ rollup: { ...rules().rollup, objectiveSatisfied: false } }),
+    };
+    const engine = report(new SequencingEngine(module('root', [leaf('a'), optional])), 'a', {
+      'cmi.success_status': 'passed',
+    });
+
+    expect(engine.status('root').satisfied).toBe(true);
+  });
+
+  it('lets a module write its rolled-up status to a global objective others read', () => {
+    const writer: CourseNode = {
+      ...module('m', [leaf('a')]),
+      sequencing: rules({
+        objectives: [
+          {
+            id: 'm',
+            primary: true,
+            satisfiedByMeasure: false,
+            minNormalizedMeasure: 1,
+            maps: [
+              {
+                target: 'g',
+                readSatisfied: false,
+                readMeasure: false,
+                writeSatisfied: true,
+                writeMeasure: false,
+              },
+            ],
+          },
+        ],
+      }),
+    };
+    const reader: CourseNode = {
+      ...leaf('b'),
+      sequencing: rules({
+        preconditions: [
+          {
+            combination: 'all',
+            conditions: [{ condition: 'satisfied', negate: false }],
+            action: 'hiddenFromChoice',
+          },
+        ],
+        objectives: [
+          {
+            id: 'b',
+            primary: true,
+            satisfiedByMeasure: false,
+            minNormalizedMeasure: 1,
+            maps: [
+              {
+                target: 'g',
+                readSatisfied: true,
+                readMeasure: false,
+                writeSatisfied: false,
+                writeMeasure: false,
+              },
+            ],
+          },
+        ],
+      }),
+    };
+    const engine = report(new SequencingEngine(module('root', [writer, reader])), 'a', {
+      'cmi.success_status': 'passed',
+    });
+
+    expect(engine.hidden('b')).toBe(true);
   });
 });

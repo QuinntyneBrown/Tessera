@@ -81,6 +81,12 @@ describe('checkSnapshot', () => {
     controlMode: { choice: true, choiceExit: true, flow: true, forwardOnly: false },
     preconditions: [],
     objectives: [],
+    rollup: {
+      rules: [],
+      objectiveSatisfied: true,
+      progressCompletion: true,
+      objectiveMeasureWeight: 1,
+    },
   };
   const course = {
     edition: '1.2',

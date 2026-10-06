@@ -148,7 +148,7 @@ export type NavigationDecision = {
 };
 
 // @public (undocumented)
-export const NO_TRACKING: Tracking;
+export const NO_TRACKING: SequencingTracking;
 
 // @public (undocumented)
 export interface ObjectiveDefinition {
@@ -237,6 +237,37 @@ export interface PreconditionRule {
     readonly combination: 'all' | 'any';
     // (undocumented)
     readonly conditions: readonly RuleCondition[];
+}
+
+// @public
+export interface RollupDefinition {
+    // (undocumented)
+    readonly objectiveMeasureWeight: number;
+    readonly objectiveSatisfied: boolean;
+    readonly progressCompletion: boolean;
+    // (undocumented)
+    readonly rules: readonly RollupRule[];
+}
+
+// @public
+export interface RollupRule {
+    // (undocumented)
+    readonly action: 'satisfied' | 'notSatisfied' | 'completed' | 'incomplete';
+    // (undocumented)
+    readonly childActivitySet: 'all' | 'any' | 'none' | 'atLeastCount' | 'atLeastPercent';
+    // (undocumented)
+    readonly combination: 'all' | 'any';
+    // (undocumented)
+    readonly conditions: readonly RuleCondition[];
+    // (undocumented)
+    readonly minimumCount: number;
+    readonly minimumPercent: number;
+}
+
+// @public
+export interface RollupStatus extends ObjectiveTracking {
+    // (undocumented)
+    readonly completion?: 'completed' | 'incomplete';
 }
 
 // @public
@@ -392,22 +423,27 @@ export interface SequencingDefinition {
     readonly objectives: readonly ObjectiveDefinition[];
     // (undocumented)
     readonly preconditions: readonly PreconditionRule[];
+    // (undocumented)
+    readonly rollup: RollupDefinition;
 }
 
 // @public
 export class SequencingEngine {
-    constructor(tree: CourseNode, tracking?: Tracking);
+    constructor(tree: CourseNode, tracking?: SequencingTracking);
     // (undocumented)
     choose(currentId: string | null, targetId: string): NavigationDecision;
-    delivered(currentId: string | null, targetId: string): Tracking;
+    delivered(currentId: string | null, targetId: string): SequencingTracking;
     hidden(id: string): boolean;
     // (undocumented)
     next(currentId: string): NavigationDecision;
     // (undocumented)
     previous(currentId: string): NavigationDecision;
-    reported(id: string, values: Readonly<Record<string, string>>): Tracking;
+    reported(id: string, values: Readonly<Record<string, string>>): SequencingTracking;
     request(currentId: string, request: string): NavigationDecision | null;
     start(): NavigationDecision;
+    status(id: string): RollupStatus;
+    // (undocumented)
+    readonly tree: CourseNode;
     unavailableReason(_currentId: string | null, targetId: string): string | null;
 }
 
@@ -415,10 +451,11 @@ export class SequencingEngine {
 export interface SequencingState {
     // (undocumented)
     readonly currentActivityId: string;
+    readonly tracking?: SequencingTracking;
 }
 
 // @public
-export interface Tracking {
+export interface SequencingTracking {
     // (undocumented)
     readonly activities: Readonly<Record<string, ActivityTracking>>;
     readonly globals?: Readonly<Record<string, ObjectiveTracking>>;

@@ -458,6 +458,13 @@ export class PlayerPage {
     }).toPass();
   }
 
+  async expectLastHostOutcome(outcome: object): Promise<void> {
+    await expect(async () => {
+      const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+      expect(events.filter((event) => event.kind === 'outcome').at(-1)?.outcome).toEqual(outcome);
+    }).toPass();
+  }
+
   private get outline(): Locator {
     return this.page.getByRole('navigation', { name: 'Course outline' });
   }

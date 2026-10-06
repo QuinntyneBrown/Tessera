@@ -179,4 +179,39 @@ describe('parseManifest for a SCORM 2004 organization', () => {
       },
     ]);
   });
+
+  it('reads rollup rules, defaulting rollup conditions to "any"', () => {
+    const xml = manifest2004.replace(
+      '<imsss:controlMode choice="false" flow="true"/>',
+      `<imsss:controlMode choice="false" flow="true"/>
+      <imsss:rollupRules rollupObjectiveSatisfied="false" objectiveMeasureWeight="0.5">
+        <imsss:rollupRule childActivitySet="atLeastPercent" minimumPercent="0.5">
+          <imsss:rollupConditions>
+            <imsss:rollupCondition condition="satisfied"/>
+            <imsss:rollupCondition operator="not" condition="attempted"/>
+          </imsss:rollupConditions>
+          <imsss:rollupAction action="notSatisfied"/>
+        </imsss:rollupRule>
+      </imsss:rollupRules>`,
+    );
+
+    expect(parseManifest(xml, ROOT).tree.children[0].sequencing.rollup).toEqual({
+      objectiveSatisfied: false,
+      progressCompletion: true,
+      objectiveMeasureWeight: 0.5,
+      rules: [
+        {
+          childActivitySet: 'atLeastPercent',
+          minimumCount: 0,
+          minimumPercent: 0.5,
+          combination: 'any',
+          conditions: [
+            { condition: 'satisfied', negate: false },
+            { condition: 'attempted', negate: true },
+          ],
+          action: 'notSatisfied',
+        },
+      ],
+    });
+  });
 });

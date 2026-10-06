@@ -1,14 +1,15 @@
-import { AttemptSnapshot, CourseOutcome, Score } from '../types';
+import { AttemptSnapshot, CourseNode, CourseOutcome, Score } from '../types';
+import { NO_TRACKING, SequencingEngine } from './sequencing-engine';
 
 const numberOrNull = (value: string | undefined): number | null =>
   value === undefined || value === '' ? null : Number(value);
 
 /**
- * Derives the outcome from the current SCO's accepted values. SCORM 2004 reports completion and success
- * separately and has no lesson status.
+ * Derives the course outcome. SCORM 1.2 reports the current SCO's lesson status and score; SCORM 2004
+ * reports the course's rolled-up completion, success and measure separately, and has no lesson status.
  */
-export function deriveOutcome(snapshot: AttemptSnapshot): CourseOutcome {
-  return snapshot.edition === '1.2' ? derive12(snapshot) : derive2004(snapshot);
+export function deriveOutcome(snapshot: AttemptSnapshot, course: CourseNode): CourseOutcome {
+  return snapshot.edition === '1.2' ? derive12(snapshot) : derive2004(snapshot, course);
 }
 
 function scoreFrom(values: Readonly<Record<string, string>>, prefix: string): Score | 'unknown' {
@@ -20,13 +21,16 @@ function scoreFrom(values: Readonly<Record<string, string>>, prefix: string): Sc
   return Object.keys(score).length > 0 ? score : 'unknown';
 }
 
-function derive2004(snapshot: AttemptSnapshot): CourseOutcome {
-  const values = snapshot.scoStates[snapshot.sequencing.currentActivityId]?.values ?? {};
+function derive2004(snapshot: AttemptSnapshot, course: CourseNode): CourseOutcome {
+  const tracking = snapshot.sequencing.tracking ?? NO_TRACKING;
+  const { completion, satisfied, measure } = new SequencingEngine(course, tracking).status(
+    course.id,
+  );
   return {
     status: 'unknown',
-    completion: values['cmi.completion_status'] ?? 'unknown',
-    success: values['cmi.success_status'] ?? 'unknown',
-    score: scoreFrom(values, 'cmi.score'),
+    completion: completion ?? 'unknown',
+    success: satisfied === undefined ? 'unknown' : satisfied ? 'passed' : 'failed',
+    score: measure === undefined ? 'unknown' : { scaled: measure },
     progress: 'unknown',
   };
 }
