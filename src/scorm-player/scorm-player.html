@@ -71,28 +71,22 @@
         </section>
         <p role="status">{{ saveStatus() }}</p>
         <div>
-          <button
-            type="button"
-            [attr.aria-disabled]="neighbour(-1) ? null : 'true'"
-            [attr.aria-describedby]="neighbour(-1) ? null : 'previous-reason'"
-            (click)="move(-1)"
-          >
-            Previous
-          </button>
-          @if (!neighbour(-1)) {
-            <span id="previous-reason">This is the first activity.</span>
-          }
-          <button
-            type="button"
-            [attr.aria-disabled]="neighbour(1) ? null : 'true'"
-            [attr.aria-describedby]="neighbour(1) ? null : 'next-reason'"
-            (click)="move(1)"
-          >
-            Next
-          </button>
-          @if (!neighbour(1)) {
-            <span id="next-reason">This is the last activity.</span>
-          }
+          <ng-container
+            [ngTemplateOutlet]="flowButton"
+            [ngTemplateOutletContext]="{
+              $implicit: previousDecision(),
+              label: 'Previous',
+              reasonId: 'previous-reason',
+            }"
+          />
+          <ng-container
+            [ngTemplateOutlet]="flowButton"
+            [ngTemplateOutletContext]="{
+              $implicit: nextDecision(),
+              label: 'Next',
+              reasonId: 'next-reason',
+            }"
+          />
         </div>
         <button type="button" (click)="requestExit()">Exit course</button>
         <div #frameHost></div>
@@ -106,13 +100,19 @@
     @for (node of nodes; track node.id) {
       <li>
         @if (node.activity; as item) {
+          @let reason = unavailableReason(item);
           <button
             type="button"
             [attr.aria-current]="item.id === activity()?.id ? 'step' : null"
-            (click)="open(item)"
+            [attr.aria-disabled]="reason ? 'true' : null"
+            [attr.aria-describedby]="reason ? 'reason-' + item.id : null"
+            (click)="choose(item)"
           >
             {{ item.title }}
           </button>
+          @if (reason) {
+            <span class="reason" [id]="'reason-' + item.id">{{ reason }}</span>
+          }
         } @else {
           <span>{{ node.title }}</span>
           <ng-container
@@ -123,4 +123,19 @@
       </li>
     }
   </ol>
+</ng-template>
+
+<ng-template #flowButton let-decision let-label="label" let-reasonId="reasonId">
+  @let blocked = decision?.kind !== 'launch';
+  <button
+    type="button"
+    [attr.aria-disabled]="blocked ? 'true' : null"
+    [attr.aria-describedby]="decision?.kind === 'denied' ? reasonId : null"
+    (click)="move(decision)"
+  >
+    {{ label }}
+  </button>
+  @if (decision?.kind === 'denied') {
+    <span [id]="reasonId">{{ decision.reason }}</span>
+  }
 </ng-template>

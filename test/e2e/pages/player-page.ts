@@ -455,8 +455,30 @@ export class PlayerPage {
     return this.page.getByRole('navigation', { name: 'Course outline' });
   }
 
+  /** An unavailable outline activity stays focusable, says so to assistive technology and shows why. */
+  async expectActivityUnavailable(title: string, reason: string): Promise<void> {
+    const button = this.outline.getByRole('button', { name: title });
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).toHaveAccessibleDescription(reason);
+    await expect(
+      this.outline
+        .getByRole('listitem')
+        .filter({ has: this.page.getByRole('button', { name: title }) })
+        .last()
+        .getByText(reason, { exact: true }),
+    ).toBeVisible();
+  }
+
+  async expectActivityAvailable(title: string): Promise<void> {
+    await expect(this.outline.getByRole('button', { name: title })).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+  }
+
   async chooseActivity(title: string): Promise<void> {
-    await this.outline.getByRole('button', { name: title }).click();
+    // An unavailable activity is aria-disabled but still activatable, so skip Playwright's enabled check.
+    await this.outline.getByRole('button', { name: title }).click({ force: true });
   }
 
   async expectCurrentActivity(title: string): Promise<void> {

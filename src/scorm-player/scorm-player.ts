@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   Injector,
   afterNextRender,
@@ -15,6 +16,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ActivityLauncher } from './runtime/activity-launcher';
+import { NavigationDecision, SequencingEngine } from './runtime/sequencing-engine';
 import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
 import { PersistenceCoordinator } from './runtime/persistence-coordinator';
@@ -66,6 +68,12 @@ export class ScormPlayer {
     persistence: 'Progress not saved',
   };
   protected readonly activity = signal<Activity | null>(null);
+  private readonly engine = computed(() => {
+    const course = this.course();
+    return course && new SequencingEngine(course.tree);
+  });
+  protected readonly previousDecision = computed(() => this.flowDecision(-1));
+  protected readonly nextDecision = computed(() => this.flowDecision(1));
   private readonly frameHost = viewChild<ElementRef<HTMLElement>>('frameHost');
   private readonly launchRequest = signal<{
     activity: Activity;
@@ -169,9 +177,12 @@ export class ScormPlayer {
             if (mismatch) return this.fail(mismatch);
             this.scoStates = { ...snapshot?.scoStates };
             this.outcome.set(snapshot ? deriveOutcome(snapshot) : null);
+            const start = this.engine()!.start();
             const first =
               course.activities.find((a) => a.id === snapshot?.sequencing.currentActivityId) ??
-              course.activities[0];
+              course.activities.find((a) => start.kind === 'launch' && a.id === start.id);
+            this.loading.set(false);
+            if (!first) return;
             this.activity.set(first);
             this.launchRequest.set({
               activity: this.launchable(first),
@@ -179,7 +190,6 @@ export class ScormPlayer {
               delivery,
               state: this.scoStates[first.id]?.values ?? null,
             });
-            this.loading.set(false);
           },
           (cause) => {
             if (!controller.signal.aborted) this.fail(this.loadingError(cause));
@@ -248,16 +258,25 @@ export class ScormPlayer {
     });
   }
 
-  /** The activity `offset` places from the current one, or undefined past either end of the course. */
-  protected neighbour(offset: -1 | 1): Activity | undefined {
-    const activities = this.course()?.activities ?? [];
-    const index = activities.findIndex((a) => a.id === this.activity()?.id);
-    return activities[index + offset];
+  /** Opens the chosen activity when the course rules allow it; otherwise nothing happens. */
+  protected choose(activity: Activity): void {
+    if (!this.unavailableReason(activity)) void this.open(activity);
   }
 
-  protected move(offset: -1 | 1): void {
-    const target = this.neighbour(offset);
-    if (target) void this.open(target);
+  protected unavailableReason(activity: Activity): string | null {
+    return this.engine()!.unavailableReason(this.activity()?.id ?? null, activity.id);
+  }
+
+  private flowDecision(direction: -1 | 1): NavigationDecision | null {
+    const engine = this.engine();
+    const current = this.activity();
+    if (!engine || !current) return null;
+    return direction > 0 ? engine.next(current.id) : engine.previous(current.id);
+  }
+
+  protected move(decision: NavigationDecision | null): void {
+    if (decision?.kind !== 'launch') return;
+    void this.open(this.course()!.activities.find((a) => a.id === decision.id)!);
   }
 
   /** For a ZIP package, points the activity at the host's delivery of the package's files. */

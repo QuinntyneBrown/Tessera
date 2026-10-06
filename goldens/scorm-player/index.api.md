@@ -7,6 +7,7 @@
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
+import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
@@ -119,6 +120,15 @@ export interface HostIntegration {
     saveState(context: AttemptContext, submission: SaveSubmission, signal: AbortSignal): Promise<SaveAck>;
 }
 
+// @public
+export type NavigationDecision = {
+    readonly kind: 'launch';
+    readonly id: string;
+} | {
+    readonly kind: 'denied';
+    readonly reason: string;
+};
+
 // @public (undocumented)
 export interface PackageLimits {
     // (undocumented)
@@ -201,6 +211,7 @@ export class ScormPlayer {
     protected readonly cancelled: WritableSignal<boolean>;
     // (undocumented)
     protected cancelLoad(): void;
+    protected choose(activity: Activity): void;
     protected collapseOutline(): void;
     // (undocumented)
     protected readonly course: WritableSignal<ValidatedCourse | null>;
@@ -230,13 +241,16 @@ export class ScormPlayer {
     // (undocumented)
     protected readonly loading: WritableSignal<boolean>;
     // (undocumented)
-    protected move(offset: -1 | 1): void;
-    protected neighbour(offset: -1 | 1): Activity | undefined;
+    protected move(decision: NavigationDecision | null): void;
+    // (undocumented)
+    protected readonly nextDecision: Signal<NavigationDecision | null>;
     protected open(activity: Activity): Promise<void>;
     // (undocumented)
     protected readonly outcome: WritableSignal<CourseOutcome | null>;
     // (undocumented)
     protected readonly outlineExpanded: WritableSignal<boolean>;
+    // (undocumented)
+    protected readonly previousDecision: Signal<NavigationDecision | null>;
     // (undocumented)
     protected requestExit(): Promise<void>;
     // (undocumented)
@@ -253,6 +267,8 @@ export class ScormPlayer {
     protected statusText(outcome: CourseOutcome | null): string;
     // (undocumented)
     protected toggleOutline(): void;
+    // (undocumented)
+    protected unavailableReason(activity: Activity): string | null;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<ScormPlayer, "tsr-scorm-player", never, {
         "source": {
@@ -292,6 +308,19 @@ export interface ScoSnapshot {
 export interface SequencingDefinition {
     // (undocumented)
     readonly controlMode: ControlMode;
+}
+
+// @public
+export class SequencingEngine {
+    constructor(tree: CourseNode);
+    // (undocumented)
+    choose(currentId: string | null, targetId: string): NavigationDecision;
+    // (undocumented)
+    next(currentId: string): NavigationDecision;
+    // (undocumented)
+    previous(currentId: string): NavigationDecision;
+    start(): NavigationDecision;
+    unavailableReason(_currentId: string | null, targetId: string): string | null;
 }
 
 // @public (undocumented)
