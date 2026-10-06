@@ -4,6 +4,7 @@
 
 ```ts
 
+import { ComponentHarness } from '@angular/cdk/testing';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
@@ -128,36 +129,6 @@ export interface HostIntegration {
     // (undocumented)
     saveState(context: AttemptContext, submission: SaveSubmission, signal: AbortSignal): Promise<SaveAck>;
 }
-
-// @public
-export type NavigationDecision = {
-    readonly kind: 'launch';
-    readonly id: string;
-} | {
-    readonly kind: 'denied';
-    readonly reason: string;
-} |
-/** The current activity ends and nothing else is delivered until the learner navigates. */
-    {
-    readonly kind: 'exit';
-} |
-/** The attempt on the course ends; suspended when the learner may resume it later. */
-    {
-    readonly kind: 'end';
-    readonly suspended: boolean;
-};
-
-// @public
-export interface NavigationValidity {
-    readonly choice: Readonly<Record<string, boolean>>;
-    // (undocumented)
-    readonly continue: boolean;
-    // (undocumented)
-    readonly previous: boolean;
-}
-
-// @public (undocumented)
-export const NO_TRACKING: SequencingTracking;
 
 // @public (undocumented)
 export interface ObjectiveDefinition {
@@ -369,6 +340,8 @@ export class ScormPlayer {
     protected readonly outcome: WritableSignal<CourseOutcome | null>;
     // (undocumented)
     protected readonly outlineExpanded: WritableSignal<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "NavigationDecision" needs to be exported by the entry point tessera-scorm-player.d.ts
+    //
     // (undocumented)
     protected readonly previousDecision: Signal<NavigationDecision | null>;
     // (undocumented)
@@ -418,6 +391,46 @@ export class ScormPlayer {
     static ɵfac: i0.ɵɵFactoryDeclaration<ScormPlayer, never>;
 }
 
+// @public
+export interface ScormPlayerActivityState {
+    available: boolean;
+    current: boolean;
+    reason: string | null;
+    // (undocumented)
+    title: string;
+}
+
+// @public
+export interface ScormPlayerErrorState {
+    // (undocumented)
+    heading: string;
+    // (undocumented)
+    text: string;
+}
+
+// @public
+export class ScormPlayerHarness extends ComponentHarness {
+    chooseActivity(title: string): Promise<void>;
+    // (undocumented)
+    exit(): Promise<void>;
+    // (undocumented)
+    getActivities(): Promise<ScormPlayerActivityState[]>;
+    getCourseTitle(): Promise<string | null>;
+    getCurrentActivity(): Promise<string | null>;
+    getError(): Promise<ScormPlayerErrorState | null>;
+    getNavigationReason(control: 'Next' | 'Previous'): Promise<string | null>;
+    getOutcome(): Promise<Record<string, string>>;
+    getSaveStatus(): Promise<string>;
+    // (undocumented)
+    static hostSelector: string;
+    // (undocumented)
+    next(): Promise<void>;
+    // (undocumented)
+    previous(): Promise<void>;
+    // (undocumented)
+    retry(): Promise<void>;
+}
+
 // @public (undocumented)
 export interface ScoSnapshot {
     // (undocumented)
@@ -434,28 +447,6 @@ export interface SequencingDefinition {
     readonly preconditions: readonly PreconditionRule[];
     // (undocumented)
     readonly rollup: RollupDefinition;
-}
-
-// @public
-export class SequencingEngine {
-    constructor(tree: CourseNode, tracking?: SequencingTracking);
-    // (undocumented)
-    choose(currentId: string | null, targetId: string): NavigationDecision;
-    delivered(currentId: string | null, targetId: string): SequencingTracking;
-    hidden(id: string): boolean;
-    // (undocumented)
-    next(currentId: string): NavigationDecision;
-    // (undocumented)
-    previous(currentId: string): NavigationDecision;
-    reported(id: string, values: Readonly<Record<string, string>>): SequencingTracking;
-    request(currentId: string, request: string): NavigationDecision | null;
-    start(): NavigationDecision;
-    status(id: string): RollupStatus;
-    // (undocumented)
-    readonly tree: CourseNode;
-    unavailableReason(currentId: string | null, targetId: string): string | null;
-    // (undocumented)
-    validity(currentId: string): NavigationValidity;
 }
 
 // @public (undocumented)

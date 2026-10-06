@@ -72,6 +72,18 @@ export class PlayerPage {
     await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
   }
 
+  /** Opens the host page that runs the consumer harness contract in a real TestBed. */
+  async openHarnessContract(): Promise<void> {
+    await this.page.goto('/?screen=player-harness');
+    await this.page.getByRole('button', { name: 'Run player harness contract' }).click();
+  }
+
+  async expectHarnessContractResult(result: object): Promise<void> {
+    await expect(
+      this.page.getByRole('status', { name: 'Player harness contract', exact: true }),
+    ).toHaveText(JSON.stringify(result), { timeout: 20_000 });
+  }
+
   async expectLoadingShown(): Promise<void> {
     await expect(this.page.getByRole('status').filter({ hasText: 'Loading course' })).toBeVisible();
   }

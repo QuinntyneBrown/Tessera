@@ -10,6 +10,9 @@
       />
     </tsr-theme-example>
   </main>
+} @else if (playerHarnessMode) {
+  <button type="button" (click)="runPlayerHarness()">Run player harness contract</button>
+  <p role="status" aria-label="Player harness contract">{{ playerHarnessReport() }}</p>
 } @else if (examplesMode) {
   <tsr-combobox-examples />
 } @else if (comboboxMode) {

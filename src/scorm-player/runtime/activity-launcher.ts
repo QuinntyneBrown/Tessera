@@ -12,6 +12,7 @@ export class ActivityLauncher {
     if (event.origin !== this.wrapperOrigin || event.source !== this.frame?.contentWindow) return;
     const message = parseWrapperMessage(event.data);
     if (message?.kind === 'ready') {
+      this.ready = true;
       this.post({ v: 1, kind: 'start', url: this.activity!.resource.url });
     } else if (message?.kind === 'launch-failed') {
       this.events.onLaunchFailed(this.activity!);
@@ -24,6 +25,8 @@ export class ActivityLauncher {
 
   private activity: Activity | null = null;
   private failureReported = false;
+  /** Whether the wrapper has started; before that no SCO can have run, so there is nothing to flush. */
+  private ready = false;
   private flushed: (() => void) | null = null;
   private session: ScormSession = createSession('1.2');
   private delivery: DeliveryDescriptor | null = null;
@@ -51,6 +54,7 @@ export class ActivityLauncher {
     this.activity = activity;
     this.session = createSession(edition);
     this.failureReported = false;
+    this.ready = false;
     if (state) this.session.restore(state);
     this.delivery = delivery;
     const frame = document.createElement('iframe');
@@ -77,7 +81,7 @@ export class ActivityLauncher {
    * host-validated state. Rejects when the wrapper does not answer, so the activity is not abandoned.
    */
   async retire(): Promise<void> {
-    if (!this.frame) return;
+    if (!this.frame || !this.ready) return;
     const delivered = new Promise<void>((resolve, reject) => {
       this.flushed = resolve;
       setTimeout(() => reject(new Error('flush timed out')), FLUSH_TIMEOUT_MS);
