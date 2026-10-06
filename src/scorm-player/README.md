@@ -33,3 +33,7 @@ on an origin different from the LMS's. For a ZIP package the course carries its 
 serves under that root. The player refuses to launch otherwise.
 
 A runnable example is in `src/components-examples/tessera/scorm-player/`.
+
+## Shared design tokens
+
+Use the [shared theme API](../theme/README.md) to customize player-owned controls and messages through `--t-<tokenName>` properties. Defaults follow the system light/dark preference; explicit themes on a document root, container or player host take precedence. Course iframe content retains its own styles.

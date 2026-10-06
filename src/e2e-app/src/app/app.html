@@ -1,4 +1,16 @@
-@if (examplesMode) {
+@if (themeMode) {
+  <main class="theme-playground">
+    <h1>Tessera theme playground</h1>
+    <tsr-theme-example [verifyApi]="true">
+      <tsr-scorm-player
+        [source]="fixture.source"
+        [attempt]="fixture.attempt"
+        [host]="fixture.host"
+        (event)="onEvent($event)"
+      />
+    </tsr-theme-example>
+  </main>
+} @else if (examplesMode) {
   <tsr-combobox-examples />
 } @else if (comboboxMode) {
   @if (cdkDialog) {

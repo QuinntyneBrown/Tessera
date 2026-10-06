@@ -53,7 +53,8 @@ export interface HostFixture {
   limits?: PackageLimits;
 }
 
-const COURSE_ORIGIN = 'http://127.0.0.1:4300';
+const COURSE_ORIGIN =
+  new URLSearchParams(location.search).get('courseOrigin') ?? 'http://127.0.0.1:4300';
 
 /** The state the host has stored for an attempt: a distinct location per attempt key. */
 function savedSnapshot(context: AttemptContext, foreign: boolean): AttemptSnapshot {

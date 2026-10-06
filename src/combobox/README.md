@@ -125,3 +125,7 @@ The [five runnable examples](../components-examples/tessera/combobox/combobox-ex
 All built-in data rendering is text. The host owns template markup, authentication, authorization, transport encoding and data access. The package persists no learner data and sends no telemetry.
 
 Release definition of done: all L2-022–L2-050 acceptance criteria pass, axe reports zero violations, the manual matrix is signed off, packed-package adoption works, performance thresholds pass, and zoneless operation is verified. Implementation evidence lives in [the verification record](../../docs/verification/combobox-implementation.md).
+
+## Shared design tokens
+
+Install `@tessera/theme` alongside this package. Both Tessera components share semantic `--t-<tokenName>` properties and typed light/dark themes. See the [theme API and adoption guide](../theme/README.md). Existing `--t-combobox-*` properties override the shared theme on either a container or the component host. Detached popups and tooltips track ancestor style/class and system media changes while open. Arbitrary stylesheet replacements take effect on the next opening.

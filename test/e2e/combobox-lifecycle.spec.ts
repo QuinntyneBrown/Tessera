@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-023, L2-030, L2-046, L2-048.
+// Acceptance tests. Traces to L2-023, L2-030, L2-046, L2-048, L2-053.
 import { expect, test } from '@playwright/test';
 import { ComboboxDemoPage } from './pages/combobox-demo-page';
 
@@ -14,6 +14,25 @@ test('destroy cancels requests and removes popup, observers and delayed work', a
   await box.emitLaterEvents();
   await box.expectRequests(['ad:0']);
   await box.expectNoAccessibilityViolations();
+});
+
+test('replacing detached tooltips releases theme subscriptions on destroy', async ({ page }) => {
+  // L2-053 AC4: Given successive truncated-chip tooltips, unmount restores media subscriptions to baseline.
+  const box = new ComboboxDemoPage(page);
+  await box.trackMediaSubscriptions();
+  await box.disablePopoverSupport();
+  await box.useViewport(320);
+  const first = 'First very long learner name '.repeat(8);
+  const second = 'Second very long learner name '.repeat(8);
+  await box.open({ value: `${first}|${second}` });
+  const baseline = await box.countMediaSubscriptions();
+  await box.focusChip(first);
+  await box.expectTooltip(first);
+  await box.focusChip(second);
+  await box.expectTooltip(second);
+  await box.setMounted(false);
+  await box.expectDisposed();
+  await box.expectMediaSubscriptions(baseline);
 });
 
 test('100 repeated mounts and destroys return panes and document listeners to their warm baseline', async ({

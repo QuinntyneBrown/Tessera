@@ -18,6 +18,10 @@ state while the host LMS controls identity, authorization, delivery, and storage
 | `@tessera/scorm-player` | Embed SCORM learning content in an Angular LMS |
 | [`@tessera/combobox`](src/combobox/README.md) | Search and select multiple remote values with keyboard-operable chips |
 
+## Shared themes
+
+[`@tessera/theme`](src/theme/README.md) provides typed semantic tokens, light/dark defaults, and scoped theme helpers for both components. The dev app includes an interactive theme example. Existing combobox CSS overrides remain supported.
+
 ## SCORM player
 
 The player's intended capabilities include:

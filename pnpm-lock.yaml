@@ -184,6 +184,9 @@ importers:
       '@angular/platform-browser':
         specifier: ^22.2.0
         version: 22.2.1(@angular/common@22.2.1(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.1(@angular/compiler@22.2.1)(rxjs@7.8.2))
+      '@tessera/theme':
+        specifier: workspace:*
+        version: link:src/theme
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
@@ -257,6 +260,10 @@ importers:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
+    devDependencies:
+      '@tessera/theme':
+        specifier: workspace:*
+        version: link:../theme
 
   src/scorm-player:
     dependencies:
@@ -269,6 +276,12 @@ importers:
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
+  src/theme:
+    dependencies:
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
