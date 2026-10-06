@@ -98,6 +98,8 @@ export interface PlayerError {
 export type Unknown = 'unknown';
 
 export interface Score {
+  /** SCORM 2004 only: the score scaled to the range -1 to 1. */
+  readonly scaled?: number;
   readonly raw?: number;
   readonly min?: number;
   readonly max?: number;

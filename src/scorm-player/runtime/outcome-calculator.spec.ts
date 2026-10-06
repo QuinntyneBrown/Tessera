@@ -52,3 +52,39 @@ describe('deriveOutcome for SCORM 1.2', () => {
     });
   });
 });
+
+describe('deriveOutcome for SCORM 2004', () => {
+  const snapshot2004 = (values: Record<string, string>): AttemptSnapshot => ({
+    ...snapshot(values),
+    edition: '2004-4th',
+  });
+
+  it('reports completion and success separately, with the scaled score', () => {
+    const outcome = deriveOutcome(
+      snapshot2004({
+        'cmi.completion_status': 'completed',
+        'cmi.success_status': 'failed',
+        'cmi.score.scaled': '0.4',
+        'cmi.score.raw': '40',
+      }),
+    );
+
+    expect(outcome).toEqual({
+      status: 'unknown',
+      completion: 'completed',
+      success: 'failed',
+      score: { scaled: 0.4, raw: 40 },
+      progress: 'unknown',
+    });
+  });
+
+  it('leaves every outcome unknown when the SCO has reported nothing', () => {
+    expect(deriveOutcome(snapshot2004({}))).toEqual({
+      status: 'unknown',
+      completion: 'unknown',
+      success: 'unknown',
+      score: 'unknown',
+      progress: 'unknown',
+    });
+  });
+});

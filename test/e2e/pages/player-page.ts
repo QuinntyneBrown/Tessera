@@ -411,10 +411,13 @@ export class PlayerPage {
     expect(events.filter((event) => event.kind === 'exit')).toEqual([]);
   }
 
-  async expectOutcomeShown(outcome: { status: string; score: string }): Promise<void> {
+  /** Each outcome field is shown as text, e.g. `{ status: 'completed' }` as "Status: completed". */
+  async expectOutcomeShown(outcome: Record<string, string>): Promise<void> {
     const region = this.page.getByRole('region', { name: 'Course outcome' });
-    await expect(region).toContainText(`Status: ${outcome.status}`);
-    await expect(region).toContainText(`Score: ${outcome.score}`);
+    for (const [field, value] of Object.entries(outcome)) {
+      const label = field[0].toUpperCase() + field.slice(1);
+      await expect(region).toContainText(`${label}: ${value}`);
+    }
   }
 
   async expectNoProgressPercentage(): Promise<void> {

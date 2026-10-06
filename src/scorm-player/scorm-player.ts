@@ -273,10 +273,13 @@ export class ScormPlayer {
     return !outcome || outcome.status === 'unknown' ? 'Not yet known' : outcome.status;
   }
 
+  protected knownText(value: string | undefined): string {
+    return !value || value === 'unknown' ? 'Not yet known' : value;
+  }
+
   protected scoreText(outcome: CourseOutcome | null): string {
-    return !outcome || outcome.score === 'unknown' || outcome.score.raw === undefined
-      ? 'Not yet known'
-      : String(outcome.score.raw);
+    const score = outcome?.score === 'unknown' ? undefined : outcome?.score;
+    return String(score?.raw ?? score?.scaled ?? 'Not yet known');
   }
 
   protected toggleOutline(): void {

@@ -159,6 +159,7 @@ export interface Score {
     readonly min?: number;
     // (undocumented)
     readonly raw?: number;
+    readonly scaled?: number;
 }
 
 // @public (undocumented)
@@ -197,6 +198,8 @@ export class ScormPlayer {
     };
     // (undocumented)
     readonly host: InputSignal<HostIntegration | undefined>;
+    // (undocumented)
+    protected knownText(value: string | undefined): string;
     // (undocumented)
     readonly limits: InputSignal<PackageLimits | undefined>;
     // (undocumented)

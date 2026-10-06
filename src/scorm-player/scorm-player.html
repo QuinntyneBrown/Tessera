@@ -70,7 +70,12 @@
           <h2 id="activity-heading" tabindex="-1" #activityHeading>{{ activity.title }}</h2>
         }
         <section aria-label="Course outcome">
-          <p>Status: {{ statusText(outcome()) }}</p>
+          @if (course.edition === '1.2') {
+            <p>Status: {{ statusText(outcome()) }}</p>
+          } @else {
+            <p>Completion: {{ knownText(outcome()?.completion) }}</p>
+            <p>Success: {{ knownText(outcome()?.success) }}</p>
+          }
           <p>Score: {{ scoreText(outcome()) }}</p>
         </section>
         <p role="status">{{ saveStatus() }}</p>

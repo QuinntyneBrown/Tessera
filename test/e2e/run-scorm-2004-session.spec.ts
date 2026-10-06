@@ -172,3 +172,70 @@ for (const [edition, suspendData, jump] of [
     expect(results).toEqual(['true', ...suspendData, ...jump]);
   });
 }
+
+// L2-010 AC1, AC2
+test('saves a SCORM 2004 SCO state on Commit and its final state on Terminate', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-2004-4th' });
+
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.location', 'page 4'],
+    ['Commit', ''],
+  ]);
+  await player.expectHostSaved({ 'cmi.location': 'page 4' });
+
+  await player.runScoCalls([
+    ['SetValue', 'cmi.location', 'page 5'],
+    ['Terminate', ''],
+  ]);
+  await player.expectHostSaved({ 'cmi.location': 'page 5' });
+  await player.expectHostSaveCount(2);
+});
+
+// L2-011 AC1
+test('gives a SCORM 2004 SCO its saved location and suspend data when the attempt is reopened', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-2004-4th', snapshot: 'saved' });
+
+  const results = await player.runScoCalls([
+    ['Initialize', ''],
+    ['GetValue', 'cmi.location'],
+    ['GetValue', 'cmi.suspend_data'],
+    ['GetValue', 'cmi.entry'],
+  ]);
+
+  expect(results).toEqual(['true', 'page 8 of attempt-1', 'chapter=3;answers=ab', 'resume']);
+});
+
+// L2-012 AC2
+test('reports SCORM 2004 completion and success separately once the save is acknowledged', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-2004-4th' });
+
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.completion_status', 'completed'],
+    ['SetValue', 'cmi.success_status', 'failed'],
+    ['SetValue', 'cmi.score.scaled', '0.4'],
+    ['Commit', ''],
+  ]);
+
+  await player.expectOutcomeShown({ completion: 'completed', success: 'failed', score: '0.4' });
+  await player.expectHostReceivedOutcomes([
+    {
+      status: 'unknown',
+      completion: 'completed',
+      success: 'failed',
+      score: { scaled: 0.4 },
+      progress: 'unknown',
+    },
+  ]);
+  await player.expectNoAccessibilityViolations();
+});
