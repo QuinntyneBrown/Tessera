@@ -87,6 +87,8 @@ export class ScormPlayer {
   private persistence: PersistenceCoordinator | null = null;
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
+  /** Course-driven navigation outcomes, announced politely. */
+  protected readonly navigationStatus = signal('');
   protected readonly exitWarning = signal(false);
   protected readonly outlineExpanded = signal(false);
   private readonly outlineToggle = viewChild<ElementRef<HTMLElement>>('outlineToggle');
@@ -115,7 +117,10 @@ export class ScormPlayer {
               retryable: true,
               correlationToken: this.token(),
             }),
-          onFlush: (activity, values) => this.save(activity, values),
+          onFlush: (activity, values, terminated) => {
+            this.save(activity, values);
+            if (terminated) this.follow(activity, values['adl.nav.request']);
+          },
           onRuntimeFailure: () =>
             this.fail({
               category: 'runtime',
@@ -231,8 +236,39 @@ export class ScormPlayer {
     this.persistence.submit(snapshot);
   }
 
-  /** Opens another activity once the current one has delivered its final state. */
-  protected async open(activity: Activity): Promise<void> {
+  /** Acts on the navigation request a SCORM 2004 SCO left when its session ended. */
+  private follow(activity: Activity, request: string | undefined): void {
+    const decision = request && this.engine()!.request(activity.id, request);
+    if (!decision) return;
+    if (decision.kind === 'launch') {
+      void this.open(
+        this.course()!.activities.find((a) => a.id === decision.id)!,
+        'course',
+      );
+    } else if (decision.kind === 'denied') {
+      this.navigationStatus.set(decision.reason);
+    } else if (decision.kind === 'exit') {
+      this.navigationStatus.set(
+        `${activity.title} has ended. Use Next or choose another activity.`,
+      );
+    } else {
+      this.launcher!.clear();
+      this.activity.set(null);
+      this.navigationStatus.set(
+        decision.suspended
+          ? 'The course is paused. You can resume it later.'
+          : 'The course has ended.',
+      );
+    }
+  }
+
+  /**
+   * Opens another activity once the current one has delivered its final state. A learner's choice takes
+   * them to the new activity's heading; a course-driven change is announced instead, unless focus was in
+   * the activity being replaced, in which case focus moves to the heading, which names the change.
+   */
+  protected async open(activity: Activity, by: 'learner' | 'course' = 'learner'): Promise<void> {
+    const focusWasInActivity = !!this.frameHost()?.nativeElement.contains(document.activeElement);
     try {
       await this.launcher!.retire();
     } catch {
@@ -246,10 +282,13 @@ export class ScormPlayer {
     }
     this.activity.set(activity);
     this.outlineExpanded.set(false);
-    // The learner chose this activity, so take them to it rather than announcing the change.
-    afterNextRender(() => this.activityHeading()?.nativeElement.focus(), {
-      injector: this.injector,
-    });
+    const moveFocus = by === 'learner' || focusWasInActivity;
+    this.navigationStatus.set(moveFocus ? '' : `Now showing ${activity.title}.`);
+    if (moveFocus) {
+      afterNextRender(() => this.activityHeading()?.nativeElement.focus(), {
+        injector: this.injector,
+      });
+    }
     this.launchRequest.set({
       activity: this.launchable(activity),
       edition: this.course()!.edition,

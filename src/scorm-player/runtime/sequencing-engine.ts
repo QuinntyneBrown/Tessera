@@ -3,7 +3,11 @@ import { CourseNode } from '../types';
 /** What a navigation request leads to: an activity to launch, or a refusal with its reason as text. */
 export type NavigationDecision =
   | { readonly kind: 'launch'; readonly id: string }
-  | { readonly kind: 'denied'; readonly reason: string };
+  | { readonly kind: 'denied'; readonly reason: string }
+  /** The current activity ends and nothing else is delivered until the learner navigates. */
+  | { readonly kind: 'exit' }
+  /** The attempt on the course ends; suspended when the learner may resume it later. */
+  | { readonly kind: 'end'; readonly suspended: boolean };
 
 const FIRST = 'This is the first activity.';
 const LAST = 'This is the last activity.';
@@ -52,6 +56,33 @@ export class SequencingEngine {
   choose(currentId: string | null, targetId: string): NavigationDecision {
     const reason = this.unavailableReason(currentId, targetId);
     return reason ? { kind: 'denied', reason } : { kind: 'launch', id: targetId };
+  }
+
+  /** Processes the `adl.nav.request` a SCO left when its session ended; null when there is none to act on. */
+  request(currentId: string, request: string): NavigationDecision | null {
+    const target = /^\{target=([^}]+)\}(choice|jump)$/.exec(request);
+    if (target) {
+      if (!this.nodes.get(target[1])?.activity) return null;
+      return target[2] === 'jump'
+        ? { kind: 'launch', id: target[1] }
+        : this.choose(currentId, target[1]);
+    }
+    switch (request) {
+      case 'continue':
+        return this.next(currentId);
+      case 'previous':
+        return this.previous(currentId);
+      case 'exit':
+      case 'abandon':
+        return { kind: 'exit' };
+      case 'exitAll':
+      case 'abandonAll':
+        return { kind: 'end', suspended: false };
+      case 'suspendAll':
+        return { kind: 'end', suspended: true };
+      default:
+        return null;
+    }
   }
 
   /** Why the learner cannot choose the target now, or null when they can. */

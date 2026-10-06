@@ -34,7 +34,7 @@ export class ActivityLauncher {
       /** The SCO did something its own session accepted but the host's validation rejects. */
       onRuntimeFailure: (activity: Activity) => void;
       /** The SCO committed or terminated; `values` is the host-validated state. */
-      onFlush: (activity: Activity, values: Record<string, string>) => void;
+      onFlush: (activity: Activity, values: Record<string, string>, terminated: boolean) => void;
     },
   ) {
     window.addEventListener('message', this.onMessage);
@@ -78,8 +78,14 @@ export class ActivityLauncher {
     this.flushed = null;
     if (this.session.state === 'initialized') {
       this.session.terminate('');
-      this.events.onFlush(this.activity!, this.session.values());
+      this.events.onFlush(this.activity!, this.session.values(), false);
     }
+  }
+
+  /** Removes the current activity's frame, as when the course ends. */
+  clear(): void {
+    this.frame?.remove();
+    this.frame = null;
   }
 
   dispose(): void {
@@ -102,7 +108,7 @@ export class ActivityLauncher {
       if (!this.failureReported) this.events.onRuntimeFailure(this.activity!);
       this.failureReported = true;
     } else if (operation.kind === 'commit' || operation.kind === 'terminate') {
-      this.events.onFlush(this.activity!, session.values());
+      this.events.onFlush(this.activity!, session.values(), operation.kind === 'terminate');
     }
   }
 

@@ -83,3 +83,29 @@ describe('SequencingEngine choice', () => {
     expect(engine.unavailableReason('a', 'c')).toBeNull();
   });
 });
+
+describe('SequencingEngine SCO navigation requests', () => {
+  const engine = new SequencingEngine(
+    module('root', [module('m1', [leaf('a'), leaf('b')], { choice: false }), leaf('c')]),
+  );
+
+  it.each([
+    ['continue', { kind: 'launch', id: 'b' }],
+    ['previous', { kind: 'denied', reason: 'This is the first activity.' }],
+    ['{target=c}choice', { kind: 'launch', id: 'c' }],
+    ['{target=b}choice', { kind: 'denied', reason: 'Take this course in order using Next.' }],
+    ['{target=b}jump', { kind: 'launch', id: 'b' }],
+    ['exit', { kind: 'exit' }],
+    ['abandon', { kind: 'exit' }],
+    ['exitAll', { kind: 'end', suspended: false }],
+    ['abandonAll', { kind: 'end', suspended: false }],
+    ['suspendAll', { kind: 'end', suspended: true }],
+  ])('from the first activity, %s gives %j', (request, decision) => {
+    expect(engine.request('a', request)).toEqual(decision);
+  });
+
+  it('ignores _none_ and requests for activities the course does not have', () => {
+    expect(engine.request('a', '_none_')).toBeNull();
+    expect(engine.request('a', '{target=zzz}choice')).toBeNull();
+  });
+});

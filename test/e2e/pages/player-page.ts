@@ -322,6 +322,13 @@ export class PlayerPage {
     return (await results.allTextContents()).map((text) => JSON.parse(text));
   }
 
+  /** Has the probe SCO run calls that end its session and navigate away, so no results remain to read. */
+  async runScoCallsThatLeave(calls: string[][]): Promise<void> {
+    const sco = this.activityFrame;
+    await sco.getByLabel('API calls (JSON)').fill(JSON.stringify(calls));
+    await sco.getByRole('button', { name: 'Run calls' }).click();
+  }
+
   private get hostSaves(): Locator {
     return this.page.getByRole('list', { name: 'Host saves' }).getByRole('listitem');
   }
@@ -476,6 +483,15 @@ export class PlayerPage {
     );
   }
 
+  /** Course-driven navigation is announced politely, without moving focus. */
+  async expectNavigationAnnounced(text: string): Promise<void> {
+    await expect(this.page.locator('tsr-scorm-player [aria-live="polite"]')).toHaveText(text);
+  }
+
+  async expectNoActivityContent(): Promise<void> {
+    await expect(this.page.locator('iframe[title^="Course content"]')).toHaveCount(0);
+  }
+
   async chooseActivity(title: string): Promise<void> {
     // An unavailable activity is aria-disabled but still activatable, so skip Playwright's enabled check.
     await this.outline.getByRole('button', { name: title }).click({ force: true });
@@ -488,6 +504,11 @@ export class PlayerPage {
     );
     await expect(this.outline.locator('[aria-current="step"]')).toHaveCount(1);
     await expect(this.page.getByRole('heading', { level: 2, name: title })).toBeVisible();
+    // The activity's own frame has replaced the previous one.
+    await expect(this.page.locator('iframe[title^="Course content"]')).toHaveAttribute(
+      'title',
+      `Course content: ${title}`,
+    );
   }
 
   /** Waits for a save whose snapshot holds these values for the given activity. */

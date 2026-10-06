@@ -70,6 +70,7 @@
           <p>Score: {{ scoreText(outcome()) }}</p>
         </section>
         <p role="status">{{ saveStatus() }}</p>
+        <p aria-live="polite">{{ navigationStatus() }}</p>
         <div>
           <ng-container
             [ngTemplateOutlet]="flowButton"

@@ -34,3 +34,37 @@ test('blocks choosing a later lesson when the course requires flow, and lets Nex
   await player.previous();
   await player.expectCurrentActivity('Lesson two');
 });
+
+// L2-006 AC2, L2-017 AC2
+test('processes navigation requests that a SCO makes when its session ends', async ({ page }) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'seq-flow-2004' });
+
+  await player.runScoCallsThatLeave([
+    ['Initialize', ''],
+    ['SetValue', 'adl.nav.request', 'continue'],
+    ['Terminate', ''],
+  ]);
+  await player.expectCurrentActivity('Lesson two');
+  // Focus was in the retired activity, so it moves to the new activity's heading, which names it.
+  await player.expectActivityHeadingFocused('Lesson two');
+
+  await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'adl.nav.request', '{target=lesson3}choice'],
+    ['Terminate', ''],
+  ]);
+  await player.expectNavigationAnnounced('Take this course in order using Next.');
+  await player.expectCurrentActivity('Lesson two');
+
+  await player.previous();
+  await player.next();
+  await player.runScoCallsThatLeave([
+    ['Initialize', ''],
+    ['SetValue', 'adl.nav.request', 'exitAll'],
+    ['Terminate', ''],
+  ]);
+  await player.expectNavigationAnnounced('The course has ended.');
+  await player.expectNoActivityContent();
+  await player.expectNoAccessibilityViolations();
+});

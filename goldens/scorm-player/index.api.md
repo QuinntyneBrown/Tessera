@@ -127,6 +127,15 @@ export type NavigationDecision = {
 } | {
     readonly kind: 'denied';
     readonly reason: string;
+} |
+/** The current activity ends and nothing else is delivered until the learner navigates. */
+    {
+    readonly kind: 'exit';
+} |
+/** The attempt on the course ends; suspended when the learner may resume it later. */
+    {
+    readonly kind: 'end';
+    readonly suspended: boolean;
 };
 
 // @public (undocumented)
@@ -242,9 +251,10 @@ export class ScormPlayer {
     protected readonly loading: WritableSignal<boolean>;
     // (undocumented)
     protected move(decision: NavigationDecision | null): void;
+    protected readonly navigationStatus: WritableSignal<string>;
     // (undocumented)
     protected readonly nextDecision: Signal<NavigationDecision | null>;
-    protected open(activity: Activity): Promise<void>;
+    protected open(activity: Activity, by?: 'learner' | 'course'): Promise<void>;
     // (undocumented)
     protected readonly outcome: WritableSignal<CourseOutcome | null>;
     // (undocumented)
@@ -319,6 +329,7 @@ export class SequencingEngine {
     next(currentId: string): NavigationDecision;
     // (undocumented)
     previous(currentId: string): NavigationDecision;
+    request(currentId: string, request: string): NavigationDecision | null;
     start(): NavigationDecision;
     unavailableReason(_currentId: string | null, targetId: string): string | null;
 }
