@@ -1,0 +1,10 @@
+{
+  "extends": "./api-extractor.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/theme/types/tessera-theme.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/goldens/theme/",
+    "reportFileName": "index.api.md",
+    "reportTempFolder": "<projectFolder>/dist/theme-api-report/"
+  }
+}

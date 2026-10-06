@@ -221,6 +221,25 @@
           "defaultConfiguration": "production"
         }
       }
+    },
+    "theme": {
+      "projectType": "library",
+      "root": "src/theme",
+      "sourceRoot": "src/theme",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "src/theme/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "src/theme/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
     }
   }
 }

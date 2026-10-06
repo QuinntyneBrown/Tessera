@@ -72,6 +72,7 @@ import {
 } from './i18n';
 import { ComboboxAnnouncer } from './combobox-announcer';
 import { ComboboxOption } from './combobox-option';
+import { tokenNames } from '@tessera/theme';
 
 let nextInstance = 0;
 
@@ -91,6 +92,7 @@ let nextInstance = 0;
   host: { '(keydown)': 'onHostKeydown($event)', '(focusout)': 'onFocusout($event)' },
 })
 export class Combobox<T> implements ControlValueAccessor, OnInit {
+  private readonly overlayThemeTracking = new Map<OverlayRef, () => void>();
   private readonly uid = ++nextInstance;
   protected readonly strings = { ...DEFAULT_COMBOBOX_STRINGS, ...inject(COMBOBOX_I18N) };
   readonly searchFn = input.required<ComboboxSearchFn<T>>();
@@ -715,6 +717,7 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
   }
 
   private stopPopupTracking(): void {
+    if (this.popup) this.stopOverlayThemeTracking(this.popup);
     if (this.geometryFrame !== undefined) {
       cancelAnimationFrame(this.geometryFrame);
       this.geometryFrame = undefined;
@@ -802,14 +805,62 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
   }
 
   private inheritPopupTheme(overlay: OverlayRef): void {
+    this.stopOverlayThemeTracking(overlay);
     if (this.host.nativeElement.contains(overlay.overlayElement)) return;
-    const styles = getComputedStyle(this.host.nativeElement);
-    for (const name of Array.from(styles)) {
-      if (name.startsWith('--t-combobox-'))
-        overlay.overlayElement.style.setProperty(name, styles.getPropertyValue(name));
-    }
-    overlay.overlayElement.style.font = styles.font;
-    overlay.overlayElement.style.direction = styles.direction;
+    let copied = new Set<string>();
+    const refresh = () => {
+      const styles = getComputedStyle(this.host.nativeElement);
+      const names = new Set([
+        ...tokenNames.map((name) => `--t-${name}`),
+        ...Array.from(styles).filter(
+          (name) => name.startsWith('--t-combobox-') || name.startsWith('--_t-'),
+        ),
+      ]);
+      for (const name of copied)
+        if (!names.has(name)) overlay.overlayElement.style.removeProperty(name);
+      for (const name of names) {
+        const value = styles.getPropertyValue(name);
+        if (value) overlay.overlayElement.style.setProperty(name, value);
+        else overlay.overlayElement.style.removeProperty(name);
+      }
+      copied = names;
+      overlay.overlayElement.style.font = styles.font;
+      overlay.overlayElement.style.direction = styles.direction;
+      overlay.overlayElement.style.colorScheme = styles.colorScheme;
+      if (overlay === this.popup) this.schedulePopupGeometry();
+    };
+    let frame: number | undefined;
+    const schedule = () => {
+      if (frame !== undefined) return;
+      frame = requestAnimationFrame(() => {
+        frame = undefined;
+        refresh();
+      });
+    };
+    const observer = new MutationObserver(schedule);
+    for (
+      let ancestor: HTMLElement | null = this.host.nativeElement;
+      ancestor;
+      ancestor = ancestor.parentElement
+    )
+      observer.observe(ancestor, { attributes: true, attributeFilter: ['style', 'class', 'dir'] });
+    const media = [
+      '(prefers-color-scheme: dark)',
+      '(forced-colors: active)',
+      '(prefers-reduced-motion: reduce)',
+    ].map((query) => matchMedia(query));
+    for (const query of media) query.addEventListener('change', schedule);
+    this.overlayThemeTracking.set(overlay, () => {
+      observer.disconnect();
+      for (const query of media) query.removeEventListener('change', schedule);
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    });
+    refresh();
+  }
+
+  private stopOverlayThemeTracking(overlay: OverlayRef): void {
+    this.overlayThemeTracking.get(overlay)?.();
+    this.overlayThemeTracking.delete(overlay);
   }
 
   protected onHostKeydown(event: KeyboardEvent): void {
@@ -869,6 +920,7 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     if (label.scrollWidth <= label.clientWidth) return;
     clearTimeout(this.tooltipTimer);
     if (this.tooltip?.hasAttached() && this.tooltipChip === chip) return;
+    if (this.tooltip) this.stopOverlayThemeTracking(this.tooltip);
     this.tooltip?.dispose();
     this.tooltipChip = chip;
     this.tooltipText.set(this.displayWith()(this.value()[index]));
@@ -927,6 +979,7 @@ export class Combobox<T> implements ControlValueAccessor, OnInit {
     }, 100);
   }
   private hideTooltip(): void {
+    if (this.tooltip) this.stopOverlayThemeTracking(this.tooltip);
     clearTimeout(this.tooltipTimer);
     this.tooltip?.detach();
     this.tooltipChip = null;

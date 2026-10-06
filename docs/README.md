@@ -37,6 +37,8 @@ SCORM runtime behavior.
 ## Contributor resources
 
 - [Manual screen reader verification](verification/manual-screen-reader-verification.md): setup, fixture scenarios, keyboard and mobile procedures, expected behavior, and evidence recording.
+- [Senior Angular Product Engineer assessment](assessments/senior-angular-product-engineer-test.md): a demanding three-hour technical test based on Tessera and the supplied Docebo role.
+- [Assessment answers and assessor guide](assessments/senior-angular-product-engineer-answers.md): worked solutions, reference code, and the 100-point rubric; keep separate from candidate material.
 - [Contributing](../CONTRIBUTING.md): contribution workflow, ATDD, and verification.
 - [Project rules](../AGENTS.md): repository layout and implementation constraints.
 - [Security](../SECURITY.md): private vulnerability reporting and integration boundaries.

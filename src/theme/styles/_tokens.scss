@@ -1,0 +1,141 @@
+// Generated from theme-values.json by tools/generate-theme-styles.mjs.
+@use 'sass:map';
+$ids: (
+  'colorScheme': 0,
+  'colorNeutralForeground1': 1,
+  'colorNeutralForeground2': 2,
+  'colorNeutralForegroundDisabled': 3,
+  'colorNeutralForegroundOnBrand': 4,
+  'colorNeutralBackground1': 5,
+  'colorNeutralBackground1Hover': 6,
+  'colorNeutralBackground1Pressed': 7,
+  'colorNeutralBackground2': 8,
+  'colorNeutralStroke1': 9,
+  'colorNeutralStrokeAccessible': 10,
+  'colorBrandForeground1': 11,
+  'colorBrandBackground': 12,
+  'colorBrandStroke1': 13,
+  'colorStrokeFocus2': 14,
+  'colorPaletteRedForeground1': 15,
+  'fontFamilyBase': 16,
+  'fontSizeBase100': 17,
+  'fontSizeBase200': 18,
+  'fontSizeBase300': 19,
+  'fontSizeBase400': 20,
+  'fontSizeBase500': 21,
+  'fontSizeBase600': 22,
+  'fontWeightRegular': 23,
+  'fontWeightSemibold': 24,
+  'fontWeightBold': 25,
+  'lineHeightBase300': 26,
+  'spacingHorizontalXXS': 27,
+  'spacingHorizontalXS': 28,
+  'spacingHorizontalS': 29,
+  'spacingHorizontalM': 30,
+  'spacingHorizontalL': 31,
+  'spacingHorizontalXL': 32,
+  'spacingVerticalXXS': 33,
+  'spacingVerticalXS': 34,
+  'spacingVerticalS': 35,
+  'spacingVerticalM': 36,
+  'spacingVerticalL': 37,
+  'spacingVerticalXL': 38,
+  'borderRadiusSmall': 39,
+  'borderRadiusMedium': 40,
+  'strokeWidthThin': 41,
+  'strokeWidthThick': 42,
+  'shadow4': 43,
+  'durationNormal': 44,
+  'curveEasyEase': 45,
+);
+$light: (
+  'colorScheme': 'light',
+  'colorNeutralForeground1': '#18312e',
+  'colorNeutralForeground2': '#536763',
+  'colorNeutralForegroundDisabled': '#536763',
+  'colorNeutralForegroundOnBrand': '#ffffff',
+  'colorNeutralBackground1': '#ffffff',
+  'colorNeutralBackground1Hover': '#f4f7f5',
+  'colorNeutralBackground1Pressed': '#e4f2ec',
+  'colorNeutralBackground2': '#e4f2ec',
+  'colorNeutralStroke1': '#657f73',
+  'colorNeutralStrokeAccessible': '#657f73',
+  'colorBrandForeground1': '#126454',
+  'colorBrandBackground': '#126454',
+  'colorBrandStroke1': '#126454',
+  'colorStrokeFocus2': '#b35c14',
+  'colorPaletteRedForeground1': '#8a1c12',
+  'fontFamilyBase': 'system-ui, sans-serif',
+  'fontSizeBase100': '0.75rem',
+  'fontSizeBase200': '0.875rem',
+  'fontSizeBase300': '1rem',
+  'fontSizeBase400': '1.25rem',
+  'fontSizeBase500': '1.5rem',
+  'fontSizeBase600': '2rem',
+  'fontWeightRegular': '400',
+  'fontWeightSemibold': '600',
+  'fontWeightBold': '700',
+  'lineHeightBase300': '1.5',
+  'spacingHorizontalXXS': '0.125rem',
+  'spacingHorizontalXS': '0.25rem',
+  'spacingHorizontalS': '0.5rem',
+  'spacingHorizontalM': '0.75rem',
+  'spacingHorizontalL': '1rem',
+  'spacingHorizontalXL': '1.5rem',
+  'spacingVerticalXXS': '0.125rem',
+  'spacingVerticalXS': '0.25rem',
+  'spacingVerticalS': '0.5rem',
+  'spacingVerticalM': '0.75rem',
+  'spacingVerticalL': '1rem',
+  'spacingVerticalXL': '1.5rem',
+  'borderRadiusSmall': '0.25rem',
+  'borderRadiusMedium': '0.5rem',
+  'strokeWidthThin': '1px',
+  'strokeWidthThick': '2px',
+  'shadow4': '0 2px 4px rgb(0 0 0 / 14%)',
+  'durationNormal': '0ms',
+  'curveEasyEase': 'cubic-bezier(0.33, 0, 0.67, 1)',
+);
+$dark: (
+  'colorScheme': 'dark',
+  'colorNeutralForeground1': '#f4f7f5',
+  'colorNeutralForeground2': '#b6cbc3',
+  'colorNeutralForegroundDisabled': '#b6cbc3',
+  'colorNeutralForegroundOnBrand': '#18312e',
+  'colorNeutralBackground1': '#18312e',
+  'colorNeutralBackground1Hover': '#244b42',
+  'colorNeutralBackground1Pressed': '#244b42',
+  'colorNeutralBackground2': '#244b42',
+  'colorNeutralStroke1': '#8fa9a0',
+  'colorNeutralStrokeAccessible': '#8fa9a0',
+  'colorBrandForeground1': '#8fd5ba',
+  'colorBrandBackground': '#8fd5ba',
+  'colorBrandStroke1': '#8fd5ba',
+  'colorStrokeFocus2': '#ffbf69',
+  'colorPaletteRedForeground1': '#ffb4a8',
+);
+@function token($name) {
+  @if not map.has-key($ids, $name) {
+    @error 'Unknown Tessera token: #{$name}';
+  }
+  @return var(--_t-#{map.get($ids, $name)});
+}
+@mixin defaults($names: map.keys($light)) {
+  :host {
+    @each $name in $names {
+      @if not map.has-key($light, $name) {
+        @error 'Unknown Tessera token: #{$name}';
+      }
+      --_t-#{map.get($ids, $name)}: var(--t-#{$name}, #{map.get($light, $name)});
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    :host {
+      @each $name in $names {
+        @if map.has-key($dark, $name) {
+          --_t-#{map.get($ids, $name)}: var(--t-#{$name}, #{map.get($dark, $name)});
+        }
+      }
+    }
+  }
+}

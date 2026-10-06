@@ -10,7 +10,7 @@ mkdirSync(consumer, { recursive: true });
 cpSync(join(workspace, 'test', 'fixtures', 'combobox-consumer'), consumer, { recursive: true });
 const modules = join(consumer, 'node_modules');
 mkdirSync(modules, { recursive: true });
-for (const name of ['@angular', '@types', 'rxjs', 'tslib', 'typescript']) {
+for (const name of ['@angular', '@types', 'rxjs', 'tslib', 'typescript', 'fflate']) {
   const target = join(modules, name);
   if (!existsSync(target))
     symlinkSync(
@@ -19,19 +19,21 @@ for (const name of ['@angular', '@types', 'rxjs', 'tslib', 'typescript']) {
       process.platform === 'win32' ? 'junction' : 'dir',
     );
 }
-const installed = join(modules, '@tessera', 'combobox');
-mkdirSync(installed, { recursive: true });
-execFileSync(
-  'tar',
-  [
-    '-xzf',
-    join(workspace, 'dist', 'packages', 'tessera-combobox-0.0.1.tgz'),
-    '--strip-components=1',
-    '-C',
-    installed,
-  ],
-  { stdio: 'inherit' },
-);
+for (const name of ['theme', 'scorm-player', 'combobox']) {
+  const installed = join(modules, '@tessera', name);
+  mkdirSync(installed, { recursive: true });
+  execFileSync(
+    'tar',
+    [
+      '-xzf',
+      join(workspace, 'dist', 'packages', `tessera-${name}-0.0.1.tgz`),
+      '--strip-components=1',
+      '-C',
+      installed,
+    ],
+    { stdio: 'inherit' },
+  );
+}
 // The package itself is installed from its tarball. Peers reuse pinned workspace dependencies.
 // This host has no Tessera source aliases and runs Angular's strict template compiler.
 includeComboboxDocumentation(consumer);

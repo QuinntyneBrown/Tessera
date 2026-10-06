@@ -11,10 +11,12 @@
     "importHelpers": true,
     "paths": {
       "@tessera/scorm-player": ["./src/scorm-player/index.ts"],
-      "@tessera/combobox": ["./src/combobox/index.ts"]
+      "@tessera/combobox": ["./src/combobox/index.ts"],
+      "@tessera/theme": ["./src/theme/index.ts"]
     },
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -23,6 +25,9 @@
   },
   "files": [],
   "references": [
+    {
+      "path": "./src/theme/tsconfig.lib.json"
+    },
     {
       "path": "./src/scorm-player/tsconfig.lib.json"
     },

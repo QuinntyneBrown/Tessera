@@ -286,6 +286,18 @@ export class ComboboxDemoPage {
     await expect(input).toBeFocused();
   }
 
+  async verifyPackedThemes(): Promise<void> {
+    await this.page.goto('/');
+    await expect(this.page.getByRole('heading', { name: 'Course cannot start' })).toBeVisible();
+    for (const component of ['t-combobox', 'tsr-scorm-player'])
+      await expect(this.page.locator(component)).toHaveCSS('color', 'rgb(244, 247, 245)');
+    await expect(this.page.locator('packed-root')).toHaveCSS('color', 'rgb(244, 247, 245)');
+    await this.page.getByRole('button', { name: 'Use packed light theme' }).click();
+    for (const component of ['t-combobox', 'tsr-scorm-player'])
+      await expect(this.page.locator(component)).toHaveCSS('color', 'rgb(24, 49, 46)');
+    await expect(this.page.locator('packed-root')).toHaveCSS('color', 'rgb(24, 49, 46)');
+  }
+
   async verifyExamples(): Promise<void> {
     await expect(
       this.page.getByRole('heading', { name: 'Combobox examples', exact: true }),
@@ -324,6 +336,44 @@ export class ComboboxDemoPage {
     }
     await session.detach();
     return total;
+  }
+
+  async countMediaSubscriptions(): Promise<number> {
+    return this.page.evaluate(
+      () => (window as unknown as { mediaSubscriptions: number }).mediaSubscriptions,
+    );
+  }
+
+  async trackMediaSubscriptions(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const state = window as unknown as { mediaSubscriptions: number };
+      state.mediaSubscriptions = 0;
+      const match = window.matchMedia.bind(window);
+      window.matchMedia = (query: string) => {
+        const media = match(query);
+        const listeners = new Set<unknown>();
+        const add = media.addEventListener.bind(media);
+        const remove = media.removeEventListener.bind(media);
+        media.addEventListener = (...args: Parameters<MediaQueryList['addEventListener']>) => {
+          if (args[0] === 'change' && !listeners.has(args[1])) {
+            listeners.add(args[1]);
+            state.mediaSubscriptions++;
+          }
+          add(...args);
+        };
+        media.removeEventListener = (
+          ...args: Parameters<MediaQueryList['removeEventListener']>
+        ) => {
+          if (args[0] === 'change' && listeners.delete(args[1])) state.mediaSubscriptions--;
+          remove(...args);
+        };
+        return media;
+      };
+    });
+  }
+
+  async expectMediaSubscriptions(count: number): Promise<void> {
+    await expect.poll(() => this.countMediaSubscriptions()).toBe(count);
   }
 
   async emitLaterEvents(): Promise<void> {

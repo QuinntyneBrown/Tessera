@@ -1,0 +1,13 @@
+{
+  "name": "@tessera/theme",
+  "version": "0.0.1",
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "exports": {
+    "./styles/tokens": {
+      "sass": "./styles/_tokens.scss"
+    }
+  }
+}

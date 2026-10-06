@@ -47,3 +47,7 @@ Thumbs.db
 /test-results/
 /playwright-report/
 /demo/.run/
+
+# Local theme verification artifacts
+/.angular/theme-*
+/.angular/node-x64.exe
