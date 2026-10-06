@@ -15,7 +15,9 @@ combination below is signed off.
 | Narrator / Edge / Windows | — | — | Not run | — |
 | Chrome actual 400% zoom, 1280 × 1024 window | — | — | Not run | — |
 
-For each run record the commit, tester, date, package/AT/browser/OS versions, device, fixture URL, observations and
+Prepare the acceptance app and set up each screen reader as the
+[manual screen reader verification guide](manual-screen-reader-verification.md) describes; its checklist covers the
+combobox, and the items below cover the player. For each run record the commit, tester, date, package/AT/browser/OS versions, device, fixture URL, observations and
 linked defects. Use the acceptance app (`pnpm e2e` serves it; for example `/?course=seq-flow-2004`). Record Pass or
 Fail per item, then sign off the combination only when every item passes.
 
