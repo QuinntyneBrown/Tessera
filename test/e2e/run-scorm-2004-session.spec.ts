@@ -77,3 +77,98 @@ test('reports the SCORM 2004 error for each out-of-sequence call or invalid argu
     '113',
   ]);
 });
+
+// L2-009 AC1, AC2
+test('reads back valid SCORM 2004 writes and refuses to write a read-only element', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-2004-4th' });
+
+  const results = await player.runScoCalls([
+    ['Initialize', ''],
+    ['GetValue', 'cmi.completion_status'],
+    ['SetValue', 'cmi.completion_status', 'completed'],
+    ['GetValue', 'cmi.completion_status'],
+    ['SetValue', 'cmi.score.scaled', '0.85'],
+    ['GetValue', 'cmi.score.scaled'],
+    ['SetValue', 'cmi.credit', 'no-credit'],
+    ['GetLastError'],
+    ['GetErrorString', '404'],
+  ]);
+
+  expect(results).toEqual([
+    'true',
+    'unknown',
+    'true',
+    'completed',
+    'true',
+    '0.85',
+    'false',
+    '404',
+    'Data Model Element Is Read Only',
+  ]);
+});
+
+// L2-009 AC3
+test('rejects invalid SCORM 2004 values without changing the previous valid value', async ({
+  page,
+}) => {
+  const player = new PlayerPage(page);
+  await player.open({ course: 'probe-2004-4th' });
+  const tooLong = 'x'.repeat(64001);
+
+  const results = await player.runScoCalls([
+    ['Initialize', ''],
+    ['SetValue', 'cmi.score.scaled', '0.5'],
+    ['SetValue', 'cmi.score.scaled', '1.5'],
+    ['GetLastError'],
+    ['SetValue', 'cmi.success_status', 'finished'],
+    ['GetLastError'],
+    ['GetValue', 'cmi.success_status'],
+    ['SetValue', 'cmi.suspend_data', 'chapter=2'],
+    ['SetValue', 'cmi.suspend_data', tooLong],
+    ['GetLastError'],
+    ['GetValue', 'cmi.suspend_data'],
+    ['GetValue', 'cmi.score.scaled'],
+  ]);
+
+  expect(results).toEqual([
+    'true',
+    'true',
+    'false',
+    '407',
+    'false',
+    '406',
+    'unknown',
+    'true',
+    'false',
+    '407',
+    'chapter=2',
+    '0.5',
+  ]);
+});
+
+// L2-008 AC3
+for (const [edition, suspendData, jump] of [
+  ['2nd', ['false', '407'], ['false', '406']],
+  ['3rd', ['false', '407'], ['false', '406']],
+  ['4th', ['true', '0'], ['true', '0']],
+] as const) {
+  test(`applies the SCORM 2004 ${edition} Edition rules where the editions differ`, async ({
+    page,
+  }) => {
+    const player = new PlayerPage(page);
+    await player.open({ course: `probe-2004-${edition}` });
+
+    const results = await player.runScoCalls([
+      ['Initialize', ''],
+      ['SetValue', 'cmi.suspend_data', 'x'.repeat(4001)],
+      ['GetLastError'],
+      ['SetValue', 'adl.nav.request', '{target=item1}jump'],
+      ['GetLastError'],
+    ]);
+
+    expect(results).toEqual(['true', ...suspendData, ...jump]);
+  });
+}
