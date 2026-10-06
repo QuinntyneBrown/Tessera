@@ -6,5 +6,19 @@
   </head>
   <body>
     <h1>Start with listening</h1>
+    <p id="api-status">Looking for the API</p>
+    <script>
+      function findApi(win) {
+        for (var depth = 0; win && depth < 10; depth++) {
+          if (win.API_1484_11) return win.API_1484_11;
+          if (win === win.parent) break;
+          win = win.parent;
+        }
+        return null;
+      }
+      document.getElementById('api-status').textContent = findApi(window)
+        ? 'API found'
+        : 'API not found';
+    </script>
   </body>
 </html>

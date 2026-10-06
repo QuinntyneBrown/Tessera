@@ -54,12 +54,16 @@ describe('parseManifest', () => {
   });
 
   it.each([
-    ['CAM 1.3', 'SCORM 2004 2nd Edition'],
-    ['2004 3rd Edition', 'SCORM 2004 3rd Edition'],
-    ['2004 4th Edition', 'SCORM 2004 4th Edition'],
-  ])('identifies %s but refuses to launch it', (schemaVersion, label) => {
-    const xml = manifest12.replace('<schemaversion>1.2<', `<schemaversion>${schemaVersion}<`);
-    expect(() => parseManifest(xml, ROOT)).toThrowError(new RegExp(`${label}.*cannot be launched`));
+    ['CAM 1.3', '2004-2nd'],
+    ['2004 3rd Edition', '2004-3rd'],
+    ['2004 4th Edition', '2004-4th'],
+  ])('identifies %s and its SCOs', (schemaVersion, edition) => {
+    const xml = manifest12
+      .replace('<schemaversion>1.2<', `<schemaversion>${schemaVersion}<`)
+      .replace('adlcp:scormtype="sco"', 'adlcp:scormType="sco"');
+    const course = parseManifest(xml, ROOT);
+    expect(course.edition).toBe(edition);
+    expect(course.activities[0].resource.kind).toBe('sco');
   });
 
   it('refuses a course whose version cannot be identified', () => {

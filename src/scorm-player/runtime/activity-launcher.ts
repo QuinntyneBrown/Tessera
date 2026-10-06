@@ -1,6 +1,6 @@
 import { Activity, ScormEdition, DeliveryDescriptor } from '../types';
 import { HostMessage, parseWrapperMessage, RuntimeOperation } from './bridge-protocol';
-import { RuntimeSession } from './runtime-session';
+import { createSession, ScormSession } from './sessions';
 
 const FLUSH_TIMEOUT_MS = 5000;
 
@@ -24,7 +24,7 @@ export class ActivityLauncher {
   private activity: Activity | null = null;
   private failureReported = false;
   private flushed: (() => void) | null = null;
-  private session = new RuntimeSession();
+  private session: ScormSession = createSession('1.2');
   private delivery: DeliveryDescriptor | null = null;
 
   constructor(
@@ -47,7 +47,7 @@ export class ActivityLauncher {
     state: Record<string, string> | null,
   ): void {
     this.activity = activity;
-    this.session = new RuntimeSession();
+    this.session = createSession(edition);
     this.failureReported = false;
     if (state) this.session.restore(state);
     this.delivery = delivery;

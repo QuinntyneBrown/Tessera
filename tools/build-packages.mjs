@@ -33,6 +33,9 @@ function largeCourse() {
 
 const packages = {
   'single-sco-12': good,
+  'single-sco-2004-2nd': await folder('single-sco-2004-2nd'),
+  'single-sco-2004-3rd': await folder('single-sco-2004-3rd'),
+  'single-sco-2004-4th': await folder('single-sco-2004-4th'),
   'no-manifest': { 'sco.html': good['sco.html'] },
   'traversal-entry': { ...good, '../evil.html': strToU8('<p>escaped</p>') },
   'missing-launch': withoutLaunchPage,

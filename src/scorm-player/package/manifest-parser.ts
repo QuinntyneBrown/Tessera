@@ -1,6 +1,6 @@
 import { Activity, ValidatedCourse } from '../types';
 import { CourseLoadError } from './course-load-error';
-import { detectEdition, EDITION_LABELS, LAUNCHABLE_EDITIONS } from './edition';
+import { detectEdition } from './edition';
 import { ResourceResolver } from './resource-resolver';
 
 const INVALID_MANIFEST = 'The file is not a valid course manifest.';
@@ -34,13 +34,6 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
       false,
     );
   }
-  if (!LAUNCHABLE_EDITIONS.includes(edition)) {
-    throw new CourseLoadError(
-      'edition-unavailable',
-      `This is a ${EDITION_LABELS[edition]} course. It cannot be launched because this player does not yet support that edition.`,
-      false,
-    );
-  }
   const resolver = new ResourceResolver(root);
 
   const organization = descendants(document, 'organization')[0];
@@ -53,8 +46,10 @@ export function parseManifest(xml: string, root: URL): ValidatedCourse {
 
   const activities: Activity[] = descendants(organization, 'item').map((item) => {
     const resource = resources.get(item.getAttribute('identifierref'))!;
-    const scormType =
-      resource.getAttributeNS('*', 'scormtype') ?? resource.getAttribute('adlcp:scormtype');
+    // SCORM 1.2 spells the attribute adlcp:scormtype; SCORM 2004 spells it adlcp:scormType.
+    const scormType = Array.from(resource.attributes).find(
+      (attribute) => attribute.localName.toLowerCase() === 'scormtype',
+    )?.value;
     return {
       id: item.getAttribute('identifier')!,
       title: children(item, 'title')[0].textContent!.trim(),

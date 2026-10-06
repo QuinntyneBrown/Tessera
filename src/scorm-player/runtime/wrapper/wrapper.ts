@@ -1,10 +1,13 @@
-import { HostMessage, WrapperMessage } from '../bridge-protocol';
+import { HostMessage, RuntimeOperation, WrapperMessage } from '../bridge-protocol';
 import { RuntimeSession } from '../runtime-session';
 import { Scorm12Api } from '../scorm12-api';
+import { Scorm2004Api } from '../scorm2004-api';
+import { Scorm2004Session } from '../scorm2004-session';
+import { createSession, ScormSession } from '../sessions';
 
 // Runs on the isolated course origin: exposes the SCORM API, then starts the activity in a nested frame.
 let hostOrigin = '';
-let session: RuntimeSession | null = null;
+let session: ScormSession | null = null;
 
 function send(message: WrapperMessage): void {
   window.parent.postMessage(message, hostOrigin);
@@ -16,11 +19,17 @@ window.addEventListener('message', (event: MessageEvent<HostMessage>) => {
   const message = event.data;
   if (message.kind === 'prepare') {
     if (message.sco) {
-      session = new RuntimeSession();
+      session = createSession(message.edition);
       if (message.state) session.restore({ ...message.state });
-      (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(session, (operation) =>
-        send({ v: 1, kind: 'operation', operation }),
-      );
+      const post = (operation: RuntimeOperation) => send({ v: 1, kind: 'operation', operation });
+      if (session instanceof RuntimeSession) {
+        (window as unknown as { API: Scorm12Api }).API = new Scorm12Api(session, post);
+      } else {
+        (window as unknown as { API_1484_11: Scorm2004Api }).API_1484_11 = new Scorm2004Api(
+          session as Scorm2004Session,
+          post,
+        );
+      }
     }
     send({ v: 1, kind: 'ready' });
   } else if (message.kind === 'flush') {
