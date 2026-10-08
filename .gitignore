@@ -43,7 +43,9 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
-/.claude/
+/.claude/*
+!/.claude/skills/
+!/.claude/skills/**
 /test-results/
 /playwright-report/
 /demo/.run/
