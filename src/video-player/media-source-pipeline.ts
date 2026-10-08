@@ -19,6 +19,7 @@ export class MediaSourcePipeline {
   private mediaAppended = false;
   private seekedToLive = false;
   private quotaRetry: VideoChunk | undefined;
+  private rangeCount = 0;
 
   constructor(
     private readonly video: HTMLVideoElement,
@@ -50,7 +51,33 @@ export class MediaSourcePipeline {
     this.mediaAppended = false;
     this.seekedToLive = false;
     this.quotaRetry = undefined;
+    this.rangeCount = 0;
     this.attach();
+  }
+
+  /** Seconds between the playhead and the end of the newest buffered range. */
+  latency(): number {
+    const buffered = this.sourceBuffer?.buffered;
+    return buffered?.length ? buffered.end(buffered.length - 1) - this.video.currentTime : 0;
+  }
+
+  /** Seconds that can play from the playhead without a seek. */
+  bufferedAhead(): number {
+    const buffered = this.sourceBuffer?.buffered;
+    const time = this.video.currentTime;
+    for (let index = 0; buffered && index < buffered.length; index++)
+      if (buffered.start(index) <= time && time <= buffered.end(index))
+        return buffered.end(index) - time;
+    return 0;
+  }
+
+  /** Moves the playhead 3 s behind the newest buffered end, or 0.5 s when less is buffered. */
+  seekToLive(): void {
+    const buffered = this.sourceBuffer?.buffered;
+    if (!buffered?.length) return;
+    const start = buffered.start(buffered.length - 1);
+    const end = buffered.end(buffered.length - 1);
+    this.video.currentTime = end - start >= 3 ? end - 3 : Math.max(start, end - 0.5);
   }
 
   private attach(): void {
@@ -98,11 +125,15 @@ export class MediaSourcePipeline {
     if (!this.prune()) this.appendNext();
   }
 
-  /** Removes media more than 30 s behind the playhead; returns whether a removal started. */
-  private prune(): boolean {
-    const end = this.video.currentTime - 30;
-    if (!this.sourceBuffer || end <= 0) return false;
-    this.sourceBuffer.remove(0, end);
+  /**
+   * Removes media more than 30 s behind the playhead once more than `threshold` seconds are
+   * buffered behind it; returns whether a removal started.
+   */
+  private prune(threshold = 30): boolean {
+    const buffered = this.sourceBuffer?.buffered;
+    const time = this.video.currentTime;
+    if (!buffered?.length || time - buffered.start(0) <= threshold || time <= 30) return false;
+    this.sourceBuffer!.remove(0, time - 30);
     return true;
   }
 
@@ -113,7 +144,11 @@ export class MediaSourcePipeline {
       const last = buffered.length - 1;
       this.video.currentTime = Math.max(buffered.start(last), buffered.end(last) - 3);
       this.events.firstMedia();
+    } else if (this.seekedToLive && buffered.length > this.rangeCount) {
+      const last = buffered.length - 1;
+      this.video.currentTime = Math.max(buffered.start(last), buffered.end(last) - 3);
     }
-    this.appendNext();
+    this.rangeCount = buffered.length;
+    if (!this.prune(60)) this.appendNext();
   }
 }

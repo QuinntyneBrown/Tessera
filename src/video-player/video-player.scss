@@ -57,3 +57,18 @@
   font-size: 1.125rem;
   color: #8a1c12;
 }
+
+.t-video-player__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+}
+
+.t-video-player__live-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: #ff6b57;
+}

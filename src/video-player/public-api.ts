@@ -4,6 +4,7 @@ export type {
   VideoPlayerError,
   VideoPlayerErrorCode,
   VideoPlayerState,
+  VideoPlayerStats,
   VideoStreamDescriptor,
   VideoStreamTransportOptions,
 } from './types';

@@ -36,3 +36,15 @@ export interface VideoPlayerError {
   message: string;
   cause?: unknown;
 }
+
+/** Playback statistics emitted once per second while the player is active. */
+export interface VideoPlayerStats {
+  state: VideoPlayerState;
+  /** Newest buffered end minus `currentTime`, rounded to 0.1 s. */
+  latencySeconds: number;
+  /** End of the buffered range containing `currentTime` minus `currentTime`, rounded to 0.1 s. */
+  bufferedAheadSeconds: number;
+  /** Sum of chunk byte lengths received since the subscription started. */
+  bytesReceived: number;
+  droppedFrames: number;
+}

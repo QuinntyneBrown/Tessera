@@ -336,6 +336,86 @@ export class VideoPlayerPage {
     await expect.poll(() => this.announcements()).toEqual(messages);
   }
 
+  private async statsOutput(): Promise<{ count: number; last: Record<string, unknown> | null }> {
+    return JSON.parse(
+      (await this.page.getByRole('status', { name: 'Stats', exact: true }).textContent()) ||
+        '{"count":0,"last":null}',
+    );
+  }
+
+  async statsCount(): Promise<number> {
+    return (await this.statsOutput()).count;
+  }
+
+  async expectLastStats(): Promise<void> {
+    const { last } = await this.statsOutput();
+    expect(Object.keys(last!).sort()).toEqual([
+      'bufferedAheadSeconds',
+      'bytesReceived',
+      'droppedFrames',
+      'latencySeconds',
+      'state',
+    ]);
+    expect(last!['state']).toBe('live');
+    expect(Number(last!['bytesReceived'])).toBeGreaterThan(0);
+    const latency = Number(last!['latencySeconds']);
+    expect(Math.round(latency * 10) / 10).toBe(latency);
+  }
+
+  async expectAnnounced(message: string): Promise<void> {
+    await expect.poll(() => this.announcements(), { timeout: 15000 }).toContain(message);
+  }
+
+  async expectLatencyAtMost(seconds: number): Promise<void> {
+    await expect
+      .poll(async () => {
+        const { ranges, currentTime } = await this.videoMetrics();
+        return ranges.length ? ranges[ranges.length - 1][1] - currentTime : Infinity;
+      })
+      .toBeLessThanOrEqual(seconds);
+  }
+
+  async expectBufferWindowPruned(): Promise<void> {
+    await expect
+      .poll(
+        async () => {
+          const { ranges, currentTime } = await this.videoMetrics();
+          return ranges.length > 0 && ranges[0][0] > 0 && currentTime - ranges[0][0] <= 62;
+        },
+        { timeout: 20000 },
+      )
+      .toBe(true);
+  }
+
+  async expectPlayheadInNewestRange(): Promise<void> {
+    await expect
+      .poll(
+        async () => {
+          const { ranges, currentTime } = await this.videoMetrics();
+          const newest = ranges[ranges.length - 1];
+          return ranges.length > 1 && currentTime >= newest[0] && currentTime <= newest[1];
+        },
+        { timeout: 15000 },
+      )
+      .toBe(true);
+  }
+
+  private liveBadge() {
+    return this.host().locator('[data-control="live"]');
+  }
+
+  async expectLiveBadge(name: string | RegExp, disabled: boolean): Promise<void> {
+    await expect(this.liveBadge()).toHaveRole('button');
+    await expect(this.liveBadge()).toHaveAccessibleName(name);
+    if (disabled) await expect(this.liveBadge()).toHaveAttribute('aria-disabled', 'true');
+    else await expect(this.liveBadge()).not.toHaveAttribute('aria-disabled', /.*/);
+  }
+
+  async goToLiveWhenBehind(): Promise<void> {
+    await this.expectLiveBadge(/^Go to live, \d+ seconds behind$/, false);
+    await this.liveBadge().click();
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

@@ -59,12 +59,15 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     if (this.scenario === 'connecting') return NEVER;
     const reinitAt = Number(this.parameters.get('reinitAt') || 0);
     const decodeAt = Number(this.parameters.get('decodeAt') || 0);
+    const gapAt = Number(this.parameters.get('gapAt') || 0);
     let init: VideoChunk | undefined;
     let media = 0;
     return replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
+      lead: Number(this.parameters.get('lead') || 0),
     }).pipe(
       filter((chunk) => chunk.kind === 1 || this.parameters.get('skipInit') !== 'true'),
+      filter((chunk) => chunk.kind === 0 || chunk.seq !== gapAt),
       map((chunk) => {
         if (chunk.kind === 0) init = chunk;
         else if (++media === decodeAt) return { ...chunk, data: corrupt(chunk.data) };

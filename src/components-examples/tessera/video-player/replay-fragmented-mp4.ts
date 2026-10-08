@@ -33,6 +33,8 @@ export function metronome(intervalMs: number): Observable<void> {
 export interface ReplayOptions {
   /** Fragments per second; defaults to 1. */
   rate?: number;
+  /** Fragments sent at once to a joining subscriber, as a server with a backlog would; default 0. */
+  lead?: number;
 }
 
 /**
@@ -61,7 +63,7 @@ export function replayFragmentedMp4(
         if (subscriber.closed) return;
         file = loaded;
         subscriber.next({ kind: 0, seq: 0, data: loaded.init });
-        emitFragment();
+        for (let sent = 0; sent <= (options.lead ?? 0); sent++) emitFragment();
       },
       (error) => subscriber.error(error),
     );

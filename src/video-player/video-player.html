@@ -22,6 +22,19 @@
     }
   </div>
   <div class="t-video-player__bar">
+    @if (state() !== 'idle' && state() !== 'connecting') {
+      <button
+        type="button"
+        class="t-video-player__live"
+        data-control="live"
+        [attr.aria-label]="liveName()"
+        [attr.aria-disabled]="behindLive() ? null : 'true'"
+        (click)="goToLive()"
+      >
+        <span class="t-video-player__live-dot" aria-hidden="true"></span>
+        <span aria-hidden="true">LIVE</span>
+      </button>
+    }
     <span class="t-video-player__elapsed" aria-hidden="true">{{ elapsed() }}</span>
   </div>
   <div class="t-video-player__announcer" aria-live="polite" aria-atomic="true" #liveRegion></div>

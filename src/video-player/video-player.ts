@@ -17,6 +17,7 @@ import {
   VideoPlayerError,
   VideoPlayerErrorCode,
   VideoPlayerState,
+  VideoPlayerStats,
   VideoStreamDescriptor,
 } from './types';
 import { VIDEO_STREAM_TRANSPORT } from './video-stream-transport';
@@ -44,6 +45,8 @@ export class VideoPlayer implements VideoPlayerHost {
   readonly stateChange = output<VideoPlayerState>();
   /** Emits each failure once, with a typed code. */
   readonly error = output<VideoPlayerError>();
+  /** Emits playback statistics once per second while the player is active. */
+  readonly stats = output<VideoPlayerStats>();
 
   protected readonly strings = { ...DEFAULT_VIDEO_PLAYER_STRINGS, ...inject(VIDEO_PLAYER_I18N) };
   private readonly stateValue = signal<VideoPlayerState>('idle');
@@ -52,6 +55,11 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly descriptor = signal<VideoStreamDescriptor | null>(null);
   private readonly now = signal(Date.now());
   protected readonly currentError = signal<VideoPlayerError | null>(null);
+  private readonly latency = signal(0);
+  protected readonly behindLive = computed(() => this.latency() > 5);
+  protected readonly liveName = computed(() =>
+    this.behindLive() ? this.strings.goToLive(Math.round(this.latency())) : this.strings.live,
+  );
   protected readonly title = computed(
     () => this.titleOverride() ?? this.descriptor()?.title ?? null,
   );
@@ -148,6 +156,26 @@ export class VideoPlayer implements VideoPlayerHost {
     if (this.state() !== 'connecting') return;
     this.setState('live');
     this.announcer.status(this.strings.liveAnnounced);
+  }
+
+  emitStats(stats: VideoPlayerStats): void {
+    this.latency.set(stats.latencySeconds);
+    this.stats.emit(stats);
+  }
+
+  fellBehind(seconds: number): void {
+    this.announcer.status(this.strings.behindLive(seconds));
+  }
+
+  jumpedToLive(): void {
+    this.latency.set(0);
+    this.announcer.status(this.strings.backLive);
+  }
+
+  protected goToLive(): void {
+    if (!this.behindLive()) return;
+    this.session?.goToLive();
+    this.latency.set(0);
   }
 
   tick(): void {

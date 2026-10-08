@@ -42,13 +42,25 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly aspectRatio: Signal<string>;
     // (undocumented)
+    protected readonly behindLive: Signal<boolean>;
+    // (undocumented)
     protected readonly currentError: WritableSignal<VideoPlayerError | null>;
     // (undocumented)
     protected readonly elapsed: Signal<string>;
+    // (undocumented)
+    emitStats(stats: VideoPlayerStats): void;
     readonly error: OutputEmitterRef<VideoPlayerError>;
     // (undocumented)
     fail(code: VideoPlayerErrorCode, cause?: unknown): void;
+    // (undocumented)
+    fellBehind(seconds: number): void;
+    // (undocumented)
+    protected goToLive(): void;
     readonly hubUrl: InputSignal<string | null>;
+    // (undocumented)
+    jumpedToLive(): void;
+    // (undocumented)
+    protected readonly liveName: Signal<string>;
     // (undocumented)
     protected onPlaying(): void;
     // (undocumented)
@@ -61,6 +73,7 @@ export class VideoPlayer implements VideoPlayerHost {
     setState(state: VideoPlayerState): void;
     readonly state: Signal<VideoPlayerState>;
     readonly stateChange: OutputEmitterRef<VideoPlayerState>;
+    readonly stats: OutputEmitterRef<VideoPlayerStats>;
     readonly streamId: InputSignal<string | null>;
     // (undocumented)
     protected readonly strings: {
@@ -68,6 +81,10 @@ export class VideoPlayer implements VideoPlayerHost {
         connectingStatus: string;
         connecting: (title: string) => string;
         liveAnnounced: string;
+        backLive: string;
+        live: string;
+        goToLive: (seconds: number) => string;
+        behindLive: (seconds: number) => string;
         retry: string;
         errorUnsupported: (mimeType: string) => string;
         errorUnauthorized: string;
@@ -109,6 +126,7 @@ export class VideoPlayer implements VideoPlayerHost {
     }, {
         "stateChange": "stateChange";
         "error": "error";
+        "stats": "stats";
     }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<VideoPlayer, never>;
@@ -134,7 +152,22 @@ export type VideoPlayerI18n = Partial<VideoPlayerStrings>;
 export type VideoPlayerState = 'idle' | 'connecting' | 'live' | 'buffering' | 'paused' | 'reconnecting' | 'ended' | 'error';
 
 // @public
+export interface VideoPlayerStats {
+    bufferedAheadSeconds: number;
+    bytesReceived: number;
+    // (undocumented)
+    droppedFrames: number;
+    latencySeconds: number;
+    // (undocumented)
+    state: VideoPlayerState;
+}
+
+// @public
 export interface VideoPlayerStrings {
+    // (undocumented)
+    backLive: string;
+    // (undocumented)
+    behindLive: (seconds: number) => string;
     // (undocumented)
     connecting: (title: string) => string;
     // (undocumented)
@@ -153,6 +186,10 @@ export interface VideoPlayerStrings {
     errorUnauthorized: string;
     // (undocumented)
     errorUnsupported: (mimeType: string) => string;
+    // (undocumented)
+    goToLive: (seconds: number) => string;
+    // (undocumented)
+    live: string;
     // (undocumented)
     liveAnnounced: string;
     // (undocumented)

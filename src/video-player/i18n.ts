@@ -6,6 +6,10 @@ export interface VideoPlayerStrings {
   connectingStatus: string;
   connecting: (title: string) => string;
   liveAnnounced: string;
+  backLive: string;
+  live: string;
+  goToLive: (seconds: number) => string;
+  behindLive: (seconds: number) => string;
   retry: string;
   errorUnsupported: (mimeType: string) => string;
   errorUnauthorized: string;
@@ -22,6 +26,10 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   connectingStatus: 'Connecting…',
   connecting: (title) => `Connecting to ${title}.`,
   liveAnnounced: 'Live.',
+  backLive: 'Back live.',
+  live: 'Live',
+  goToLive: (seconds) => `Go to live, ${seconds} seconds behind`,
+  behindLive: (seconds) => `${seconds} seconds behind live. Press Live to catch up.`,
   retry: 'Retry',
   errorUnsupported: (mimeType) => `This browser can't play this stream (${mimeType}).`,
   errorUnauthorized: "You don't have access to this stream. Sign in again or ask the organiser.",
