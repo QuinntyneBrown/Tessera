@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-062, L2-069, L2-073, L2-074.
+// Acceptance tests. Traces to L2-062, L2-064, L2-069, L2-072, L2-073, L2-074.
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -110,5 +110,59 @@ test('preserves playback, state and focus across a resize', async ({ page }) => 
   await player.focusVolume();
   await player.resizeContainer(600);
   await player.expectFocusedControl('mute');
+  await player.expectNoAccessibilityViolations();
+});
+
+for (const scheme of ['light', 'dark'] as const) {
+  test(`meets text, icon and focus contrast against the control scrim in ${scheme}`, async ({
+    page,
+  }) => {
+    // L2-072 AC1, AC5; L2-064 AC5: control text 4.5:1, icons and the focus ring 3:1 against the
+    // scrim, error text 4.5:1, and caption cues 4.5:1 through the caption tokens, in both themes.
+    const player = new VideoPlayerPage(page);
+    await page.emulateMedia({ colorScheme: scheme });
+    await player.open('live', { realTime: true, extra: { captions: true } });
+    await player.expectState('live');
+    await player.expectBarContrast();
+    await player.expectCaptionContrast();
+    await player.failSource();
+    await player.expectError('The video source stopped unexpectedly.');
+    await player.expectErrorContrast();
+  });
+}
+
+test('runs no decorative animation under reduced motion while the video plays', async ({
+  page,
+}) => {
+  // L2-072 AC3: under reduced motion the LIVE dot, spinner and control fade do not animate, the
+  // spinner is a static ring, and the video itself keeps playing.
+  const player = new VideoPlayerPage(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectNoDecorativeMotion();
+  await player.expectPlaybackAdvancing();
+  await player.stallSource();
+  await player.expectSpinner(true);
+  await player.expectNoDecorativeMotion();
+});
+
+test('animates the LIVE dot when motion is allowed', async ({ page }) => {
+  // L2-072 AC3 (contrast case): without the preference the LIVE dot pulses.
+  const player = new VideoPlayerPage(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectLiveDotAnimated(true);
+});
+
+test('maps the scrim and controls to system colours in forced colours mode', async ({ page }) => {
+  // L2-072 AC4: the scrim uses Canvas, controls ButtonText, icons stay visible, and only the LIVE
+  // dot opts out with forced-color-adjust: none.
+  const player = new VideoPlayerPage(page);
+  await page.emulateMedia({ forcedColors: 'active' });
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectForcedColors();
   await player.expectNoAccessibilityViolations();
 });

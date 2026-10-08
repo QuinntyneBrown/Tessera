@@ -1152,6 +1152,162 @@ export class VideoPlayerPage {
     await this.page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   }
 
+  /** Resolves CSS colours (including system colours and custom properties) to rgb() values. */
+  private async contrastPairs(pairs: [string, string, number][]): Promise<void> {
+    const ratios = await this.host().evaluate((host, pairs) => {
+      const probe = document.createElement('i');
+      host.appendChild(probe);
+      const rgb = (color: string) => {
+        probe.style.color = color;
+        return getComputedStyle(probe)
+          .color.match(/[\d.]+/g)!
+          .slice(0, 3)
+          .map(Number);
+      };
+      const luminance = (color: string) => {
+        const [r, g, b] = rgb(color).map((value) => {
+          const s = value / 255;
+          return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const result = pairs.map(([a, b, minimum]) => {
+        const [x, y] = [luminance(a), luminance(b)];
+        return { a, b, minimum, ratio: (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05) };
+      });
+      probe.remove();
+      return result;
+    }, pairs);
+    for (const { a, b, minimum, ratio } of ratios)
+      expect(ratio, `${a} against ${b}`).toBeGreaterThanOrEqual(minimum);
+  }
+
+  private style(selector: string, property: string): Promise<string> {
+    return this.host().evaluate(
+      (host, [selector, property]) =>
+        getComputedStyle(host.querySelector(selector)!).getPropertyValue(property),
+      [selector, property],
+    );
+  }
+
+  async expectBarContrast(): Promise<void> {
+    // Tabbing onto Mute gives it keyboard focus, so its focus ring is drawn.
+    await this.focusControl('play-pause');
+    await this.page.keyboard.press('Tab');
+    const scrim = await this.style('.t-video-player__bar', 'background-color');
+    await this.contrastPairs([
+      [await this.style('[data-control="play-pause"]', 'color'), scrim, 4.5],
+      [await this.style('.t-video-player__elapsed', 'color'), scrim, 4.5],
+      [await this.style('[data-control="live"]', 'color'), scrim, 4.5],
+      [await this.style('.t-video-player__live-dot', 'background-color'), scrim, 3],
+      [await this.style('[data-control="mute"]', 'outline-color'), scrim, 3],
+    ]);
+    expect(await this.style('[data-control="mute"]', 'outline-style')).toBe('solid');
+  }
+
+  async expectCaptionContrast(): Promise<void> {
+    await this.contrastPairs([
+      [
+        await this.style('.t-video-player__region', '--_vp-caption-fg'),
+        await this.style('.t-video-player__region', '--_vp-caption-bg'),
+        4.5,
+      ],
+    ]);
+    const cue = await this.page.evaluate(() =>
+      Array.from(document.styleSheets)
+        .flatMap((sheet) => Array.from(sheet.cssRules))
+        .some((rule) => rule.cssText.includes('::cue') && rule.cssText.includes('caption')),
+    );
+    expect(cue).toBe(true);
+  }
+
+  async expectErrorContrast(): Promise<void> {
+    const surface = await this.style('.t-video-player__error', 'background-color');
+    await this.contrastPairs([
+      [await this.style('.t-video-player__error-heading', 'color'), surface, 4.5],
+      [
+        await this.style('.t-video-player__retry', 'color'),
+        await this.style('.t-video-player__retry', 'background-color'),
+        4.5,
+      ],
+    ]);
+  }
+
+  async expectNoDecorativeMotion(): Promise<void> {
+    expect(await this.style('.t-video-player__live-dot', 'animation-name')).toBe('none');
+    expect(await this.style('.t-video-player__bar', 'transition-duration')).toBe('0s');
+    if (await this.host().locator('.t-video-player__spinner').count())
+      expect(await this.style('.t-video-player__spinner', 'animation-name')).toBe('none');
+  }
+
+  async expectLiveDotAnimated(animated: boolean): Promise<void> {
+    const name = await this.style('.t-video-player__live-dot', 'animation-name');
+    expect(name !== 'none').toBe(animated);
+  }
+
+  async expectForcedColors(): Promise<void> {
+    const system = await this.host().evaluate((host) => {
+      const probe = document.createElement('i');
+      host.appendChild(probe);
+      const resolve = (color: string) => {
+        probe.style.color = color;
+        return getComputedStyle(probe).color;
+      };
+      const result = { canvas: resolve('Canvas'), buttonText: resolve('ButtonText') };
+      probe.remove();
+      return result;
+    });
+    expect(await this.style('.t-video-player__bar', 'background-color')).toBe(system.canvas);
+    expect(await this.style('[data-control="play-pause"]', 'color')).toBe(system.buttonText);
+    expect(await this.style('[data-control="play-pause"] svg', 'fill')).toBe(system.buttonText);
+    expect(await this.style('.t-video-player__live-dot', 'forced-color-adjust')).toBe('none');
+    for (const selector of [
+      '.t-video-player__bar',
+      '[data-control="play-pause"]',
+      '[data-control="live"]',
+    ])
+      expect(await this.style(selector, 'forced-color-adjust')).toBe('auto');
+  }
+
+  async expectThemeColors(colors: {
+    scrim: string;
+    controlForeground: string;
+    placeholder: string;
+  }): Promise<void> {
+    await expect(this.host().locator('.t-video-player__bar')).toHaveCSS(
+      'background-color',
+      colors.scrim,
+    );
+    await expect(this.control('play-pause')).toHaveCSS('color', colors.controlForeground);
+    await expect(this.host().locator('.t-video-player__placeholder')).toHaveCSS(
+      'background-color',
+      colors.placeholder,
+    );
+  }
+
+  async expectFocusRingColor(color: string): Promise<void> {
+    await this.focusControl('mute');
+    await expect(this.control('mute')).toHaveCSS('outline-color', color);
+  }
+
+  async expectAccentColor(color: string): Promise<void> {
+    await expect(this.host().locator('.t-video-player__central-play svg')).toHaveCSS(
+      'background-color',
+      color,
+    );
+  }
+
+  async scrimColor(): Promise<string> {
+    return this.style('.t-video-player__bar', 'background-color');
+  }
+
+  async expectScrimColorNot(color: string): Promise<void> {
+    await expect(this.host().locator('.t-video-player__bar')).not.toHaveCSS(
+      'background-color',
+      color,
+    );
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

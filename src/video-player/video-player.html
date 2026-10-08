@@ -38,18 +38,22 @@
     }
     @if (state() === 'buffering') {
       <div class="t-video-player__overlay">
-        <div class="t-video-player__spinner" aria-hidden="true"></div>
-        @if (waitingForSource()) {
-          <p class="t-video-player__status">{{ strings.waitingForSource }}</p>
-        }
+        <div class="t-video-player__card">
+          <div class="t-video-player__spinner" aria-hidden="true"></div>
+          @if (waitingForSource()) {
+            <p class="t-video-player__status">{{ strings.waitingForSource }}</p>
+          }
+        </div>
       </div>
     }
     @if (state() === 'reconnecting') {
       <div class="t-video-player__overlay">
-        <div class="t-video-player__spinner" aria-hidden="true"></div>
-        <p class="t-video-player__status">
-          {{ strings.reconnecting(reconnectAttemptValue(), 5) }}
-        </p>
+        <div class="t-video-player__card">
+          <div class="t-video-player__spinner" aria-hidden="true"></div>
+          <p class="t-video-player__status">
+            {{ strings.reconnecting(reconnectAttemptValue(), 5) }}
+          </p>
+        </div>
       </div>
     }
     @if (state() === 'ended') {

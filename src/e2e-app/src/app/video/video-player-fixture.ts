@@ -31,12 +31,7 @@ export class FixtureTransport {}
   template: `
     <main>
       <h1>Video player</h1>
-      <div
-        class="fixture-container"
-        [style.width]="
-          parameters.has('containerWidth') ? parameters.get('containerWidth') + 'px' : null
-        "
-      >
+      <div class="fixture-container" [attr.style]="containerStyle">
         @if (mounted()) {
           <t-video-player
             tsrFixtureTransport
@@ -96,6 +91,15 @@ export class VideoPlayerFixture {
     last: null,
   });
   readonly json = JSON.stringify;
+  /** The container width and the theme tokens a host page might set around the player. */
+  readonly containerStyle =
+    (parameters.has('containerWidth') ? `width: ${parameters.get('containerWidth')}px; ` : '') +
+    (parameters.get('themed') === 'shared'
+      ? '--t-colorNeutralBackground1: rgb(10, 20, 30); --t-colorNeutralForeground1: rgb(250, 240, 230);' +
+        ' --t-colorStrokeFocus2: rgb(255, 200, 0); --t-colorNeutralBackground2: rgb(40, 50, 60);'
+      : parameters.get('themed') === 'component'
+        ? '--t-colorBrandBackground: rgb(1, 2, 3); --t-video-player-accent: rgb(4, 5, 6);'
+        : '');
 
   constructor() {
     // Lets a test change inputs without moving focus out of the player.

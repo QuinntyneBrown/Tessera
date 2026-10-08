@@ -1,7 +1,44 @@
 @use '../theme/styles/tokens' as theme;
-@include theme.defaults(('colorScheme', 'fontFamilyBase'));
+@include theme.defaults(
+  (
+    'borderRadiusMedium',
+    'colorBrandBackground',
+    'colorNeutralBackground1',
+    'colorNeutralBackground1Hover',
+    'colorNeutralBackground2',
+    'colorNeutralForeground1',
+    'colorNeutralForegroundOnBrand',
+    'colorPaletteRedForeground1',
+    'colorScheme',
+    'colorStrokeFocus2',
+    'durationNormal',
+    'fontFamilyBase'
+  )
+);
 
+/*
+ * Every colour, radius and duration resolves from a --t-video-player-* override, then the shared
+ * --t-* token, then the theme's built-in default.
+ */
 :host {
+  --_vp-scrim: var(--t-video-player-scrim, #{theme.token('colorNeutralBackground1')});
+  --_vp-control-fg: var(--t-video-player-control-fg, #{theme.token('colorNeutralForeground1')});
+  --_vp-control-bg-hover: var(
+    --t-video-player-control-bg-hover,
+    #{theme.token('colorNeutralBackground1Hover')}
+  );
+  --_vp-accent: var(--t-video-player-accent, #{theme.token('colorBrandBackground')});
+  --_vp-accent-fg: var(--t-video-player-accent-fg, #{theme.token('colorNeutralForegroundOnBrand')});
+  --_vp-live: var(--t-video-player-live, #{theme.token('colorPaletteRedForeground1')});
+  --_vp-focus-ring: var(--t-video-player-focus-ring, #{theme.token('colorStrokeFocus2')});
+  --_vp-error: var(--t-video-player-error, #{theme.token('colorPaletteRedForeground1')});
+  --_vp-error-fg: var(--t-video-player-error-fg, #{theme.token('colorNeutralForeground1')});
+  --_vp-skeleton: var(--t-video-player-skeleton, #{theme.token('colorNeutralBackground2')});
+  --_vp-caption-bg: var(--t-video-player-caption-bg, rgb(0 0 0 / 0.85));
+  --_vp-caption-fg: var(--t-video-player-caption-fg, #fff);
+  --_vp-motion: var(--t-video-player-motion-duration, #{theme.token('durationNormal')});
+  --_vp-radius: var(--t-video-player-radius, #{theme.token('borderRadiusMedium')});
+
   display: block;
   min-width: 0;
   max-width: 100%;
@@ -42,6 +79,11 @@
   block-size: 100%;
 }
 
+.t-video-player__video::cue {
+  background: var(--_vp-caption-bg);
+  color: var(--_vp-caption-fg);
+}
+
 :host([data-state='reconnecting']) .t-video-player__video {
   filter: brightness(0.45);
 }
@@ -73,22 +115,38 @@
 }
 
 .t-video-player__placeholder {
-  background: #d8e2df;
-  color: #18312e;
+  background: var(--_vp-skeleton);
+  color: var(--_vp-control-fg);
 }
 
-.t-video-player__overlay .t-video-player__status,
-.t-video-player__ended {
-  color: #fff;
+/* Status shown over the picture sits on the scrim, so its contrast never depends on the video. */
+.t-video-player__card,
+.t-video-player__ended,
+.t-video-player__error {
+  background: var(--_vp-scrim);
+  color: var(--_vp-control-fg);
 }
 
-.t-video-player__ended {
-  background: rgb(24 49 46 / 0.82);
+.t-video-player__card {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: var(--_vp-radius);
 }
 
-.t-video-player__ended h2 {
+.t-video-player__error {
+  color: var(--_vp-error-fg);
+}
+
+.t-video-player__ended h2,
+.t-video-player__error-heading {
   margin: 0;
   font-size: 1.125rem;
+}
+
+.t-video-player__error-heading {
+  color: var(--_vp-error);
 }
 
 .t-video-player__ended p,
@@ -96,28 +154,12 @@
   margin: 0;
 }
 
-.t-video-player__error {
-  background: #fff;
-  color: #18312e;
-}
-
-.t-video-player__error-heading {
-  margin: 0;
-  font-size: 1.125rem;
-  color: #8a1c12;
-}
-
-.t-video-player__retry {
-  min-inline-size: 44px;
-  min-block-size: 44px;
-  padding-inline: 1rem;
-}
-
 .t-video-player__spinner {
   inline-size: 3.5rem;
   block-size: 3.5rem;
-  border: 0.375rem solid rgb(255 255 255 / 0.3);
-  border-block-start-color: #fff;
+  border: 0.375rem solid transparent;
+  border-color: var(--_vp-control-fg);
+  border-block-start-color: var(--_vp-accent);
   border-radius: 50%;
   animation: t-video-player-spin 0.9s linear infinite;
 }
@@ -141,8 +183,8 @@
   block-size: 4.5rem;
   padding: 1rem;
   border-radius: 50%;
-  background: #8fd5ba;
-  fill: #18312e;
+  background: var(--_vp-accent);
+  fill: var(--_vp-accent-fg);
 }
 
 .t-video-player__chip {
@@ -153,9 +195,17 @@
   gap: 0.25rem;
 }
 
-.t-video-player__chip button {
+.t-video-player__chip button,
+.t-video-player__retry {
   min-inline-size: 44px;
   min-block-size: 44px;
+  padding-inline: 1rem;
+  border: 0;
+  border-radius: var(--_vp-radius);
+  background: var(--_vp-accent);
+  color: var(--_vp-accent-fg);
+  font: inherit;
+  cursor: pointer;
 }
 
 .t-video-player__chip svg {
@@ -175,9 +225,9 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: rgb(24 49 46 / 0.92);
-  color: #fff;
-  transition: opacity 200ms ease;
+  background: var(--_vp-scrim);
+  color: var(--_vp-control-fg);
+  transition: opacity var(--_vp-motion) ease;
 }
 
 .t-video-player__bar--hidden {
@@ -198,11 +248,16 @@
   min-block-size: 44px;
   padding: 0 0.5rem;
   border: 0;
-  border-radius: 0.5rem;
+  border-radius: var(--_vp-radius);
   background: transparent;
   color: inherit;
   font: inherit;
   cursor: pointer;
+}
+
+.t-video-player__control:hover,
+.t-video-player__live:hover {
+  background: var(--_vp-control-bg-hover);
 }
 
 .t-video-player__control svg {
@@ -211,11 +266,16 @@
   fill: currentColor;
 }
 
+:focus-visible {
+  outline: 2px solid var(--_vp-focus-ring);
+  outline-offset: 2px;
+}
+
 .t-video-player__live-dot {
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
   border-radius: 50%;
-  background: #ff6b57;
+  background: var(--_vp-live);
 }
 
 .t-video-player__elapsed {
@@ -230,7 +290,7 @@
   min-block-size: 44px;
   margin: 0;
   background: transparent;
-  accent-color: #8fd5ba;
+  color: inherit;
   appearance: none;
   cursor: pointer;
 }
@@ -276,12 +336,58 @@
   }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .t-video-player__live-dot {
+    animation: t-video-player-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes t-video-player-pulse {
+    50% {
+      opacity: 0.4;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  :host {
+    --_vp-motion: 0s;
+  }
+
   .t-video-player__bar {
     transition-duration: 0s;
   }
 
   .t-video-player__spinner {
     animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .t-video-player__bar,
+  .t-video-player__card,
+  .t-video-player__ended,
+  .t-video-player__error {
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .t-video-player__control,
+  .t-video-player__live,
+  .t-video-player__retry,
+  .t-video-player__chip button {
+    border: 1px solid ButtonText;
+    color: ButtonText;
+  }
+
+  .t-video-player__control[aria-pressed='true'] {
+    border-color: Highlight;
+  }
+
+  :focus-visible {
+    outline-color: Highlight;
+  }
+
+  .t-video-player__live-dot {
+    forced-color-adjust: none;
   }
 }
