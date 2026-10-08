@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, Directive, signal } from '@angular/core';
 import {
   VIDEO_STREAM_TRANSPORT,
   VideoPlayer,
@@ -11,22 +11,29 @@ import { FixtureVideoStreamTransport } from './fixture-video-stream-transport';
 
 const parameters = new URLSearchParams(location.search);
 
-/** Production-component host for the video player acceptance suite; grows with each slice. */
-@Component({
-  selector: 'tsr-video-player-fixture',
-  imports: [VideoPlayer],
+/** Gives the player on the same element its own fixture transport, as a hub connection would. */
+@Directive({
+  selector: '[tsrFixtureTransport]',
   providers: [
     {
       provide: VIDEO_STREAM_TRANSPORT,
       useFactory: () => new FixtureVideoStreamTransport(parameters),
     },
   ],
+})
+export class FixtureTransport {}
+
+/** Production-component host for the video player acceptance suite; grows with each slice. */
+@Component({
+  selector: 'tsr-video-player-fixture',
+  imports: [VideoPlayer, FixtureTransport],
   styles: ['output { display: block; overflow-wrap: anywhere; }'],
   template: `
     <main>
       <h1>Video player</h1>
       @if (mounted()) {
         <t-video-player
+          tsrFixtureTransport
           hubUrl="https://hub.example/hubs/video"
           [accessTokenFactory]="tokenFactory"
           [streamId]="streamId()"
@@ -38,6 +45,14 @@ const parameters = new URLSearchParams(location.search);
           (stateChange)="record($event)"
           (error)="recordError($event)"
           (stats)="recordStats($event)"
+        />
+      }
+      @if (parameters.get('instances') === '2') {
+        <t-video-player
+          tsrFixtureTransport
+          hubUrl="https://hub.example/hubs/video"
+          streamId="lab-camera"
+          titleOverride="Lab camera"
         />
       }
       <button type="button" (click)="mounted.set(false)">Unmount player</button>

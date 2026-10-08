@@ -918,6 +918,50 @@ export class VideoPlayerPage {
     await expect(this.host().getByRole('region')).toBeFocused();
   }
 
+  async expectControlCatalogue(): Promise<void> {
+    const group = this.host().getByRole('group', { name: 'Player controls', exact: true });
+    await expect(group).toBeVisible();
+    const buttons = group.locator('button');
+    for (const button of await buttons.all()) {
+      await expect(button).toHaveAttribute('type', 'button');
+      await expect(button).toHaveAttribute('aria-label', /.+/);
+      await expect(button).not.toHaveAttribute('disabled', /.*/);
+    }
+    for (const toggle of ['mute', 'captions', 'fullscreen'])
+      await expect(this.control(toggle)).toHaveAttribute('aria-pressed', /^(true|false)$/);
+    await expect(group.getByRole('slider')).toHaveCount(1);
+    await this.expectVolumeSlider();
+    await this.expectLiveBadge('Live', true);
+    await this.focusControl('live');
+    await expect(this.control('live')).toBeFocused();
+  }
+
+  async expectPlayerCount(count: number): Promise<void> {
+    await expect(this.host()).toHaveCount(count);
+  }
+
+  /** Each player has exactly one polite region inside its host, holding its own messages. */
+  async expectOwnLiveRegions(messages: string[]): Promise<void> {
+    const hosts = await this.host().all();
+    expect(hosts).toHaveLength(messages.length);
+    for (const [index, host] of hosts.entries()) {
+      await expect(host.locator('[aria-live="polite"]')).toHaveCount(1);
+      await expect(host.locator('[aria-live="polite"]')).toHaveText(messages[index]);
+    }
+  }
+
+  async expectTransportCount(count: number): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () =>
+            (window as unknown as { __videoFixture: { transports: unknown[] } }).__videoFixture
+              .transports.length,
+        ),
+      )
+      .toBe(count);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })
