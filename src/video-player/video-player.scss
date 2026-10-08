@@ -72,3 +72,33 @@
   border-radius: 50%;
   background: #ff6b57;
 }
+
+.t-video-player__control {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+}
+
+.t-video-player__control svg {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  fill: currentColor;
+}
+
+.t-video-player__central-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.t-video-player__central-play svg {
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  padding: 1rem;
+  border-radius: 50%;
+  background: #8fd5ba;
+  fill: #18312e;
+}

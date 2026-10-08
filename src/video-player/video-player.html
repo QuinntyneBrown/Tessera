@@ -1,5 +1,9 @@
 <div class="t-video-player__region" role="region" [attr.aria-label]="regionName()">
-  <div class="t-video-player__stage" [style.aspect-ratio]="aspectRatio()">
+  <div
+    class="t-video-player__stage"
+    [style.aspect-ratio]="aspectRatio()"
+    (click)="togglePlayback()"
+  >
     <video
       class="t-video-player__video"
       playsinline
@@ -12,6 +16,11 @@
         <p class="t-video-player__status">{{ strings.connectingStatus }}</p>
       </div>
     }
+    @if (state() === 'paused') {
+      <div class="t-video-player__central-play" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z" /></svg>
+      </div>
+    }
     @if (currentError(); as error) {
       <div class="t-video-player__error" role="alert">
         <h2 class="t-video-player__error-heading" tabindex="-1">{{ error.message }}</h2>
@@ -21,7 +30,23 @@
       </div>
     }
   </div>
-  <div class="t-video-player__bar">
+  <div class="t-video-player__bar" role="group" [attr.aria-label]="strings.controlsLabel">
+    <button
+      type="button"
+      class="t-video-player__control"
+      data-control="play-pause"
+      [attr.aria-label]="playing() ? strings.pause : strings.play"
+      [attr.aria-disabled]="playPauseDisabled() ? 'true' : null"
+      (click)="togglePlayback()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        @if (playing()) {
+          <path d="M6 5h4v14H6zm8 0h4v14h-4z" />
+        } @else {
+          <path d="M8 5v14l11-7z" />
+        }
+      </svg>
+    </button>
     @if (state() !== 'idle' && state() !== 'connecting') {
       <button
         type="button"

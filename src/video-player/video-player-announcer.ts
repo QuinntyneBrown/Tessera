@@ -14,6 +14,11 @@ export class VideoPlayerAnnouncer {
     }, 150);
   }
 
+  /** Writes a control toggle message at once; it never drops a pending status. */
+  toggle(message: string): void {
+    this.write(message);
+  }
+
   clear(): void {
     clearTimeout(this.timer);
     this.timer = undefined;

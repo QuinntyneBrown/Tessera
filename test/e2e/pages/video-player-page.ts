@@ -416,6 +416,78 @@ export class VideoPlayerPage {
     await this.liveBadge().click();
   }
 
+  private control(name: string) {
+    return this.host().locator(`[data-control="${name}"]`);
+  }
+
+  async expectControlBar(): Promise<void> {
+    const group = this.host().getByRole('group', { name: 'Player controls', exact: true });
+    await expect(group).toBeVisible();
+    await expect(group.locator('[data-control="play-pause"]')).toHaveCount(1);
+  }
+
+  async expectPlayPause(name: string, disabled: boolean): Promise<void> {
+    const control = this.control('play-pause');
+    await expect(control).toHaveRole('button');
+    await expect(control).toHaveAttribute('type', 'button');
+    await expect(control).toHaveAccessibleName(name);
+    if (disabled) await expect(control).toHaveAttribute('aria-disabled', 'true');
+    else await expect(control).not.toHaveAttribute('aria-disabled', /.*/);
+  }
+
+  async clickPlayPause(): Promise<void> {
+    await this.clickControl('play-pause');
+  }
+
+  /** Clicks a control; an aria-disabled control is clicked by position to exercise its guard. */
+  private async clickControl(name: string): Promise<void> {
+    const control = this.control(name);
+    if ((await control.getAttribute('aria-disabled')) !== 'true') return control.click();
+    const box = (await control.boundingBox())!;
+    await this.page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  }
+
+  async clickStage(): Promise<void> {
+    await this.host().locator('.t-video-player__stage').click();
+  }
+
+  async expectCentralPlay(visible: boolean): Promise<void> {
+    await expect(this.host().locator('.t-video-player__central-play')).toHaveCount(visible ? 1 : 0);
+  }
+
+  async expectVideoPaused(paused: boolean): Promise<void> {
+    await expect.poll(async () => (await this.videoMetrics()).paused).toBe(paused);
+  }
+
+  async expectLatencyAtLeast(seconds: number): Promise<void> {
+    await expect
+      .poll(async () => {
+        const { ranges, currentTime } = await this.videoMetrics();
+        return ranges.length ? ranges[ranges.length - 1][1] - currentTime : 0;
+      })
+      .toBeGreaterThanOrEqual(seconds);
+  }
+
+  async expectBytesStillArriving(): Promise<void> {
+    await expect.poll(async () => (await this.statsOutput()).last?.['state']).toBe('paused');
+    const before = Number((await this.statsOutput()).last!['bytesReceived']);
+    await expect
+      .poll(async () => Number((await this.statsOutput()).last!['bytesReceived']), {
+        timeout: 5000,
+      })
+      .toBeGreaterThan(before);
+  }
+
+  async rejectNextPlay(): Promise<void> {
+    await this.page.evaluate(() => {
+      const play = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () {
+        HTMLMediaElement.prototype.play = play;
+        return Promise.reject(new DOMException('Fixture block', 'NotAllowedError'));
+      };
+    });
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

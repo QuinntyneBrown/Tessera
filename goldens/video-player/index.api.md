@@ -66,6 +66,10 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected onVideoError(): void;
     // (undocumented)
+    protected readonly playing: Signal<boolean>;
+    // (undocumented)
+    protected readonly playPauseDisabled: Signal<boolean>;
+    // (undocumented)
     protected readonly regionName: Signal<string>;
     // (undocumented)
     requestPlay(): void;
@@ -81,6 +85,10 @@ export class VideoPlayer implements VideoPlayerHost {
         connectingStatus: string;
         connecting: (title: string) => string;
         liveAnnounced: string;
+        controlsLabel: string;
+        play: string;
+        pause: string;
+        paused: string;
         backLive: string;
         live: string;
         goToLive: (seconds: number) => string;
@@ -99,6 +107,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly title: Signal<string | null>;
     readonly titleOverride: InputSignal<string | undefined>;
+    // (undocumented)
+    protected togglePlayback(): void;
     // (undocumented)
     videoElement(): HTMLVideoElement;
     // (undocumented)
@@ -173,6 +183,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     connectingStatus: string;
     // (undocumented)
+    controlsLabel: string;
+    // (undocumented)
     errorConnection: string;
     // (undocumented)
     errorDecode: string;
@@ -192,6 +204,12 @@ export interface VideoPlayerStrings {
     live: string;
     // (undocumented)
     liveAnnounced: string;
+    // (undocumented)
+    pause: string;
+    // (undocumented)
+    paused: string;
+    // (undocumented)
+    play: string;
     // (undocumented)
     regionLabel: (title: string | null) => string;
     // (undocumented)

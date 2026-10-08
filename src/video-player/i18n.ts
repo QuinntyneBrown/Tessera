@@ -6,6 +6,10 @@ export interface VideoPlayerStrings {
   connectingStatus: string;
   connecting: (title: string) => string;
   liveAnnounced: string;
+  controlsLabel: string;
+  play: string;
+  pause: string;
+  paused: string;
   backLive: string;
   live: string;
   goToLive: (seconds: number) => string;
@@ -26,6 +30,10 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   connectingStatus: 'Connecting…',
   connecting: (title) => `Connecting to ${title}.`,
   liveAnnounced: 'Live.',
+  controlsLabel: 'Player controls',
+  play: 'Play',
+  pause: 'Pause',
+  paused: 'Paused.',
   backLive: 'Back live.',
   live: 'Live',
   goToLive: (seconds) => `Go to live, ${seconds} seconds behind`,

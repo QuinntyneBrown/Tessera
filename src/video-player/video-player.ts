@@ -56,6 +56,10 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly now = signal(Date.now());
   protected readonly currentError = signal<VideoPlayerError | null>(null);
   private readonly latency = signal(0);
+  protected readonly playing = computed(() => ['live', 'buffering'].includes(this.state()));
+  protected readonly playPauseDisabled = computed(
+    () => !['live', 'buffering', 'paused'].includes(this.state()),
+  );
   protected readonly behindLive = computed(() => this.latency() > 5);
   protected readonly liveName = computed(() =>
     this.behindLive() ? this.strings.goToLive(Math.round(this.latency())) : this.strings.live,
@@ -170,6 +174,26 @@ export class VideoPlayer implements VideoPlayerHost {
   jumpedToLive(): void {
     this.latency.set(0);
     this.announcer.status(this.strings.backLive);
+  }
+
+  protected togglePlayback(): void {
+    const video = this.videoElement();
+    if (this.playing()) {
+      video.pause();
+      this.setState('paused');
+      this.announcer.toggle(this.strings.paused);
+    } else if (this.state() === 'paused') {
+      this.session?.goToLive();
+      video.play().then(
+        () => {
+          if (this.state() !== 'paused') return;
+          this.latency.set(0);
+          this.setState('live');
+          this.announcer.toggle(this.strings.backLive);
+        },
+        () => undefined,
+      );
+    }
   }
 
   protected goToLive(): void {
