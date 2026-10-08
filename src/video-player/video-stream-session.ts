@@ -178,14 +178,19 @@ export class VideoStreamSession {
     this.host.fail(code, cause);
   }
 
-  stop(): void {
+  /**
+   * Releases everything this session holds. A stream switch keeps the hub connection
+   * (`stopConnection` false); clearing the stream, a new hub URL, Retry and destroy stop it.
+   */
+  stop(stopConnection = true): void {
     this.disposed = true;
     clearInterval(this.ticker);
     this.clearStallTimers();
     this.policy.reset();
     this.connection.unsubscribe();
-    this.transport.stop?.();
     this.subscription?.unsubscribe();
+    this.pipeline?.dispose();
+    if (stopConnection) this.transport.stop?.();
   }
 }
 

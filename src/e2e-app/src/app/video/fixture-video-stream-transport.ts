@@ -10,6 +10,12 @@ import {
 /** Test controls and observations shared by every fixture transport on the page. */
 export interface VideoFixtureWindow {
   calls: string[];
+  /** Lifecycle log with stream ids, unsubscribes and stops. */
+  log: string[];
+  activeSubscriptions: number;
+  /** Connections started by describe and not yet stopped. */
+  openConnections: number;
+  resolveDescribe(): void;
   tokenRequests: number;
   hubUrls: (string | null)[];
   stalled: boolean;
@@ -37,10 +43,18 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
   private dropped = false;
   private closeTimer: ReturnType<typeof setTimeout> | undefined;
   private readonly failures = new Subject<void>();
+  private pendingDescribe: (() => void) | undefined;
+  private open = false;
 
   constructor(private readonly parameters: URLSearchParams) {
     this.controls = window.__videoFixture ??= {
       calls: [],
+      log: [],
+      activeSubscriptions: 0,
+      openConnections: 0,
+      resolveDescribe() {
+        this.transports.forEach((transport) => transport.pendingDescribe?.());
+      },
       tokenRequests: 0,
       hubUrls: [],
       stalled: false,
@@ -70,6 +84,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
 
   configure(options: VideoStreamTransportOptions): void {
     this.controls.calls.push('configure');
+    this.controls.log.push('configure');
     this.controls.hubUrls.push(options.hubUrl);
     this.options = options;
   }
@@ -88,12 +103,18 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
 
   async describe(streamId: string): Promise<VideoStreamDescriptor> {
     this.controls.calls.push('describe');
+    this.controls.log.push(`describe:${streamId}`);
+    if (!this.open) {
+      this.open = true;
+      this.controls.openConnections++;
+    }
     // Like a hub connection, starting asks the token factory for a token and never keeps it.
     if (this.options?.accessTokenFactory) {
       await this.options.accessTokenFactory();
       this.controls.tokenRequests++;
     }
-    if (this.scenario === 'describe-pending') return new Promise(() => undefined);
+    if (this.scenario === 'describe-pending')
+      await new Promise<void>((resolve) => (this.pendingDescribe = resolve));
     if (this.scenario === 'not-found') throw new Error('unknown-stream');
     if (this.scenario === 'unauthorized')
       throw Object.assign(new Error('Unauthorized'), { statusCode: 401 });
@@ -115,8 +136,15 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     };
   }
 
-  subscribe(_streamId: string): Observable<VideoChunk> {
+  stop(): void {
+    this.controls.log.push('stop');
+    if (this.open) this.controls.openConnections--;
+    this.open = false;
+  }
+
+  subscribe(streamId: string): Observable<VideoChunk> {
     this.controls.calls.push('subscribe');
+    this.controls.log.push(`subscribe:${streamId}`);
     if (this.scenario === 'connecting') return NEVER;
     const reinitAt = Number(this.parameters.get('reinitAt') || 0);
     const decodeAt = Number(this.parameters.get('decodeAt') || 0);
@@ -144,11 +172,14 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     );
     // A failure errors the stream; completion of the replay still completes it.
     return new Observable<VideoChunk>((subscriber) => {
+      this.controls.activeSubscriptions++;
       const chunks = replay.subscribe(subscriber);
       const failures = this.failures.subscribe(() =>
         subscriber.error(new Error('source-failed: encoder exited')),
       );
       return () => {
+        this.controls.activeSubscriptions--;
+        this.controls.log.push('unsubscribe');
         chunks.unsubscribe();
         failures.unsubscribe();
       };

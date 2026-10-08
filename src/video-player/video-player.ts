@@ -144,10 +144,14 @@ export class VideoPlayer implements VideoPlayerHost {
 
   constructor() {
     effect(() => {
-      this.hubUrl();
+      const connection = [this.hubUrl(), this.accessTokenFactory()] as const;
       this.streamId();
-      this.accessTokenFactory();
-      untracked(() => this.startSession());
+      untracked(() => {
+        const sameConnection =
+          connection[0] === this.connection[0] && connection[1] === this.connection[1];
+        this.connection = connection;
+        this.startSession(!sameConnection);
+      });
     });
     effect(() => {
       const video = this.video().nativeElement;
@@ -183,16 +187,25 @@ export class VideoPlayer implements VideoPlayerHost {
     });
   }
 
-  private startSession(): void {
-    this.session?.stop();
+  /** The hub URL and token factory of the current connection. */
+  private connection: readonly [string | null, unknown] = [null, undefined];
+
+  /** Starts a session for the current stream; a stream switch reuses the hub connection. */
+  private startSession(newConnection = true): void {
     const streamId = this.streamId();
-    if (streamId) this.warnInsecureHubUrl(this.hubUrl());
-    this.session = streamId
-      ? new VideoStreamSession(this.transport, this, streamId, {
-          hubUrl: this.hubUrl(),
-          accessTokenFactory: this.accessTokenFactory(),
-        })
-      : undefined;
+    this.session?.stop(newConnection || !streamId);
+    this.session = undefined;
+    this.currentError.set(null);
+    if (!streamId) {
+      this.descriptor.set(null);
+      this.setState('idle');
+      return;
+    }
+    this.warnInsecureHubUrl(this.hubUrl());
+    this.session = new VideoStreamSession(this.transport, this, streamId, {
+      hubUrl: this.hubUrl(),
+      accessTokenFactory: this.accessTokenFactory(),
+    });
   }
 
   /** Development builds warn once when a remote hub URL is not protected by TLS. */

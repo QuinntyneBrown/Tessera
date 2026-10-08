@@ -23,7 +23,7 @@ export class SignalRVideoStreamTransport implements VideoStreamTransport {
     // (undocumented)
     configure(options: VideoStreamTransportOptions): void;
     // (undocumented)
-    readonly connectionEvents: Subject<"reconnecting" | "reconnected" | "closed">;
+    readonly connectionEvents: Subject<"closed" | "reconnecting" | "reconnected">;
     // (undocumented)
     describe(streamId: string): Promise<VideoStreamDescriptor>;
     // (undocumented)

@@ -81,6 +81,8 @@ export class FixtureTransport {}
           />
         }
       </div>
+      <button type="button" (click)="streamId.set('lab-camera')">Change stream</button>
+      <button type="button" (click)="streamId.set(null)">Clear stream</button>
       <button type="button" (click)="mounted.set(false)">Unmount player</button>
       <button type="button" (click)="mounted.set(true)">Mount player</button>
       <button type="button" (click)="volume.set(40)">Set volume 40</button>

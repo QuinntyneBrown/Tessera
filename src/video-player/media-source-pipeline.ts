@@ -51,6 +51,20 @@ export class MediaSourcePipeline {
     this.appendNext();
   }
 
+  /** Releases the MediaSource and its object URL and empties the video element. */
+  dispose(): void {
+    this.queue = [];
+    if (this.mediaSource?.readyState === 'open' && this.sourceBuffer?.updating) {
+      try {
+        this.sourceBuffer.abort();
+      } catch {
+        // The source buffer may already be detached.
+      }
+    }
+    this.detach();
+    this.video.load();
+  }
+
   /** Detaches the current MediaSource, revokes its URL and attaches a fresh one. */
   rebuild(): void {
     this.detach();

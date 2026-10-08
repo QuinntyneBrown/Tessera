@@ -1391,6 +1391,92 @@ export class VideoPlayerPage {
     expect(await this.host().evaluate((host) => host.outerHTML)).not.toContain(text);
   }
 
+  async changeStream(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Change stream', exact: true }).click();
+  }
+
+  async clearStream(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Clear stream', exact: true }).click();
+  }
+
+  async mountPlayer(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Mount player', exact: true }).click();
+    await expect(this.host()).toHaveCount(1);
+  }
+
+  async resolvePendingDescribe(): Promise<void> {
+    await this.page.evaluate(() =>
+      (
+        window as unknown as { __videoFixture: { resolveDescribe(): void } }
+      ).__videoFixture.resolveDescribe(),
+    );
+    await this.page.waitForTimeout(250);
+  }
+
+  private fixtureNumber(name: string): Promise<number> {
+    return this.page.evaluate(
+      (name) =>
+        (window as unknown as { __videoFixture: Record<string, number> }).__videoFixture[name],
+      name,
+    );
+  }
+
+  async expectActiveSubscriptions(count: number): Promise<void> {
+    await expect.poll(() => this.fixtureNumber('activeSubscriptions')).toBe(count);
+  }
+
+  async expectOpenConnections(count: number): Promise<void> {
+    await expect.poll(() => this.fixtureNumber('openConnections')).toBe(count);
+  }
+
+  async expectLiveMediaSourceUrls(count: number): Promise<void> {
+    await expect
+      .poll(async () => {
+        const record = await this.page.evaluate(
+          () => (window as unknown as { __mse: { created: number; revoked: number } }).__mse,
+        );
+        return record.created - record.revoked;
+      })
+      .toBe(count);
+  }
+
+  /** Listeners on document and window, read through the Chrome DevTools Protocol. */
+  async documentListenerCount(): Promise<number> {
+    const session = await this.page.context().newCDPSession(this.page);
+    let total = 0;
+    for (const expression of ['document', 'window']) {
+      const { result } = await session.send('Runtime.evaluate', { expression });
+      if (result.objectId)
+        total += (
+          await session.send('DOMDebugger.getEventListeners', { objectId: result.objectId })
+        ).listeners.length;
+    }
+    await session.detach();
+    return total;
+  }
+
+  async expectDocumentListenerCount(count: number): Promise<void> {
+    await expect.poll(() => this.documentListenerCount()).toBe(count);
+  }
+
+  async expectZoneless(): Promise<void> {
+    expect(await this.page.evaluate(() => 'Zone' in window)).toBe(false);
+  }
+
+  async expectTransportLog(entries: string[]): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () => (window as unknown as { __videoFixture: { log: string[] } }).__videoFixture.log,
+        ),
+      )
+      .toEqual(entries);
+  }
+
+  async expectStateOneOf(states: string[]): Promise<void> {
+    await expect(this.host()).toHaveAttribute('data-state', new RegExp(`^(${states.join('|')})$`));
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })
