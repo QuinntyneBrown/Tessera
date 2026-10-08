@@ -29,7 +29,7 @@ test('resumes at the live edge and announces Back live', async ({ page }) => {
   // behind the buffered end, playback resumes live and "Back live." is announced.
   const player = new VideoPlayerPage(page);
   await player.observeAnnouncements();
-  await player.open('live', { realTime: true });
+  await player.open('live', { realTime: true, extra: { lead: 6 } });
   await player.expectState('live');
   await player.clickPlayPause();
   await player.expectState('paused');
@@ -88,7 +88,7 @@ test('mutes, remembers volume 60 and restores it when unmuted', async ({ page })
   const player = new VideoPlayerPage(page);
   await player.observeAnnouncements();
   await player.open('live', { realTime: true, extra: { volume: 60 } });
-  await player.expectState('live');
+  await player.expectAnnouncementHistoryToEndWith('Live.');
   await player.expectMute('Mute', false);
   await player.clickMute();
   await player.expectMute('Unmute', true);
