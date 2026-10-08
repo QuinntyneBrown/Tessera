@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Secure and perform
+
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component, OnPush", "Text bindings for title; host listeners; ngOnDestroy")
+  Component(session, "VideoStreamSession", "Internal orchestrator", "Owns subscription, stall and stats timers, disposed flag; stop() releases in order")
+  Component(pipeline, "MediaSourcePipeline", "Internal", "MediaSource, SourceBuffer, object URL, append queue, prune; dispose()")
+  Component(reconnect, "ReconnectPolicy", "Internal", "Backoff timer cleared on stop()")
+  Component(controls, "ControlsVisibility", "Internal", "Class toggle; hide timer cleared through DestroyRef")
+  Component(announcer, "VideoPlayerAnnouncer", "Internal", "textContent writes; coalescing timer cleared through DestroyRef")
+  Component(transport, "SignalRVideoStreamTransport", "Default transport", "withUrl(hubUrl, { accessTokenFactory }); stop()")
+}
+Container_Ext(signalr, "HubConnection", "@microsoft/signalr", "Only holder of the token")
+Container_Ext(media, "MediaSource and <video>", "Browser media", "Decodes; fires waiting, playing, error")
+
+Rel(player, session, "Creates; stop() on destroy")
+Rel(session, transport, "configure(hubUrl, accessTokenFactory); describe; subscribe")
+Rel(transport, signalr, "Builds; stop() on release")
+Rel(session, pipeline, "Appends chunks; dispose() on stop")
+Rel(session, reconnect, "Schedules; clears on stop")
+Rel(pipeline, media, "addSourceBuffer(mimeType) in try; revokeObjectURL; src = ''; load()")
+Rel(player, controls, "Pointer, key, focus events")
+Rel(player, announcer, "Plain text messages")
+@enduml

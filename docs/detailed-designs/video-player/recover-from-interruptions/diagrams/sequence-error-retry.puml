@@ -1,0 +1,54 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Error panel and Retry
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "VideoStreamSession" as session
+  participant "VideoPlayerAnnouncer" as ann
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+
+session -> session : toError(source): code, mapped message, raw cause (L2-068)
+session -> vp : state error with VideoPlayerError
+vp -> vp : Record whether focus was inside the host
+vp -> ann : clear() polite region
+vp --> viewer : role="alert" panel with heading and mapped message
+alt Code unsupported
+  vp --> viewer : Message includes the mime type; no Retry control
+else Any other code
+  vp --> viewer : Distinct message per code and a Retry button
+end
+opt Focus was inside the player
+  vp -> vp : Focus the panel heading
+end
+opt Host is fullscreen
+  vp --> viewer : Fullscreen kept; panel inside the fullscreen element
+end
+vp -> host : error emits { code, message, cause }
+viewer -> vp : Activate Retry
+vp -> vp : Close panel; state connecting
+vp -> session : restart()
+session -> session : ReconnectPolicy.reset(); clear timers
+session -> transport : stop() closed connection; build a new HubConnection
+transport -> host : accessTokenFactory() for a fresh token
+transport -> hub : start(); invoke('Describe'); stream('Subscribe')
+hub --> transport : Descriptor, then chunks
+vp -> vp : Focus the play/pause control (L2-068)
+@enduml

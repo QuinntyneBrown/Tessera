@@ -1,0 +1,1552 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Video player mock · Tessera</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, 'Segoe UI', Arial, sans-serif;
+        /* Host page colors; not part of the component contract. */
+        --page-canvas: #f4f7f5;
+        --page-card: #ffffff;
+        --page-divider: #d8e2df;
+        --page-line: #657f73;
+        --page-ink: #18312e;
+        --page-muted: #536763;
+        --page-accent: #126454;
+        --page-accent-soft: #e4f2ec;
+        --page-focus: #b35c14;
+        /* Component tokens. Controls always sit on a dark scrim, so the accent and focus ring are the
+           light-on-dark values in both themes. */
+        --t-video-player-scrim: rgb(24 49 46 / 0.82);
+        --t-video-player-control-fg: #ffffff;
+        --t-video-player-control-bg-hover: rgb(255 255 255 / 0.14);
+        --t-video-player-accent: #8fd5ba;
+        --t-video-player-accent-fg: #18312e;
+        --t-video-player-live: #ff6b57;
+        --t-video-player-focus-ring: #ffbf69;
+        --t-video-player-error: #8a1c12;
+        --t-video-player-error-fg: #ffffff;
+        --t-video-player-skeleton: #d8e2df;
+        --t-video-player-caption-bg: rgb(0 0 0 / 0.75);
+        --t-video-player-caption-fg: #ffffff;
+        --t-video-player-motion-duration: 200ms;
+        --t-video-player-radius: 12px;
+      }
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+        --page-canvas: #10221f;
+        --page-card: #18312e;
+        --page-divider: #2f5249;
+        --page-line: #8fa9a0;
+        --page-ink: #f4f7f5;
+        --page-muted: #b6cbc3;
+        --page-accent: #8fd5ba;
+        --page-accent-soft: #244b42;
+        --page-focus: #ffbf69;
+        --t-video-player-scrim: rgb(16 34 31 / 0.88);
+        --t-video-player-control-fg: #f4f7f5;
+        --t-video-player-live: #ff8a78;
+        --t-video-player-error: #ffb4a8;
+        --t-video-player-error-fg: #18312e;
+        --t-video-player-skeleton: #2f5249;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        :root,
+        :root[data-theme] {
+          --t-video-player-motion-duration: 0ms;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--page-canvas);
+        color: var(--page-ink);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--page-focus);
+        outline-offset: 3px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+      .skip-link {
+        position: absolute;
+        z-index: 10;
+        left: 1rem;
+        top: -5rem;
+        padding: 0.65rem 1rem;
+        background: var(--page-ink);
+        color: var(--page-card);
+      }
+      .skip-link:focus {
+        top: 1rem;
+      }
+      .topbar {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        background: var(--page-card);
+        border-bottom: 1px solid var(--page-divider);
+      }
+      .topbar h1 {
+        font-size: 1rem;
+        font-weight: 750;
+      }
+      .shell {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem 3rem;
+      }
+      .eyebrow {
+        color: var(--page-muted);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .shell > h2 {
+        margin: 0.25rem 0 0.5rem;
+        font-size: 2rem;
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+      }
+      .intro {
+        max-width: 60ch;
+        color: var(--page-muted);
+      }
+      .mock-states {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem 1rem;
+        margin: 1.5rem 0;
+        border: 1px dashed var(--page-line);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: var(--page-muted);
+        font-size: 0.85rem;
+      }
+      .mock-states legend {
+        padding: 0 0.3rem;
+        font-weight: 700;
+      }
+      .mock-states select,
+      .mock-states .button {
+        min-height: 44px;
+        border: 1px solid var(--page-line);
+        border-radius: 7px;
+        padding: 0.45rem 0.7rem;
+        background: var(--page-card);
+        color: var(--page-ink);
+      }
+      .button {
+        font-weight: 750;
+      }
+      .layout {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 1.5rem;
+      }
+      .card {
+        flex: 999 1 30rem;
+        min-width: 0;
+        background: var(--page-card);
+        border: 1px solid var(--page-divider);
+        border-radius: 12px;
+        padding: 1.25rem;
+      }
+      .notes {
+        flex: 1 1 16rem;
+        min-width: 0;
+        background: var(--page-card);
+        border: 1px solid var(--page-divider);
+        border-radius: 12px;
+        padding: 1.25rem;
+        font-size: 0.9rem;
+      }
+      .notes h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .notes ul {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+      .notes li + li {
+        margin-top: 0.35rem;
+      }
+      kbd {
+        display: inline-block;
+        min-width: 1.6em;
+        border: 1px solid var(--page-line);
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        padding: 0 0.35em;
+        font: 0.85em/1.6 ui-monospace, Consolas, monospace;
+        text-align: center;
+      }
+      .session-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.5rem;
+        margin: 1rem 0 0;
+        color: var(--page-muted);
+        font-size: 0.9rem;
+      }
+      .session-meta div {
+        display: flex;
+        gap: 0.3rem;
+      }
+      .session-meta dt {
+        font-weight: 700;
+        color: var(--page-ink);
+      }
+      .session-meta dd {
+        margin: 0;
+      }
+
+      /* ---------- Component ---------- */
+      .t-video-player {
+        position: relative;
+        border-radius: var(--t-video-player-radius);
+        overflow: hidden;
+        background: #000;
+        color: var(--t-video-player-control-fg);
+      }
+      .t-video-player:fullscreen {
+        border-radius: 0;
+        display: grid;
+        place-items: center;
+      }
+      .t-video-player:fullscreen .stage {
+        width: 100%;
+        max-height: 100vh;
+      }
+      .stage {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: #000;
+        /* Native menu off on the stage only, so long-press reveals controls instead. */
+        -webkit-touch-callout: none;
+      }
+      .stage video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: #000;
+      }
+      .stage video::cue {
+        background: var(--t-video-player-caption-bg);
+        color: var(--t-video-player-caption-fg);
+        font-family: inherit;
+        font-size: clamp(0.9rem, 2.2vw, 1.3rem);
+      }
+      .stage canvas {
+        display: none;
+      }
+      .t-video-player[data-state='reconnecting'] .stage video,
+      .t-video-player[data-state='ended'] .stage video {
+        filter: brightness(0.45);
+      }
+      .overlay {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        text-align: center;
+      }
+      .overlay p {
+        font-weight: 700;
+        text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+      }
+      .skeleton {
+        background: linear-gradient(
+          100deg,
+          var(--t-video-player-skeleton) 30%,
+          color-mix(in srgb, var(--t-video-player-skeleton), white 18%) 50%,
+          var(--t-video-player-skeleton) 70%
+        );
+        background-size: 300% 100%;
+        color: var(--page-ink);
+      }
+      .skeleton p {
+        color: var(--page-muted);
+        text-shadow: none;
+      }
+      .skeleton .ghost-title {
+        font-size: 1.4rem;
+        color: var(--page-ink);
+        opacity: 0.35;
+        margin-bottom: 0.4rem;
+      }
+      .spinner {
+        width: 56px;
+        height: 56px;
+        border: 5px solid rgb(255 255 255 / 0.35);
+        border-top-color: var(--t-video-player-accent);
+        border-radius: 50%;
+      }
+      .central {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+      }
+      .central button {
+        width: 72px;
+        height: 72px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--t-video-player-scrim);
+        color: var(--t-video-player-control-fg);
+        display: grid;
+        place-items: center;
+      }
+      .central button:hover {
+        background: var(--t-video-player-accent);
+        color: var(--t-video-player-accent-fg);
+      }
+      .central svg {
+        width: 34px;
+        height: 34px;
+        margin-left: 4px;
+      }
+      .chip {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        min-height: 44px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.5rem 1rem;
+        background: var(--t-video-player-accent);
+        color: var(--t-video-player-accent-fg);
+        font-weight: 750;
+      }
+      .toast {
+        position: absolute;
+        left: 0.75rem;
+        bottom: 4.5rem;
+        border-radius: 999px;
+        padding: 0.4rem 0.9rem;
+        background: var(--t-video-player-scrim);
+        font-size: 0.85rem;
+        font-weight: 700;
+        pointer-events: none;
+      }
+      .reconnecting {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 1rem;
+      }
+      .reconnecting .spinner {
+        margin: 0 auto 0.75rem;
+      }
+      .ended-card {
+        background: var(--t-video-player-scrim);
+        border-radius: var(--t-video-player-radius);
+        padding: 1.25rem 1.75rem;
+      }
+      .ended-card h3 {
+        font-size: 1.25rem;
+      }
+      .ended-card p {
+        font-weight: 400;
+        margin-top: 0.25rem;
+      }
+      .error-panel {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        background: var(--t-video-player-scrim);
+      }
+      .error-panel > div {
+        max-width: 36rem;
+        border-left: 5px solid var(--t-video-player-error);
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        background: var(--page-card);
+        color: var(--page-ink);
+        text-align: left;
+      }
+      .error-panel h3 {
+        font-size: 1.1rem;
+      }
+      .error-panel h3:focus-visible {
+        outline-color: var(--page-focus);
+      }
+      .error-panel p {
+        margin: 0.25rem 0 0.9rem;
+        font-weight: 400;
+        text-shadow: none;
+      }
+      .error-panel .button {
+        min-height: 44px;
+        border: 1px solid var(--page-accent);
+        border-radius: 7px;
+        padding: 0.55rem 1rem;
+        background: var(--page-accent);
+        color: var(--page-card);
+      }
+      :root[data-theme='dark'] .error-panel .button {
+        color: var(--page-canvas);
+      }
+
+      /* Control bar */
+      .controls {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: linear-gradient(to top, var(--t-video-player-scrim), transparent);
+        transition:
+          opacity var(--t-video-player-motion-duration) ease,
+          transform var(--t-video-player-motion-duration) ease;
+      }
+      .controls.is-hidden {
+        opacity: 0;
+        transform: translateY(4px);
+        pointer-events: none;
+      }
+      /* Visibility is a class, not aria-hidden: hidden controls stay focusable, and focus reveals them. */
+      .controls.is-hidden:focus-within {
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      .t-video-player.hide-cursor .stage {
+        cursor: none;
+      }
+      .ctl {
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border: 0;
+        border-radius: 8px;
+        padding: 0 0.5rem;
+        background: transparent;
+        color: var(--t-video-player-control-fg);
+        font-weight: 750;
+      }
+      .ctl:hover:not([aria-disabled='true']) {
+        background: var(--t-video-player-control-bg-hover);
+      }
+      .ctl:focus-visible {
+        outline: 3px solid var(--t-video-player-focus-ring);
+        outline-offset: 2px;
+      }
+      .ctl[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .ctl svg {
+        width: 24px;
+        height: 24px;
+        flex: none;
+      }
+      .spacer {
+        flex: 1 0 0;
+      }
+      .volume {
+        width: 6rem;
+        min-height: 44px;
+        accent-color: var(--t-video-player-accent);
+        margin: 0;
+      }
+      .volume:focus-visible {
+        outline: 3px solid var(--t-video-player-focus-ring);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .live {
+        border: 2px solid transparent;
+        letter-spacing: 0.04em;
+        font-variant-numeric: tabular-nums;
+      }
+      .live .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--t-video-player-live);
+        box-shadow: 0 0 0 2px rgb(0 0 0 / 0.25);
+      }
+      .live[aria-disabled='true'] {
+        opacity: 1;
+        cursor: default;
+      }
+      .live:not([aria-disabled='true']) {
+        border-color: var(--t-video-player-accent);
+      }
+      .live:not([aria-disabled='true']) .dot {
+        background: var(--t-video-player-control-fg);
+        opacity: 0.6;
+        animation: none;
+      }
+      .live .elapsed {
+        font-weight: 400;
+        opacity: 0.9;
+      }
+      .live .behind {
+        font-weight: 400;
+      }
+      .cc-on,
+      .cc-off,
+      .fs-exit,
+      .fs-enter,
+      .icon-play,
+      .icon-pause,
+      .vol-high,
+      .vol-low,
+      .vol-off {
+        display: none;
+      }
+      [data-icon='play'] .icon-play,
+      [data-icon='pause'] .icon-pause,
+      [data-vol='high'] .vol-high,
+      [data-vol='low'] .vol-low,
+      [data-vol='off'] .vol-off,
+      .ctl.cc[aria-pressed='true'] .cc-on,
+      .ctl.cc[aria-pressed='false'] .cc-off,
+      .ctl.fs[aria-pressed='true'] .fs-exit,
+      .ctl.fs[aria-pressed='false'] .fs-enter {
+        display: block;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .live[aria-disabled='true'] .dot {
+          animation: pulse 1.6s ease-in-out infinite;
+        }
+        .spinner {
+          animation: spin 0.9s linear infinite;
+        }
+        .skeleton {
+          animation: shimmer 2.2s linear infinite;
+        }
+        .central button {
+          animation: pop 150ms ease-out;
+        }
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.35;
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes shimmer {
+        from {
+          background-position: 100% 0;
+        }
+        to {
+          background-position: -100% 0;
+        }
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0.9);
+        }
+      }
+
+      @media (max-width: 47.5em) {
+        .shell {
+          padding: 1.3rem 1rem 2rem;
+        }
+        .shell > h2 {
+          font-size: 1.6rem;
+        }
+        .card,
+        .notes {
+          padding: 1rem;
+        }
+        .volume {
+          display: none;
+        }
+        /* On narrow screens the bar sits below the picture instead of over it, so a two-row bar
+           never covers the video, and it does not auto-hide. */
+        .controls,
+        .controls.is-hidden {
+          position: static;
+          opacity: 1;
+          transform: none;
+          pointer-events: auto;
+          gap: 0.25rem;
+          padding: 0.4rem 0.5rem;
+          background: var(--t-video-player-scrim);
+        }
+        .toast {
+          bottom: 0.75rem;
+        }
+      }
+      @media (forced-colors: active) {
+        :root,
+        :root[data-theme] {
+          --page-line: ButtonText;
+          --page-focus: Highlight;
+          --t-video-player-scrim: Canvas;
+          --t-video-player-control-fg: ButtonText;
+          --t-video-player-control-bg-hover: Canvas;
+          --t-video-player-accent: Highlight;
+          --t-video-player-accent-fg: HighlightText;
+          --t-video-player-focus-ring: Highlight;
+          --t-video-player-error: CanvasText;
+          --t-video-player-error-fg: Canvas;
+          --t-video-player-skeleton: Canvas;
+        }
+        .controls {
+          background: Canvas;
+          border-top: 1px solid ButtonText;
+        }
+        .ctl,
+        .central button,
+        .chip {
+          border: 1px solid ButtonText;
+        }
+        .live .dot {
+          forced-color-adjust: none;
+          background: Highlight;
+        }
+        .spinner {
+          border-color: ButtonText;
+          border-top-color: Highlight;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#player">Skip to player</a>
+    <header class="topbar"><h1>Tessera · Host LMS</h1></header>
+    <main class="shell">
+      <p class="eyebrow">Component design reference</p>
+      <h2>Thermal transfer — live lecture</h2>
+      <p class="intro">
+        A live session from a lecture hall camera. This interactive HTML mock draws a fictional
+        scene locally; nothing is streamed, recorded, or sent anywhere.
+      </p>
+      <fieldset class="mock-states">
+        <legend>Mock states · design reference only</legend>
+        <label for="scenario">Scenario</label>
+        <select id="scenario">
+          <option value="live">Live</option>
+          <option value="slow-connect">Connecting (slow)</option>
+          <option value="buffering">Buffering</option>
+          <option value="paused">Paused, then resume</option>
+          <option value="reconnect-ok">Reconnecting (recovers)</option>
+          <option value="reconnect-fail">Reconnecting (gives up)</option>
+          <option value="ended">Stream ended</option>
+          <option value="unsupported">Unsupported codec</option>
+          <option value="unauthorized">Unauthorized</option>
+          <option value="autoplay-blocked">Autoplay blocked</option>
+          <option value="no-captions">Captions off (no track)</option>
+          <option value="slow-network">Slow network</option>
+        </select>
+        <label for="theme">Theme</label>
+        <select id="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">System</option>
+        </select>
+        <button type="button" class="button" id="reset">Reset</button>
+      </fieldset>
+
+      <div class="layout">
+        <section class="card" aria-labelledby="session-title">
+          <h3 id="session-title" class="sr-only">Lecture hall A</h3>
+          <div class="t-video-player" id="player" data-state="idle" tabindex="-1">
+            <div role="region" aria-label="Video player" id="region">
+              <div class="stage" id="stage">
+                <video id="video" playsinline muted></video>
+                <canvas id="scene" width="640" height="360"></canvas>
+                <div class="overlay skeleton" id="skeleton" hidden>
+                  <div>
+                    <p class="ghost-title" id="ghost-title">Lecture hall A</p>
+                    <p id="connect-text">Connecting…</p>
+                  </div>
+                </div>
+                <div class="overlay" id="buffering" hidden><div class="spinner"></div></div>
+                <div class="reconnecting" id="reconnecting" hidden>
+                  <div>
+                    <div class="spinner"></div>
+                    <p id="reconnect-text">Reconnecting… attempt 1 of 5</p>
+                  </div>
+                </div>
+                <div class="central" id="central" hidden>
+                  <button type="button" id="central-play" aria-label="Play">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M7 4.5v15l12-7.5z" fill="currentColor" />
+                    </svg>
+                  </button>
+                </div>
+                <button type="button" class="chip" id="unmute-chip" hidden>Unmute</button>
+                <div class="toast" id="toast" hidden>Back live</div>
+                <div class="overlay" id="ended" hidden>
+                  <div class="ended-card">
+                    <h3 id="ended-heading" tabindex="-1">Stream ended</h3>
+                    <p id="ended-detail">Live for 00:48:12</p>
+                  </div>
+                </div>
+                <div class="error-panel" id="error" role="alert" hidden>
+                  <div>
+                    <h3 id="error-heading" tabindex="-1">Something went wrong</h3>
+                    <p id="error-message"></p>
+                    <button type="button" class="button" id="retry">Retry</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="controls" id="controls" role="group" aria-label="Player controls">
+                <button type="button" class="ctl" id="play" aria-label="Pause" data-icon="pause">
+                  <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M7 4.5v15l12-7.5z" fill="currentColor" />
+                  </svg>
+                  <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="ctl"
+                  id="mute"
+                  aria-label="Mute"
+                  aria-pressed="false"
+                  data-vol="high"
+                >
+                  <svg class="vol-high" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 9v6h4l5 4V5L7 9z" fill="currentColor" />
+                    <path
+                      d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <svg class="vol-low" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 9v6h4l5 4V5L7 9z" fill="currentColor" />
+                    <path
+                      d="M15.5 8.5a5 5 0 0 1 0 7"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <svg class="vol-off" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 9v6h4l5 4V5L7 9z" fill="currentColor" />
+                    <path
+                      d="M15 9l6 6M21 9l-6 6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="range"
+                  class="volume"
+                  id="volume"
+                  min="0"
+                  max="100"
+                  step="5"
+                  value="60"
+                  aria-label="Volume"
+                  aria-valuetext="60%"
+                />
+                <button type="button" class="ctl live" id="live" aria-label="Live" aria-disabled="true">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span aria-hidden="true">LIVE</span>
+                  <span class="behind" id="behind" aria-hidden="true" hidden></span>
+                  <span class="elapsed" id="elapsed" aria-hidden="true">00:12:00</span>
+                </button>
+                <span class="spacer"></span>
+                <button
+                  type="button"
+                  class="ctl cc"
+                  id="captions"
+                  aria-label="Captions"
+                  aria-pressed="false"
+                >
+                  <svg class="cc-off" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect
+                      x="2.5"
+                      y="5.5"
+                      width="19"
+                      height="13"
+                      rx="2.5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M10.5 10a2.2 2.2 0 1 0 0 4M17 10a2.2 2.2 0 1 0 0 4"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <svg class="cc-on" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" fill="currentColor" />
+                    <path
+                      d="M10.5 10a2.2 2.2 0 1 0 0 4M17 10a2.2 2.2 0 1 0 0 4"
+                      fill="none"
+                      stroke="#000"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  class="ctl fs"
+                  id="fullscreen"
+                  aria-label="Fullscreen"
+                  aria-pressed="false"
+                >
+                  <svg class="fs-enter" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <svg class="fs-exit" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M9 4v5H4M15 9V4h5M20 15h-5v5M4 15h5v5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="sr-only" id="announce" aria-live="polite" aria-atomic="true"></div>
+            </div>
+          </div>
+          <dl class="session-meta">
+            <div><dt>Session</dt><dd>Thermal transfer, week 7</dd></div>
+            <div><dt>Started</dt><dd id="started-at">10:30</dd></div>
+            <div><dt>Presenter</dt><dd>Dr. A. Okafor (fictional)</dd></div>
+          </dl>
+        </section>
+
+        <aside class="notes" aria-labelledby="notes-title">
+          <h3 id="notes-title">Try the interaction</h3>
+          <ul>
+            <li><kbd>Space</kbd> or <kbd>K</kbd> pauses and resumes. Resume jumps back to live.</li>
+            <li><kbd>M</kbd> mutes. <kbd>↑</kbd> <kbd>↓</kbd> change volume by 5.</li>
+            <li><kbd>C</kbd> toggles captions. <kbd>F</kbd> toggles fullscreen; <kbd>Esc</kbd> leaves it.</li>
+            <li>Controls hide after 3 s while playing and never while a control has focus.</li>
+            <li>The LIVE badge becomes a “Go to live” button when playback falls behind.</li>
+            <li>Pick a scenario above to see buffering, reconnecting, ended, and error states.</li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const player = $('player');
+      const video = $('video');
+      const scene = $('scene');
+      const controls = $('controls');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      // ---------- Timings. Production defaults are in L2; reconnect delays are compressed here. ----------
+      const CONNECT_MS = 2000;
+      const SLOW_CONNECT_MS = 8000;
+      const STALL_MS = 2500;
+      const BUFFERING_ANNOUNCE_MS = 1000;
+      const CONTROLS_HIDE_MS = 3000;
+      const TOAST_MS = 1500;
+      const RECONNECT_SCHEDULE_MS = [0, 1000, 2000, 3000, 3000];
+      const TARGET_LATENCY = 3;
+
+      const ERRORS = {
+        unsupported: {
+          heading: 'This browser can’t play this stream',
+          message: 'This browser can’t play this stream (video/mp4; codecs="avc1.4d401f,mp4a.40.2").',
+          retry: false,
+        },
+        unauthorized: {
+          heading: 'No access to this stream',
+          message: 'You don’t have access to this stream. Sign in again or ask the organiser.',
+          retry: true,
+        },
+        connection: {
+          heading: 'Connection lost',
+          message: 'The connection was lost and couldn’t be restored.',
+          retry: true,
+        },
+      };
+
+      // ---------- Generated scene: a fictional lecture hall camera. ----------
+      const ctx = scene.getContext('2d');
+      const BASE_CLOCK = 10 * 3600 + 30 * 60; // 10:30:00, the fictional start time
+      let sceneStart = performance.now();
+      let frozenAt = null;
+      let raf = 0;
+      const pad = (n) => String(n).padStart(2, '0');
+      const hms = (s) => `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s / 60) % 60))}:${pad(Math.floor(s % 60))}`;
+
+      function draw(now) {
+        const t = ((frozenAt ?? now) - sceneStart) / 1000 + 12 * 60; // the session is 12 minutes in
+        const w = scene.width;
+        const h = scene.height;
+        const wall = ctx.createLinearGradient(0, 0, 0, h);
+        wall.addColorStop(0, '#1d3b36');
+        wall.addColorStop(1, '#0f2320');
+        ctx.fillStyle = wall;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#243f3a';
+        ctx.fillRect(0, h - 70, w, 70);
+        // Projector screen with a slide that advances every 20 s.
+        ctx.fillStyle = '#f3f6f4';
+        ctx.fillRect(80, 40, 480, 240);
+        ctx.fillStyle = '#18312e';
+        ctx.font = '700 20px Inter, "Segoe UI", Arial, sans-serif';
+        const slide = 7 + (Math.floor(t / 20) % 6);
+        ctx.fillText(`Slide ${slide} of 24 — Thermal transfer`, 100, 76);
+        ctx.font = '14px Inter, "Segoe UI", Arial, sans-serif';
+        ctx.fillStyle = '#536763';
+        ctx.fillText('Conduction through a composite wall', 100, 98);
+        const grow = Math.min(1, (t % 20) / 14);
+        [0.9, 0.55, 0.7, 0.35, 0.8].forEach((v, i) => {
+          const bh = 130 * v * grow;
+          ctx.fillStyle = i === 2 ? '#126454' : '#8fd5ba';
+          ctx.fillRect(110 + i * 88, 260 - bh, 56, bh);
+        });
+        // Presenter: head, torso, lectern. Oscillates slowly so the picture is visibly live.
+        const px = 560 + Math.sin(t / 2) * 20;
+        const bob = Math.sin(t * 1.7) * 2;
+        ctx.fillStyle = '#2f5249';
+        ctx.fillRect(500, 250, 120, 50);
+        ctx.fillStyle = '#e9c9a8';
+        ctx.beginPath();
+        ctx.arc(px, 170 + bob, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#3b6f62';
+        ctx.beginPath();
+        ctx.roundRect(px - 34, 196 + bob, 68, 70, 16);
+        ctx.fill();
+        // Burned-in camera overlay.
+        ctx.fillStyle = 'rgb(0 0 0 / 0.55)';
+        ctx.fillRect(10, 10, 232, 30);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '600 15px ui-monospace, Consolas, monospace';
+        ctx.fillText(`LAB CAM 02  ${hms(BASE_CLOCK + t)}`, 18, 31);
+        if (Math.floor(t) % 2 === 0) {
+          ctx.fillStyle = '#ff6b57';
+          ctx.beginPath();
+          ctx.arc(228, 25, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        const vignette = ctx.createRadialGradient(w / 2, h / 2, h * 0.5, w / 2, h / 2, h);
+        vignette.addColorStop(0, 'rgb(0 0 0 / 0)');
+        vignette.addColorStop(1, 'rgb(0 0 0 / 0.45)');
+        ctx.fillStyle = vignette;
+        ctx.fillRect(0, 0, w, h);
+        if (frozenAt === null) raf = requestAnimationFrame(draw);
+      }
+      function freeze() {
+        if (frozenAt !== null) return;
+        frozenAt = performance.now();
+        cancelAnimationFrame(raf);
+      }
+      function resume() {
+        if (frozenAt === null) return;
+        sceneStart += performance.now() - frozenAt;
+        frozenAt = null;
+        raf = requestAnimationFrame(draw);
+      }
+      // The scene stream is attached once; video.play()/pause() then behave like real media.
+      if (scene.captureStream) {
+        video.srcObject = scene.captureStream(30);
+      }
+      raf = requestAnimationFrame(draw);
+
+      // ---------- Captions: a real <track> built from fictional cues. ----------
+      const CUES = [
+        [0, 4, 'Today we look at conduction through a composite wall.'],
+        [4, 8, 'Each layer adds its own thermal resistance.'],
+        [8, 12, 'Think of it like resistors in series.'],
+        [12, 16, 'The total resistance is just the sum.'],
+        [16, 20, 'Now, what happens at the interface between layers?'],
+        [20, 24, 'Contact resistance. It is small, but it is never zero.'],
+        [24, 28, 'Let’s put numbers on this on the next slide.'],
+        [28, 32, 'A brick wall, 20 centimetres, with 5 centimetres of insulation.'],
+        [32, 36, 'The insulation does most of the work here.'],
+        [36, 40, 'Question from the back? Yes, go ahead.'],
+        [40, 44, 'Good question. Radiation matters at higher temperatures.'],
+        [44, 48, 'We will come back to that in week nine.'],
+      ];
+      const stamp = (s) => `00:${pad(Math.floor(s / 60))}:${pad(s % 60)}.000`;
+      const vtt = 'WEBVTT\n\n' + CUES.map(([a, b, text]) => `${stamp(a)} --> ${stamp(b)}\n${text}\n`).join('\n');
+      let track = null;
+      function attachCaptions() {
+        if (track) return;
+        track = document.createElement('track');
+        track.kind = 'captions';
+        track.srclang = 'en';
+        track.label = 'English';
+        track.src = URL.createObjectURL(new Blob([vtt], { type: 'text/vtt' }));
+        video.append(track);
+        track.track.mode = $('captions').getAttribute('aria-pressed') === 'true' ? 'showing' : 'hidden';
+        track.addEventListener('load', placeCues);
+      }
+      // Cues sit above the control bar while it is visible, and drop lower once it hides.
+      function placeCues() {
+        if (!track || !track.track.cues) return;
+        const overlaid = !window.matchMedia('(max-width: 47.5em)').matches;
+        const line = overlaid && !controls.classList.contains('is-hidden') ? -4 : -2;
+        for (const cue of track.track.cues) cue.line = line;
+      }
+      function detachCaptions() {
+        if (!track) return;
+        URL.revokeObjectURL(track.src);
+        track.remove();
+        track = null;
+      }
+
+      // ---------- Announcements: status messages coalesce; toggles never drop. ----------
+      let statusPending = null;
+      let togglePending = [];
+      let flushTimer = 0;
+      function flushAnnouncements() {
+        flushTimer = 0;
+        const parts = [...togglePending];
+        if (statusPending) parts.push(statusPending);
+        togglePending = [];
+        statusPending = null;
+        if (parts.length) $('announce').textContent = parts.join(' ');
+      }
+      function announce(text, { toggle = false } = {}) {
+        if (toggle) togglePending.push(text);
+        else statusPending = text;
+        if (!flushTimer) flushTimer = setTimeout(flushAnnouncements, 150);
+      }
+
+      // ---------- State machine ----------
+      let state = 'idle';
+      let scenario = 'live';
+      let timers = [];
+      let startedAt = Date.now() - 12 * 60 * 1000;
+      let pausedAt = 0;
+      let latency = 2;
+      let behindAnnounced = false;
+      let hadFocusInside = () => player.contains(document.activeElement);
+      const later = (fn, ms) => {
+        const id = setTimeout(fn, ms);
+        timers.push(id);
+        return id;
+      };
+      const clearTimers = () => {
+        timers.forEach(clearTimeout);
+        timers = [];
+      };
+      const overlays = ['skeleton', 'buffering', 'reconnecting', 'central', 'unmute-chip', 'ended', 'error'];
+
+      function setDisabled(el, disabled) {
+        if (disabled) el.setAttribute('aria-disabled', 'true');
+        else el.removeAttribute('aria-disabled');
+      }
+
+      function setState(next, detail = {}) {
+        const prev = state;
+        state = next;
+        player.dataset.state = next;
+        overlays.forEach((id) => ($(id).hidden = true));
+        const playing = next === 'live' || next === 'buffering';
+        $('play').dataset.icon = playing ? 'pause' : 'play';
+        $('play').setAttribute('aria-label', playing ? 'Pause' : 'Play');
+        setDisabled($('play'), ['idle', 'connecting', 'reconnecting', 'ended', 'error'].includes(next));
+        const ended = next === 'ended';
+        setDisabled($('mute'), ended);
+        $('volume').disabled = ended;
+        setDisabled($('captions'), ended);
+        if (next !== 'live') $('live').setAttribute('aria-disabled', 'true');
+        if (next === 'live') updateLiveBadge();
+        // No LIVE badge until the stream is actually delivering, and none over an error.
+        $('live').hidden = ['idle', 'connecting', 'error'].includes(next);
+        if (next !== 'live') showControls();
+        switch (next) {
+          case 'idle':
+            $('skeleton').hidden = false;
+            $('connect-text').textContent = 'Not connected';
+            break;
+          case 'connecting':
+            $('skeleton').hidden = false;
+            $('connect-text').textContent = 'Connecting…';
+            announce('Connecting to Lecture hall A.');
+            break;
+          case 'live':
+            if (prev === 'connecting' || prev === 'reconnecting') announce(prev === 'reconnecting' ? 'Reconnected. Live.' : 'Live.');
+            resume();
+            video.play().catch(() => {});
+            scheduleHide();
+            break;
+          case 'buffering':
+            $('buffering').hidden = false;
+            freeze();
+            later(() => {
+              if (state === 'buffering') announce('Buffering.');
+            }, BUFFERING_ANNOUNCE_MS);
+            break;
+          case 'paused':
+            $('central').hidden = false;
+            if (detail.autoplayBlocked) {
+              $('unmute-chip').hidden = !detail.muted;
+            } else {
+              announce('Paused.');
+            }
+            freeze();
+            video.pause();
+            break;
+          case 'reconnecting':
+            $('reconnecting').hidden = false;
+            freeze();
+            announce('Connection lost. Reconnecting.');
+            break;
+          case 'ended':
+            $('ended').hidden = false;
+            freeze();
+            video.pause();
+            $('ended-detail').textContent = `Live for ${hms((Date.now() - startedAt) / 1000)}`;
+            announce(`Stream ended. It was live for ${describeDuration((Date.now() - startedAt) / 1000)}.`);
+            if (hadFocusInside()) $('ended-heading').focus();
+            break;
+          case 'error':
+            showError(detail.code);
+            break;
+        }
+      }
+
+      function describeDuration(s) {
+        const m = Math.round(s / 60);
+        return m < 1 ? 'less than a minute' : `${m} minute${m === 1 ? '' : 's'}`;
+      }
+
+      function showError(code) {
+        const err = ERRORS[code];
+        $('error-heading').textContent = err.heading;
+        $('error-message').textContent = err.message;
+        $('retry').hidden = !err.retry;
+        $('error').hidden = false;
+        freeze();
+        video.pause();
+        statusPending = null;
+        if (hadFocusInside()) $('error-heading').focus();
+      }
+
+      // ---------- Elapsed clock and LIVE badge ----------
+      setInterval(() => {
+        if (state === 'idle' || state === 'error') return;
+        $('elapsed').textContent = hms((Date.now() - startedAt) / 1000);
+        if (state === 'live') {
+          if (scenario === 'slow-network') latency = Math.min(9, latency + 0.35);
+          else latency = Math.max(2, latency - 1.5);
+          updateLiveBadge();
+        }
+      }, 1000);
+
+      function updateLiveBadge() {
+        const behind = Math.round(latency);
+        const isBehind = behind > TARGET_LATENCY + 2;
+        if (isBehind) {
+          $('live').removeAttribute('aria-disabled');
+          $('live').setAttribute('aria-label', `Go to live, ${behind} seconds behind`);
+          $('behind').textContent = `· ${behind} s behind`;
+          $('behind').hidden = false;
+          if (behind >= 10 && !behindAnnounced) {
+            behindAnnounced = true;
+            announce('10 seconds behind live. Press Live to catch up.');
+          }
+        } else {
+          $('live').setAttribute('aria-disabled', 'true');
+          $('live').setAttribute('aria-label', 'Live');
+          $('behind').hidden = true;
+          behindAnnounced = false;
+        }
+      }
+      function goLive(fromResume) {
+        const caught = Math.round(latency);
+        latency = 2;
+        updateLiveBadge();
+        if (caught > TARGET_LATENCY + 2) {
+          // Show what was caught up for a moment before the badge settles on LIVE.
+          $('behind').textContent = `· ${caught} s behind`;
+          $('behind').hidden = false;
+          later(() => updateLiveBadge(), 400);
+        }
+        if (fromResume || caught > TARGET_LATENCY + 2) {
+          $('toast').hidden = false;
+          later(() => ($('toast').hidden = true), TOAST_MS);
+          announce('Back live.');
+        }
+      }
+
+      // ---------- Controls visibility ----------
+      let hideTimer = 0;
+      let pointerOver = false;
+      function showControls() {
+        controls.classList.remove('is-hidden');
+        player.classList.remove('hide-cursor');
+        clearTimeout(hideTimer);
+        hideTimer = 0;
+        placeCues();
+      }
+      function scheduleHide() {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          if (state !== 'live' || controls.contains(document.activeElement) || pointerOver) return;
+          controls.classList.add('is-hidden');
+          if (document.fullscreenElement === player) player.classList.add('hide-cursor');
+          placeCues();
+        }, CONTROLS_HIDE_MS);
+      }
+      player.addEventListener('pointermove', () => {
+        showControls();
+        if (state === 'live') scheduleHide();
+      });
+      player.addEventListener('pointerleave', () => {
+        pointerOver = false;
+        if (state === 'live') scheduleHide();
+      });
+      controls.addEventListener('pointerenter', () => {
+        pointerOver = true;
+      });
+      controls.addEventListener('pointerleave', () => {
+        pointerOver = false;
+      });
+      controls.addEventListener('focusin', showControls);
+      controls.addEventListener('focusout', () => {
+        if (state === 'live') scheduleHide();
+      });
+
+      // ---------- Playback ----------
+      function togglePlay() {
+        if ($('play').getAttribute('aria-disabled') === 'true') return;
+        if (state === 'paused') {
+          latency = Math.max(latency, (Date.now() - pausedAt) / 1000);
+          setState('live');
+          goLive(true);
+        } else {
+          pausedAt = Date.now();
+          setState('paused');
+        }
+      }
+      $('play').addEventListener('click', togglePlay);
+      $('central-play').addEventListener('click', () => {
+        if (state === 'paused') {
+          $('unmute-chip').hidden = true;
+          togglePlay();
+          $('play').focus();
+        }
+      });
+      let lastTap = 0;
+      $('stage').addEventListener('click', (event) => {
+        if (event.target.closest('button, [role="alert"]')) return;
+        // A touch on hidden controls only reveals them; the next tap toggles.
+        if (event.pointerType === 'touch' && controls.classList.contains('is-hidden')) {
+          showControls();
+          scheduleHide();
+          return;
+        }
+        if (state === 'live' || state === 'buffering' || state === 'paused') togglePlay();
+      });
+      $('stage').addEventListener('contextmenu', (event) => event.preventDefault());
+
+      // ---------- Volume ----------
+      let lastVolume = 60;
+      function setVolume(value, { announceIt = true } = {}) {
+        value = Math.max(0, Math.min(100, value));
+        const slider = $('volume');
+        slider.value = value;
+        slider.setAttribute('aria-valuetext', `${value}%`);
+        video.volume = value / 100;
+        const muted = value === 0 || $('mute').getAttribute('aria-pressed') === 'true';
+        $('mute').dataset.vol = muted ? 'off' : value < 50 ? 'low' : 'high';
+        if (value > 0 && $('mute').getAttribute('aria-pressed') === 'true' && announceIt) setMuted(false, value);
+      }
+      function setMuted(muted, restoreTo) {
+        $('mute').setAttribute('aria-pressed', String(muted));
+        $('mute').setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+        if (muted) {
+          lastVolume = Number($('volume').value) || lastVolume;
+          $('mute').dataset.vol = 'off';
+          announce('Muted.', { toggle: true });
+        } else {
+          const v = restoreTo ?? lastVolume;
+          setVolume(v, { announceIt: false });
+          $('mute').dataset.vol = v < 50 ? 'low' : 'high';
+          announce(`Unmuted, volume ${v}%.`, { toggle: true });
+        }
+      }
+      $('mute').addEventListener('click', () => {
+        if ($('mute').getAttribute('aria-disabled') === 'true') return;
+        setMuted($('mute').getAttribute('aria-pressed') !== 'true');
+      });
+      $('volume').addEventListener('input', () => {
+        const v = Number($('volume').value);
+        if (v === 0) {
+          setVolume(0, { announceIt: false });
+          if ($('mute').getAttribute('aria-pressed') !== 'true') setMuted(true);
+        } else setVolume(v);
+      });
+      $('unmute-chip').addEventListener('click', () => {
+        $('unmute-chip').hidden = true;
+        setMuted(false);
+        $('mute').focus();
+      });
+
+      // ---------- LIVE badge ----------
+      $('live').addEventListener('click', () => {
+        if ($('live').getAttribute('aria-disabled') === 'true') return;
+        goLive(false);
+      });
+
+      // ---------- Captions ----------
+      function toggleCaptions() {
+        const cc = $('captions');
+        if (cc.hidden || cc.getAttribute('aria-disabled') === 'true') return;
+        const on = cc.getAttribute('aria-pressed') !== 'true';
+        cc.setAttribute('aria-pressed', String(on));
+        if (track) track.track.mode = on ? 'showing' : 'hidden';
+        announce(on ? 'Captions on.' : 'Captions off.', { toggle: true });
+      }
+      $('captions').addEventListener('click', toggleCaptions);
+
+      // ---------- Fullscreen ----------
+      function toggleFullscreen() {
+        if (document.fullscreenElement === player) document.exitFullscreen();
+        else player.requestFullscreen().catch(() => {});
+      }
+      if (!document.fullscreenEnabled) $('fullscreen').hidden = true;
+      $('fullscreen').addEventListener('click', toggleFullscreen);
+      document.addEventListener('fullscreenchange', () => {
+        const on = document.fullscreenElement === player;
+        $('fullscreen').setAttribute('aria-pressed', String(on));
+        $('fullscreen').setAttribute('aria-label', on ? 'Exit fullscreen' : 'Fullscreen');
+        if (!on) player.classList.remove('hide-cursor');
+        announce(on ? 'Fullscreen.' : 'Exited fullscreen.', { toggle: true });
+      });
+
+      // ---------- Keyboard shortcuts: act anywhere inside the player, except where a key is native. ----------
+      player.addEventListener('keydown', (event) => {
+        if (event.ctrlKey || event.altKey || event.metaKey) return;
+        const onSlider = event.target === $('volume');
+        const onButton = event.target.tagName === 'BUTTON';
+        const key = event.key.toLowerCase();
+        if ((key === ' ' || key === 'k') && !onSlider) {
+          // Space on a focused button is that button's own activation.
+          if (key === ' ' && onButton) return;
+          event.preventDefault();
+          togglePlay();
+        } else if (key === 'm') {
+          setMuted($('mute').getAttribute('aria-pressed') !== 'true');
+        } else if (key === 'f') {
+          toggleFullscreen();
+        } else if (key === 'c') {
+          toggleCaptions();
+        } else if ((key === 'arrowup' || key === 'arrowdown') && !onSlider) {
+          event.preventDefault();
+          const v = Number($('volume').value) + (key === 'arrowup' ? 5 : -5);
+          if (v <= 0) {
+            setVolume(0, { announceIt: false });
+            if ($('mute').getAttribute('aria-pressed') !== 'true') setMuted(true);
+          } else setVolume(v);
+        }
+        showControls();
+        if (state === 'live') scheduleHide();
+      });
+      // Enter and Space on an enabled LIVE badge are its click; disabled buttons swallow activation.
+      player.addEventListener('click', (event) => {
+        const button = event.target.closest('[aria-disabled="true"]');
+        if (button) event.stopPropagation();
+      }, true);
+
+      // ---------- Retry ----------
+      $('retry').addEventListener('click', () => {
+        $('error').hidden = true;
+        setState('connecting');
+        $('play').focus();
+        if (scenario === 'unauthorized') later(() => setState('error', { code: 'unauthorized' }), 1000);
+        else later(() => setState('live'), CONNECT_MS);
+      });
+
+      // ---------- Scenarios ----------
+      function reconnect(recover) {
+        let attempt = 0;
+        const step = () => {
+          attempt += 1;
+          $('reconnect-text').textContent = `Reconnecting… attempt ${attempt} of 5`;
+          if (recover && attempt === 2) {
+            later(() => {
+              setState('live');
+            }, 900);
+            return;
+          }
+          if (attempt >= 5) {
+            later(() => setState('error', { code: 'connection' }), 900);
+            return;
+          }
+          later(step, RECONNECT_SCHEDULE_MS[attempt] + 600);
+        };
+        setState('reconnecting');
+        later(step, RECONNECT_SCHEDULE_MS[0]);
+      }
+
+      function start(name) {
+        clearTimers();
+        scenario = name;
+        latency = 2;
+        behindAnnounced = false;
+        startedAt = Date.now() - 12 * 60 * 1000;
+        $('toast').hidden = true;
+        $('captions').hidden = name === 'no-captions';
+        if (name === 'no-captions') detachCaptions();
+        else attachCaptions();
+        $('region').setAttribute('aria-label', 'Video player: Lecture hall A');
+        setState('connecting');
+        switch (name) {
+          case 'slow-connect':
+            later(() => ($('connect-text').textContent = 'Still connecting…'), 5000);
+            later(() => setState('live'), SLOW_CONNECT_MS);
+            break;
+          case 'buffering':
+            later(() => setState('live'), CONNECT_MS);
+            const stall = () => {
+              if (state !== 'live') return later(stall, 10000);
+              setState('buffering');
+              later(() => {
+                if (state === 'buffering') setState('live');
+                later(stall, 10000);
+              }, STALL_MS);
+            };
+            later(stall, CONNECT_MS + 10000);
+            break;
+          case 'paused':
+            later(() => setState('live'), CONNECT_MS);
+            later(() => {
+              if (state === 'live') {
+                pausedAt = Date.now() - 14000; // pretend the viewer paused 14 s ago
+                setState('paused');
+              }
+            }, CONNECT_MS + 1500);
+            break;
+          case 'reconnect-ok':
+            later(() => setState('live'), CONNECT_MS);
+            later(() => reconnect(true), CONNECT_MS + 3000);
+            break;
+          case 'reconnect-fail':
+            later(() => setState('live'), CONNECT_MS);
+            later(() => reconnect(false), CONNECT_MS + 3000);
+            break;
+          case 'ended':
+            later(() => setState('live'), CONNECT_MS);
+            later(() => setState('ended'), CONNECT_MS + 5000);
+            break;
+          case 'unsupported':
+            later(() => setState('error', { code: 'unsupported' }), 1000);
+            break;
+          case 'unauthorized':
+            later(() => setState('error', { code: 'unauthorized' }), 1000);
+            break;
+          case 'autoplay-blocked':
+            later(() => {
+              setMuted(true);
+              setState('paused', { autoplayBlocked: true, muted: true });
+            }, CONNECT_MS);
+            break;
+          case 'slow-network':
+            later(() => setState('live'), CONNECT_MS);
+            const hiccup = () => {
+              if (state === 'live') {
+                setState('buffering');
+                later(() => state === 'buffering' && setState('live'), 1000);
+              }
+              later(hiccup, 6000);
+            };
+            later(hiccup, CONNECT_MS + 6000);
+            break;
+          default:
+            later(() => setState('live'), CONNECT_MS);
+        }
+      }
+
+      $('scenario').addEventListener('change', () => start($('scenario').value));
+      const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      function applyTheme() {
+        const choice = $('theme').value;
+        document.documentElement.dataset.theme =
+          choice === 'system' ? (darkScheme.matches ? 'dark' : 'light') : choice;
+      }
+      $('theme').addEventListener('change', applyTheme);
+      darkScheme.addEventListener('change', applyTheme);
+      $('reset').addEventListener('click', () => {
+        $('scenario').value = 'live';
+        $('theme').value = 'light';
+        applyTheme();
+        if ($('mute').getAttribute('aria-pressed') === 'true') setMuted(false, 60);
+        setVolume(60, { announceIt: false });
+        if ($('captions').getAttribute('aria-pressed') === 'true') toggleCaptions();
+        start('live');
+      });
+
+      setVolume(60, { announceIt: false });
+      start('live');
+    </script>
+  </body>
+</html>

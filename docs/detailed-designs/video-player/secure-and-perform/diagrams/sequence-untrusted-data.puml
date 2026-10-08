@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Render untrusted data and confine the token
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "SignalRVideoStreamTransport" as transport
+  participant "VideoPlayerAnnouncer" as announcer
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "MediaSource" as mse
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+host -> player : hubUrl, accessTokenFactory
+player -> session : start(streamId)
+session -> transport : configure(hubUrl, accessTokenFactory) unchanged (L2-078)
+transport -> transport : withUrl(hubUrl, { accessTokenFactory }); hubUrl never interpolated into HTML (L2-078)
+transport -> hub : Negotiate; token only on the transport (L2-078)
+session -> transport : describe(streamId)
+transport -> hub : invoke('Describe')
+hub --> transport : Descriptor whose title contains image markup with an onerror handler
+transport --> session : VideoStreamDescriptor
+session -> player : title signal set
+player -> player : aria-label attribute binding; status interpolation; ended panel interpolation (L2-078)
+player -> announcer : strings.connecting(title) written as textContent
+player --> viewer : Markup appears literally; window.__xss undefined
+session -> session : checkSupport(mimeType)
+alt isTypeSupported true and addSourceBuffer succeeds
+  session -> mse : isTypeSupported(mimeType) verbatim; addSourceBuffer(mimeType) verbatim (L2-078)
+  mse --> session : SourceBuffer
+  session -> transport : subscribe(streamId)
+else Returns false or throws
+  mse --> session : false, TypeError, or NotSupportedError
+  session -> session : mapError gives code unsupported; message from strings.errorUnsupported(mimeType) (L2-078)
+  session -> player : error { code, message, cause } without token or hubUrl query
+  player --> host : error emitted; stats never carry the token (L2-078)
+end
+note over host : README documents media-src blob:, connect-src hub origin, access_token query parameter, TLS outside localhost, no query-string logging (L2-078)
+@enduml

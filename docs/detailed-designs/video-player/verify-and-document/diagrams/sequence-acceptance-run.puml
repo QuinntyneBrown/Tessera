@@ -1,0 +1,63 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Run the acceptance suite
+actor "Maintainer" as maintainer
+box "Test runner - Playwright and vitest" #FFF4E5
+  participant "Acceptance spec" as spec
+  participant "VideoPlayerPage" as pageobj
+  participant "vitest adapter spec" as unit
+end box
+box "Frontend - Host application" #E0F2FE
+  participant "e2e-app /video-player" as app
+  participant "FixtureVideoStreamTransport" as fixture
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "SignalRVideoStreamTransport" as adapter
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+maintainer -> spec : pnpm e2e (Chromium only)
+spec -> pageobj : open('live') (L2-082)
+pageobj -> app : goto /video-player?scenario=live
+app -> fixture : Provide through VIDEO_STREAM_TRANSPORT
+app -> player : Mount with fixture transport
+player -> fixture : describe(streamId); subscribe(streamId)
+fixture -> fixture : Parse lecture-10s.fmp4 into init and fragments
+fixture --> player : kind 0 chunk, then one fragment per second (L2-082)
+spec -> pageobj : expectState('live'); expectNoAccessibilityViolations()
+pageobj -> player : Locate by role and name; axe scoped to t-video-player (L2-082)
+spec -> pageobj : dropConnection()
+pageobj -> fixture : window.__videoFixture.drop()
+fixture --> player : connectionEvents reconnecting
+spec -> pageobj : expectState('reconnecting'); expectNoAccessibilityViolations()
+spec -> pageobj : restoreConnection(); endStream(); failStream()
+pageobj -> fixture : restore(); end(); fail()
+spec -> pageobj : axe in buffering, paused, ended, each error code, captions showing, autoplay blocked (L2-082)
+spec -> pageobj : pressKey for each L2-069 criterion; useViewport widths; enlargeText; applyTextSpacing (L2-082)
+alt TESSERA_VIDEO_HUB_URL set
+  spec -> pageobj : open('backend', { hubUrl })
+  pageobj -> app : goto with demonstration hub
+  app -> player : Mount with SignalRVideoStreamTransport
+  player -> adapter : describe; subscribe
+  adapter -> hub : Describe then Subscribe over MessagePack
+  hub --> adapter : kind 0 chunk first, then media
+  spec -> pageobj : expectFirstChunkKind(0); expectFirstFrame() (L2-082)
+else Variable unset
+  spec -> spec : test.skip with reason (L2-082)
+end
+maintainer -> unit : pnpm test
+unit -> adapter : Construct with mocked HubConnection (start, invoke, stream, onreconnecting, onreconnected, onclose)
+unit -> unit : Assert MessagePackHubProtocol; Describe before Subscribe; resubscribe on reconnected; dispose on unsubscribe (L2-082)
+@enduml

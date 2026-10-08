@@ -1,0 +1,66 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Backpressure and supervision
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+  participant "FfmpegHealthCheck" as health
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamSessionRegistry" as registry
+  participant "LiveStreamSession" as session
+  participant "StreamSubscriber (slow)" as slow
+  participant "StreamSubscriber (healthy)" as healthy
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "FfmpegFragmentSource" as source
+  participant "FfmpegProcess" as process
+end box
+
+source --> session : Fragment
+session -> slow : TryWrite to bounded channel of 30
+alt Channel full
+  slow -> slow : DropOldest; Dropped++ (L2-090)
+  session -> session : Log streamId and drop count, no bytes (L2-090)
+end
+session -> healthy : TryWrite without blocking; timing unaffected (L2-090)
+loop Every 10 s sweep
+  session -> slow : LastReadUtc older than 60 s with items queued?
+  alt Not drained for 60 s
+    session -> slow : Complete with HubException("slow-consumer") (L2-090)
+    slow --> hub : Stream ends with slow-consumer for that client only
+  end
+end
+alt FFmpeg exits non-zero or reader throws
+  process --> source : Exit code and last 20 stderr lines (L2-091)
+  source --> session : Exception
+  session -> session : Log; wait 2 s; count restarts in last 60 s (L2-091)
+  alt Fewer than 3 restarts in 60 s
+    session -> source : RunSourceAsync again; subscribers stay attached
+    source --> session : New InitSegment; resend kind 0 to all (L2-087)
+  else Budget exhausted
+    session -> healthy : Complete with HubException("source-failed: ffmpeg exited {code}") (L2-091)
+    session -> registry : Remove(streamId)
+  end
+else No stdout bytes for 15 s while running
+  source -> process : Watchdog KillTree; treat as failed exit (L2-091)
+  source --> session : Exception; same restart budget
+end
+hub -> health : GET /healthz
+health -> process : Probe ffmpeg -version at Ffmpeg:Path
+alt FFmpeg not found
+  health --> hub : Unhealthy with error naming the path (L2-091)
+  hub -> session : Subscribe attaches; source cannot start
+  session -> healthy : Complete with HubException("source-failed ...") (L2-091)
+else FFmpeg available
+  health --> hub : Healthy with active session count (L2-094)
+end
+@enduml

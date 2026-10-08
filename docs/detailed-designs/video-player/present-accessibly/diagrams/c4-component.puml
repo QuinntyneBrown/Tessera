@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Present accessibly
+Container_Boundary(pkg, "@tessera/video-player in the browser") {
+  Component(vp, "VideoPlayer", "Angular component", "ResizeObserver narrow signal; stage pointerup and contextmenu; aspect-ratio binding")
+  Component(visibility, "ControlsVisibility", "Timer", "No auto-hide when narrow; show() on touch and control taps")
+  Component(scss, "video-player.scss", "Stylesheet", "Scrim, tokens, wrap, 44 px targets, container query, reduced motion, forced colors")
+  Component(stage, "Stage", "Template region", "Video, overlays, and the central play affordance")
+}
+Container_Ext(theme, "@tessera/theme", "Angular library", "Shared --t-* tokens")
+Container_Ext(os, "Operating system and browser", "Platform", "Media queries, pointer events, resize")
+Rel(vp, visibility, "narrow signal; show()")
+Rel(vp, stage, "Binds aspect-ratio and data-state; handles pointerup, contextmenu")
+Rel(scss, theme, "theme.token() fallbacks")
+Rel(os, scss, "prefers-reduced-motion, forced-colors, container width")
+Rel(os, vp, "ResizeObserver callbacks, pointerType")
+@enduml

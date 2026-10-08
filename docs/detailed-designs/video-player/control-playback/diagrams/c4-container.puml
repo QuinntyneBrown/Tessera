@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Control playback
+
+Person(viewer, "Viewer", "Operates the controls")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Binds captions, autoplay, muted and volume")
+  Container(player, "@tessera/video-player", "Angular library", "Control bar, autoplay fallback, remembered volume, host fullscreen, captions track")
+  Container(media, "Browser media and fullscreen APIs", "HTMLVideoElement, TextTrack, Fullscreen API", "Plays, pauses, mutes, shows cues, enters fullscreen")
+}
+Container_Ext(captions, "Caption file host", "HTTPS", "WebVTT file")
+Rel(viewer, player, "Activates controls in", "Pointer, touch, keyboard")
+Rel(host, player, "Binds captions, autoplay, muted, volume")
+Rel(player, media, "play, pause, muted, volume, track.mode, requestFullscreen on the host")
+Rel(media, captions, "Fetches the track", "HTTPS")
+@enduml

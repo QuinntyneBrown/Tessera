@@ -1,0 +1,69 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Control playback
+class VideoPlayer {
+  +captions: InputSignal<VideoPlayerCaptions | null | undefined>
+  +autoplay: InputSignal<boolean>
+  +muted: InputSignal<boolean>
+  +volume: InputSignal<number>
+  #state: Signal<VideoPlayerState>
+  #isMuted: WritableSignal<boolean>
+  #volumeValue: WritableSignal<number>
+  #captionsShowing: WritableSignal<boolean>
+  #isFullscreen: WritableSignal<boolean>
+  #autoplayBlocked: WritableSignal<boolean>
+  #fullscreenSupported: boolean
+  -rememberedVolume: number
+  -host: ElementRef<HTMLElement>
+  -video: Signal<ElementRef<HTMLVideoElement>>
+  #togglePlayPause(): void
+  #onStageClick(event: PointerEvent): void
+  #toggleMute(): void
+  #setVolume(value: number): void
+  #dismissUnmuteChip(): void
+  #unmuteFromChip(): void
+  #toggleFullscreen(): Promise<void>
+  #toggleCaptions(): void
+  -requestPlay(): Promise<void>
+  -onFullscreenChange(): void
+  -applyTrackMode(): void
+}
+class MediaSourcePipeline {
+  +seekToLive(): void
+  +bufferedEnd(): number
+}
+class VideoPlayerAnnouncer {
+  +status(message: string): void
+  +toggle(message: string): void
+}
+interface VideoPlayerCaptions {
+  +src: string
+  +srclang: string
+  +label: string
+}
+interface VideoPlayerStrings {
+  +play: string
+  +pause: string
+  +mute: string
+  +unmute: string
+  +fullscreen: string
+  +exitFullscreen: string
+  +captionsOn: string
+  +captionsOff: string
+  +unmuteChip: string
+  +unmuted(volume: number): string
+}
+VideoPlayer --> MediaSourcePipeline : seekToLive on resume
+VideoPlayer --> VideoPlayerAnnouncer : queues toggle messages
+VideoPlayer ..> VideoPlayerCaptions : renders as track element
+VideoPlayer ..> VideoPlayerStrings : names and messages
+@enduml

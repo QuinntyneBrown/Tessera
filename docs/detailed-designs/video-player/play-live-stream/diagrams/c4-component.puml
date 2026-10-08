@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Play live stream
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component", "Holds the video element reference and the stats output")
+  Component(session, "VideoStreamSession", "Internal orchestrator", "Feeds chunks, runs the 1 Hz tick and the live-edge watchdog")
+  Component(pipeline, "MediaSourcePipeline", "Internal", "MediaSource, SourceBuffer, append queue, prune, rebuild, seekToLive")
+  Component(announcer, "VideoPlayerAnnouncer", "Text queue", "Speaks Back live")
+}
+Container_Boundary(media, "Browser media") {
+  Component(mse, "MediaSource and SourceBuffer", "Media Source Extensions", "Accepts appended fragments; fires sourceopen and updateend")
+  Component(video, "HTMLVideoElement", "Native video element", "Decodes and renders; exposes buffered and currentTime")
+}
+Rel(session, pipeline, "push(chunk); seekToLive()")
+Rel(session, player, "Emits stats; sets state")
+Rel(session, announcer, "Queues Back live")
+Rel(pipeline, mse, "addSourceBuffer, appendBuffer, remove")
+Rel(pipeline, video, "src = object URL; currentTime; buffered")
+Rel(video, session, "error, waiting, playing events")
+@enduml

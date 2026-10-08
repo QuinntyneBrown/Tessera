@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Recover from interruptions
+
+Person(viewer, "Viewer", "Watches and retries")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host LMS application", "Angular", "Supplies hubUrl, streamId, accessTokenFactory; observes error and stateChange")
+  Container(player, "@tessera/video-player", "Angular library", "Runs the reconnect schedule, maps failures, renders the error panel")
+}
+Container_Ext(hub, "Host SignalR hub", "ASP.NET Core SignalR", "Streams VideoChunk; connections drop and return")
+Rel(viewer, player, "Activates Retry in", "Keyboard, pointer, touch")
+Rel(host, player, "Binds inputs; receives error output")
+Rel(player, host, "Calls accessTokenFactory on each fresh connection")
+Rel(player, hub, "Reconnects and re-subscribes", "WebSocket, MessagePack")
+@enduml

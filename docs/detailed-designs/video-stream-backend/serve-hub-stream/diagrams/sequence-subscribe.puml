@@ -1,0 +1,63 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Subscribe to a stream
+box "Frontend - Host application" #E0F2FE
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "CORS and SignalR negotiate" as negotiate
+  participant "DemoTokenAuthenticationHandler" as auth
+  participant "VideoStreamHub" as hub
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamSessionRegistry" as registry
+  participant "LiveStreamSession" as session
+  participant "StreamSubscriber" as subscriber
+end box
+
+transport -> negotiate : POST /hubs/video/negotiate with Authorization bearer or access_token
+negotiate -> negotiate : Check Origin against Cors:AllowedOrigins (L2-092)
+alt Origin not allowed
+  negotiate --> transport : No CORS headers; browser blocks
+else Origin allowed
+  negotiate -> auth : Authenticate on the hub path only (L2-092)
+end
+alt Token missing or wrong
+  auth --> transport : 401 (L2-092)
+else Token equals Demo:AccessToken
+  auth --> negotiate : Principal; negotiate succeeds
+end
+transport -> negotiate : Handshake naming a protocol
+alt Protocol is json
+  negotiate --> transport : Handshake refused; MessagePack only (L2-088)
+else Protocol is messagepack
+  negotiate --> transport : Handshake accepted
+end
+transport -> hub : stream Subscribe(streamId)
+hub -> hub : StreamIdValidator; HubException("unknown-stream") on failure (L2-085)
+hub -> registry : GetOrCreate(streamId)
+registry --> hub : LiveStreamSession
+hub -> session : Attach(new StreamSubscriber)
+session -> subscriber : Enqueue cached kind 0 chunk when present (L2-087)
+loop await foreach subscriber.ReadAllAsync(ct)
+  subscriber --> hub : VideoChunk
+  hub --> transport : yield VideoChunk with integer keys, up to 1 MB (L2-088)
+end
+alt Source ended
+  hub --> transport : Stream completion (L2-088)
+else Source failed or subscriber evicted
+  hub --> transport : HubException("source-failed: ...") or HubException("slow-consumer") (L2-088)
+else Client disposes stream or disconnects
+  transport -> hub : ct cancelled
+  hub -> session : Detach(subscriber) in finally, within 1 s (L2-088)
+end
+@enduml

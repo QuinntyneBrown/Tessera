@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Volume, mute, captions and fullscreen
+actor "Viewer" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoPlayerAnnouncer" as announcer
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "<video> and TextTrack" as video
+  participant "document (Fullscreen API)" as doc
+end box
+
+viewer -> player : Activate Mute (volume 60, unmuted)
+player -> player : rememberedVolume = 60
+player -> video : muted = true (L2-062)
+player -> player : aria-pressed="true"; name "Unmute"
+player -> announcer : "Muted."
+viewer -> player : Activate Unmute
+player -> video : muted = false; volume = 0.6
+player -> announcer : unmuted(60): "Unmuted, volume 60%." (L2-062)
+viewer -> player : Arrow key on the focused slider
+player -> player : Native step 5 clamped 0-100; input event; aria-valuenow and aria-valuetext "60%"
+player -> video : volume = value / 100 (L2-062)
+alt Value is 0
+  player -> player : Muted icon; mute control aria-pressed="true"
+else Non-zero value
+  player -> video : muted = false
+end
+viewer -> player : Activate Captions (track rendered with mode hidden)
+alt Toggled on
+  player -> video : track.mode = "showing" (L2-064)
+  player -> announcer : "Captions on."
+else Toggled off
+  player -> video : track.mode = "hidden"
+  player -> announcer : "Captions off."
+end
+viewer -> player : Activate Fullscreen (document.fullscreenEnabled true)
+player -> doc : host.requestFullscreen() (L2-063)
+doc --> player : fullscreenchange
+player -> player : isFullscreen = (fullscreenElement === host); name "Exit fullscreen"; aria-pressed="true"
+player -> announcer : "Fullscreen."
+viewer -> player : Escape or Fullscreen control
+player -> doc : exitFullscreen()
+doc --> player : fullscreenchange
+player -> player : isFullscreen derived from fullscreenElement, never from the activation (L2-063)
+player -> announcer : "Exited fullscreen."
+@enduml

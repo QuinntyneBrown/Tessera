@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Control playback
+
+Person(viewer, "Viewer", "Plays, pauses, mutes, enters fullscreen, and shows captions")
+System(app, "Host LMS application with @tessera/video-player", "Renders its own control bar over a native video element")
+System_Ext(hub, "Video stream hub", "Keeps streaming while the viewer is paused")
+System_Ext(captions, "Caption file host", "Serves the WebVTT file named by captions.src")
+Rel(viewer, app, "Operates the controls in", "Pointer, touch, keyboard")
+Rel(app, hub, "Stays subscribed to", "WebSocket, MessagePack")
+Rel(app, captions, "Loads the WebVTT track from", "HTTPS")
+@enduml

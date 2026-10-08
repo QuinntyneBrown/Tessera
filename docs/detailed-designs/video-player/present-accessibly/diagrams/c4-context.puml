@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Present accessibly
+
+Person(viewer, "Viewer", "Watches on any viewport, zoom, text size, colour mode, or touch screen")
+System(app, "Host LMS application with @tessera/video-player", "Renders the player with contrast, reflow, and touch handling")
+System_Ext(os, "Operating system and browser settings", "Viewport, zoom, text size, forced colors, reduced motion, pointer type")
+Rel(viewer, app, "Watches and taps or clicks in", "Browser")
+Rel(os, app, "Exposes preferences through media queries and pointer events")
+@enduml

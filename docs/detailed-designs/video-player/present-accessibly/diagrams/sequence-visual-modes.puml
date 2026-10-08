@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Visual modes
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Browser and OS settings" as os
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "video-player.scss" as scss
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "Video element" as video
+end box
+
+
+vp -> scss : Render control bar over the scrim
+scss --> viewer : Text 4.5:1, icons and focus ring 3:1 against the scrim, independent of the frame (L2-072)
+viewer -> vp : Activate Mute, Captions, or Fullscreen
+vp --> viewer : Icon swap plus aria-pressed; LIVE badge differs by text, not colour alone (L2-072)
+alt prefers-reduced-motion: reduce
+  os -> scss : Media query matches
+  scss -> scss : motion-duration 0ms; animations removed; spinner static ring (L2-072)
+  scss --> viewer : Controls show and hide instantly
+  vp -> video : Playback continues unchanged
+else No preference
+  scss --> viewer : LIVE dot pulse, spinner, fade on --t-video-player-motion-duration
+end
+alt forced-colors: active
+  os -> scss : Media query matches
+  scss -> scss : Scrim Canvas; controls ButtonText; pressed and focus Highlight (L2-072)
+  scss -> scss : forced-color-adjust none on the LIVE dot only
+  scss --> viewer : Every icon visible with a ButtonText border
+else Author colours
+  scss -> scss : --t-video-player-* over --t-* over defaults
+  scss --> viewer : Light or dark token pairs at the same ratios
+end
+@enduml

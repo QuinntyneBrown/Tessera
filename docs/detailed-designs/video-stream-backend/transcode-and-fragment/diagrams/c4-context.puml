@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Transcode and fragment
+
+Person(viewer, "Viewer", "Watches a live lecture stream in the LMS")
+System(host, "Host LMS browser application with @tessera/video-player", "Appends the initialisation segment then media fragments")
+System(demo, "Tessera.VideoStream.Demo", "Runs FFmpeg and splits its output into chunks")
+System_Ext(ffmpeg, "FFmpeg", "External transcoder producing fragmented MP4 on stdout")
+System_Ext(media, "MP4 media file", "Local file under MediaRoot")
+Rel(viewer, host, "Watches", "Browser")
+Rel(host, demo, "Subscribe(streamId)", "SignalR MessagePack")
+Rel(demo, ffmpeg, "Starts with an argument list and reads stdout", "Child process pipe")
+Rel(ffmpeg, media, "Reads in real time", "-re -i file")
+@enduml

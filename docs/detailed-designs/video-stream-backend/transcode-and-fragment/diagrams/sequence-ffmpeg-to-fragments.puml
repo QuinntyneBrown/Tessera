@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Parse FFmpeg output into fragments
+box "Backend - Streaming" #ECFDF3
+  participant "LiveStreamSession" as session
+  participant "FfmpegFragmentSource" as source
+  participant "Mp4FragmentReader" as reader
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "FfmpegProcess" as process
+  participant "ffmpeg" as ffmpeg
+  participant "MP4 file" as file
+end box
+
+session -> source : ReadAsync(ct)
+source -> process : Start(entry) with ProcessStartInfo.ArgumentList (L2-086)
+process -> ffmpeg : Spawn -re [-stream_loop -1] -i file ... -movflags frag_keyframe+empty_moov+default_base_moof pipe:1
+process -> process : Begin stderr drain; keep last 20 lines (L2-091)
+ffmpeg -> file : Read at real-time rate
+source -> reader : ReadAsync(process.Stdout, ct)
+loop Until stdout ends or ct cancels
+  ffmpeg --> reader : Arbitrary byte slice on stdout
+  reader -> reader : Buffer until an 8-byte header and the whole box are present (L2-086)
+  alt Header size 0 or 1
+    reader --> source : throw InvalidDataException (L2-086)
+    source --> session : Source failed; handled per L2-091
+  else ftyp then moov
+    reader --> source : InitSegment(ftyp+moov)
+    source --> session : InitSegment
+    session -> session : Cache CurrentInit (L2-087)
+  else moof then mdat
+    reader --> source : Fragment(moof+mdat)
+    source --> session : Fragment
+    session -> session : Fan out kind 1 to subscribers
+  else Other box type
+    reader -> reader : Discard box
+  end
+end
+alt Exit code 0 at end of file
+  process --> source : Stdout closed
+  source --> session : Enumerable completes
+else Non-zero exit
+  process --> source : ExitCode and last 20 stderr lines
+  source --> session : Exception; supervision per L2-091
+end
+@enduml

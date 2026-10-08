@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Present accessibly
+
+Person(viewer, "Viewer", "Resizes, zooms, enlarges text, uses touch")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host LMS application", "Angular", "Sizes the player's container; may set --t-video-player-* overrides")
+  Container(theme, "@tessera/theme", "Angular library", "Shared --t-* semantic tokens for light and dark")
+  Container(player, "@tessera/video-player", "Angular library", "Scrim, tokens, container query layout, reduced motion, forced colors, touch handling")
+}
+Container_Ext(os, "Operating system and browser", "Platform", "Media queries and pointer events")
+Rel(viewer, player, "Taps, clicks, resizes", "Pointer and touch")
+Rel(host, player, "Contains and sizes")
+Rel(player, theme, "Falls back to shared tokens", "theme.token()")
+Rel(os, player, "prefers-reduced-motion, forced-colors, pointerType")
+@enduml

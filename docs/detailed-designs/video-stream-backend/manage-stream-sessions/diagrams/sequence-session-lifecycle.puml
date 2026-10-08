@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Session lifecycle
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+  participant "Host lifetime" as lifetime
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamSessionRegistry" as registry
+  participant "LiveStreamSession" as session
+  participant "StreamSubscriber" as subscriber
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "FfmpegFragmentSource" as source
+  participant "FfmpegProcess" as process
+end box
+
+hub -> registry : GetOrCreate(streamId) for the first subscriber
+registry -> session : new LiveStreamSession(entry, sourceFactory)
+hub -> session : Attach(subscriber)
+session -> source : RunSourceAsync; state Starting (L2-089)
+source -> process : Start(entry)
+source --> session : InitSegment
+session -> session : Cache init; state Live
+session -> subscriber : kind 0 then media
+hub -> session : Attach(second subscriber)
+session --> hub : Running session reused (L2-089)
+hub -> session : Detach(last subscriber)
+session -> session : Start idle grace of IdleStopSeconds (10 s) (L2-089)
+alt New subscriber within the grace period
+  hub -> session : Attach(subscriber)
+  session -> session : Cancel idle stop; reuse source (L2-089)
+else Grace period elapses
+  session -> source : Cancel read
+  source -> process : KillTree (entireProcessTree) (L2-089)
+  session -> session : Clear cached init; state Stopped
+  session -> registry : Remove(streamId)
+end
+alt Loop false and FFmpeg exits 0 at end of file
+  process --> source : Stdout closed, exit code 0
+  source --> session : Enumerable completes
+  session -> subscriber : Complete channel; hub stream completes (L2-089)
+  session -> registry : Remove(streamId)
+end
+lifetime -> registry : ApplicationStopping
+registry -> session : StopAsync for every session, concurrently
+session -> process : KillTree
+registry --> lifetime : All processes killed within 5 s (L2-089)
+@enduml

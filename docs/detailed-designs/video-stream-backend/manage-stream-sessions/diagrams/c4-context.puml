@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Manage stream sessions
+
+Person(viewer, "Viewer", "Watches a live lecture stream in the LMS")
+System(host, "Host LMS browser application with @tessera/video-player", "Subscribes and unsubscribes as the viewer arrives and leaves")
+System(demo, "Tessera.VideoStream.Demo", "Starts, shares, restarts, and stops one FFmpeg process per watched stream")
+System_Ext(ffmpeg, "FFmpeg", "External transcoder process")
+System_Ext(media, "MP4 media file", "Local file under MediaRoot")
+Rel(viewer, host, "Opens and closes the player", "Browser")
+Rel(host, demo, "Subscribe; dispose", "SignalR MessagePack")
+Rel(demo, ffmpeg, "Starts on first subscriber; kills after grace period or on shutdown; restarts on failure")
+Rel(ffmpeg, media, "Reads")
+@enduml

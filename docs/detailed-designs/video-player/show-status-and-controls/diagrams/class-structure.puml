@@ -1,0 +1,75 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Show status and controls
+enum VideoPlayerState {
+  idle
+  connecting
+  live
+  buffering
+  paused
+  reconnecting
+  ended
+  error
+}
+class VideoPlayer {
+  +stateChange: OutputEmitterRef<VideoPlayerState>
+  #state: Signal<VideoPlayerState>
+  #statusText: Signal<string>
+  #liveDuration: Signal<string>
+  #controlsHidden: Signal<boolean>
+  -bufferingAnnounceTimer: number | null
+  +setState(next: VideoPlayerState): void
+  -onWaiting(): void
+  -onPlaying(): void
+  -onEnded(): void
+  -onStageTap(event: PointerEvent): void
+}
+class VideoStreamSession {
+  -stallTimer: number | null
+  -timeoutTimer: number | null
+  -sourceEnded: boolean
+  -onChunk(chunk: VideoChunk): void
+  -onComplete(): void
+  -restartStallTimers(): void
+  -onStall(): void
+  -onTimeout(): void
+}
+class ControlsVisibility {
+  +visible: Signal<boolean>
+  +hover: WritableSignal<boolean>
+  +focusWithin: WritableSignal<boolean>
+  +narrow: WritableSignal<boolean>
+  +touch: WritableSignal<boolean>
+  -hideTimer: number | null
+  -hideMs: number = 3000
+  +show(): void
+  +setState(state: VideoPlayerState): void
+  +tapReveals(): boolean
+  -scheduleHide(): void
+  -hide(): void
+  +destroy(): void
+}
+class MediaSourcePipeline {
+  +markEnded(): void
+  -endOfStreamWhenDrained(): void
+}
+class VideoPlayerAnnouncer {
+  +status(message: string): void
+}
+VideoPlayer --> VideoPlayerState : holds exactly one
+VideoPlayer "1" *-- "1" ControlsVisibility : owns
+VideoPlayer "1" *-- "0..1" VideoStreamSession : owns
+VideoStreamSession --> VideoPlayer : setState
+VideoStreamSession --> MediaSourcePipeline : markEnded
+VideoPlayer --> VideoPlayerAnnouncer : status messages
+ControlsVisibility ..> VideoPlayerState : hides only while live
+@enduml

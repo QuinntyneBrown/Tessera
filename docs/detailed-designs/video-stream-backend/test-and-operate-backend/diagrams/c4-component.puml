@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Test and operate backend
+
+Container_Boundary(tests, "Tessera.VideoStream.Demo.Tests") {
+  Component(readerTests, "Mp4FragmentReaderTests", "xunit class", "Split reads, init before fragments, size 0 and 1 boxes")
+  Component(sessionTests, "LiveStreamSessionTests", "xunit class", "Start, grace stop, late joiner, restart, drop-oldest, eviction, failure")
+  Component(hubTests, "VideoStreamHubTests", "xunit class", "WebApplicationFactory and MessagePack client: 401, unknown stream, descriptor, order, JSON refusal")
+  Component(integration, "FfmpegPipelineIntegrationTest", "xunit class, Integration trait", "Real pipeline to the first fragment; skipped without ffmpeg")
+  Component(fixtureSource, "FixtureFragmentSource", "IFragmentSource", "Replays Fixtures/lecture-10s.fmp4 with optional delay, loop, and FailAfter")
+}
+Container_Boundary(hubapp, "SignalR hub application") {
+  Component(reader, "Mp4FragmentReader", "Pure parser", "Under test")
+  Component(session, "LiveStreamSession", "Session", "Consumes IFragmentSource")
+  Component(hub, "VideoStreamHub", "SignalR hub", "Describe and Subscribe")
+  Component(health, "FfmpegHealthCheck", "IHealthCheck", "/healthz: ffmpeg availability and active sessions")
+}
+Rel(readerTests, reader, "Feeds sliced fixture bytes")
+Rel(sessionTests, session, "Constructs with FixtureFragmentSource and TimeProvider")
+Rel(hubTests, hub, "Connects with MessagePackHubProtocol")
+Rel(hubTests, health, "GET /healthz")
+Rel(sessionTests, fixtureSource, "Supplies")
+Rel(hubTests, fixtureSource, "Replaces the session factory with")
+Rel(fixtureSource, reader, "Parses the fixture with")
+Rel(integration, health, "Probes ffmpeg; skips when absent")
+@enduml

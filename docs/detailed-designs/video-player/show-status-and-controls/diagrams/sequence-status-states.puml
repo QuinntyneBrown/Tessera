@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Playback status states
+box "Frontend - Host application" #E0F2FE
+  participant "Host page" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "MediaSourcePipeline" as pipeline
+  participant "VideoPlayerAnnouncer" as announcer
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "<video>" as video
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+video --> player : waiting while live
+player -> player : setState(buffering); spinner over the last frame (L2-066)
+player -> player : Start 1000 ms announce timer
+alt playing within 1000 ms
+  video --> player : playing
+  player -> player : setState(live); cancel timer; nothing announced
+else Still buffering at 1000 ms
+  player -> announcer : "Buffering." once (L2-066)
+  video --> player : playing
+  player -> player : setState(live)
+end
+hub --> session : Chunk
+session -> session : Restart 10 s and 30 s stall timers
+alt No chunk for 10 s
+  session -> player : Status text "Waiting for the source..."; setState(buffering) (L2-066)
+else No chunk for 30 s
+  session -> player : setState(error, code stalled); Retry offered (L2-066)
+end
+hub --> session : Subscribe stream completes
+session -> pipeline : markEnded()
+pipeline -> pipeline : Drain the append queue
+pipeline -> video : mediaSource.endOfStream()
+video --> player : ended after buffered media plays out
+player -> player : setState(ended); "Stream ended" with live duration; all controls except Fullscreen aria-disabled (L2-066)
+player -> announcer : endedAfter(duration): "Stream ended. It was live for {duration}."
+note over player : Every setState(next) with next different from the current state
+player --> host : stateChange emits once (L2-066)
+player -> player : Host attribute data-state = state
+@enduml

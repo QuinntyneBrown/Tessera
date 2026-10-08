@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Test and operate backend
+
+Person(dev, "Developer", "Runs tests and the demonstration")
+Container_Ext(host, "Host LMS browser application", "Angular dev app with @tessera/video-player", "Plays the stream end to end")
+System_Boundary(demo, "Tessera.VideoStream.Demo") {
+  Container(hubapp, "SignalR hub application", "ASP.NET Core", "Hub, sessions, catalogue, /healthz")
+  Container(tests, "Tessera.VideoStream.Demo.Tests", "xunit", "Reader, session, and hub tests over the fixture; one Integration test")
+  Container(ffmpeg, "FFmpeg process", "ffmpeg child process", "Real pipeline; absent on CI")
+  Container(media, "Media files", "Filesystem under MediaRoot", "lecture-10s.fmp4 fixture and local MP4 files")
+}
+Rel(dev, tests, "dotnet test")
+Rel(dev, hubapp, "dotnet run; GET /healthz")
+Rel(dev, host, "ng serve; opens the player page")
+Rel(tests, hubapp, "Hosts in WebApplicationFactory with FixtureFragmentSource")
+Rel(tests, media, "Replays the fixture")
+Rel(host, hubapp, "Describe; Subscribe", "SignalR MessagePack over HTTPS")
+Rel(hubapp, ffmpeg, "Starts when a session begins", "Pipes")
+Rel(ffmpeg, media, "Reads")
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Play live stream
+
+Person(viewer, "Viewer", "Watches a live stream near its live edge")
+System(app, "Host LMS application with @tessera/video-player", "Appends fragmented MP4 chunks through Media Source Extensions")
+System_Ext(hub, "Video stream hub", "Pushes an initialisation segment and about one media fragment per second")
+Rel(viewer, app, "Watches the stream in", "Browser")
+Rel(app, hub, "Receives VideoChunk values from", "WebSocket, MessagePack")
+@enduml

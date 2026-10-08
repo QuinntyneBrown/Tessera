@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Tab order and focus recovery
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "Control bar template" as bar
+  participant "VideoStreamSession" as session
+end box
+
+
+viewer -> bar : Tab into the player
+bar --> viewer : play/pause (L2-069)
+viewer -> bar : Tab
+bar --> viewer : mute
+viewer -> bar : Tab
+bar --> viewer : volume slider (when shown)
+viewer -> bar : Tab
+bar --> viewer : LIVE badge
+viewer -> bar : Tab
+bar --> viewer : captions (when supplied)
+viewer -> bar : Tab
+bar --> viewer : fullscreen (when supported)
+note over bar : The stage has no tabindex and is never in the Tab sequence
+alt Focused control becomes aria-disabled
+  session -> vp : state ended
+  vp -> bar : aria-disabled="true" on every control except fullscreen
+else Focused control is removed
+  host -> vp : captions set to null
+  vp -> bar : Captions control removed from the template
+end
+vp -> vp : afterRenderEffect reads document.activeElement
+vp -> vp : focusNearestEnabled(index): preceding enabled control, else following (L2-069)
+vp -> bar : focus() on the nearest enabled control
+bar --> viewer : Focus stays inside the player, never on body
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Hide and reveal the control bar
+actor "Viewer" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "ControlsVisibility" as visibility
+end box
+
+viewer -> player : Pointer rests over the stage; state live; width at least 47.5em
+player -> visibility : pointermove: show(); restart 3000 ms timer (L2-065)
+visibility -> visibility : Timer elapses; state live, not hovered, not focused, not narrow
+visibility --> player : visible = false
+player -> player : Add hidden class; bar stays in DOM, focusable, no aria-hidden (L2-065)
+alt Pointer moves, key pressed, or a control receives focus
+  viewer -> player : pointermove, keydown or focusin
+  player -> visibility : show()
+  visibility --> player : visible = true within one animation frame; timer restarts (L2-065)
+else Focus inside the bar or pointer over it when the timer elapses
+  visibility -> visibility : hover or focusWithin true: rearm, stay visible (L2-065)
+else State paused, buffering, connecting, reconnecting, ended or error
+  player -> visibility : setState(state)
+  visibility -> visibility : visible = true; timer cleared (L2-065)
+end
+viewer -> player : Tap on the stage (pointerType touch) while hidden
+player -> visibility : tapReveals()
+alt Controls hidden
+  visibility -> visibility : show(); touch = true
+  visibility --> player : Reveal only; playback unchanged (L2-065)
+else Controls visible
+  visibility --> player : Toggle playback (L2-061)
+end
+opt Host narrower than 47.5em
+  player -> visibility : ResizeObserver: narrow = true
+  visibility -> visibility : Bar in flow below the stage; never hides (L2-065)
+end
+opt prefers-reduced-motion: reduce
+  player -> player : Motion duration 0 ms; show and hide are instant (L2-065)
+end
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Resolve stream catalogue
+
+Person(viewer, "Viewer", "Watches a stream")
+Container_Ext(host, "Host LMS browser application", "Angular with @tessera/video-player", "Invokes Describe before Subscribe")
+System_Boundary(demo, "Tessera.VideoStream.Demo") {
+  Container(hubapp, "SignalR hub application", "ASP.NET Core", "Binds the catalogue from configuration and answers Describe")
+  Container(ffmpeg, "FFmpeg process", "ffmpeg child process", "Not started by Describe")
+  Container(media, "Media files", "Filesystem under MediaRoot", "Catalogued MP4 files")
+}
+Rel(viewer, host, "Uses", "Browser")
+Rel(host, hubapp, "Describe(streamId)", "SignalR MessagePack over HTTPS")
+Rel(hubapp, media, "Validates each File path at startup")
+Rel(hubapp, ffmpeg, "Starts on first Subscribe only")
+@enduml

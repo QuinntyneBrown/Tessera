@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Live edge, buffer window, gaps and quota
+box "Frontend - Package" #E0F2FE
+  participant "VideoStreamSession" as session
+  participant "MediaSourcePipeline" as pipeline
+  participant "VideoPlayerAnnouncer" as announcer
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "SourceBuffer" as sb
+  participant "<video>" as video
+end box
+
+sb --> pipeline : updateend after the first media append
+pipeline -> video : currentTime = max(bufferedStart, bufferedEnd - 3) (L2-060)
+pipeline --> session : First media buffered
+session -> video : play() subject to the autoplay policy (L2-062)
+loop Every 1000 ms while connecting, live, buffering, paused or reconnecting
+  session -> video : Read buffered end and currentTime
+  session -> session : latencySeconds = bufferedEnd - currentTime rounded to 0.1 (L2-060)
+  session --> session : Emit stats
+  alt State live and latency > 8 s on two consecutive ticks
+    session -> pipeline : seekToLive()
+    pipeline -> video : currentTime = newest range end - 3 (L2-060)
+    session -> announcer : "Back live."
+  end
+end
+sb --> pipeline : updateend after an append
+alt currentTime - bufferedStart > 60 s
+  pipeline -> sb : remove(0, currentTime - 30) (L2-060)
+  sb --> pipeline : updateend; next queued append proceeds
+end
+alt Chunk appended after a seq gap lands in a new buffered range
+  pipeline -> video : currentTime = new range end - 3; no error (L2-060)
+end
+alt appendBuffer throws QuotaExceededError
+  sb --> pipeline : QuotaExceededError
+  pipeline -> sb : remove(0, currentTime - 30)
+  sb --> pipeline : updateend
+  pipeline -> sb : Retry appendBuffer once (L2-059)
+  alt Retry throws again
+    pipeline --> session : Failure
+    session -> session : setState(error, code decode)
+  end
+end
+@enduml

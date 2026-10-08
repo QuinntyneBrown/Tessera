@@ -1,0 +1,101 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Secure and perform
+
+class VideoPlayer {
+  +hubUrl: InputSignal<string | null>
+  +accessTokenFactory: InputSignal<(() => string | Promise<string>) | undefined>
+  +titleOverride: InputSignal<string | undefined>
+  -uid: number
+  -title: Signal<string>
+  -regionLabel: Signal<string>
+  -onFullscreenChange(): void
+  +ngOnDestroy(): void
+}
+
+class VideoStreamSession {
+  -disposed: boolean
+  -subscription: Subscription | undefined
+  -stallTimer: number | undefined
+  -timeoutTimer: number | undefined
+  -statsTimer: number | undefined
+  -bufferingAnnounceTimer: number | undefined
+  +start(streamId: string): void
+  +stop(): void
+  -checkSupport(mimeType: string): boolean
+  -mapError(cause: unknown): VideoPlayerError
+}
+
+class MediaSourcePipeline {
+  -mediaSource: MediaSource | undefined
+  -sourceBuffer: SourceBuffer | undefined
+  -objectUrl: string | undefined
+  -queue: VideoChunk[]
+  +attach(video: HTMLVideoElement, mimeType: string): void
+  +append(chunk: VideoChunk): void
+  +prune(currentTime: number): void
+  +dispose(): void
+}
+
+class ReconnectPolicy {
+  -schedule: number[]
+  -attempt: number
+  -timer: number | undefined
+  +next(): number | undefined
+  +reset(): void
+  +cancel(): void
+}
+
+class SignalRVideoStreamTransport {
+  -connection: HubConnection | undefined
+  +configure(hubUrl: string, accessTokenFactory?: () => string | Promise<string>): void
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +stop(): Promise<void>
+}
+
+class ControlsVisibility {
+  -hideTimer: number | undefined
+  +show(): void
+  +scheduleHide(): void
+  +destroy(): void
+}
+
+class VideoPlayerAnnouncer {
+  -coalesceTimer: number | undefined
+  +announce(text: string, toggle: boolean): void
+  +clear(): void
+}
+
+interface VideoPlayerError {
+  +code: VideoPlayerErrorCode
+  +message: string
+  +cause: unknown
+}
+
+class "Performance budgets (L2-079)" as Budgets <<measured>> {
+  +firstFrameMs: 2000 at 4x slowdown, 95 of 100
+  +bufferBehindSeconds: 60 plus one fragment
+  +longTaskMs: 50, 95 of 100 appends
+  +pausedTimers: statistics tick only
+  +controlsUpdate: one animation frame
+}
+
+VideoPlayer *-- VideoStreamSession : stop() on destroy
+VideoPlayer *-- ControlsVisibility : destroy() via DestroyRef
+VideoPlayer *-- VideoPlayerAnnouncer : clear() via DestroyRef
+VideoStreamSession *-- MediaSourcePipeline : dispose()
+VideoStreamSession *-- ReconnectPolicy : cancel()
+VideoStreamSession --> SignalRVideoStreamTransport : configure(); stop()
+VideoStreamSession ..> VideoPlayerError : maps without token
+MediaSourcePipeline ..> Budgets : bounded by
+@enduml

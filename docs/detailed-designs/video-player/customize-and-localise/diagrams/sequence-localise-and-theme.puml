@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Localise and theme the player
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Host providers and styles" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VIDEO_PLAYER_I18N" as i18n
+  participant "VideoPlayerAnnouncer" as announcer
+  participant "video-player.scss" as styles
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "<video>" as video
+end box
+
+host -> player : Provide { reconnecting: (attempt, max) => "Versuch attempt von max" } (L2-076)
+player -> i18n : inject(VIDEO_PLAYER_I18N)
+i18n --> player : Partial override
+player -> player : strings = { ...DEFAULT_VIDEO_PLAYER_STRINGS, ...override } once (L2-076)
+player -> player : Control names, status text, and panels read strings
+player -> announcer : strings.connecting(title) as plain text
+viewer -> player : Mute then unmute at volume 60
+player -> announcer : strings.muted
+player -> announcer : strings.unmuted(60) (L2-076)
+player -> player : Status reads strings.reconnecting(attempt, 5) during reconnect
+host -> styles : --t-video-player-accent on an ancestor; shared theme applied (L2-077)
+styles -> styles : var(--t-video-player-accent, theme.token('colorBrandBackground'))
+styles --> player : Component token wins over shared token over built-in default (L2-077)
+viewer -> styles : System colour scheme changes
+styles -> styles : prefers-color-scheme re-evaluates shared tokens; color-scheme updates
+styles --> player : No signal write, no handler, focus unchanged (L2-077)
+video --> viewer : Playback continues
+@enduml

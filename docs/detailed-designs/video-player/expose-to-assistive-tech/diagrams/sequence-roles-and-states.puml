@@ -1,0 +1,46 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Roles, names, and states
+actor "Screen reader user" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "VideoStreamSession" as session
+  participant "VideoPlayerStrings" as strings
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+
+host -> vp : Mount with hubUrl, streamId, optional VIDEO_PLAYER_I18N
+vp -> strings : Merge overrides over English defaults (L2-070)
+vp --> viewer : role="region" aria-label="Video player"; video without controls or aria-hidden
+vp --> viewer : role="group" aria-label="Player controls"; buttons with aria-label; range input aria-valuetext "60%"
+session -> hub : Describe(streamId)
+hub --> session : VideoStreamDescriptor with title
+session -> vp : Apply descriptor
+vp --> viewer : aria-label="Video player: {title}" as literal text (L2-070)
+viewer -> vp : Activate Mute
+vp --> viewer : aria-pressed="true", name "Unmute"
+session -> vp : state ended
+vp --> viewer : aria-disabled="true" on every control except fullscreen; controls stay focusable
+session -> vp : Statistics tick with latencySeconds
+alt At most 5 s behind
+  vp --> viewer : LIVE badge named "Live" with aria-disabled="true"
+else More than 5 s behind
+  vp --> viewer : aria-disabled removed; name "Go to live, {n} seconds behind" (L2-070)
+end
+vp --> viewer : Elapsed time aria-hidden="true"; no per-second announcement
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Verify and document
+
+Person(dev, "Consumer developer", "Adopts the player and tests through the harness")
+Person(maintainer, "Maintainer", "Runs the acceptance suite and keeps the documents")
+Person(tester, "Accessibility tester", "Executes and records the manual matrix")
+System(repo, "Tessera repository", "Package, harness, examples, e2e-app, fixture transport, tests, documents")
+System_Ext(chromium, "Chromium", "Only automated browser, driven by Playwright")
+System_Ext(readers, "Screen readers and browsers", "NVDA, JAWS, VoiceOver, TalkBack, Narrator with their browsers")
+System_Ext(backend, "Tessera.VideoStream.Demo", "Optional demonstration backend reached when TESSERA_VIDEO_HUB_URL is set")
+
+Rel(dev, repo, "Reads README and examples; uses VideoPlayerHarness")
+Rel(maintainer, repo, "Runs pnpm e2e, vitest, api:check")
+Rel(tester, repo, "Records docs/verification/video-player-screen-reader-matrix.md")
+Rel(repo, chromium, "Drives through Playwright and axe-core")
+Rel(tester, readers, "Operates the player with")
+Rel(repo, backend, "Opt-in backend acceptance test and dev-app page", "SignalR")
+@enduml

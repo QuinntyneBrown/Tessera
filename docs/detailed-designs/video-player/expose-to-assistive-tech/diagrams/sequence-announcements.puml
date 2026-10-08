@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Live-region announcements
+actor "Screen reader user" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "VideoStreamSession" as session
+  participant "VideoPlayerAnnouncer" as ann
+  participant "Polite live region" as region
+end box
+
+
+vp -> region : Render hidden aria-live="polite" element, empty (L2-071)
+session -> ann : status("Connecting to {title}.")
+ann -> ann : Pending status; start 150 ms timer
+session -> ann : status("Live.") within 150 ms
+ann -> ann : Replace pending status; keep the running timer
+viewer -> vp : Activate Mute during the window
+vp -> ann : toggle("Muted.")
+ann -> region : Write "Muted." immediately; never dropped (L2-071)
+ann -> region : Timer fires: write "Live." only
+viewer -> vp : Arrow Up on the volume slider
+vp --> region : No write; aria-valuetext carries the value (L2-071)
+session -> session : waiting fired; 1000 ms buffering timer
+alt playing fires before 1000 ms
+  session --> region : Nothing written
+else 1000 ms elapse
+  session -> ann : status("Buffering.")
+end
+session -> session : Statistics tick with latencySeconds 10
+opt Not yet announced for this lapse
+  session -> ann : status(behindLive(10)) once (L2-071)
+  session -> session : Set behindLiveAnnounced until back at the live edge
+end
+session -> vp : state error
+vp -> ann : clear()
+ann -> region : Cancel timer; empty the region
+vp --> viewer : role="alert" panel speaks the mapped message
+@enduml

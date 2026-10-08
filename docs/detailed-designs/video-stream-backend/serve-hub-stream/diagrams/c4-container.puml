@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Serve hub stream
+
+Person(viewer, "Viewer", "Watches a stream")
+Container_Ext(host, "Host LMS browser application", "Angular with @tessera/video-player", "SignalRVideoStreamTransport with MessagePackHubProtocol and accessTokenFactory")
+System_Boundary(demo, "Tessera.VideoStream.Demo") {
+  Container(hubapp, "SignalR hub application", "ASP.NET Core", "VideoStreamHub at /hubs/video, DemoToken scheme, CORS policy, GET /demo/token")
+  Container(ffmpeg, "FFmpeg process", "ffmpeg child process", "Fragmented MP4 source")
+  Container(media, "Media files", "Filesystem under MediaRoot", "Catalogued MP4 files")
+}
+Rel(viewer, host, "Uses", "Browser")
+Rel(host, hubapp, "Negotiate with bearer or access_token; Describe; Subscribe", "HTTPS, WebSocket, MessagePack")
+Rel(hubapp, ffmpeg, "Starts and reads", "Pipes")
+Rel(ffmpeg, media, "Reads")
+@enduml

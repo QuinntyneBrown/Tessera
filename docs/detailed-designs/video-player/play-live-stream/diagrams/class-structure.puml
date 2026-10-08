@@ -1,0 +1,73 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Play live stream
+class VideoPlayer {
+  +stats: OutputEmitterRef<VideoPlayerStats>
+  -video: Signal<ElementRef<HTMLVideoElement>>
+  #state: Signal<VideoPlayerState>
+}
+class VideoStreamSession {
+  -pipeline: MediaSourcePipeline
+  -statsTimer: number | null
+  -bytesReceived: number
+  -ticksBehind: number
+  -onChunk(chunk: VideoChunk): void
+  -tick(): void
+  -computeLatency(): number
+  -emitStats(): void
+}
+class MediaSourcePipeline {
+  -mediaSource: MediaSource | null
+  -objectUrl: string | null
+  -sourceBuffer: SourceBuffer | null
+  -queue: VideoChunk[]
+  -lastSeq: number | null
+  -initAppended: boolean
+  -rangeCount: number
+  -quotaRetried: boolean
+  +attach(video: HTMLVideoElement, mimeType: string): void
+  +push(chunk: VideoChunk): void
+  +rebuild(): void
+  +seekToLive(): void
+  +bufferedEnd(): number
+  +detach(): void
+  -appendNext(): void
+  -onUpdateEnd(): void
+  -pruneBehind(): void
+}
+interface VideoChunk {
+  +kind: 0 | 1
+  +seq: number
+  +data: Uint8Array
+}
+interface VideoPlayerStats {
+  +state: VideoPlayerState
+  +latencySeconds: number
+  +bufferedAheadSeconds: number
+  +bytesReceived: number
+  +droppedFrames: number
+}
+class "Pipeline defaults" as Defaults <<constants>> {
+  +targetLatencySeconds = 3
+  +maxLatencySeconds = 8
+  +bufferRetainSeconds = 30
+  +bufferPruneSeconds = 60
+  +statsIntervalMs = 1000
+}
+VideoPlayer "1" *-- "0..1" VideoStreamSession : owns
+VideoStreamSession "1" *-- "1" MediaSourcePipeline : owns
+VideoStreamSession ..> VideoChunk : receives
+VideoStreamSession ..> VideoPlayerStats : emits every 1000 ms
+MediaSourcePipeline ..> VideoChunk : queues and appends
+MediaSourcePipeline ..> Defaults : reads
+VideoStreamSession ..> Defaults : reads
+@enduml
