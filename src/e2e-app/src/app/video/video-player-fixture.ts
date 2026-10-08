@@ -101,7 +101,7 @@ export class VideoPlayerFixture {
   readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
   readonly states = signal<VideoPlayerState[]>([]);
   readonly mounted = signal(true);
-  readonly tokenFactory = () => 'fixture-token';
+  readonly tokenFactory = () => 'fixture-token-7f3a';
   readonly muted = signal(parameters.get('muted') === 'true');
   readonly captions = signal<VideoPlayerCaptions | null>(
     parameters.get('captions') === 'true'

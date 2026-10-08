@@ -8,6 +8,7 @@ const expect = baseExpect.configure({ timeout: 15000 });
 export class VideoPlayerPage {
   private readonly errors: string[] = [];
   private readonly warnings: string[] = [];
+  private readonly consoleTexts: string[] = [];
 
   constructor(readonly page: Page) {
     page.setDefaultTimeout(20000);
@@ -15,6 +16,7 @@ export class VideoPlayerPage {
     page.on('console', (message) => {
       if (message.type() === 'error') this.errors.push(message.text());
       if (message.type() === 'warning') this.warnings.push(message.text());
+      this.consoleTexts.push(message.text());
     });
   }
 
@@ -1357,6 +1359,36 @@ export class VideoPlayerPage {
 
   async expectLiveBadgeText(text: string): Promise<void> {
     await expect(this.control('live')).toHaveText(text);
+  }
+
+  async expectPlaceholderTitle(title: string): Promise<void> {
+    await expect(
+      this.host().locator('.t-video-player__placeholder .t-video-player__title'),
+    ).toHaveText(title);
+  }
+
+  async expectEndedTitle(title: string): Promise<void> {
+    await expect(this.host().locator('.t-video-player__ended .t-video-player__title')).toHaveText(
+      title,
+    );
+  }
+
+  async expectNoInjectedMarkup(): Promise<void> {
+    await expect(this.host().locator('img')).toHaveCount(0);
+    expect(
+      await this.page.evaluate(() => (window as unknown as { __xss?: unknown }).__xss),
+    ).toBeUndefined();
+  }
+
+  async expectTokenConfined(token: string): Promise<void> {
+    expect(await this.host().evaluate((host) => host.outerHTML)).not.toContain(token);
+    expect(this.consoleTexts.join(' ')).not.toContain(token);
+    for (const name of ['Errors', 'Error causes', 'Stats'])
+      await expect(this.page.getByRole('status', { name, exact: true })).not.toContainText(token);
+  }
+
+  async expectNotInPlayer(text: string): Promise<void> {
+    expect(await this.host().evaluate((host) => host.outerHTML)).not.toContain(text);
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {

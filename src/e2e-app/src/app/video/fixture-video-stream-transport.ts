@@ -101,7 +101,10 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
       this.parameters.has(name) ? Number(this.parameters.get(name)) : fallback;
     return {
       streamId,
-      title: 'Lecture hall A',
+      title:
+        this.parameters.get('hostile') === 'true'
+          ? '<img src=x onerror="window.__xss=1">'
+          : 'Lecture hall A',
       mimeType:
         this.scenario === 'unsupported'
           ? 'video/unknown'
