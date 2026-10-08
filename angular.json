@@ -75,6 +75,16 @@
               {
                 "glob": "**/*",
                 "input": "src/dev-app/public"
+              },
+              {
+                "glob": "lecture-10s.fmp4",
+                "input": "src/e2e-app/public",
+                "output": "/"
+              },
+              {
+                "glob": "captions-en.vtt",
+                "input": "src/e2e-app/public",
+                "output": "/"
               }
             ],
             "styles": ["src/dev-app/src/styles.scss"]

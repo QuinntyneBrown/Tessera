@@ -1,5 +1,7 @@
 @if (videoPlayerMode) {
   <tsr-video-player-fixture />
+} @else if (videoExamplesMode) {
+  <tsr-video-player-examples />
 } @else if (themeMode) {
   <main class="theme-playground">
     <h1>Tessera theme playground</h1>

@@ -6,6 +6,9 @@ Requirements and detailed designs below are the source of intended behavior.
 The [combobox adoption guide](../src/combobox/README.md), [implementation evidence](verification/combobox-implementation.md),
 and [pending manual release matrix](verification/combobox-screen-reader-matrix.md) describe its current status.
 
+The [video player adoption guide](../src/video-player/README.md), [implementation record](verification/video-player-implementation.md),
+and [pending manual release matrix](verification/video-player-screen-reader-matrix.md) describe the video player's status.
+
 The [combobox engineering review](verification/combobox-engineering-review.md) evaluates
 maintainability, implementation rationale, file sizes, and measured browser performance.
 

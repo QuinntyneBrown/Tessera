@@ -10,6 +10,23 @@ import {
   VideoPlayerStats,
 } from '@tessera/video-player';
 import { FixtureVideoStreamTransport } from './fixture-video-stream-transport';
+import { SignalRVideoStreamTransport, VideoStreamTransport } from '@tessera/video-player';
+import { tap } from 'rxjs';
+
+/** Wraps the real SignalR transport for the opt-in backend test and records the first chunk kind. */
+function recordFirstChunk(transport: SignalRVideoStreamTransport): VideoStreamTransport {
+  const controls = ((
+    window as unknown as { __videoFixture: { firstKind?: number } }
+  ).__videoFixture ??= {});
+  return {
+    connectionEvents: transport.connectionEvents,
+    configure: (options) => transport.configure(options),
+    describe: (streamId) => transport.describe(streamId),
+    stop: () => transport.stop(),
+    subscribe: (streamId) =>
+      transport.subscribe(streamId).pipe(tap((chunk) => (controls.firstKind ??= chunk.kind))),
+  };
+}
 
 const parameters = new URLSearchParams(location.search);
 
@@ -35,7 +52,10 @@ const FRENCH: VideoPlayerI18n = {
   providers: [
     {
       provide: VIDEO_STREAM_TRANSPORT,
-      useFactory: () => new FixtureVideoStreamTransport(parameters),
+      useFactory: () =>
+        parameters.get('scenario') === 'backend'
+          ? recordFirstChunk(new SignalRVideoStreamTransport())
+          : new FixtureVideoStreamTransport(parameters),
     },
   ],
 })
@@ -102,10 +122,12 @@ export class FixtureTransport {}
 })
 export class VideoPlayerFixture {
   readonly parameters = parameters;
-  readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
+  readonly streamId = signal(
+    parameters.get('scenario') === 'idle' ? null : (parameters.get('streamId') ?? 'lecture-hall-a'),
+  );
   readonly states = signal<VideoPlayerState[]>([]);
   readonly mounted = signal(true);
-  readonly tokenFactory = () => 'fixture-token-7f3a';
+  readonly tokenFactory = () => parameters.get('token') ?? 'fixture-token-7f3a';
   readonly muted = signal(parameters.get('muted') === 'true');
   readonly captions = signal<VideoPlayerCaptions | null>(
     parameters.get('captions') === 'true'

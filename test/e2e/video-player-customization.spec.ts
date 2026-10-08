@@ -110,8 +110,10 @@ test('applies a partial override to names, status and announcements', async ({ p
     live: 'Direct',
   });
   await player.expectLiveBadgeText('DIRECT');
-  await player.expectAnnounced('Connexion à Lecture hall A.');
   await player.expectNoAccessibilityViolations();
+  // A fast first frame can coalesce the connecting status away; this scenario never goes live.
+  await player.open('connecting', { extra: { localized: true } });
+  await player.expectAnnouncement('Connexion à Lecture hall A.');
 });
 
 test('calls number strings with the volume, seconds behind, attempt and duration', async ({

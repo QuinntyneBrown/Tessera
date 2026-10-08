@@ -17,6 +17,7 @@ state while the host LMS controls identity, authorization, delivery, and storage
 | --- | --- |
 | `@tessera/scorm-player` | Embed SCORM learning content in an Angular LMS |
 | [`@tessera/combobox`](src/combobox/README.md) | Search and select multiple remote values with keyboard-operable chips |
+| [`@tessera/video-player`](src/video-player/README.md) | Play a live fragmented-MP4 stream from a SignalR hub with accessible controls |
 
 ## Shared themes
 

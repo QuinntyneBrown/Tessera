@@ -1719,6 +1719,65 @@ export class VideoPlayerPage {
       .toEqual(report);
   }
 
+  async openExamples(): Promise<void> {
+    await this.page.goto('/?screen=video-player-examples');
+  }
+
+  async verifyExamples(): Promise<void> {
+    await expect(
+      this.page.getByRole('heading', { name: 'Video player examples', exact: true }),
+    ).toBeVisible();
+    await expect(this.host()).toHaveCount(5);
+    const section = (heading: string) =>
+      this.page
+        .locator('section')
+        .filter({ has: this.page.getByRole('heading', { name: heading, exact: true }) });
+    await expect(section('Hub connection').locator('t-video-player')).toHaveAttribute(
+      'data-state',
+      'idle',
+    );
+    await expect(
+      section('Hub connection').getByRole('button', { name: 'Connect to the hub', exact: true }),
+    ).toBeVisible();
+    await expect(section('Custom transport').locator('t-video-player')).toHaveAttribute(
+      'data-state',
+      'live',
+    );
+    await expect(section('Captions').locator('video > track')).toHaveAttribute('kind', 'captions');
+    await expect(
+      section('Localised strings').getByRole('region', {
+        name: 'Reproductor de vídeo: Lecture hall A',
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(section('Themed player').locator('t-video-player')).toHaveAttribute(
+      'data-state',
+      'paused',
+    );
+    await expect(section('Themed player').locator('.t-video-player__central-play svg')).toHaveCSS(
+      'background-color',
+      'rgb(122, 62, 157)',
+    );
+  }
+
+  async requestDemoToken(url: string): Promise<string> {
+    const response = await this.page.request.get(url);
+    expect(response.ok()).toBe(true);
+    return (await response.json()).token;
+  }
+
+  async expectFirstChunkKind(kind: number): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () =>
+            (window as unknown as { __videoFixture: { firstKind?: number } }).__videoFixture
+              .firstKind,
+        ),
+      )
+      .toBe(kind);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })
