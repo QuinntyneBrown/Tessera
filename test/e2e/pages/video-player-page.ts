@@ -4,12 +4,14 @@ import AxeBuilder from '@axe-core/playwright';
 /** Owns the selectors and interactions of the video player acceptance screen. */
 export class VideoPlayerPage {
   private readonly errors: string[] = [];
+  private readonly warnings: string[] = [];
 
   constructor(readonly page: Page) {
     page.setDefaultTimeout(10000);
     page.on('pageerror', (error) => this.errors.push(error.message));
     page.on('console', (message) => {
       if (message.type() === 'error') this.errors.push(message.text());
+      if (message.type() === 'warning') this.warnings.push(message.text());
     });
   }
 
@@ -152,7 +154,27 @@ export class VideoPlayerPage {
 
   async recordMediaSourceCalls(): Promise<void> {
     await this.page.addInitScript(() => {
-      const record = { addSourceBuffer: 0, appends: [] as { type: string; updating: boolean }[] };
+      const record = {
+        addSourceBuffer: 0,
+        appends: [] as { type: string; updating: boolean }[],
+        created: 0,
+        revoked: 0,
+      };
+      const urls = new Set<string>();
+      const create = URL.createObjectURL;
+      URL.createObjectURL = (object: Blob | MediaSource) => {
+        const url = create(object);
+        if (object instanceof MediaSource) {
+          urls.add(url);
+          record.created++;
+        }
+        return url;
+      };
+      const revoke = URL.revokeObjectURL;
+      URL.revokeObjectURL = (url: string) => {
+        if (urls.delete(url)) record.revoked++;
+        revoke(url);
+      };
       (window as unknown as { __mse: typeof record }).__mse = record;
       const add = MediaSource.prototype.addSourceBuffer;
       MediaSource.prototype.addSourceBuffer = function (type: string) {
@@ -171,6 +193,57 @@ export class VideoPlayerPage {
         return append.call(this, data);
       };
     });
+  }
+
+  private mediaSourceRecord() {
+    return this.page.evaluate(
+      () =>
+        (
+          window as unknown as {
+            __mse: { addSourceBuffer: number; created: number; revoked: number };
+          }
+        ).__mse,
+    );
+  }
+
+  async expectMediaSourceUrls(counts: { created: number; revoked: number }): Promise<void> {
+    await expect
+      .poll(async () => {
+        const { created, revoked } = await this.mediaSourceRecord();
+        return { created, revoked };
+      })
+      .toEqual(counts);
+  }
+
+  async expectSourceBuffersAdded(count: number): Promise<void> {
+    await expect.poll(async () => (await this.mediaSourceRecord()).addSourceBuffer).toBe(count);
+  }
+
+  async expectPlaybackAdvancing(): Promise<void> {
+    const before = (await this.videoMetrics()).currentTime;
+    await expect.poll(async () => (await this.videoMetrics()).currentTime).toBeGreaterThan(before);
+  }
+
+  async expectWarning(fragment: string): Promise<void> {
+    await expect.poll(() => this.warnings.join(' ')).toContain(fragment);
+  }
+
+  async failAppendsWithQuota(times: number): Promise<void> {
+    await this.page.addInitScript((times) => {
+      let remaining = times;
+      const append = SourceBuffer.prototype.appendBuffer;
+      SourceBuffer.prototype.appendBuffer = function (data: BufferSource) {
+        const bytes = ArrayBuffer.isView(data)
+          ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
+          : new Uint8Array(data);
+        const media = String.fromCharCode(...bytes.subarray(4, 8)) === 'moof';
+        if (media && remaining > 0) {
+          remaining--;
+          throw new DOMException('Fixture quota', 'QuotaExceededError');
+        }
+        return append.call(this, data);
+      };
+    }, times);
   }
 
   async expectSerialisedAppends(): Promise<void> {

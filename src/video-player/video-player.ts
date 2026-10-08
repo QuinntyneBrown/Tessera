@@ -108,6 +108,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   fail(code: VideoPlayerErrorCode, cause?: unknown): void {
+    if (this.state() === 'error') return;
     const error: VideoPlayerError = { code, message: this.errorMessage(code), cause };
     this.announcer.clear();
     this.currentError.set(error);
@@ -116,12 +117,21 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   private errorMessage(code: VideoPlayerErrorCode): string {
-    switch (code) {
-      case 'unsupported':
-        return this.strings.errorUnsupported(this.descriptor()?.mimeType ?? '');
-      default:
-        return this.strings.errorNotFound;
-    }
+    const strings = this.strings;
+    const messages: Record<VideoPlayerErrorCode, string> = {
+      unsupported: strings.errorUnsupported(this.descriptor()?.mimeType ?? ''),
+      unauthorized: strings.errorUnauthorized,
+      'not-found': strings.errorNotFound,
+      connection: strings.errorConnection,
+      source: strings.errorSource,
+      decode: strings.errorDecode,
+      stalled: strings.errorStalled,
+    };
+    return messages[code];
+  }
+
+  protected onVideoError(): void {
+    if (this.session) this.fail('decode', this.videoElement().error?.code);
   }
 
   videoElement(): HTMLVideoElement {

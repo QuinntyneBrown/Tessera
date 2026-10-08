@@ -52,6 +52,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected onPlaying(): void;
     // (undocumented)
+    protected onVideoError(): void;
+    // (undocumented)
     protected readonly regionName: Signal<string>;
     // (undocumented)
     requestPlay(): void;
@@ -68,7 +70,12 @@ export class VideoPlayer implements VideoPlayerHost {
         liveAnnounced: string;
         retry: string;
         errorUnsupported: (mimeType: string) => string;
+        errorUnauthorized: string;
         errorNotFound: string;
+        errorConnection: string;
+        errorSource: string;
+        errorDecode: string;
+        errorStalled: string;
     };
     // (undocumented)
     tick(): void;
@@ -133,7 +140,17 @@ export interface VideoPlayerStrings {
     // (undocumented)
     connectingStatus: string;
     // (undocumented)
+    errorConnection: string;
+    // (undocumented)
+    errorDecode: string;
+    // (undocumented)
     errorNotFound: string;
+    // (undocumented)
+    errorSource: string;
+    // (undocumented)
+    errorStalled: string;
+    // (undocumented)
+    errorUnauthorized: string;
     // (undocumented)
     errorUnsupported: (mimeType: string) => string;
     // (undocumented)

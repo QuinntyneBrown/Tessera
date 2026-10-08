@@ -8,7 +8,12 @@ export interface VideoPlayerStrings {
   liveAnnounced: string;
   retry: string;
   errorUnsupported: (mimeType: string) => string;
+  errorUnauthorized: string;
   errorNotFound: string;
+  errorConnection: string;
+  errorSource: string;
+  errorDecode: string;
+  errorStalled: string;
 }
 
 /** English defaults; consumers can replace any subset through VIDEO_PLAYER_I18N. */
@@ -19,7 +24,12 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   liveAnnounced: 'Live.',
   retry: 'Retry',
   errorUnsupported: (mimeType) => `This browser can't play this stream (${mimeType}).`,
+  errorUnauthorized: "You don't have access to this stream. Sign in again or ask the organiser.",
   errorNotFound: "This stream doesn't exist or is no longer available.",
+  errorConnection: "The connection was lost and couldn't be restored.",
+  errorSource: 'The video source stopped unexpectedly.',
+  errorDecode: "The video couldn't be decoded.",
+  errorStalled: 'The source stopped sending video.',
 };
 
 /** Partial string overrides merged over the English defaults. */

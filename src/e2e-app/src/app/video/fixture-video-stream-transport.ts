@@ -1,4 +1,4 @@
-import { NEVER, Observable, Subject } from 'rxjs';
+import { NEVER, Observable, Subject, concatMap, filter, from, map } from 'rxjs';
 import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
 import {
   VideoChunk,
@@ -57,8 +57,29 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
   subscribe(_streamId: string): Observable<VideoChunk> {
     this.controls.calls.push('subscribe');
     if (this.scenario === 'connecting') return NEVER;
+    const reinitAt = Number(this.parameters.get('reinitAt') || 0);
+    const decodeAt = Number(this.parameters.get('decodeAt') || 0);
+    let init: VideoChunk | undefined;
+    let media = 0;
     return replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
-    });
+    }).pipe(
+      filter((chunk) => chunk.kind === 1 || this.parameters.get('skipInit') !== 'true'),
+      map((chunk) => {
+        if (chunk.kind === 0) init = chunk;
+        else if (++media === decodeAt) return { ...chunk, data: corrupt(chunk.data) };
+        return chunk;
+      }),
+      concatMap((chunk) =>
+        from(chunk.kind === 1 && media === reinitAt && init ? [init, chunk] : [chunk]),
+      ),
+    );
   }
+}
+
+/** Keeps the moof header but destroys its contents, so the browser cannot parse the fragment. */
+function corrupt(data: Uint8Array): Uint8Array {
+  const copy = data.slice();
+  copy.fill(0xff, 8, Math.min(copy.length, 512));
+  return copy;
 }

@@ -1,6 +1,12 @@
 <div class="t-video-player__region" role="region" [attr.aria-label]="regionName()">
   <div class="t-video-player__stage" [style.aspect-ratio]="aspectRatio()">
-    <video class="t-video-player__video" playsinline #video (playing)="onPlaying()"></video>
+    <video
+      class="t-video-player__video"
+      playsinline
+      #video
+      (playing)="onPlaying()"
+      (error)="onVideoError()"
+    ></video>
     @if (state() === 'connecting') {
       <div class="t-video-player__placeholder">
         <p class="t-video-player__status">{{ strings.connectingStatus }}</p>

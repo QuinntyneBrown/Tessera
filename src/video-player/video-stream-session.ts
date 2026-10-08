@@ -49,6 +49,7 @@ export class VideoStreamSession {
     if (!isSupported(descriptor.mimeType)) return this.fail('unsupported');
     const pipeline = new MediaSourcePipeline(this.host.videoElement(), descriptor.mimeType, {
       firstMedia: () => this.host.requestPlay(),
+      failed: (cause) => this.fail('decode', cause),
     });
     this.pipeline = pipeline;
     this.subscription = this.transport
@@ -58,6 +59,7 @@ export class VideoStreamSession {
 
   private fail(code: VideoPlayerErrorCode, cause?: unknown): void {
     clearInterval(this.ticker);
+    this.subscription?.unsubscribe();
     this.host.fail(code, cause);
   }
 
