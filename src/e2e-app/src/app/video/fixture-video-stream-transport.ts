@@ -37,12 +37,16 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
   describe(streamId: string): Promise<VideoStreamDescriptor> {
     this.controls.calls.push('describe');
     if (this.scenario === 'describe-pending') return new Promise(() => undefined);
+    if (this.scenario === 'not-found') return Promise.reject(new Error('unknown-stream'));
     const number = (name: string, fallback: number) =>
       this.parameters.has(name) ? Number(this.parameters.get(name)) : fallback;
     return Promise.resolve({
       streamId,
       title: 'Lecture hall A',
-      mimeType: 'video/mp4; codecs="avc1.4d401f,mp4a.40.2"',
+      mimeType:
+        this.scenario === 'unsupported'
+          ? 'video/unknown'
+          : 'video/mp4; codecs="avc1.4d401f,mp4a.40.2"',
       startedAt: new Date(Date.now() - number('startedAgo', 60) * 1000).toISOString(),
       width: number('width', 1280),
       height: number('height', 720),

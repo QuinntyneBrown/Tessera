@@ -1,5 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { VIDEO_STREAM_TRANSPORT, VideoPlayer, VideoPlayerState } from '@tessera/video-player';
+import {
+  VIDEO_STREAM_TRANSPORT,
+  VideoPlayer,
+  VideoPlayerError,
+  VideoPlayerState,
+} from '@tessera/video-player';
 import { FixtureVideoStreamTransport } from './fixture-video-stream-transport';
 
 const parameters = new URLSearchParams(location.search);
@@ -23,8 +28,10 @@ const parameters = new URLSearchParams(location.search);
         [streamId]="streamId()"
         [titleOverride]="parameters.get('titleOverride') ?? undefined"
         (stateChange)="record($event)"
+        (error)="recordError($event)"
       />
       <output aria-label="State changes">{{ json(states()) }}</output>
+      <output aria-label="Errors">{{ json(errors()) }}</output>
     </main>
   `,
 })
@@ -32,7 +39,12 @@ export class VideoPlayerFixture {
   readonly parameters = parameters;
   readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
   readonly states = signal<VideoPlayerState[]>([]);
+  readonly errors = signal<Pick<VideoPlayerError, 'code' | 'message'>[]>([]);
   readonly json = JSON.stringify;
+
+  recordError({ code, message }: VideoPlayerError): void {
+    this.errors.update((errors) => [...errors, { code, message }]);
+  }
 
   record(state: VideoPlayerState): void {
     this.states.update((states) => [...states, state]);

@@ -13,7 +13,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N } from './i18n';
-import { VideoPlayerState, VideoStreamDescriptor } from './types';
+import {
+  VideoPlayerError,
+  VideoPlayerErrorCode,
+  VideoPlayerState,
+  VideoStreamDescriptor,
+} from './types';
 import { VIDEO_STREAM_TRANSPORT } from './video-stream-transport';
 import { VideoPlayerHost, VideoStreamSession } from './video-stream-session';
 import { VideoPlayerAnnouncer } from './video-player-announcer';
@@ -37,6 +42,8 @@ export class VideoPlayer implements VideoPlayerHost {
   readonly titleOverride = input<string | undefined>(undefined);
   /** Emits the new state once per transition. */
   readonly stateChange = output<VideoPlayerState>();
+  /** Emits each failure once, with a typed code. */
+  readonly error = output<VideoPlayerError>();
 
   protected readonly strings = { ...DEFAULT_VIDEO_PLAYER_STRINGS, ...inject(VIDEO_PLAYER_I18N) };
   private readonly stateValue = signal<VideoPlayerState>('idle');
@@ -44,6 +51,7 @@ export class VideoPlayer implements VideoPlayerHost {
   readonly state = this.stateValue.asReadonly();
   private readonly descriptor = signal<VideoStreamDescriptor | null>(null);
   private readonly now = signal(Date.now());
+  protected readonly currentError = signal<VideoPlayerError | null>(null);
   protected readonly title = computed(
     () => this.titleOverride() ?? this.descriptor()?.title ?? null,
   );
@@ -96,6 +104,23 @@ export class VideoPlayer implements VideoPlayerHost {
     this.descriptor.set(descriptor);
     this.now.set(Date.now());
     this.announcer.status(this.strings.connecting(this.title()!));
+  }
+
+  fail(code: VideoPlayerErrorCode, cause?: unknown): void {
+    const error: VideoPlayerError = { code, message: this.errorMessage(code), cause };
+    this.announcer.clear();
+    this.currentError.set(error);
+    this.setState('error');
+    this.error.emit(error);
+  }
+
+  private errorMessage(code: VideoPlayerErrorCode): string {
+    switch (code) {
+      case 'unsupported':
+        return this.strings.errorUnsupported(this.descriptor()?.mimeType ?? '');
+      default:
+        return this.strings.errorNotFound;
+    }
   }
 
   tick(): void {

@@ -74,3 +74,49 @@ test('prefers titleOverride over the descriptor title', async ({ page }) => {
   await player.expectAnnouncement('Connecting to Hall override.');
   await player.expectNoAccessibilityViolations();
 });
+
+test('shows the unsupported alert with the mime type and no Retry, without subscribing', async ({
+  page,
+}) => {
+  // L2-058 AC2; L2-068 AC1, AC2; L2-071 AC5; L2-078 AC5: Given isTypeSupported(mimeType) is false,
+  // when the check runs, then Subscribe is not called, the state is error with code unsupported,
+  // the message names the mime type, there is no Retry, and the polite region is empty.
+  const player = new VideoPlayerPage(page);
+  await player.open('unsupported');
+  await player.expectError("This browser can't play this stream (video/unknown).");
+  await player.expectState('error');
+  await player.expectRetry(false);
+  await player.expectTransportCalls(['configure', 'describe']);
+  await player.expectErrorOutputs([
+    { code: 'unsupported', message: "This browser can't play this stream (video/unknown)." },
+  ]);
+  await player.expectAnnouncement('');
+  await player.expectNoAccessibilityViolations();
+});
+
+for (const variant of ['missing MediaSource', 'throwing isTypeSupported'] as const) {
+  test(`treats a ${variant} as unsupported`, async ({ page }) => {
+    // L2-058 AC2; L2-078 AC5: an undefined MediaSource or an exception from the check is unsupported.
+    const player = new VideoPlayerPage(page);
+    if (variant === 'missing MediaSource') await player.removeMediaSource();
+    else await player.makeTypeCheckThrow();
+    await player.open('connecting');
+    await player.expectError(
+      'This browser can\'t play this stream (video/mp4; codecs="avc1.4d401f,mp4a.40.2").',
+    );
+    await player.expectTransportCalls(['configure', 'describe']);
+    await player.expectNoAccessibilityViolations();
+  });
+}
+
+test('maps an unknown-stream rejection to not-found with Retry', async ({ page }) => {
+  // L2-058 AC4; L2-068 AC2: Given Describe rejects with unknown-stream, then the code is not-found.
+  const player = new VideoPlayerPage(page);
+  await player.open('not-found');
+  await player.expectError("This stream doesn't exist or is no longer available.");
+  await player.expectRetry(true);
+  await player.expectErrorOutputs([
+    { code: 'not-found', message: "This stream doesn't exist or is no longer available." },
+  ]);
+  await player.expectNoAccessibilityViolations();
+});

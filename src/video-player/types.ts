@@ -25,3 +25,14 @@ export interface VideoStreamTransportOptions {
   hubUrl: string | null;
   accessTokenFactory?: () => string | Promise<string>;
 }
+
+/** Classifies a failure shown in the error panel and emitted through `error`. */
+export type VideoPlayerErrorCode =
+  'unsupported' | 'unauthorized' | 'not-found' | 'connection' | 'source' | 'decode' | 'stalled';
+
+/** A failure as emitted by the `error` output. `cause` carries raw details, never the token. */
+export interface VideoPlayerError {
+  code: VideoPlayerErrorCode;
+  message: string;
+  cause?: unknown;
+}

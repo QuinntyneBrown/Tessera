@@ -10,6 +10,7 @@ import { InputSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings;
@@ -41,7 +42,12 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly aspectRatio: Signal<string>;
     // (undocumented)
+    protected readonly currentError: WritableSignal<VideoPlayerError | null>;
+    // (undocumented)
     protected readonly elapsed: Signal<string>;
+    readonly error: OutputEmitterRef<VideoPlayerError>;
+    // (undocumented)
+    fail(code: VideoPlayerErrorCode, cause?: unknown): void;
     readonly hubUrl: InputSignal<string | null>;
     // (undocumented)
     protected readonly regionName: Signal<string>;
@@ -55,6 +61,9 @@ export class VideoPlayer implements VideoPlayerHost {
         regionLabel: (title: string | null) => string;
         connectingStatus: string;
         connecting: (title: string) => string;
+        retry: string;
+        errorUnsupported: (mimeType: string) => string;
+        errorNotFound: string;
     };
     // (undocumented)
     tick(): void;
@@ -85,10 +94,24 @@ export class VideoPlayer implements VideoPlayerHost {
         };
     }, {
         "stateChange": "stateChange";
+        "error": "error";
     }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<VideoPlayer, never>;
 }
+
+// @public
+export interface VideoPlayerError {
+    // (undocumented)
+    cause?: unknown;
+    // (undocumented)
+    code: VideoPlayerErrorCode;
+    // (undocumented)
+    message: string;
+}
+
+// @public
+export type VideoPlayerErrorCode = 'unsupported' | 'unauthorized' | 'not-found' | 'connection' | 'source' | 'decode' | 'stalled';
 
 // @public
 export type VideoPlayerI18n = Partial<VideoPlayerStrings>;
@@ -103,7 +126,13 @@ export interface VideoPlayerStrings {
     // (undocumented)
     connectingStatus: string;
     // (undocumented)
+    errorNotFound: string;
+    // (undocumented)
+    errorUnsupported: (mimeType: string) => string;
+    // (undocumented)
     regionLabel: (title: string | null) => string;
+    // (undocumented)
+    retry: string;
 }
 
 // @public

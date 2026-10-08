@@ -113,6 +113,43 @@ export class VideoPlayerPage {
     await expect(this.host().locator('.t-video-player__stage')).toHaveCSS('aspect-ratio', ratio);
   }
 
+  async expectError(message: string): Promise<void> {
+    const alert = this.host().getByRole('alert');
+    await expect(alert).toBeVisible();
+    await expect(alert.getByRole('heading')).toHaveText(message);
+  }
+
+  async expectRetry(present: boolean): Promise<void> {
+    await expect(
+      this.host().getByRole('alert').getByRole('button', { name: 'Retry', exact: true }),
+    ).toHaveCount(present ? 1 : 0);
+  }
+
+  async expectErrorOutputs(errors: { code: string; message: string }[]): Promise<void> {
+    await expect
+      .poll(async () =>
+        JSON.parse(
+          (await this.page.getByRole('status', { name: 'Errors', exact: true }).textContent()) ||
+            '[]',
+        ),
+      )
+      .toEqual(errors);
+  }
+
+  async removeMediaSource(): Promise<void> {
+    await this.page.addInitScript(() => {
+      delete (window as unknown as Record<string, unknown>)['MediaSource'];
+    });
+  }
+
+  async makeTypeCheckThrow(): Promise<void> {
+    await this.page.addInitScript(() => {
+      MediaSource.isTypeSupported = () => {
+        throw new TypeError('Fixture type check failure');
+      };
+    });
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

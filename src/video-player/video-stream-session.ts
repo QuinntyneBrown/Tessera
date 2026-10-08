@@ -1,12 +1,18 @@
 import { Subscription } from 'rxjs';
 import { VideoStreamTransport } from './video-stream-transport';
-import { VideoPlayerState, VideoStreamDescriptor, VideoStreamTransportOptions } from './types';
+import {
+  VideoPlayerErrorCode,
+  VideoPlayerState,
+  VideoStreamDescriptor,
+  VideoStreamTransportOptions,
+} from './types';
 
 /** What a session needs from the component that hosts it. */
 export interface VideoPlayerHost {
   setState(state: VideoPlayerState): void;
   applyDescriptor(descriptor: VideoStreamDescriptor): void;
   tick(): void;
+  fail(code: VideoPlayerErrorCode, cause?: unknown): void;
 }
 
 /** Orchestrates one stream: describe, subscribe, and the 1 Hz tick. */
@@ -27,10 +33,22 @@ export class VideoStreamSession {
   }
 
   private async start(): Promise<void> {
-    const descriptor = await this.transport.describe(this.streamId);
+    let descriptor: VideoStreamDescriptor;
+    try {
+      descriptor = await this.transport.describe(this.streamId);
+    } catch (cause) {
+      if (!this.disposed) this.fail(failureCode(cause), cause);
+      return;
+    }
     if (this.disposed) return;
     this.host.applyDescriptor(descriptor);
+    if (!isSupported(descriptor.mimeType)) return this.fail('unsupported');
     this.subscription = this.transport.subscribe(this.streamId).subscribe();
+  }
+
+  private fail(code: VideoPlayerErrorCode, cause?: unknown): void {
+    clearInterval(this.ticker);
+    this.host.fail(code, cause);
   }
 
   stop(): void {
@@ -38,4 +56,17 @@ export class VideoStreamSession {
     clearInterval(this.ticker);
     this.subscription?.unsubscribe();
   }
+}
+
+function isSupported(mimeType: string): boolean {
+  try {
+    return typeof MediaSource !== 'undefined' && MediaSource.isTypeSupported(mimeType);
+  } catch {
+    return false;
+  }
+}
+
+function failureCode(cause: unknown): VideoPlayerErrorCode {
+  const message = cause instanceof Error ? cause.message : String(cause);
+  return message.includes('unknown-stream') ? 'not-found' : 'connection';
 }

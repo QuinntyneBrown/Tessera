@@ -14,6 +14,13 @@ export class VideoPlayerAnnouncer {
     }, 150);
   }
 
+  clear(): void {
+    clearTimeout(this.timer);
+    this.timer = undefined;
+    this.pending = null;
+    this.write('');
+  }
+
   destroy(): void {
     clearTimeout(this.timer);
   }

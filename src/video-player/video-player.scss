@@ -38,3 +38,22 @@
   background: #d8e2df;
   color: #18312e;
 }
+
+.t-video-player__error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  color: #18312e;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.t-video-player__error-heading {
+  margin: 0;
+  font-size: 1.125rem;
+  color: #8a1c12;
+}
