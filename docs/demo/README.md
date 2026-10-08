@@ -113,3 +113,54 @@ Promotion backs up and replaces this video's WebM, poster, captions, chapter met
 
 Sources: [recording](../../demo/combobox/record.story.ts), [page object](../../demo/combobox/page.ts), [narration script](../../demo/combobox/storyboard.json), [finalizer](../../demo/combobox/finalize.mjs), [component examples](../../src/components-examples/tessera/combobox/combobox-examples.ts), [acceptance scenario](../../test/e2e/combobox-examples.spec.ts). Revision `4f4ea1c34302c480d86d8258285db1cd875c77b9` plus uncommitted combobox and demo changes; Node v22.23.2. Recording order has no dependency on the SCORM demo.
 <!-- combobox-demo:end -->
+
+<!-- video-player-demo:start -->
+## Narrated video player walkthrough
+
+[Watch the video](video-player.webm) · [Narration](video-player-narration.md) · [Chapter metadata](video-player.chapters.json) · [Pronunciations](pronunciations.json)
+
+![Video player poster](video-player-poster.png)
+
+Recorded 3:34 (214.7 s), 1280 × 720, 18.80 MiB, VP8 video with one Opus 48 kHz mono, 96 kb/s, loudness-normalised to -16 LUFS narration track. Narrator: Microsoft Edge read-aloud voice `en-US-AndrewMultilingualNeural` via edge-tts 7.2.8. Each narration paragraph is burned in as the caption while it is spoken. The poster is decoded from the final WebM at 0:21.
+
+| Time | Chapter | Verified while recording |
+|---|---|---|
+| 0:14 | 1. Watch a live stream | Live state, LIVE badge and running elapsed time; Pause holds the picture and the badge reads "Go to live, n seconds behind"; Play returns within 5 s of the live edge with "Back live."; Unmute announces "Unmuted, volume 100%." and the slider lowers the volume |
+| 1:02 | 2. Keyboard and captions | Click the section heading, then Tab lands on Play with a visible focus ring; Space plays; M mutes and unmutes; Arrow Down twice sets 90%; C turns captions on ("Captions on.", active cue); stepping away hides the bar after 3 s and the cue is visible |
+| 1:49 | 3. Make it yours | Spanish strings: region "Reproductor de vídeo: Lecture hall A", Play labelled "Reproducir", badge "EN DIRECTO"; themed player accent rgb(122, 62, 157) |
+| 2:11 | 4. When the hub can't be reached | Connect to the hub with no hub listening: state error, role="alert" message "The connection was lost and couldn't be restored." with Retry |
+| 2:33 | 5. Recover from interruptions | Simulated loss: reconnecting, "Reconnecting… attempt 1 of 5", dimmed frame, "Connection lost. Reconnecting."; restore: live, "Reconnected. Live.", state log ends reconnecting → live; an 8-fragment stream ends with "Stream ended" and "Live for 1 minute" |
+
+### Applications for this recording
+
+| Application | Status |
+|---|---|
+| `e2e-app` (`src/e2e-app/`), screens `/?screen=video-player-examples` and `/video-player` | Recorded in this take |
+| Dev app (`src/dev-app/`) | Excluded: without the demonstration backend it shows the same custom-transport example and the shared examples recorded here |
+| Demonstration video backend (L2-085 to L2-094) | Not implemented, so nothing to record; the hub example's failure in chapter 4 is real |
+
+The SCORM and combobox recordings are unrelated and unchanged.
+
+### What the recording shows and what it does not
+
+- Every stream is the committed 10.24 s test pattern `src/e2e-app/public/lecture-10s.fmp4` replayed in the page as live fMP4 fragments: by the documented `ReplayVideoStreamTransport` example in chapters 1 to 3, and by the acceptance app's fixture transport in chapter 5. No video server or SignalR hub runs. Playwright captures video only, so the stream's 440 Hz tone is not in the recording; the only audio is the narration.
+- Chapter 5's connection loss and recovery are simulated through the fixture transport's test controls (`window.__videoFixture.drop()` and `restore()`), which report the same `reconnecting` and `reconnected` events the SignalR transport would. No network was cut. The fixture's descriptor says the stream started 60 s earlier, which is why it reads "Live for 1 minute".
+- **Known issue the recording exposes:** at player widths of 47.5em (760 px) and above the control bar overlays the bottom of the video, and while it is showing it covers the caption cue. The cue becomes visible when the bar hides after 3 s. This is product behaviour, not a recording artefact; a plain `<video>` in the same browser shows the cue.
+- On the final stream load in chapter 5, Chromium blocked audible autoplay, so the player started muted and showed its Unmute chip. This is the player's documented fallback and is visible but not narrated.
+- No screen reader was used. Announcements are verified by reading the player's polite live region and `role="alert"`; the manual screen reader matrix is still open. Fullscreen and touch are not shown.
+
+### Reproduce the recording
+
+From `C:\projects\Tessera`, with Node 22 or later, locked dependencies and Chromium installed (`corepack pnpm install --frozen-lockfile`, `corepack pnpm exec playwright install chromium`), Python with `edge-tts` (`python -m pip install edge-tts`), internet access for synthesis, and a full FFmpeg build with ffprobe, libopus and libvpx on `PATH`:
+
+```
+node demo/video-player/run.mjs
+node demo/video-player/finalize.mjs "<run directory>" review
+node demo/video-player/finalize.mjs "<run directory>" promote
+```
+
+`run.mjs` refuses to start if port 4331 (or `VIDEO_PLAYER_DEMO_PORT`) is in use, or if anything listens on port 5180, where the hub example connects. It synthesizes one clip per paragraph of [`narration.md`](../../demo/video-player/narration.md) after applying [`pronunciations.json`](../../demo/video-player/pronunciations.json), starts `ng serve e2e-app --host 127.0.0.1 --port 4331` through Playwright, records one continuous Chromium take with no retries, and runs `finalize.mjs stage`. Staging measures the take, locates the chapter cards to correct the browser clock (offset 0.23 s for this take), places each clip at its caption time, loudness-normalises and muxes the narration with `-c:v copy`, then checks the streams, durations, chapter positions and that every paragraph starts within a second of its caption (largest lag 0.15 s). `review` plays the staged file at normal speed in Chromium. `promote` requires a `review-approved.json` in the run directory, backs up the published files and this README, and restores them if publishing fails. Optional variables: `PYTHON`, `EDGE_VOICE`, `FFMPEG`, `FFPROBE`, `VIDEO_PLAYER_DEMO_PORT`. No credentials, database or demo storage are used. Playwright stops the Angular server on success or failure; clips, the raw take, review frames and traces stay in the ignored `demo/.run/video-player/<timestamp>/`.
+
+Sources: [story](../../demo/video-player/record.story.ts), [page object](../../demo/video-player/page.ts), [Playwright config](../../demo/video-player/playwright.config.ts), [runner](../../demo/video-player/run.mjs), [finalizer](../../demo/video-player/finalize.mjs), [caption helper](../../demo/narration.ts), [examples](../../src/components-examples/tessera/video-player/video-player-examples.ts), [acceptance screen](../../src/e2e-app/src/app/video/video-player-fixture.ts). Revision `5968fab68f3dea36f216b951ee6f4b8e1fcfdfc2` plus the uncommitted demo files; Node v22.23.2; ffmpeg version 9.0.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers
+.
+<!-- video-player-demo:end -->
