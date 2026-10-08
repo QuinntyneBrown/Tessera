@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Validate the catalogue at startup
+box "Backend - Demo API" #D1FADF
+  participant "Program" as program
+  participant "Options binder" as binder
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamCatalogue" as catalogue
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "appsettings.json" as config
+  participant "Filesystem under MediaRoot" as fs
+end box
+
+program -> binder : Bind StreamCatalogueOptions from MediaRoot and Streams
+binder -> config : Read Streams:{id}:Title, File, Loop, Codecs
+config --> binder : Configuration values
+binder --> program : StreamCatalogueOptions
+program -> catalogue : Validate(options) before listening (L2-085)
+catalogue -> fs : GetFullPath(MediaRoot)
+fs --> catalogue : Root path
+loop Each catalogue entry
+  catalogue -> fs : GetFullPath(Combine(MediaRoot, File))
+  fs --> catalogue : Resolved path
+  alt Resolved path outside MediaRoot or file missing
+    catalogue --> program : Failure naming the entry identifier and key (L2-085)
+    program -> program : Startup fails; host does not listen
+  else Resolved path inside MediaRoot
+    catalogue -> catalogue : Store ResolvedPath and MimeType with Codecs default (L2-086)
+  end
+end
+catalogue --> program : Catalogue ready
+program -> program : Start listening
+@enduml

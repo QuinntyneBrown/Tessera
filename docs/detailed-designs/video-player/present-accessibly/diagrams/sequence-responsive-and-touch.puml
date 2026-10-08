@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Responsive layout and touch
+actor "Viewer" as viewer
+box "Frontend - Host application" #E0F2FE
+  participant "Browser" as browser
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "ControlsVisibility" as visibility
+  participant "video-player.scss" as scss
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "Video element" as video
+end box
+
+
+browser -> scss : Container width 320, 576, 768, 992, 1200, or 1920 CSS px
+scss --> viewer : Stage fills the width at the descriptor aspect ratio; control bar wraps before clipping; no horizontal scroll (L2-073)
+alt Width below 47.5em
+  scss -> scss : Container query: control bar in flow below the stage; slider hidden; icons only; elapsed time visible
+  browser -> vp : ResizeObserver callback
+  vp -> visibility : narrow true; hide timer suspended (L2-073)
+else Width at least 47.5em
+  scss -> scss : Control bar overlaid on the stage; slider shown
+  vp -> visibility : narrow false
+end
+browser -> scss : 200% text or text-spacing overrides
+scss --> viewer : Elapsed time, LIVE badge, status, and error text wrap without clipping or overlap (L2-073)
+scss --> viewer : Each control at least 44 by 44 CSS px; slider thumb 24 by 24 CSS px
+browser -> vp : Resize while playing
+vp --> video : No element re-created; playback and state unchanged
+vp --> viewer : Focus preserved, or moved to the nearest enabled control when the slider is hidden
+viewer -> vp : Tap the stage (pointerType touch)
+alt Controls hidden
+  vp -> visibility : show()
+  vp --> viewer : Controls revealed; playback unchanged (L2-074)
+else Controls visible
+  vp -> video : play() or pause()
+end
+viewer -> vp : Tap a control
+vp -> visibility : show(); hide timer restarts (L2-074)
+viewer -> vp : Long press on the stage
+vp -> vp : contextmenu preventDefault on the stage only
+vp --> viewer : No native video context menu (L2-074)
+@enduml

@@ -1,10 +1,13 @@
 # Tessera documentation
 
-Tessera includes a SCORM player and an asynchronous multi-select combobox.
+Tessera includes a SCORM player, an asynchronous multi-select combobox, and a real-time video player.
 Requirements and detailed designs below are the source of intended behavior.
 
 The [combobox adoption guide](../src/combobox/README.md), [implementation evidence](verification/combobox-implementation.md),
 and [pending manual release matrix](verification/combobox-screen-reader-matrix.md) describe its current status.
+
+The [video player adoption guide](../src/video-player/README.md), [implementation record](verification/video-player-implementation.md),
+and [pending manual release matrix](verification/video-player-screen-reader-matrix.md) describe the video player's status.
 
 The [combobox engineering review](verification/combobox-engineering-review.md) evaluates
 maintainability, implementation rationale, file sizes, and measured browser performance.
@@ -32,7 +35,10 @@ behavior that depends on them.
 
 Open the [SCORM player mock](mocks/scorm-player/index.html) in a browser to
 inspect the proposed interface. It is a design artifact and does not implement
-SCORM runtime behavior.
+SCORM runtime behavior. The [combobox mock](mocks/combobox/index.html) and the
+[video player mock](mocks/video-player/index.html) are the same kind of artifact; the
+video player mock models the states, controls, and announcements of L2-057 to L2-094
+with a locally generated picture and no streaming code.
 
 ## Contributor resources
 

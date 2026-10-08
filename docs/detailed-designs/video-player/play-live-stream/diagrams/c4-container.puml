@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Play live stream
+
+Person(viewer, "Viewer", "Watches the stream")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Embeds t-video-player and observes stats")
+  Container(player, "@tessera/video-player", "Angular library", "Queues appends, prunes the buffer, holds playback near the live edge")
+  Container(media, "Browser media engine", "MediaSource, SourceBuffer, HTMLVideoElement", "Decodes H.264 and AAC from appended fragments")
+}
+Container_Ext(hub, "Video stream hub", "ASP.NET Core SignalR, MessagePack", "Streams VideoChunk values")
+Rel(viewer, host, "Watches in", "Browser")
+Rel(host, player, "Embeds; receives stats every 1000 ms")
+Rel(player, media, "appendBuffer, remove, currentTime, play", "MSE and HTMLMediaElement APIs")
+Rel(hub, player, "Pushes VideoChunk values", "WebSocket, MessagePack")
+@enduml

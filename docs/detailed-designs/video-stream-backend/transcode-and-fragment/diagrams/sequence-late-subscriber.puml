@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Late subscriber and initialisation replacement
+box "Frontend - Host application" #E0F2FE
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "LiveStreamSession" as session
+  participant "StreamSubscriber A" as subA
+  participant "StreamSubscriber B" as subB
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "FfmpegFragmentSource" as source
+end box
+
+transport -> hub : stream Subscribe(streamId)
+hub -> session : Attach(subscriber A)
+alt CurrentInit absent (session starting)
+  session -> subA : Attach; wait, no media before init (L2-087)
+  source --> session : InitSegment
+  session -> session : Cache CurrentInit
+  session -> subA : kind 0, seq 0, cached bytes (L2-087)
+else CurrentInit present (late subscriber)
+  session -> subA : kind 0, seq 0, cached bytes first (L2-087)
+end
+loop Each Fragment from the source
+  source --> session : Fragment
+  session -> subA : kind 1, next seq, from the next fragment boundary (L2-087)
+  subA --> transport : VideoChunk via hub stream
+end
+hub -> session : Attach(subscriber B) mid-stream
+session -> subB : kind 0, seq 0, cached bytes; media from next boundary (L2-087)
+opt Channel full for a subscriber
+  session -> subB : DropOldest; seq still advances so a gap is visible (L2-087, L2-090)
+end
+source --> session : InitSegment from a restarted process
+session -> session : Replace CurrentInit (L2-087)
+session -> subA : kind 0, next seq, new bytes before further media
+session -> subB : kind 0, next seq, new bytes before further media
+source --> session : Fragment
+session -> subA : kind 1
+session -> subB : kind 1
+@enduml

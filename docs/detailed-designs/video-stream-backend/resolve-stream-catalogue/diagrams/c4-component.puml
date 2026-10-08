@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Resolve stream catalogue
+
+Container_Boundary(hubapp, "SignalR hub application") {
+  Component(hub, "VideoStreamHub", "SignalR hub", "Validates streamId, then answers Describe from the catalogue")
+  Component(validator, "StreamIdValidator", "Static class", "Regex check before any lookup")
+  Component(catalogue, "StreamCatalogue", "Singleton", "Dictionary of entries; TryGet by identifier")
+  Component(options, "StreamCatalogueOptions", "Options record", "Bound from MediaRoot and Streams; validated at startup")
+  Component(descriptor, "StreamDescriptor", "MessagePack contract", "streamId, title, mimeType, startedAt, width, height")
+  Component(registry, "StreamSessionRegistry", "Singleton", "Supplies startedAt for an active session")
+}
+Container_Ext(config, "Configuration", "appsettings.json and environment", "MediaRoot and Streams keys")
+Rel(hub, validator, "IsValid(streamId) first")
+Rel(hub, catalogue, "TryGet(streamId)")
+Rel(hub, registry, "Reads active session start")
+Rel(hub, descriptor, "Builds and returns")
+Rel(catalogue, options, "Built from")
+Rel(options, config, "Bound from", "IOptions")
+@enduml

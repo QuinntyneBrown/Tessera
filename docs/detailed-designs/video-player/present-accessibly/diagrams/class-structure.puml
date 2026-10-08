@@ -1,0 +1,67 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Present accessibly
+class VideoPlayer {
+  +state: Signal<VideoPlayerState>
+  +volume: InputSignal<number>
+  +muted: InputSignal<boolean>
+  #descriptor: Signal<VideoStreamDescriptor | null>
+  #aspectRatio: Signal<string>
+  #narrow: WritableSignal<boolean>
+  #muted: Signal<boolean>
+  #captionsShowing: Signal<boolean>
+  #fullscreen: Signal<boolean>
+  -host: ElementRef<HTMLElement>
+  -resizeObserver: ResizeObserver | null
+  -observeWidth(): void
+  #onStagePointerUp(event: PointerEvent): void
+  #onStageContextMenu(event: Event): void
+  #togglePlayback(): void
+  #toggleMute(): void
+}
+class ControlsVisibility {
+  +hidden: Signal<boolean>
+  -narrow: Signal<boolean>
+  -hideMs: number
+  -timer: number | null
+  +show(): void
+  +scheduleHide(): void
+  +noteHover(inside: boolean): void
+  +noteFocus(inside: boolean): void
+}
+class "video-player.scss" as Scss <<stylesheet>> {
+  +scrim: token --t-video-player-scrim
+  +controlFg: token --t-video-player-control-fg
+  +focusRing: token --t-video-player-focus-ring
+  +live: token --t-video-player-live
+  +motionDuration: token --t-video-player-motion-duration
+  +radius: token --t-video-player-radius
+  +narrowLayout(): container query below 47.5em
+  +reducedMotion(): media query prefers-reduced-motion
+  +forcedColors(): media query forced-colors active
+}
+class "@tessera/theme" as Theme <<library>> {
+  +token(name: string): string
+}
+interface VideoStreamDescriptor {
+  +streamId: string
+  +title: string
+  +mimeType: string
+  +startedAt: string
+  +width: number
+  +height: number
+}
+VideoPlayer *-- ControlsVisibility : owns
+VideoPlayer ..> VideoStreamDescriptor : aspect-ratio from width and height
+VideoPlayer ..> Scss : host and template classes, data-state
+Scss ..> Theme : fallback tokens
+@enduml

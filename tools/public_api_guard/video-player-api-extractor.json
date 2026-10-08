@@ -1,0 +1,10 @@
+{
+  "extends": "./api-extractor.json",
+  "mainEntryPointFilePath": "<projectFolder>/dist/video-player/types/tessera-video-player.d.ts",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "<projectFolder>/goldens/video-player/",
+    "reportFileName": "index.api.md",
+    "reportTempFolder": "<projectFolder>/dist/video-player-api-report/"
+  }
+}

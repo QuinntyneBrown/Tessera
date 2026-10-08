@@ -1,0 +1,114 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Customize and localise
+
+class VideoPlayer {
+  +hubUrl: InputSignal<string | null>
+  +streamId: InputSignal<string | null>
+  +accessTokenFactory: InputSignal<(() => string | Promise<string>) | undefined>
+  +captions: InputSignal<VideoPlayerCaptions | null | undefined>
+  +autoplay: InputSignal<boolean>
+  +muted: InputSignal<boolean>
+  +volume: InputSignal<number>
+  +titleOverride: InputSignal<string | undefined>
+  +stateChange: OutputEmitterRef<VideoPlayerState>
+  +error: OutputEmitterRef<VideoPlayerError>
+  +stats: OutputEmitterRef<VideoPlayerStats>
+  +state: Signal<VideoPlayerState>
+  -strings: VideoPlayerStrings
+  -transport: VideoStreamTransport
+}
+
+class VideoStreamSession {
+  -statsTimer: number | undefined
+  -bytesReceived: number
+  +start(streamId: string): void
+  +stop(): void
+  -tickStats(): VideoPlayerStats
+}
+
+interface VideoStreamTransport {
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +connectionEvents: Observable<'reconnecting' | 'reconnected' | 'closed'>
+}
+
+class "VIDEO_STREAM_TRANSPORT" as TransportToken <<InjectionToken>> {
+  +factory(): SignalRVideoStreamTransport
+}
+
+class SignalRVideoStreamTransport {
+  -connection: HubConnection | undefined
+  +configure(hubUrl: string, accessTokenFactory?: () => string | Promise<string>): void
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +stop(): Promise<void>
+}
+
+interface VideoPlayerStrings {
+  +regionLabel(title?: string): string
+  +controlsLabel: string
+  +play: string
+  +pause: string
+  +mute: string
+  +unmute: string
+  +live: string
+  +goToLive(seconds: number): string
+  +unmuted(volume: number): string
+  +endedAfter(duration: string): string
+  +behindLive(seconds: number): string
+  +reconnecting(attempt: number, max: number): string
+  +errorUnsupported(mimeType: string): string
+  +retry: string
+}
+
+class "VIDEO_PLAYER_I18N" as I18nToken <<InjectionToken>> {
+  +factory(): VideoPlayerI18n
+}
+
+class "DEFAULT_VIDEO_PLAYER_STRINGS" as Defaults <<const>> {
+}
+
+interface VideoPlayerStats {
+  +state: VideoPlayerState
+  +latencySeconds: number
+  +bufferedAheadSeconds: number
+  +bytesReceived: number
+  +droppedFrames: number
+}
+
+interface VideoStreamDescriptor {
+  +streamId: string
+  +title: string
+  +mimeType: string
+  +startedAt: string
+  +width: number
+  +height: number
+}
+
+interface VideoChunk {
+  +kind: 0 | 1
+  +seq: number
+  +data: Uint8Array
+}
+
+VideoPlayer *-- VideoStreamSession : creates per streamId
+VideoPlayer ..> I18nToken : injects once
+I18nToken ..> Defaults : merged over
+Defaults ..|> VideoPlayerStrings
+VideoStreamSession ..> TransportToken : injects
+TransportToken ..> SignalRVideoStreamTransport : default factory
+SignalRVideoStreamTransport ..|> VideoStreamTransport
+VideoStreamSession --> VideoPlayerStats : emits at 1 Hz
+VideoStreamTransport ..> VideoStreamDescriptor : returns
+VideoStreamTransport ..> VideoChunk : streams
+@enduml

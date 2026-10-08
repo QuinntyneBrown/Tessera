@@ -10,7 +10,7 @@ mkdirSync(consumer, { recursive: true });
 cpSync(join(workspace, 'test', 'fixtures', 'combobox-consumer'), consumer, { recursive: true });
 const modules = join(consumer, 'node_modules');
 mkdirSync(modules, { recursive: true });
-for (const name of ['@angular', '@types', 'rxjs', 'tslib', 'typescript', 'fflate']) {
+for (const name of ['@angular', '@types', '@microsoft', 'rxjs', 'tslib', 'typescript', 'fflate']) {
   const target = join(modules, name);
   if (!existsSync(target))
     symlinkSync(
@@ -19,7 +19,7 @@ for (const name of ['@angular', '@types', 'rxjs', 'tslib', 'typescript', 'fflate
       process.platform === 'win32' ? 'junction' : 'dir',
     );
 }
-for (const name of ['theme', 'scorm-player', 'combobox']) {
+for (const name of ['theme', 'scorm-player', 'combobox', 'video-player']) {
   const installed = join(modules, '@tessera', name);
   mkdirSync(installed, { recursive: true });
   execFileSync(

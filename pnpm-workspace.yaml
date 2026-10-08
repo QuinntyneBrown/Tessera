@@ -2,6 +2,7 @@ packages:
   - src/theme
   - src/scorm-player
   - src/combobox
+  - src/video-player
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

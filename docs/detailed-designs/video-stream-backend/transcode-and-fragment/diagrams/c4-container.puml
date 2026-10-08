@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Transcode and fragment
+
+Person(viewer, "Viewer", "Watches a stream")
+Container_Ext(host, "Host LMS browser application", "Angular with @tessera/video-player", "Receives kind 0 then kind 1 chunks")
+System_Boundary(demo, "Tessera.VideoStream.Demo") {
+  Container(hubapp, "SignalR hub application", "ASP.NET Core", "Parses fragmented MP4 from stdout and caches the initialisation segment")
+  Container(ffmpeg, "FFmpeg process", "ffmpeg child process", "Encodes H.264/AAC fragmented MP4 to pipe:1")
+  Container(media, "Media files", "Filesystem under MediaRoot", "Catalogued MP4 input")
+}
+Rel(viewer, host, "Uses", "Browser")
+Rel(host, hubapp, "Subscribe(streamId)", "SignalR MessagePack over HTTPS")
+Rel(hubapp, ffmpeg, "Starts via ProcessStartInfo.ArgumentList; reads stdout; drains stderr", "Pipes")
+Rel(ffmpeg, media, "Reads", "-re -i file")
+@enduml

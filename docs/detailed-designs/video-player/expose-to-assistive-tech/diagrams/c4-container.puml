@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Expose to assistive tech
+
+Person(viewer, "Screen reader user", "Navigates the player by control")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host LMS application", "Angular", "Supplies titleOverride and VIDEO_PLAYER_I18N overrides")
+  Container(player, "@tessera/video-player", "Angular library", "Owns the region, group, native controls, alert, and polite live region")
+}
+Container_Ext(sr, "Screen reader", "Assistive technology", "Speaks names, states, and live-region text")
+Container_Ext(hub, "Host SignalR hub", "ASP.NET Core SignalR", "Returns the descriptor title")
+Rel(viewer, sr, "Uses")
+Rel(sr, player, "Reads", "Accessibility tree")
+Rel(host, player, "Provides strings and title")
+Rel(player, hub, "Describe", "WebSocket, MessagePack")
+@enduml

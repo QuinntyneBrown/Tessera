@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Recover from interruptions
+Container_Boundary(pkg, "@tessera/video-player in the browser") {
+  Component(vp, "VideoPlayer", "Angular component", "Renders reconnecting status and the error panel; retry(); emits error")
+  Component(session, "VideoStreamSession", "Orchestrator", "Handles connection events, maps failures, restarts")
+  Component(policy, "ReconnectPolicy", "Schedule", "Delays 0, 2, 5, 10, 10 s; attempt counter; reset")
+  Component(pipeline, "MediaSourcePipeline", "Media pipeline", "Rebuilds the MediaSource on the new kind 0 chunk")
+  Component(ann, "VideoPlayerAnnouncer", "Text queue", "Status messages for reconnecting and reconnected; clear on error")
+  Component(transport, "SignalRVideoStreamTransport", "Transport", "withAutomaticReconnect; connectionEvents; fresh HubConnection on restart")
+}
+Container_Ext(hub, "Host SignalR hub", "ASP.NET Core SignalR", "Describe and Subscribe")
+Rel(vp, session, "restart(); reads state and error")
+Rel(session, policy, "start, reset")
+Rel(session, pipeline, "reset on new initialisation chunk")
+Rel(session, ann, "Queues status; clears on error")
+Rel(session, transport, "connectionEvents, subscribe, stop")
+Rel(transport, hub, "HubConnection", "WebSocket, MessagePack")
+@enduml

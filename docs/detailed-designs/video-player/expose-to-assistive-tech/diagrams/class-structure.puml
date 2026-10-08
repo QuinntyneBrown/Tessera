@@ -1,0 +1,76 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Expose to assistive tech
+class VideoPlayer {
+  +titleOverride: InputSignal<string | undefined>
+  +state: Signal<VideoPlayerState>
+  #title: Signal<string | null>
+  #regionName: Signal<string>
+  #playPauseName: Signal<string>
+  #playPauseDisabled: Signal<boolean>
+  #muted: Signal<boolean>
+  #volume: Signal<number>
+  #volumeText: Signal<string>
+  #latencySeconds: Signal<number>
+  #liveName: Signal<string>
+  #liveDisabled: Signal<boolean>
+  #captionsShowing: Signal<boolean>
+  #fullscreen: Signal<boolean>
+  #currentError: Signal<VideoPlayerError | null>
+  -liveRegion: ElementRef<HTMLElement>
+}
+class VideoPlayerAnnouncer {
+  -element: HTMLElement
+  -pendingStatus: string | null
+  -timer: number | null
+  +status(message: string): void
+  +toggle(message: string): void
+  +clear(): void
+  -write(message: string): void
+}
+class VideoStreamSession {
+  -bufferingTimer: number | null
+  -behindLiveAnnounced: boolean
+  -onStateChange(next: VideoPlayerState): void
+  -onStatsTick(latencySeconds: number): void
+}
+interface VideoPlayerStrings {
+  +regionName: string
+  +regionNameWithTitle: (title: string) => string
+  +controlsGroup: string
+  +play: string
+  +pause: string
+  +mute: string
+  +unmute: string
+  +volume: string
+  +live: string
+  +captions: string
+  +fullscreen: string
+  +exitFullscreen: string
+  +retry: string
+  +connecting: (title: string) => string
+  +unmuted: (volume: number) => string
+  +endedAfter: (duration: string) => string
+  +behindLive: (seconds: number) => string
+  +reconnecting: (attempt: number, max: number) => string
+}
+class "VIDEO_PLAYER_I18N" as Token <<InjectionToken>> {
+  +value: Partial<VideoPlayerStrings>
+}
+VideoPlayer *-- VideoPlayerAnnouncer : owns one per instance
+VideoPlayer *-- VideoStreamSession : owns per streamId
+VideoStreamSession --> VideoPlayerAnnouncer : status()
+VideoPlayer --> VideoPlayerAnnouncer : toggle(), clear()
+VideoPlayer ..> VideoPlayerStrings : resolves names
+VideoStreamSession ..> VideoPlayerStrings : formats messages
+Token ..> VideoPlayerStrings : partial override merged over defaults
+@enduml

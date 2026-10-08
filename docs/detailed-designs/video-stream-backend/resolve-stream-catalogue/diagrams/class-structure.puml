@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Resolve stream catalogue
+class StreamCatalogueOptions {
+  +string MediaRoot
+  +Dictionary<string, StreamCatalogueEntry> Streams
+}
+class StreamCatalogueEntry {
+  +string Title
+  +string File
+  +bool Loop
+  +string Codecs
+  +string ResolvedPath
+  +string MimeType
+}
+class StreamCatalogue {
+  -IReadOnlyDictionary<string, StreamCatalogueEntry> entries
+  +StreamCatalogue(options: IOptions<StreamCatalogueOptions>, environment: IHostEnvironment)
+  +TryGet(streamId: string, entry: out StreamCatalogueEntry): bool
+  +Validate(options: StreamCatalogueOptions): ValidateOptionsResult
+}
+class StreamIdValidator <<static>> {
+  -Regex Pattern
+  +IsValid(streamId: string): bool
+}
+class StreamDescriptor <<MessagePackObject>> {
+  {field} +[Key(0)] string StreamId
+  {field} +[Key(1)] string Title
+  {field} +[Key(2)] string MimeType
+  {field} +[Key(3)] string StartedAt
+  {field} +[Key(4)] int Width
+  {field} +[Key(5)] int Height
+}
+class VideoStreamHub {
+  -StreamCatalogue catalogue
+  -StreamSessionRegistry registry
+  +Describe(streamId: string): Task<StreamDescriptor>
+  +Subscribe(streamId: string, ct: CancellationToken): IAsyncEnumerable<VideoChunk>
+}
+StreamCatalogueOptions "1" *-- "*" StreamCatalogueEntry : Streams
+StreamCatalogue ..> StreamCatalogueOptions : binds and validates
+StreamCatalogue "1" o-- "*" StreamCatalogueEntry : entries
+VideoStreamHub ..> StreamIdValidator : checks first
+VideoStreamHub --> StreamCatalogue : TryGet
+VideoStreamHub ..> StreamDescriptor : returns
+@enduml

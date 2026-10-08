@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Verify and document
+
+Container_Boundary(kit, "Verification and documentation kit") {
+  Component(harness, "VideoPlayerHarness", "CDK ComponentHarness", "getState, play, pause, toggleMute, setVolume, getVolume, toggleCaptions, areCaptionsShowing, isLive, goToLive, getStatusText, getErrorMessage, retry")
+  Component(page, "VideoPlayerPage", "Playwright page object", "Owns every selector; open(scenario); axe per state; viewport and text helpers")
+  Component(fixture, "FixtureVideoStreamTransport", "e2e-app transport", "Box parser over lecture-10s.fmp4; one fragment per second; window.__videoFixture")
+  Component(specs, "Acceptance spec files", "Playwright, Chromium", "Traces header; one test per L2-069 criterion; widths, reflow, text, spacing")
+  Component(adapter, "signalr-video-stream-transport.spec.ts", "vitest", "Mocked HubConnection: protocol, order, resubscribe, dispose")
+  Component(backendspec, "video-player-backend.spec.ts", "Playwright, opt-in", "Skipped unless TESSERA_VIDEO_HUB_URL")
+  Component(matrix, "video-player-screen-reader-matrix.md", "Markdown record", "Five screen readers, zoom row; pending until executed")
+  Component(readme, "src/video-player/README.md and examples", "Markdown and Angular", "Adoption guide, five examples, dev-app page, definition of done")
+}
+Container_Ext(player, "VideoPlayer", "@tessera/video-player", "Production component under test")
+
+Rel(harness, player, "Operates by role, name, and data-state")
+Rel(page, player, "Locates by role and name")
+Rel(specs, page, "State intent only")
+Rel(page, fixture, "Calls window.__videoFixture controls")
+Rel(fixture, player, "Provided through VIDEO_STREAM_TRANSPORT")
+Rel(adapter, player, "Tests SignalRVideoStreamTransport")
+Rel(backendspec, page, "Uses when gated on")
+Rel(readme, harness, "Documents")
+@enduml

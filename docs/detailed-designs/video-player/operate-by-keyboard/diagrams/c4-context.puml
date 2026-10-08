@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Operate by keyboard
+
+Person(viewer, "Keyboard-only viewer", "Operates the player with Tab and single-key shortcuts")
+System(app, "Host LMS application with @tessera/video-player", "Dispatches shortcuts and keeps focus on an enabled control")
+System_Ext(hub, "Host SignalR hub", "Streams video; unaffected by keyboard operation")
+Rel(viewer, app, "Presses keys in", "Browser")
+Rel(app, hub, "Streams from", "WebSocket, MessagePack")
+@enduml

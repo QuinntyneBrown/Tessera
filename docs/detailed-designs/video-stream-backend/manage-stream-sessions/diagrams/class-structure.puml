@@ -1,0 +1,80 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Manage stream sessions
+enum SessionState {
+  Starting
+  Live
+  Restarting
+  Stopped
+}
+class StreamSessionRegistry <<IHostedService>> {
+  -ConcurrentDictionary<string, LiveStreamSession> sessions
+  -Func<StreamCatalogueEntry, IFragmentSource> sourceFactory
+  +int ActiveSessionCount
+  +GetOrCreate(streamId: string, entry: StreamCatalogueEntry): LiveStreamSession
+  +TryGet(streamId: string, session: out LiveStreamSession): bool
+  +Remove(streamId: string): void
+  +StopAsync(ct: CancellationToken): Task
+}
+class LiveStreamSession {
+  +string StreamId
+  +SessionState State
+  +DateTimeOffset StartedAt
+  -SemaphoreSlim gate
+  -List<StreamSubscriber> subscribers
+  -ReadOnlyMemory<byte>? currentInit
+  -CancellationTokenSource? idleStop
+  -PeriodicTimer sweep
+  -Queue<DateTimeOffset> restartTimes
+  -int idleStopSeconds
+  +Attach(subscriber: StreamSubscriber): Task
+  +Detach(subscriber: StreamSubscriber): Task
+  +StopAsync(): Task
+  -RunSourceAsync(ct: CancellationToken): Task
+  -TryRestart(exitCode: int): bool
+  -SweepAsync(): Task
+  -FailAll(message: string): void
+}
+class StreamSubscriber {
+  +string ConnectionId
+  -Channel<VideoChunk> channel
+  -uint nextSeq
+  +long Dropped
+  +DateTimeOffset LastReadUtc
+  +bool HasInit
+  +Send(kind: byte, data: ReadOnlyMemory<byte>): void
+  +ReadAllAsync(ct: CancellationToken): IAsyncEnumerable<VideoChunk>
+  +Complete(error: Exception?): void
+}
+class FfmpegFragmentSource {
+  -TimeSpan stdoutTimeout
+  +ReadAsync(ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+class FfmpegProcess {
+  +int? ExitCode
+  +Start(entry: StreamCatalogueEntry, ffmpegPath: string): void
+  +KillTree(): void
+  +LastStderrLines(): IReadOnlyList<string>
+}
+class FfmpegHealthCheck <<IHealthCheck>> {
+  -string ffmpegPath
+  -StreamSessionRegistry registry
+  +CheckHealthAsync(context: HealthCheckContext, ct: CancellationToken): Task<HealthCheckResult>
+}
+StreamSessionRegistry "1" *-- "*" LiveStreamSession : sessions
+LiveStreamSession --> SessionState : State
+LiveStreamSession "1" o-- "*" StreamSubscriber : subscribers
+LiveStreamSession --> FfmpegFragmentSource : supervises
+FfmpegFragmentSource *-- FfmpegProcess : owns
+FfmpegHealthCheck --> StreamSessionRegistry : reads count
+FfmpegHealthCheck ..> FfmpegProcess : probes -version
+@enduml

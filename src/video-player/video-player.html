@@ -1,0 +1,233 @@
+<div
+  class="t-video-player__region"
+  role="region"
+  tabindex="-1"
+  #region
+  [attr.aria-label]="regionName()"
+>
+  <div
+    class="t-video-player__stage"
+    [style.aspect-ratio]="aspectRatio()"
+    (pointerup)="onStagePointerUp($event)"
+    (click)="onStageClick()"
+    (contextmenu)="$event.preventDefault()"
+  >
+    <video
+      class="t-video-player__video"
+      playsinline
+      #video
+      (playing)="onPlaying()"
+      (waiting)="onWaiting()"
+      (ended)="onEnded()"
+      (error)="onVideoError()"
+    >
+      @for (captions of captionTracks(); track captions.src) {
+        <track
+          #track
+          kind="captions"
+          [src]="captions.src"
+          [srclang]="captions.srclang"
+          [label]="captions.label"
+        />
+      }
+    </video>
+    @if (state() === 'connecting') {
+      <div class="t-video-player__placeholder">
+        @if (title(); as title) {
+          <p class="t-video-player__title">{{ title }}</p>
+        }
+        <p class="t-video-player__status">{{ strings.connectingStatus }}</p>
+      </div>
+    }
+    @if (state() === 'buffering') {
+      <div class="t-video-player__overlay">
+        <div class="t-video-player__card">
+          <div class="t-video-player__spinner" aria-hidden="true"></div>
+          @if (waitingForSource()) {
+            <p class="t-video-player__status">{{ strings.waitingForSource }}</p>
+          }
+        </div>
+      </div>
+    }
+    @if (state() === 'reconnecting') {
+      <div class="t-video-player__overlay">
+        <div class="t-video-player__card">
+          <div class="t-video-player__spinner" aria-hidden="true"></div>
+          <p class="t-video-player__status">
+            {{ strings.reconnecting(reconnectAttemptValue(), 5) }}
+          </p>
+        </div>
+      </div>
+    }
+    @if (state() === 'ended') {
+      <div class="t-video-player__ended">
+        <h2>{{ strings.streamEnded }}</h2>
+        @if (title(); as title) {
+          <p class="t-video-player__title">{{ title }}</p>
+        }
+        <p>{{ strings.liveFor(liveDuration()) }}</p>
+      </div>
+    }
+    @if (state() === 'paused') {
+      <div class="t-video-player__central-play" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z" /></svg>
+      </div>
+    }
+    @if (unmuteChip()) {
+      <div class="t-video-player__chip" (click)="$event.stopPropagation()">
+        <button type="button" data-control="unmute-chip" (click)="toggleMute()">
+          {{ strings.unmuteChip }}
+        </button>
+        <button type="button" [attr.aria-label]="strings.dismiss" (click)="dismissUnmuteChip()">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+    }
+    @if (currentError(); as error) {
+      <div class="t-video-player__error" role="alert">
+        <h2 class="t-video-player__error-heading" tabindex="-1" #errorHeading>
+          {{ error.message }}
+        </h2>
+        @if (error.code !== 'unsupported') {
+          <button type="button" class="t-video-player__retry" (click)="retry()">
+            {{ strings.retry }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+  <div
+    class="t-video-player__bar"
+    role="group"
+    #bar
+    [attr.aria-label]="strings.controlsLabel"
+    [class.t-video-player__bar--hidden]="!visibility.visible()"
+    (pointerenter)="$event.pointerType === 'mouse' && visibility.setHovered(true)"
+    (pointerleave)="visibility.setHovered(false)"
+    (pointerdown)="visibility.show()"
+  >
+    <button
+      type="button"
+      class="t-video-player__control"
+      data-control="play-pause"
+      #playPause
+      [attr.aria-label]="playing() ? strings.pause : strings.play"
+      [attr.aria-disabled]="playPauseDisabled() ? 'true' : null"
+      (click)="togglePlayback()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        @if (playing()) {
+          <path d="M6 5h4v14H6zm8 0h4v14h-4z" />
+        } @else {
+          <path d="M8 5v14l11-7z" />
+        }
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="t-video-player__control"
+      data-control="mute"
+      [attr.aria-label]="mutePressed() ? strings.unmute : strings.mute"
+      [attr.aria-pressed]="mutePressed()"
+      [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
+      (click)="toggleMute()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+        [attr.data-icon]="mutePressed() ? 'muted' : 'volume'"
+      >
+        @if (mutePressed()) {
+          <path
+            d="M4 9v6h4l5 4V5L8 9zm12.5 0L15 10.5l1.5 1.5-1.5 1.5 1.5 1.5 1.5-1.5 1.5 1.5L21 13.5 19.5 12 21 10.5 19.5 9 18 10.5z"
+          />
+        } @else {
+          <path
+            d="M4 9v6h4l5 4V5L8 9zm11 0a4 4 0 0 1 0 6v-2a2 2 0 0 0 0-2zm0-4v2a7 7 0 0 1 0 10v2a9 9 0 0 0 0-14z"
+          />
+        }
+      </svg>
+    </button>
+    <input
+      type="range"
+      class="t-video-player__volume"
+      data-control="volume"
+      #slider
+      min="0"
+      max="100"
+      step="5"
+      [attr.aria-label]="strings.volumeLabel"
+      [attr.aria-valuetext]="strings.volumeValue(volumeValue())"
+      [value]="volumeValue()"
+      [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
+      (input)="setVolume($any($event.target).valueAsNumber, $any($event.target))"
+    />
+    @if (state() !== 'idle' && state() !== 'connecting') {
+      <button
+        type="button"
+        class="t-video-player__live"
+        data-control="live"
+        [attr.aria-label]="liveName()"
+        [attr.aria-disabled]="behindLive() && !controlsDisabled() ? null : 'true'"
+        (click)="goToLive()"
+      >
+        <span class="t-video-player__live-dot" aria-hidden="true"></span>
+        <span aria-hidden="true">{{ strings.liveBadge }}</span>
+      </button>
+    }
+    @if (captions()) {
+      <button
+        type="button"
+        class="t-video-player__control"
+        data-control="captions"
+        [attr.aria-label]="strings.captions"
+        [attr.aria-pressed]="captionsShowing()"
+        [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
+        (click)="toggleCaptions()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+          [attr.data-icon]="captionsShowing() ? 'captions-on' : 'captions-off'"
+        >
+          @if (captionsShowing()) {
+            <path d="M3 5h18v14H3zm4 5v4h4v-1.5H8.5v-1H11V10zm6 0v4h4v-1.5h-2.5v-1H17V10z" />
+          } @else {
+            <path
+              d="M3 5h18v14H3zm2 2v10h14V7zm2 3h4v1.5H8.5v1H11V14H7zm6 0h4v1.5h-2.5v1H17V14h-4z"
+            />
+          }
+        </svg>
+      </button>
+    }
+    <span class="t-video-player__elapsed" aria-hidden="true">{{ elapsed() }}</span>
+    @if (fullscreenSupported) {
+      <button
+        type="button"
+        class="t-video-player__control"
+        data-control="fullscreen"
+        [attr.aria-label]="isFullscreen() ? strings.exitFullscreen : strings.fullscreen"
+        [attr.aria-pressed]="isFullscreen()"
+        (click)="toggleFullscreen()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+          [attr.data-icon]="isFullscreen() ? 'exit' : 'enter'"
+        >
+          @if (isFullscreen()) {
+            <path d="M8 3v5H3v2h7V3zm8 0h-2v7h7V8h-5zM3 14v2h5v5h2v-7zm11 0v7h2v-5h5v-2z" />
+          } @else {
+            <path d="M3 3v7h2V5h5V3zm11 0v2h5v5h2V3zM3 14v7h7v-2H5v-5zm16 0v5h-5v2h7v-7z" />
+          }
+        </svg>
+      </button>
+    }
+  </div>
+  <div class="t-video-player__announcer" aria-live="polite" aria-atomic="true" #liveRegion></div>
+</div>

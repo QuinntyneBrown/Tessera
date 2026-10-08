@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Connect and subscribe
+
+Person(viewer, "Viewer", "Opens a page that embeds a live video player")
+System(app, "Host LMS application with @tessera/video-player", "Connects to the hub, describes the stream, subscribes to chunks")
+System_Ext(hub, "Video stream hub", "SignalR hub exposing Describe and Subscribe with MessagePack")
+Rel(viewer, app, "Opens the player page in", "Browser")
+Rel(app, hub, "Describes and subscribes to a stream through", "WebSocket, MessagePack")
+@enduml

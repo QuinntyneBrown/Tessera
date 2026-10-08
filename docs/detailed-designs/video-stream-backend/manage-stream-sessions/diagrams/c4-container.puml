@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage stream sessions
+
+Person(viewer, "Viewer", "Watches a stream")
+Container_Ext(host, "Host LMS browser application", "Angular with @tessera/video-player", "One subscription per player")
+System_Boundary(demo, "Tessera.VideoStream.Demo") {
+  Container(hubapp, "SignalR hub application", "ASP.NET Core", "StreamSessionRegistry and LiveStreamSessions; bounded channels; /healthz")
+  Container(ffmpeg, "FFmpeg process", "ffmpeg child process", "One per active stream; killed as a process tree")
+  Container(media, "Media files", "Filesystem under MediaRoot", "Catalogued MP4 input")
+}
+Rel(viewer, host, "Uses", "Browser")
+Rel(host, hubapp, "Subscribe; dispose", "SignalR MessagePack over HTTPS")
+Rel(hubapp, ffmpeg, "Start, 15 s watchdog, kill tree, restart 2 s up to 3 per 60 s", "Pipes and process control")
+Rel(ffmpeg, media, "Reads")
+@enduml

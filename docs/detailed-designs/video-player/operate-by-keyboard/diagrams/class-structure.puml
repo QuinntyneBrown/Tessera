@@ -1,0 +1,51 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Operate by keyboard
+class VideoPlayer {
+  +captions: InputSignal<VideoPlayerCaptions | null>
+  +state: Signal<VideoPlayerState>
+  #volume: Signal<number>
+  #fullscreenSupported: boolean
+  -host: ElementRef<HTMLElement>
+  -volumeSlider: Signal<ElementRef<HTMLInputElement> | undefined>
+  -controls: Signal<readonly ElementRef<HTMLElement>[]>
+  -lastFocused: HTMLElement | null
+  #onKeydown(event: KeyboardEvent): void
+  #togglePlayback(): void
+  #toggleMute(): void
+  #toggleFullscreen(): void
+  #toggleCaptions(): void
+  #exitFullscreen(): void
+  -stepVolume(delta: number): void
+  -setVolume(value: number): void
+  -focusNearestEnabled(index: number): void
+}
+class ControlsVisibility {
+  +hidden: Signal<boolean>
+  +show(): void
+  +noteFocus(inside: boolean): void
+}
+class KeyAction <<type>> {
+  +key: string
+  +skipOnSlider: boolean
+  +run: () => void
+}
+class VideoPlayerPage <<Playwright page object>> {
+  +focusControl(name: string): Promise<void>
+  +pressKey(key: string): Promise<void>
+  +tabOrder(): Promise<string[]>
+  +focusedControlName(): Promise<string>
+}
+VideoPlayer *-- ControlsVisibility : owns
+VideoPlayer ..> KeyAction : dispatches
+VideoPlayerPage ..> VideoPlayer : drives through the DOM
+@enduml

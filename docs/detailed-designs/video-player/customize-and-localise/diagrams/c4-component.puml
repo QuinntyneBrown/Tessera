@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Customize and localise
+
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component", "Inputs, outputs, resolved strings, host data-state")
+  Component(session, "VideoStreamSession", "Internal orchestrator", "Injects the transport; emits stateChange, error, and 1 Hz stats")
+  Component(token, "VIDEO_STREAM_TRANSPORT", "Injection token", "Default factory creates SignalRVideoStreamTransport")
+  Component(signalr, "SignalRVideoStreamTransport", "Default transport", "HubConnection with MessagePackHubProtocol")
+  Component(i18n, "VIDEO_PLAYER_I18N", "Injection token", "Partial<VideoPlayerStrings> merged over DEFAULT_VIDEO_PLAYER_STRINGS")
+  Component(styles, "video-player.scss", "Stylesheet", "var(--t-video-player-*, theme.token('...')) fallback chain")
+  Component(announcer, "VideoPlayerAnnouncer", "Text queue", "Receives already-localised plain text")
+}
+Container_Ext(theme, "@tessera/theme", "Sass module", "theme.defaults and theme.token")
+Container_Ext(custom, "Consumer transport", "Host class", "Optional VideoStreamTransport implementation")
+
+Rel(player, session, "Creates per streamId; forwards inputs")
+Rel(session, token, "Injects")
+Rel(token, signalr, "Creates by default")
+Rel(token, custom, "Resolves to when provided")
+Rel(player, i18n, "Injects once; builds strings")
+Rel(player, announcer, "Passes formatted messages")
+Rel(styles, theme, "Includes defaults and reads tokens")
+@enduml

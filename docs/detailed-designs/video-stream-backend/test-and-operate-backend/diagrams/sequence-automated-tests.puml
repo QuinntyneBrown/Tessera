@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Automated tests
+actor "Developer" as dev
+box "Backend - Demo API" #D1FADF
+  participant "xunit runner" as runner
+  participant "WebApplicationFactory + MessagePack client" as factory
+  participant "VideoStreamHub" as hub
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "Mp4FragmentReader" as reader
+  participant "LiveStreamSession" as session
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "FixtureFragmentSource" as fixture
+  participant "Fixtures/lecture-10s.fmp4" as file
+  participant "ffmpeg on PATH" as ffmpeg
+end box
+
+dev -> runner : dotnet test
+runner -> reader : Mp4FragmentReaderTests: fixture bytes in odd slices (L2-093)
+reader -> file : Read
+reader --> runner : One InitSegment, then 10 +/- 1 Fragments; InvalidDataException for size 0 or 1 (L2-086)
+runner -> session : LiveStreamSessionTests with FixtureFragmentSource and FakeTimeProvider (L2-093)
+session -> fixture : ReadAsync
+fixture -> file : Replay events
+fixture --> session : InitSegment, Fragments, optional FailAfter exception
+session --> runner : Start on first attach, grace stop, late joiner init first, restart, drop-oldest, eviction, failure (L2-087, L2-089, L2-090, L2-091)
+runner -> factory : Host Program with the session factory bound to FixtureFragmentSource
+factory -> hub : Negotiate without token
+hub --> factory : 401 (L2-092)
+factory -> hub : Describe unknown and malformed ids
+hub --> factory : HubException("unknown-stream") (L2-085)
+factory -> hub : Describe lecture-hall-a
+hub --> factory : Six integer-keyed members (L2-088)
+factory -> hub : Subscribe lab-camera-short
+hub --> factory : kind 0 first, seq +1, completion (L2-087, L2-088)
+factory -> hub : Handshake with JSON protocol
+hub --> factory : Refused (L2-088)
+runner -> ffmpeg : Integration trait: probe ffmpeg -version
+alt ffmpeg absent
+  runner --> dev : Integration test skipped with reason; all other tests pass (L2-093)
+else ffmpeg present
+  runner -> ffmpeg : Real pipeline over the fixture
+  ffmpeg --> runner : InitSegment then first Fragment (L2-093)
+end
+runner --> dev : Test results
+@enduml

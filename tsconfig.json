@@ -12,7 +12,8 @@
     "paths": {
       "@tessera/scorm-player": ["./src/scorm-player/index.ts"],
       "@tessera/combobox": ["./src/combobox/index.ts"],
-      "@tessera/theme": ["./src/theme/index.ts"]
+      "@tessera/theme": ["./src/theme/index.ts"],
+      "@tessera/video-player": ["./src/video-player/index.ts"]
     },
     "target": "ES2022",
     "module": "preserve",
@@ -33,6 +34,9 @@
     },
     {
       "path": "./src/combobox/tsconfig.lib.json"
+    },
+    {
+      "path": "./src/video-player/tsconfig.lib.json"
     },
     {
       "path": "./src/dev-app/tsconfig.app.json"

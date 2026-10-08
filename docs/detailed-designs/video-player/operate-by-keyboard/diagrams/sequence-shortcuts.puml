@@ -1,0 +1,53 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Shortcut dispatch
+actor "Viewer" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "ControlsVisibility" as visibility
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "Volume slider (range input)" as slider
+  participant "Video element" as video
+end box
+
+
+viewer -> vp : keydown with focus inside the host (L2-069)
+alt Ctrl, Alt, or Meta held
+  vp --> viewer : Ignored; default kept
+else Space or K, focus not on the slider
+  vp -> visibility : show()
+  vp -> vp : togglePlayback(); preventDefault (L2-069)
+  vp -> video : play() or pause() per state guards
+else M, F, or C (case-insensitive)
+  vp -> visibility : show()
+  vp -> vp : toggleMute(), toggleFullscreen(), or toggleCaptions(); preventDefault
+  vp -> video : muted, requestFullscreen on host, or track mode
+else Arrow Up or Arrow Down, focus not on the slider
+  vp -> visibility : show()
+  vp -> vp : stepVolume(+5 or -5), clamped 0 to 100; preventDefault
+  vp -> slider : value and aria-valuetext updated
+  vp -> video : volume = value / 100
+else Arrow key with focus on the slider
+  vp --> slider : Not handled; native range step of 5 applies (L2-069)
+  slider -> vp : input event
+  vp -> video : volume = value / 100 (single change)
+else Arrow Left or Arrow Right elsewhere
+  vp --> viewer : Nothing
+else Escape
+  alt document.fullscreenElement is the host
+    vp -> vp : exitFullscreen(); preventDefault (L2-069)
+  else Not fullscreen
+    vp --> viewer : Nothing; default kept
+  end
+end
+@enduml

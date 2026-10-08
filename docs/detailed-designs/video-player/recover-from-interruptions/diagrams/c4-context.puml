@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Recover from interruptions
+
+Person(viewer, "Viewer", "Watches a live stream and activates Retry after a failure")
+System(app, "Host LMS application with @tessera/video-player", "Reconnects, re-subscribes, and shows an error panel")
+System_Ext(hub, "Host SignalR hub", "Serves Describe and Subscribe; the connection may drop")
+Rel(viewer, app, "Watches and retries in", "Browser")
+Rel(app, hub, "Reconnects to and re-subscribes with", "WebSocket, MessagePack")
+@enduml

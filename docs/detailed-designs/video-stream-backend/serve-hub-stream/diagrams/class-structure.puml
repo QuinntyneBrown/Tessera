@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Serve hub stream
+class VideoStreamHub <<Authorize Hub>> {
+  -StreamCatalogue catalogue
+  -StreamSessionRegistry registry
+  -ILogger<VideoStreamHub> logger
+  +Describe(streamId: string): Task<StreamDescriptor>
+  +Subscribe(streamId: string, ct: CancellationToken): IAsyncEnumerable<VideoChunk>
+}
+class StreamDescriptor <<MessagePackObject>> {
+  {field} +[Key(0)] string StreamId
+  {field} +[Key(1)] string Title
+  {field} +[Key(2)] string MimeType
+  {field} +[Key(3)] string StartedAt
+  {field} +[Key(4)] int Width
+  {field} +[Key(5)] int Height
+}
+class VideoChunk <<MessagePackObject>> {
+  {field} +[Key(0)] byte Kind
+  {field} +[Key(1)] uint Seq
+  {field} +[Key(2)] byte[] Data
+}
+class DemoTokenAuthenticationHandler {
+  -IOptions<DemoOptions> demo
+  #HandleAuthenticateAsync(): Task<AuthenticateResult>
+  -ReadToken(request: HttpRequest): string?
+}
+class DemoOptions {
+  +string AccessToken
+}
+class DemoTokenEndpoint <<static>> {
+  +MapDemoToken(app: IEndpointRouteBuilder): IEndpointConventionBuilder
+}
+class StreamSessionRegistry {
+  +GetOrCreate(streamId: string, entry: StreamCatalogueEntry): LiveStreamSession
+}
+class StreamSubscriber {
+  +ReadAllAsync(ct: CancellationToken): IAsyncEnumerable<VideoChunk>
+}
+VideoStreamHub ..> StreamDescriptor : returns
+VideoStreamHub ..> VideoChunk : yields
+VideoStreamHub --> StreamSessionRegistry : GetOrCreate
+VideoStreamHub ..> StreamSubscriber : iterates; detaches in finally
+DemoTokenAuthenticationHandler --> DemoOptions : compares token to
+DemoTokenEndpoint --> DemoOptions : returns token from
+DemoTokenAuthenticationHandler ..> VideoStreamHub : guards via [Authorize]
+@enduml

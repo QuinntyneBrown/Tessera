@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Expose to assistive tech
+Container_Boundary(pkg, "@tessera/video-player in the browser") {
+  Component(vp, "VideoPlayer", "Angular component", "Binds region name, group, aria-pressed, aria-disabled, aria-valuetext, alert")
+  Component(ann, "VideoPlayerAnnouncer", "Text queue", "150 ms status coalescing; immediate toggles; clear on error")
+  Component(session, "VideoStreamSession", "Orchestrator", "Emits state milestones, buffering after 1000 ms, behind-live once at 10 s")
+  Component(strings, "VideoPlayerStrings", "Merged i18n table", "Names and messages; unmuted, endedAfter, behindLive, reconnecting functions")
+  Component(region, "Polite live region", "Hidden div aria-live=polite", "Present and empty from first render")
+}
+Container_Ext(sr, "Screen reader", "Assistive technology", "Reads the accessibility tree")
+Rel(session, ann, "status(message)")
+Rel(vp, ann, "toggle(message), clear()")
+Rel(ann, region, "Writes text content")
+Rel(vp, strings, "Resolves every name and message")
+Rel(session, strings, "Formats milestone messages")
+Rel(sr, vp, "Reads roles, names, states")
+Rel(sr, region, "Speaks changes")
+@enduml

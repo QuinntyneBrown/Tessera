@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Test and operate backend
+
+Person(viewer, "Viewer", "Watches the demonstration stream")
+Person(dev, "Developer", "Runs dotnet test and dotnet run; records the manual check")
+System(host, "Host LMS browser application with @tessera/video-player", "Dev app page targeting the demonstration backend")
+System(demo, "Tessera.VideoStream.Demo", "Streams lecture-hall-a and lab-camera-short; reports /healthz")
+System_Ext(ffmpeg, "FFmpeg", "External transcoder; optional for tests")
+System_Ext(media, "MP4 media file", "Fixture and any local MP4 under MediaRoot")
+Rel(viewer, host, "Watches", "Browser")
+Rel(dev, demo, "dotnet run; dotnet test; GET /healthz")
+Rel(dev, host, "ng serve; opens the video player page")
+Rel(host, demo, "Describe; Subscribe", "SignalR MessagePack")
+Rel(demo, ffmpeg, "Runs when present; tests replay the fixture instead")
+Rel(ffmpeg, media, "Reads")
+@enduml

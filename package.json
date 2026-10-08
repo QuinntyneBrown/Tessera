@@ -6,16 +6,16 @@
   "scripts": {
     "ng": "ng",
     "start": "node tools/generate-theme-styles.mjs && ng serve dev-app",
-    "build": "node tools/generate-theme-styles.mjs && ng build theme && ng build scorm-player && ng build combobox",
-    "test": "ng test scorm-player",
-    "e2e": "playwright test --grep-invert \"render-latency samples\"",
-    "e2e:performance": "playwright test test/e2e/combobox-performance.spec.ts --workers=1",
-    "e2e:packed": "node -e \"require('node:fs').mkdirSync('dist/packages', {recursive: true})\" && npm pack ./dist/theme ./dist/scorm-player ./dist/combobox --pack-destination ./dist/packages && node tools/combobox-packed-smoke.mjs",
+    "build": "node tools/generate-theme-styles.mjs && ng build theme && ng build scorm-player && ng build combobox && ng build video-player",
+    "test": "ng test scorm-player && ng test video-player",
+    "e2e": "playwright test --grep-invert \"render-latency samples|performance budget\"",
+    "e2e:performance": "playwright test test/e2e/combobox-performance.spec.ts test/e2e/video-player-performance.spec.ts --workers=1",
+    "e2e:packed": "node -e \"require('node:fs').mkdirSync('dist/packages', {recursive: true})\" && npm pack ./dist/theme ./dist/scorm-player ./dist/combobox ./dist/video-player --pack-destination ./dist/packages && node tools/combobox-packed-smoke.mjs",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "prepare": "husky",
-    "api:update": "pnpm build && api-extractor run --local -c tools/public_api_guard/api-extractor.json && api-extractor run --local -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run --local -c tools/public_api_guard/theme-api-extractor.json",
-    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json && api-extractor run -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run -c tools/public_api_guard/theme-api-extractor.json",
+    "api:update": "pnpm build && api-extractor run --local -c tools/public_api_guard/api-extractor.json && api-extractor run --local -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run --local -c tools/public_api_guard/theme-api-extractor.json && api-extractor run --local -c tools/public_api_guard/video-player-api-extractor.json",
+    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json && api-extractor run -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run -c tools/public_api_guard/theme-api-extractor.json && api-extractor run -c tools/public_api_guard/video-player-api-extractor.json",
     "demo:record": "node demo/run.mjs"
   },
   "dependencies": {
@@ -25,10 +25,12 @@
     "@angular/core": "^22.2.0",
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
+    "@microsoft/signalr": "^10.0.11",
+    "@microsoft/signalr-protocol-msgpack": "^10.0.11",
+    "@tessera/theme": "workspace:*",
     "fflate": "^0.8.3",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "@tessera/theme": "workspace:*"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^22.2.1",

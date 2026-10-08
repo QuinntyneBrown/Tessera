@@ -1,0 +1,62 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Play, pause, resume to live, and autoplay fallback
+actor "Viewer" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "ControlsVisibility" as visibility
+  participant "MediaSourcePipeline" as pipeline
+  participant "VideoPlayerAnnouncer" as announcer
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "<video>" as video
+end box
+
+viewer -> player : Pause control, Space or K, or stage click
+alt State live or buffering
+  player -> video : pause() (L2-061)
+  player -> player : setState(paused); name "Play"; central play affordance; spinner removed
+  player -> announcer : "Paused."
+else State paused
+  player -> pipeline : seekToLive(): buffered end - 3, or - 0.5 when under 3 s buffered (L2-061)
+  player -> video : play()
+  alt play() resolves
+    player -> player : setState(live)
+    player -> announcer : "Back live."
+  else NotAllowedError after a gesture
+    player -> player : setState(paused); central play affordance; no error (L2-061)
+  end
+else State connecting, reconnecting or ended
+  player --> viewer : No effect; control has aria-disabled="true" (L2-061)
+end
+viewer -> player : Tap or click on the stage
+player -> visibility : Controls visible?
+alt Controls visible
+  player -> player : togglePlayPause() (L2-061)
+else Touch device with hidden controls
+  visibility -> visibility : Reveal controls only; playback unchanged (L2-065)
+end
+pipeline --> player : First media buffered; autoplay true
+player -> video : play() without a gesture
+alt play() rejects with NotAllowedError
+  player -> video : muted = true; play() again (L2-062)
+  alt Muted retry resolves
+    player -> player : setState(live); mute control pressed; show Unmute chip
+    viewer -> player : Activate Unmute chip
+    player -> video : muted = false; restore remembered volume
+  else Muted retry rejects
+    player -> player : setState(paused); central play affordance (L2-062)
+  end
+else play() resolves
+  player -> player : setState(live)
+end
+@enduml

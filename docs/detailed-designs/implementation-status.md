@@ -2,7 +2,8 @@
 
 This records how far the production implementation has come against the [detailed designs](README.md),
 the decisions made where a design said `<TO SUPPLY>`, and where the implementation departs from a design.
-The [combobox designs](combobox/) describe its implemented contracts. The status sections below concern the SCORM player.
+The [combobox designs](combobox/) describe its implemented contracts. The [video player](#video-player) section is at the end;
+the other status sections concern the SCORM player.
 
 ## Covered
 
@@ -61,3 +62,50 @@ so and a mutation of the production code was shown to fail the test.
 
 - `pnpm lint`, `pnpm test` (unit), `pnpm build`, `pnpm e2e` (Chromium only), `pnpm api:check`
 - `pnpm api:update` regenerates `goldens/scorm-player/index.api.md` after a deliberate public API change
+
+## Video player
+
+L2-057 to L2-084 are implemented in `@tessera/video-player` and verified by Chromium acceptance tests through
+`VideoPlayerPage` (`test/e2e/pages/video-player-page.ts`) against an in-page fixture transport that replays the
+committed `src/e2e-app/public/lecture-10s.fmp4`, plus vitest specs for the SignalR adapter, the reconnect policy, the
+announcer and the strings. The slice-by-slice evidence is in the
+[video player implementation record](../verification/video-player-implementation.md).
+
+### Not implemented
+
+| Area | Requirement | State |
+|------|-------------|-------|
+| Demonstration backend | `L2-085` to `L2-094` | Not started. `video-player-backend.spec.ts` skips unless `TESSERA_VIDEO_HUB_URL` is set; the dev app falls back to the replayed fixture. |
+| Manual screen reader verification | `L2-083` | Not done; every row of the [matrix](../verification/video-player-screen-reader-matrix.md) is Not run. |
+| Actual 400% browser zoom | `L2-073` AC3 | Manual; the automated check is the 320 by 256 CSS px reflow viewport. |
+
+### Decisions made where the designs said `<TO SUPPLY>`
+
+| Decision | Choice |
+|----------|--------|
+| Transport configuration | Optional `configure({ hubUrl, accessTokenFactory })` and `stop()` on `VideoStreamTransport`; the session calls `configure` before each connection's first `describe` |
+| Default transport | `VIDEO_STREAM_TRANSPORT` has no root factory; a player without a provider creates its own `SignalRVideoStreamTransport`, so each owns its connection |
+| Stream and hub changes | A `streamId` change keeps the connection; clearing `streamId`, a new `hubUrl` or token factory, Retry and destroy stop it |
+| Development warning | Once per player, origin only: "the hubUrl origin {origin} does not use TLS…" for non-TLS hosts other than `localhost` and `127.0.0.1` |
+| Live duration | `duration(seconds)`: "less than a minute", "1 minute", "{m} minutes", "{h} hour(s) {m} minute(s)"; `endedAfter` and `liveFor` receive the result |
+| `bufferedAheadSeconds` | End of the buffered range containing `currentTime` minus `currentTime`, rounded to 0.1 s; `latencySeconds` uses the newest range |
+| Title strings | Functions: `regionLabel(title)`, `connecting(title)`, `errorUnsupported(mimeType)` |
+| Space on a focused button | Toggles playback and prevents the button's activation, as L2-069 AC1 states; Enter still activates buttons |
+| Focus fallback | The nearest enabled control, preceding first; with none enabled, the region (`tabindex="-1"`) |
+| `autoplay = false` | The first frame waits paused at the live edge with the central play affordance |
+| Harness selectors | `data-control` attributes, `data-state`, `t-video-player__status` and the `role="alert"` panel, so i18n overrides need nothing extra |
+| 401 and 403 | A rejection carrying either `statusCode` maps to `unauthorized` |
+| Shared-token fallbacks | `accent-fg` → `colorNeutralForegroundOnBrand`, `live` → `colorPaletteRedForeground1`, `motion-duration` → `durationNormal`; caption colours have built-in values only |
+| Dev-app backend origin | `http://localhost:5180` (`/demo/token`, `/hubs/video`), overridable with `?backend=` |
+| SignalR wire format | Integer-keyed MessagePack objects arrive as arrays and are mapped to descriptors and chunks |
+
+### Departures from the designs
+
+- **Visible control labels.** Controls show icons only at every width; their names are in `aria-label`. The design
+  showed icon and text in the wide layout.
+- **Opaque scrim.** The control bar uses the shared `colorNeutralBackground1` token rather than the mock's
+  translucent dark scrim, so its contrast never depends on the picture.
+- **Reconnect attempts.** `ReconnectPolicy` displays the attempt on the schedule; the SignalR client performs the
+  attempts with the same delays.
+- **Keyboard focus keeps the bar visible; pointer focus does not.** A tapped or clicked control does not pin the bar,
+  so `L2-074` AC2's timer restart is observable.

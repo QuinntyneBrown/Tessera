@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Operate by keyboard
+Container_Boundary(pkg, "@tessera/video-player in the browser") {
+  Component(vp, "VideoPlayer", "Angular component", "Host keydown listener; shortcut map; Tab order in the template; focusNearestEnabled")
+  Component(visibility, "ControlsVisibility", "Timer", "show() on any handled key; never hides while a control has focus")
+  Component(template, "Control bar template", "video-player.html", "Buttons and range input in reading order; aria-disabled keeps controls focusable")
+  Component(video, "Video element", "Browser media", "Receives play, pause, volume, muted; no controls attribute")
+}
+Rel(vp, visibility, "show() on handled keys")
+Rel(vp, template, "Renders controls; reads element references")
+Rel(vp, video, "play(), pause(), volume, muted")
+Rel(template, vp, "keydown bubbles to the host listener")
+@enduml

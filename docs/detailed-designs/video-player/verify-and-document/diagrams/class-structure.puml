@@ -1,0 +1,105 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Verify and document
+
+class VideoPlayerHarness {
+  {static} +hostSelector: string = "t-video-player"
+  +getState(): Promise<VideoPlayerState>
+  +play(): Promise<void>
+  +pause(): Promise<void>
+  +toggleMute(): Promise<void>
+  +setVolume(n: number): Promise<void>
+  +getVolume(): Promise<number>
+  +toggleCaptions(): Promise<void>
+  +areCaptionsShowing(): Promise<boolean>
+  +isLive(): Promise<boolean>
+  +goToLive(): Promise<void>
+  +getStatusText(): Promise<string>
+  +getErrorMessage(): Promise<string | null>
+  +retry(): Promise<void>
+}
+
+class "ComponentHarness" as CdkHarness <<CDK testing>> {
+  #locatorFor(selector: string): AsyncFactoryFn<TestElement>
+  #host(): Promise<TestElement>
+}
+
+class VideoPlayerPage {
+  +page: Page
+  -errors: string[]
+  +open(scenario: string, options?: { rate?: number; width?: number; theme?: string }): Promise<void>
+  +expectState(state: VideoPlayerState): Promise<void>
+  +expectNoAccessibilityViolations(): Promise<void>
+  +expectAnnouncement(text: string): Promise<void>
+  +dropConnection(): Promise<void>
+  +restoreConnection(): Promise<void>
+  +stallSource(ms: number): Promise<void>
+  +endStream(): Promise<void>
+  +failStream(): Promise<void>
+  +pressKey(key: string): Promise<void>
+  +useViewport(width: number, height?: number): Promise<void>
+  +enlargeText(): Promise<void>
+  +applyTextSpacing(): Promise<void>
+  +measureFirstFrame(): Promise<number>
+  +documentListenerCount(): Promise<number>
+}
+
+class FixtureVideoStreamTransport {
+  -chunks: VideoChunk[]
+  -rate: number
+  -scenario: string
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +connectionEvents: Observable<'reconnecting' | 'reconnected' | 'closed'>
+  +drop(): void
+  +restore(): void
+  +stall(ms: number): void
+  +end(): void
+  +fail(): void
+  +unsupported(): void
+  +unauthorized(): void
+}
+
+class Mp4BoxSplitter {
+  +split(bytes: Uint8Array): { init: Uint8Array; fragments: Uint8Array[] }
+}
+
+interface VideoStreamTransport {
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +connectionEvents: Observable<'reconnecting' | 'reconnected' | 'closed'>
+}
+
+class VideoPlayerExamples {
+  +basic: VideoPlayerBasicExample
+  +customTransport: VideoPlayerCustomTransportExample
+  +captions: VideoPlayerCaptionsExample
+  +i18n: VideoPlayerI18nExample
+  +themed: VideoPlayerThemedExample
+}
+
+class "video-player-screen-reader-matrix.md" as Matrix <<record>> {
+  +combination: string
+  +date: string
+  +versions: string
+  +result: "Not run" | "Pass" | "Fail" | "Not applicable"
+  +defects: string
+}
+
+CdkHarness <|-- VideoPlayerHarness
+VideoPlayerHarness ..> "VideoPlayer DOM" : role, name, data-state
+VideoPlayerPage ..> FixtureVideoStreamTransport : window.__videoFixture
+FixtureVideoStreamTransport ..|> VideoStreamTransport
+FixtureVideoStreamTransport *-- Mp4BoxSplitter : parses lecture-10s.fmp4
+VideoPlayerExamples ..> VideoStreamTransport : custom transport example
+Matrix ..> VideoPlayerPage : scenario URLs
+@enduml

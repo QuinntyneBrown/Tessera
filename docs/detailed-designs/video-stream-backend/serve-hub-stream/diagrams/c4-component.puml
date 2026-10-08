@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Serve hub stream
+
+Container_Boundary(hubapp, "SignalR hub application") {
+  Component(cors, "CORS policy", "ASP.NET Core middleware", "Allows Cors:AllowedOrigins with credentials")
+  Component(auth, "DemoTokenAuthenticationHandler", "AuthenticationHandler", "Bearer header or access_token query on the hub path; compares to Demo:AccessToken")
+  Component(token, "DemoTokenEndpoint", "Minimal API", "GET /demo/token returns the demonstration token")
+  Component(hub, "VideoStreamHub", "[Authorize] SignalR hub", "Describe and Subscribe; MessagePack only")
+  Component(contracts, "StreamDescriptor, VideoChunk", "MessagePack contracts", "Integer-keyed members")
+  Component(registry, "StreamSessionRegistry", "Singleton", "GetOrCreate(streamId)")
+  Component(subscriber, "StreamSubscriber", "Bounded channel", "ReadAllAsync(ct) feeds the hub stream")
+}
+Container_Ext(host, "Host LMS browser application", "SignalR client", "MessagePackHubProtocol")
+Rel(host, cors, "Negotiate from an origin")
+Rel(cors, auth, "Passes allowed origins")
+Rel(auth, hub, "Authenticated principal or 401")
+Rel(host, token, "GET /demo/token", "HTTPS")
+Rel(hub, contracts, "Serialises")
+Rel(hub, registry, "GetOrCreate and Attach")
+Rel(hub, subscriber, "await foreach ReadAllAsync(ct); detach in finally")
+@enduml

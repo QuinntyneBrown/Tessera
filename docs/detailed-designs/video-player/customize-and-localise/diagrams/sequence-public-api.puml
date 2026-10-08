@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Apply the public API
+actor "Consumer developer" as dev
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+  participant "Consumer transport" as custom
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "VIDEO_STREAM_TRANSPORT" as token
+  participant "SignalRVideoStreamTransport" as signalr
+end box
+box "Build - Repository" #FFF4E5
+  participant "api-extractor" as extractor
+end box
+
+dev -> host : Bind hubUrl, streamId, accessTokenFactory, captions, autoplay, muted, volume, titleOverride (L2-075)
+host -> player : Input signals set
+player -> session : Create for streamId
+session -> token : inject(VIDEO_STREAM_TRANSPORT)
+alt Consumer provided VIDEO_STREAM_TRANSPORT
+  token --> session : Consumer transport (L2-075)
+  session -> custom : describe(streamId) then subscribe(streamId)
+else No provider
+  token -> signalr : Default factory
+  token --> session : SignalRVideoStreamTransport
+  session -> signalr : configure(hubUrl, accessTokenFactory)
+  session -> signalr : describe(streamId) then subscribe(streamId)
+end
+session -> player : Transition connecting then live
+player --> host : stateChange emits once per transition (L2-066)
+loop Every 1000 ms while connecting, live, buffering, paused, or reconnecting
+  session -> session : tickStats()
+  session --> host : stats { state, latencySeconds, bufferedAheadSeconds, bytesReceived, droppedFrames } (L2-075)
+end
+session -> player : Transition ended, error, or idle
+session -> session : clearInterval(statsTimer); no further stats
+opt Failure
+  player --> host : error { code, message, cause } (L2-068)
+end
+dev -> extractor : pnpm api:check
+extractor -> extractor : Compare dist/video-player with goldens/video-player/index.api.md (L2-075)
+extractor --> dev : Pass, or diff and non-zero exit
+@enduml

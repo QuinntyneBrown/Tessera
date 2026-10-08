@@ -1,0 +1,54 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Append initialisation and media chunks
+box "Frontend - Package" #E0F2FE
+  participant "VideoStreamSession" as session
+  participant "MediaSourcePipeline" as pipeline
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "MediaSource / SourceBuffer" as mse
+  participant "<video>" as video
+end box
+
+session -> pipeline : attach(video, mimeType)
+pipeline -> mse : new MediaSource(); URL.createObjectURL
+pipeline -> video : src = object URL
+mse --> pipeline : sourceopen
+session -> pipeline : push(kind 0 chunk)
+pipeline -> mse : addSourceBuffer(mimeType) once (L2-059)
+pipeline -> mse : appendBuffer(init bytes) as the first append (L2-059)
+mse --> pipeline : updateend
+session -> pipeline : push(kind 1, seq n)
+alt SourceBuffer updating
+  pipeline -> pipeline : Enqueue in seq order
+  mse --> pipeline : updateend
+  pipeline -> mse : appendBuffer(next queued chunk) (L2-059)
+else SourceBuffer idle
+  pipeline -> mse : appendBuffer(chunk)
+end
+alt Media chunk before any initialisation segment
+  session -> pipeline : push(kind 1)
+  pipeline -> pipeline : Discard; development-mode warning (L2-059)
+end
+alt Second kind 0 chunk after reconnect or source restart
+  session -> pipeline : push(kind 0 chunk)
+  pipeline -> pipeline : rebuild(): clear queue
+  pipeline -> video : Remove src
+  pipeline -> mse : URL.revokeObjectURL(old URL); new MediaSource (L2-059)
+  mse --> pipeline : sourceopen
+  pipeline -> mse : addSourceBuffer(mimeType); appendBuffer(new init bytes) before later media
+end
+opt <video> fires error
+  video --> session : error (MediaError)
+  session -> session : setState(error, code decode); internals only in cause (L2-059)
+end
+@enduml

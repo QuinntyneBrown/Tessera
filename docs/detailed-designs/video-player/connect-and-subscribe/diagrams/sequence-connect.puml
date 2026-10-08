@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Connect to a stream
+box "Frontend - Host application" #E0F2FE
+  participant "Host page" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "SignalRVideoStreamTransport" as transport
+  participant "MediaSourcePipeline" as pipeline
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "MediaSource" as mse
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+host -> player : Bind hubUrl, streamId, accessTokenFactory
+player -> player : Dev-mode warning once for insecure hubUrl (L2-057)
+player -> session : Create session for streamId
+session -> player : setState(connecting); emit stateChange; data-state
+session -> transport : describe(streamId)
+transport -> hub : Start with MessagePack protocol and token; invoke Describe (L2-057)
+alt Describe resolves
+  hub --> transport : VideoStreamDescriptor
+  transport --> session : descriptor
+  session -> player : Region name "Video player: {title}"; aspect-ratio; elapsed from startedAt (L2-058)
+  session -> mse : MediaSource.isTypeSupported(mimeType) (L2-058)
+  alt Supported
+    mse --> session : true
+    session -> transport : subscribe(streamId)
+    transport -> hub : stream('Subscribe', streamId) (L2-057)
+    hub --> transport : VideoChunk values
+    transport --> session : next(chunk)
+    session -> pipeline : push(chunk)
+  else MediaSource undefined, false, or throws
+    session -> player : setState(error, code unsupported, mime type in message); no Retry
+  end
+else Describe rejects with unknown-stream
+  hub --> transport : HubException("unknown-stream")
+  transport --> session : rejection
+  session -> player : setState(error, code not-found) (L2-058)
+end
+@enduml

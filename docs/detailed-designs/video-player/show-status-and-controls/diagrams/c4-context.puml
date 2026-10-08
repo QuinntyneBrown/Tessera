@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Show status and controls
+
+Person(viewer, "Viewer", "Reads the player's status and reveals its controls")
+System(app, "Host LMS application with @tessera/video-player", "Shows one playback state at a time and auto-hides the control bar while live")
+System_Ext(hub, "Video stream hub", "Streams chunks, pauses sending, or completes the stream")
+Rel(viewer, app, "Watches and operates in", "Pointer, touch, keyboard")
+Rel(app, hub, "Observes chunk arrival and completion from", "WebSocket, MessagePack")
+@enduml
