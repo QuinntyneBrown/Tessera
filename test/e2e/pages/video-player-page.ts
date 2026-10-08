@@ -488,6 +488,97 @@ export class VideoPlayerPage {
     });
   }
 
+  async expectMute(name: string, pressed: boolean): Promise<void> {
+    const control = this.control('mute');
+    await expect(control).toHaveRole('button');
+    await expect(control).toHaveAccessibleName(name);
+    await expect(control).toHaveAttribute('aria-pressed', String(pressed));
+    await expect(control.locator('svg')).toHaveAttribute('data-icon', pressed ? 'muted' : 'volume');
+  }
+
+  async clickMute(): Promise<void> {
+    await this.clickControl('mute');
+  }
+
+  async expectVideoAudio(audio: { muted: boolean; volume: number }): Promise<void> {
+    await expect
+      .poll(async () => {
+        const { muted, volume } = await this.videoMetrics();
+        return { muted, volume: Math.round(volume * 100) / 100 };
+      })
+      .toEqual(audio);
+  }
+
+  async expectVolumeSlider(): Promise<void> {
+    const slider = this.control('volume');
+    await expect(slider).toHaveRole('slider');
+    await expect(slider).toHaveAccessibleName('Volume');
+    for (const [name, value] of [
+      ['type', 'range'],
+      ['min', '0'],
+      ['max', '100'],
+      ['step', '5'],
+    ])
+      await expect(slider).toHaveAttribute(name, value);
+  }
+
+  async focusVolume(): Promise<void> {
+    await this.control('volume').focus();
+  }
+
+  async pressKey(key: string): Promise<void> {
+    await this.page.keyboard.press(key);
+  }
+
+  /** The slider shows `value`; a non-zero value is also the video volume. */
+  async expectVolume(value: number): Promise<void> {
+    const slider = this.control('volume');
+    await expect(slider).toHaveValue(String(value));
+    await expect(slider).toHaveAttribute('aria-valuetext', `${value}%`);
+    if (value)
+      await expect
+        .poll(async () => Math.round((await this.videoMetrics()).volume * 100))
+        .toBe(value);
+  }
+
+  async setHostVolume(volume: number): Promise<void> {
+    await this.page.getByRole('button', { name: `Set volume ${volume}`, exact: true }).click();
+  }
+
+  async setHostMuted(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Set muted', exact: true }).click();
+  }
+
+  async blockAudiblePlay(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const play = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () {
+        return this.muted
+          ? play.call(this)
+          : Promise.reject(new DOMException('Fixture block', 'NotAllowedError'));
+      };
+    });
+  }
+
+  async blockAllPlay(): Promise<void> {
+    await this.page.addInitScript(() => {
+      HTMLMediaElement.prototype.play = () =>
+        Promise.reject(new DOMException('Fixture block', 'NotAllowedError'));
+    });
+  }
+
+  async expectUnmuteChip(visible: boolean): Promise<void> {
+    await expect(this.control('unmute-chip')).toHaveCount(visible ? 1 : 0);
+  }
+
+  async clickUnmuteChip(): Promise<void> {
+    await this.control('unmute-chip').click();
+  }
+
+  async dismissUnmuteChip(): Promise<void> {
+    await this.host().getByRole('button', { name: 'Dismiss', exact: true }).click();
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

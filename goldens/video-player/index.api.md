@@ -41,10 +41,13 @@ export class VideoPlayer implements VideoPlayerHost {
     applyDescriptor(descriptor: VideoStreamDescriptor): void;
     // (undocumented)
     protected readonly aspectRatio: Signal<string>;
+    readonly autoplay: InputSignal<boolean>;
     // (undocumented)
     protected readonly behindLive: Signal<boolean>;
     // (undocumented)
     protected readonly currentError: WritableSignal<VideoPlayerError | null>;
+    // (undocumented)
+    protected dismissUnmuteChip(): void;
     // (undocumented)
     protected readonly elapsed: Signal<string>;
     // (undocumented)
@@ -61,6 +64,9 @@ export class VideoPlayer implements VideoPlayerHost {
     jumpedToLive(): void;
     // (undocumented)
     protected readonly liveName: Signal<string>;
+    readonly muted: InputSignal<boolean>;
+    // (undocumented)
+    protected readonly mutePressed: Signal<boolean>;
     // (undocumented)
     protected onPlaying(): void;
     // (undocumented)
@@ -75,6 +81,8 @@ export class VideoPlayer implements VideoPlayerHost {
     requestPlay(): void;
     // (undocumented)
     setState(state: VideoPlayerState): void;
+    // (undocumented)
+    protected setVolume(value: number): void;
     readonly state: Signal<VideoPlayerState>;
     readonly stateChange: OutputEmitterRef<VideoPlayerState>;
     readonly stats: OutputEmitterRef<VideoPlayerStats>;
@@ -89,6 +97,14 @@ export class VideoPlayer implements VideoPlayerHost {
         play: string;
         pause: string;
         paused: string;
+        mute: string;
+        unmute: string;
+        volumeLabel: string;
+        volumeValue: (volume: number) => string;
+        muted: string;
+        unmuted: (volume: number) => string;
+        unmuteChip: string;
+        dismiss: string;
         backLive: string;
         live: string;
         goToLive: (seconds: number) => string;
@@ -108,9 +124,16 @@ export class VideoPlayer implements VideoPlayerHost {
     protected readonly title: Signal<string | null>;
     readonly titleOverride: InputSignal<string | undefined>;
     // (undocumented)
+    protected toggleMute(): void;
+    // (undocumented)
     protected togglePlayback(): void;
     // (undocumented)
+    protected readonly unmuteChip: WritableSignal<boolean>;
+    // (undocumented)
     videoElement(): HTMLVideoElement;
+    readonly volume: InputSignal<number>;
+    // (undocumented)
+    protected readonly volumeValue: WritableSignal<number>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<VideoPlayer, "t-video-player", never, {
         "hubUrl": {
@@ -130,6 +153,21 @@ export class VideoPlayer implements VideoPlayerHost {
         };
         "titleOverride": {
             "alias": "titleOverride";
+            "required": false;
+            "isSignal": true;
+        };
+        "autoplay": {
+            "alias": "autoplay";
+            "required": false;
+            "isSignal": true;
+        };
+        "muted": {
+            "alias": "muted";
+            "required": false;
+            "isSignal": true;
+        };
+        "volume": {
+            "alias": "volume";
             "required": false;
             "isSignal": true;
         };
@@ -185,6 +223,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     controlsLabel: string;
     // (undocumented)
+    dismiss: string;
+    // (undocumented)
     errorConnection: string;
     // (undocumented)
     errorDecode: string;
@@ -205,6 +245,10 @@ export interface VideoPlayerStrings {
     // (undocumented)
     liveAnnounced: string;
     // (undocumented)
+    mute: string;
+    // (undocumented)
+    muted: string;
+    // (undocumented)
     pause: string;
     // (undocumented)
     paused: string;
@@ -214,6 +258,16 @@ export interface VideoPlayerStrings {
     regionLabel: (title: string | null) => string;
     // (undocumented)
     retry: string;
+    // (undocumented)
+    unmute: string;
+    // (undocumented)
+    unmuteChip: string;
+    // (undocumented)
+    unmuted: (volume: number) => string;
+    // (undocumented)
+    volumeLabel: string;
+    // (undocumented)
+    volumeValue: (volume: number) => string;
 }
 
 // @public

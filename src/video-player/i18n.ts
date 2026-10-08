@@ -10,6 +10,14 @@ export interface VideoPlayerStrings {
   play: string;
   pause: string;
   paused: string;
+  mute: string;
+  unmute: string;
+  volumeLabel: string;
+  volumeValue: (volume: number) => string;
+  muted: string;
+  unmuted: (volume: number) => string;
+  unmuteChip: string;
+  dismiss: string;
   backLive: string;
   live: string;
   goToLive: (seconds: number) => string;
@@ -34,6 +42,14 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   play: 'Play',
   pause: 'Pause',
   paused: 'Paused.',
+  mute: 'Mute',
+  unmute: 'Unmute',
+  volumeLabel: 'Volume',
+  volumeValue: (volume) => `${volume}%`,
+  muted: 'Muted.',
+  unmuted: (volume) => `Unmuted, volume ${volume}%.`,
+  unmuteChip: 'Unmute',
+  dismiss: 'Dismiss',
   backLive: 'Back live.',
   live: 'Live',
   goToLive: (seconds) => `Go to live, ${seconds} seconds behind`,

@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   output,
   signal,
   untracked,
@@ -41,6 +42,12 @@ export class VideoPlayer implements VideoPlayerHost {
   readonly accessTokenFactory = input<(() => string | Promise<string>) | undefined>(undefined);
   /** Replaces the descriptor title in the region name and announcements. */
   readonly titleOverride = input<string | undefined>(undefined);
+  /** Starts playback as soon as the first frame is buffered. */
+  readonly autoplay = input(true);
+  /** Mutes the video element; changing it never restarts the stream. */
+  readonly muted = input(false);
+  /** Volume from 0 to 100; changing it never restarts the stream. */
+  readonly volume = input(100);
   /** Emits the new state once per transition. */
   readonly stateChange = output<VideoPlayerState>();
   /** Emits each failure once, with a typed code. */
@@ -56,6 +63,11 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly now = signal(Date.now());
   protected readonly currentError = signal<VideoPlayerError | null>(null);
   private readonly latency = signal(0);
+  protected readonly volumeValue = linkedSignal(() => clampVolume(this.volume()));
+  private readonly isMuted = linkedSignal(() => this.muted());
+  protected readonly mutePressed = computed(() => this.isMuted() || this.volumeValue() === 0);
+  protected readonly unmuteChip = signal(false);
+  private rememberedVolume = 100;
   protected readonly playing = computed(() => ['live', 'buffering'].includes(this.state()));
   protected readonly playPauseDisabled = computed(
     () => !['live', 'buffering', 'paused'].includes(this.state()),
@@ -100,6 +112,11 @@ export class VideoPlayer implements VideoPlayerHost {
               })
             : undefined;
       });
+    });
+    effect(() => {
+      const video = this.video().nativeElement;
+      video.muted = this.isMuted();
+      video.volume = this.volumeValue() / 100;
     });
     inject(DestroyRef).onDestroy(() => {
       this.session?.stop();
@@ -151,9 +168,41 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   requestPlay(): void {
-    this.videoElement()
-      .play()
-      .catch(() => undefined);
+    if (!this.autoplay()) return this.setState('paused');
+    const video = this.videoElement();
+    video.play().catch((cause) => {
+      if (!isNotAllowed(cause)) return;
+      this.isMuted.set(true);
+      video.muted = true;
+      video.play().then(
+        () => this.unmuteChip.set(true),
+        () => this.setState('paused'),
+      );
+    });
+  }
+
+  protected toggleMute(): void {
+    if (this.mutePressed()) {
+      if (this.volumeValue() === 0) this.volumeValue.set(this.rememberedVolume);
+      this.isMuted.set(false);
+      this.unmuteChip.set(false);
+      this.announcer.toggle(this.strings.unmuted(this.volumeValue()));
+    } else {
+      this.isMuted.set(true);
+      this.announcer.toggle(this.strings.muted);
+    }
+  }
+
+  protected setVolume(value: number): void {
+    const volume = clampVolume(value);
+    this.volumeValue.set(volume);
+    if (volume === 0) return;
+    this.rememberedVolume = volume;
+    this.isMuted.set(false);
+  }
+
+  protected dismissUnmuteChip(): void {
+    this.unmuteChip.set(false);
   }
 
   protected onPlaying(): void {
@@ -205,6 +254,14 @@ export class VideoPlayer implements VideoPlayerHost {
   tick(): void {
     this.now.set(Date.now());
   }
+}
+
+function clampVolume(value: number): number {
+  return Math.min(100, Math.max(0, Math.round(value)));
+}
+
+function isNotAllowed(cause: unknown): boolean {
+  return cause instanceof DOMException && cause.name === 'NotAllowedError';
 }
 
 function formatClock(totalSeconds: number): string {

@@ -21,6 +21,18 @@
         <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z" /></svg>
       </div>
     }
+    @if (unmuteChip()) {
+      <div class="t-video-player__chip" (click)="$event.stopPropagation()">
+        <button type="button" data-control="unmute-chip" (click)="toggleMute()">
+          {{ strings.unmuteChip }}
+        </button>
+        <button type="button" [attr.aria-label]="strings.dismiss" (click)="dismissUnmuteChip()">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+    }
     @if (currentError(); as error) {
       <div class="t-video-player__error" role="alert">
         <h2 class="t-video-player__error-heading" tabindex="-1">{{ error.message }}</h2>
@@ -47,6 +59,43 @@
         }
       </svg>
     </button>
+    <button
+      type="button"
+      class="t-video-player__control"
+      data-control="mute"
+      [attr.aria-label]="mutePressed() ? strings.unmute : strings.mute"
+      [attr.aria-pressed]="mutePressed()"
+      (click)="toggleMute()"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+        [attr.data-icon]="mutePressed() ? 'muted' : 'volume'"
+      >
+        @if (mutePressed()) {
+          <path
+            d="M4 9v6h4l5 4V5L8 9zm12.5 0L15 10.5l1.5 1.5-1.5 1.5 1.5 1.5 1.5-1.5 1.5 1.5L21 13.5 19.5 12 21 10.5 19.5 9 18 10.5z"
+          />
+        } @else {
+          <path
+            d="M4 9v6h4l5 4V5L8 9zm11 0a4 4 0 0 1 0 6v-2a2 2 0 0 0 0-2zm0-4v2a7 7 0 0 1 0 10v2a9 9 0 0 0 0-14z"
+          />
+        }
+      </svg>
+    </button>
+    <input
+      type="range"
+      class="t-video-player__volume"
+      data-control="volume"
+      min="0"
+      max="100"
+      step="5"
+      [attr.aria-label]="strings.volumeLabel"
+      [attr.aria-valuetext]="strings.volumeValue(volumeValue())"
+      [value]="volumeValue()"
+      (input)="setVolume($any($event.target).valueAsNumber)"
+    />
     @if (state() !== 'idle' && state() !== 'connecting') {
       <button
         type="button"

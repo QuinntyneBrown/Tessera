@@ -28,10 +28,15 @@ const parameters = new URLSearchParams(location.search);
         hubUrl="https://hub.example/hubs/video"
         [streamId]="streamId()"
         [titleOverride]="parameters.get('titleOverride') ?? undefined"
+        [autoplay]="parameters.get('autoplay') !== 'false'"
+        [muted]="muted()"
+        [volume]="volume()"
         (stateChange)="record($event)"
         (error)="recordError($event)"
         (stats)="recordStats($event)"
       />
+      <button type="button" (click)="volume.set(40)">Set volume 40</button>
+      <button type="button" (click)="muted.set(true)">Set muted</button>
       <output aria-label="State changes">{{ json(states()) }}</output>
       <output aria-label="Errors">{{ json(errors()) }}</output>
       <output aria-label="Stats">{{ json(stats()) }}</output>
@@ -42,6 +47,8 @@ export class VideoPlayerFixture {
   readonly parameters = parameters;
   readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
   readonly states = signal<VideoPlayerState[]>([]);
+  readonly muted = signal(parameters.get('muted') === 'true');
+  readonly volume = signal(Number(parameters.get('volume') ?? 100));
   readonly errors = signal<Pick<VideoPlayerError, 'code' | 'message'>[]>([]);
   readonly stats = signal<{ count: number; last: VideoPlayerStats | null }>({
     count: 0,
