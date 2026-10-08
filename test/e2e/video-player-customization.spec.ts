@@ -1,5 +1,5 @@
-// Acceptance tests. Traces to L2-077.
-import { test } from '@playwright/test';
+// Acceptance tests. Traces to L2-057, L2-075, L2-077, L2-078.
+import { expect, test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
 // Real media decoding is slow on a loaded machine.
@@ -44,3 +44,36 @@ test('follows a system colour scheme change without interrupting playback or mov
   await player.expectState('live');
   await player.expectPlaybackAdvancing();
 });
+
+test('uses a provided transport instead of opening a SignalR connection', async ({ page }) => {
+  // L2-075 AC2: Given a VIDEO_STREAM_TRANSPORT provider, the player uses it and opens no socket.
+  const player = new VideoPlayerPage(page);
+  const hubTraffic = player.countHubTraffic();
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectTransportCalls(['configure', 'describe', 'subscribe']);
+  expect(hubTraffic()).toBe(0);
+});
+
+test('warns once in development about a remote hub URL without TLS', async ({ page }) => {
+  // L2-057 AC6; L2-078 AC3: a remote http: hub URL logs one warning naming only its origin, and
+  // the URL reaches the transport unchanged.
+  const player = new VideoPlayerPage(page);
+  const hubUrl = 'http://hub.example:8080/hubs/video?tenant=<b>';
+  await player.open('connecting', { extra: { hubUrl } });
+  await player.expectRegionName('Video player: Lecture hall A');
+  await player.expectWarningCount('hubUrl', 1);
+  await player.expectWarning('http://hub.example:8080');
+  await player.expectNoWarning('/hubs/video');
+  await player.expectConfiguredHubUrl(hubUrl);
+});
+
+for (const hubUrl of ['http://localhost:5180/hubs/video', 'https://hub.example/hubs/video']) {
+  test(`does not warn for ${hubUrl}`, async ({ page }) => {
+    // L2-057 AC6: localhost and TLS hub URLs are silent.
+    const player = new VideoPlayerPage(page);
+    await player.open('connecting', { extra: { hubUrl } });
+    await player.expectRegionName('Video player: Lecture hall A');
+    await player.expectWarningCount('hubUrl', 0);
+  });
+}

@@ -4,16 +4,33 @@
 
 ```ts
 
+import { HubConnectionBuilder } from '@microsoft/signalr';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { WritableSignal } from '@angular/core';
 
 // @public
 export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings;
+
+// @public
+export class SignalRVideoStreamTransport implements VideoStreamTransport {
+    constructor(createBuilder?: () => HubConnectionBuilder);
+    // (undocumented)
+    configure(options: VideoStreamTransportOptions): void;
+    // (undocumented)
+    readonly connectionEvents: Subject<"reconnecting" | "reconnected" | "closed">;
+    // (undocumented)
+    describe(streamId: string): Promise<VideoStreamDescriptor>;
+    // (undocumented)
+    stop(): Promise<void>;
+    // (undocumented)
+    subscribe(streamId: string): Observable<VideoChunk>;
+}
 
 // @public
 export const VIDEO_PLAYER_I18N: InjectionToken<Partial<VideoPlayerStrings>>;

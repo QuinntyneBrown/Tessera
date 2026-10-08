@@ -1308,6 +1308,35 @@ export class VideoPlayerPage {
     );
   }
 
+  /** Counts requests and sockets to the hub's host; SignalR would negotiate there first. */
+  countHubTraffic(): () => number {
+    let count = 0;
+    const toHub = (url: string) => new URL(url).hostname === 'hub.example';
+    this.page.on('request', (request) => toHub(request.url()) && count++);
+    this.page.on('websocket', (socket) => toHub(socket.url()) && count++);
+    return () => count;
+  }
+
+  async expectWarningCount(fragment: string, count: number): Promise<void> {
+    await this.page.waitForTimeout(250);
+    expect(this.warnings.filter((warning) => warning.includes(fragment))).toHaveLength(count);
+  }
+
+  async expectNoWarning(fragment: string): Promise<void> {
+    expect(this.warnings.join(' ')).not.toContain(fragment);
+  }
+
+  async expectConfiguredHubUrl(hubUrl: string): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () =>
+            (window as unknown as { __videoFixture: { hubUrls: string[] } }).__videoFixture.hubUrls,
+        ),
+      )
+      .toEqual([hubUrl]);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

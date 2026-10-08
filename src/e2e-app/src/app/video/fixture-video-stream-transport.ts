@@ -11,6 +11,7 @@ import {
 export interface VideoFixtureWindow {
   calls: string[];
   tokenRequests: number;
+  hubUrls: (string | null)[];
   stalled: boolean;
   transports: FixtureVideoStreamTransport[];
   stall(): void;
@@ -41,6 +42,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     this.controls = window.__videoFixture ??= {
       calls: [],
       tokenRequests: 0,
+      hubUrls: [],
       stalled: false,
       transports: [],
       stall() {
@@ -68,6 +70,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
 
   configure(options: VideoStreamTransportOptions): void {
     this.controls.calls.push('configure');
+    this.controls.hubUrls.push(options.hubUrl);
     this.options = options;
   }
 

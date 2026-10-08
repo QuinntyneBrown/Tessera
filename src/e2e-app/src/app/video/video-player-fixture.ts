@@ -35,7 +35,7 @@ export class FixtureTransport {}
         @if (mounted()) {
           <t-video-player
             tsrFixtureTransport
-            hubUrl="https://hub.example/hubs/video"
+            [hubUrl]="hubUrl"
             [accessTokenFactory]="tokenFactory"
             [streamId]="streamId()"
             [titleOverride]="parameters.get('titleOverride') ?? undefined"
@@ -91,6 +91,7 @@ export class VideoPlayerFixture {
     last: null,
   });
   readonly json = JSON.stringify;
+  readonly hubUrl = parameters.get('hubUrl') ?? 'https://hub.example/hubs/video';
   /** The container width and the theme tokens a host page might set around the player. */
   readonly containerStyle =
     (parameters.has('containerWidth') ? `width: ${parameters.get('containerWidth')}px; ` : '') +

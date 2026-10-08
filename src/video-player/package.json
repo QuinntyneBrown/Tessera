@@ -5,8 +5,8 @@
     "@angular/common": "^22.2.0",
     "@angular/core": "^22.2.0",
     "@angular/cdk": "^22.2.1",
-    "@microsoft/signalr": "^9.0.0",
-    "@microsoft/signalr-protocol-msgpack": "^9.0.0",
+    "@microsoft/signalr": "^10.0.0",
+    "@microsoft/signalr-protocol-msgpack": "^10.0.0",
     "rxjs": "^7.8.0",
     "@tessera/theme": "^0.0.1"
   },

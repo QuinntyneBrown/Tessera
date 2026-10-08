@@ -10,6 +10,7 @@ import {
   effect,
   inject,
   input,
+  isDevMode,
   linkedSignal,
   output,
   signal,
@@ -27,6 +28,7 @@ import {
   VideoStreamDescriptor,
 } from './types';
 import { VIDEO_STREAM_TRANSPORT } from './video-stream-transport';
+import { SignalRVideoStreamTransport } from './signalr-video-stream-transport';
 import { VideoPlayerHost, VideoStreamSession } from './video-stream-session';
 import { VideoPlayerAnnouncer } from './video-player-announcer';
 import { ControlsVisibility } from './controls-visibility';
@@ -134,7 +136,10 @@ export class VideoPlayer implements VideoPlayerHost {
   private lastPointerType = '';
   private focusedControl: { element: HTMLElement; index: number; wasDisabled: boolean } | undefined;
   private readonly announcer = new VideoPlayerAnnouncer(() => this.liveRegion().nativeElement);
-  private readonly transport = inject(VIDEO_STREAM_TRANSPORT, { optional: true });
+  /** A provided transport, or this player's own SignalR connection. */
+  private readonly transport =
+    inject(VIDEO_STREAM_TRANSPORT, { optional: true }) ?? new SignalRVideoStreamTransport();
+  private warnedHubUrl = false;
   private session: VideoStreamSession | undefined;
 
   constructor() {
@@ -181,13 +186,32 @@ export class VideoPlayer implements VideoPlayerHost {
   private startSession(): void {
     this.session?.stop();
     const streamId = this.streamId();
-    this.session =
-      streamId && this.transport
-        ? new VideoStreamSession(this.transport, this, streamId, {
-            hubUrl: this.hubUrl(),
-            accessTokenFactory: this.accessTokenFactory(),
-          })
-        : undefined;
+    if (streamId) this.warnInsecureHubUrl(this.hubUrl());
+    this.session = streamId
+      ? new VideoStreamSession(this.transport, this, streamId, {
+          hubUrl: this.hubUrl(),
+          accessTokenFactory: this.accessTokenFactory(),
+        })
+      : undefined;
+  }
+
+  /** Development builds warn once when a remote hub URL is not protected by TLS. */
+  private warnInsecureHubUrl(hubUrl: string | null): void {
+    if (this.warnedHubUrl || !hubUrl || !isDevMode()) return;
+    let url: URL;
+    try {
+      url = new URL(hubUrl, location.href);
+    } catch {
+      return;
+    }
+    const secure = url.protocol === 'https:' || url.protocol === 'wss:';
+    const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    if (secure || local) return;
+    this.warnedHubUrl = true;
+    console.warn(
+      `t-video-player: the hubUrl origin ${url.origin} does not use TLS. The access token travels ` +
+        'in the WebSocket query string; use https: or wss: outside localhost.',
+    );
   }
 
   /** Closes the error panel and starts a fresh connection. */
