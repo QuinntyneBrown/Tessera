@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Connect and subscribe
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component", "Owns hubUrl, streamId, accessTokenFactory inputs, the state signal and data-state")
+  Component(session, "VideoStreamSession", "Internal orchestrator", "Describes, checks isTypeSupported, subscribes; one per streamId")
+  Component(transport, "SignalRVideoStreamTransport", "VideoStreamTransport", "HubConnection with MessagePack, automatic reconnect and accessTokenFactory")
+  Component(pipeline, "MediaSourcePipeline", "Internal", "Receives VideoChunk values after subscription")
+  Component(announcer, "VideoPlayerAnnouncer", "Text queue", "Speaks Connecting to {title}")
+}
+Container_Ext(hub, "Video stream hub", "ASP.NET Core SignalR", "Describe and Subscribe")
+Rel(player, session, "Creates per streamId; receives descriptor and state")
+Rel(session, transport, "describe(streamId), subscribe(streamId), stop()")
+Rel(session, pipeline, "Forwards VideoChunk values")
+Rel(session, announcer, "Queues the connecting message")
+Rel(transport, hub, "invoke('Describe'), stream('Subscribe')", "MessagePack")
+@enduml

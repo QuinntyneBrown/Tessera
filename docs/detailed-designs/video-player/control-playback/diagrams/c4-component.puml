@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Control playback
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component", "togglePlayPause, toggleMute, setVolume, toggleFullscreen, toggleCaptions; control template")
+  Component(pipeline, "MediaSourcePipeline", "Internal", "seekToLive() on resume")
+  Component(visibility, "ControlsVisibility", "Internal", "Reports whether a stage tap reveals or toggles")
+  Component(announcer, "VideoPlayerAnnouncer", "Text queue", "Paused, Back live, Muted, Unmuted, Captions on/off, Fullscreen")
+  Component(i18n, "VIDEO_PLAYER_I18N", "Injection token", "Control names and unmuted(volume)")
+}
+Container_Boundary(media, "Browser media") {
+  Component(video, "HTMLVideoElement", "Native video element", "play, pause, muted, volume, textTracks")
+  Component(fs, "Fullscreen API", "document", "requestFullscreen on the host, exitFullscreen, fullscreenchange")
+}
+Rel(player, pipeline, "seekToLive() before play() on resume")
+Rel(player, visibility, "Asks whether controls are visible")
+Rel(player, announcer, "Queues toggle messages")
+Rel(player, i18n, "Reads names and formatted strings")
+Rel(player, video, "play, pause, muted, volume, track.mode")
+Rel(player, fs, "requestFullscreen on host; derives state from fullscreenchange")
+@enduml

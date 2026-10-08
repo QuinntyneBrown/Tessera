@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Secure and perform
+
+Person(viewer, "Viewer", "Watches a live stream and reads its status")
+Person(dev, "Consumer developer", "Supplies hubUrl, accessTokenFactory, and the page CSP")
+System(app, "Host Angular application with @tessera/video-player", "Renders descriptor text, forwards the token, bounds its own resources")
+System_Ext(hub, "Host SignalR hub", "Returns an untrusted descriptor and chunks; authenticates the access_token")
+
+Rel(dev, app, "Configures and hosts under a Content Security Policy")
+Rel(viewer, app, "Watches in", "Browser")
+Rel(app, hub, "Presents the token once; receives descriptor and chunks", "WebSocket, MessagePack")
+@enduml

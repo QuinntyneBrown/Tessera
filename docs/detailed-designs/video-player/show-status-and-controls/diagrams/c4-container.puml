@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Show status and controls
+
+Person(viewer, "Viewer", "Watches the stream")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Observes stateChange and reads data-state")
+  Container(player, "@tessera/video-player", "Angular library", "State signal, stage overlays, stall timers, control bar auto-hide")
+  Container(media, "Browser media engine", "HTMLVideoElement, MediaSource", "Fires waiting, playing and ended")
+}
+Container_Ext(hub, "Video stream hub", "ASP.NET Core SignalR, MessagePack", "Chunk arrival drives the stall timers; completion drives ended")
+Rel(viewer, player, "Moves the pointer, presses keys, taps, and focuses controls in", "Browser")
+Rel(host, player, "Receives stateChange; reads data-state")
+Rel(media, player, "waiting, playing, ended events")
+Rel(player, media, "endOfStream() after the subscription completes")
+Rel(hub, player, "Pushes VideoChunk values or completes", "WebSocket, MessagePack")
+@enduml

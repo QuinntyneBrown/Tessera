@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Run the demonstration
+actor "Developer" as dev
+box "Frontend - Host application" #E0F2FE
+  participant "Dev app video player page" as page
+  participant "VideoPlayer" as player
+end box
+box "Backend - Demo API" #D1FADF
+  participant "Program" as program
+  participant "VideoStreamHub" as hub
+  participant "FfmpegHealthCheck" as health
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamCatalogue" as catalogue
+  participant "StreamSessionRegistry" as registry
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "ffmpeg" as ffmpeg
+  participant "Fixture and media files" as media
+end box
+
+opt Fixture generation, once
+  dev -> ffmpeg : ffmpeg -f lavfi -i testsrc2 -f lavfi -i sine -t 10 ... lecture-10s.fmp4 (L2-094)
+  ffmpeg -> media : Write fixture
+end
+dev -> program : dotnet run --project Tessera.VideoStream.Demo (L2-094)
+program -> catalogue : Bind and validate lecture-hall-a (Loop true) and lab-camera-short (Loop false) (L2-085, L2-094)
+program --> dev : Listening on HTTPS with the development certificate (L2-092)
+dev -> health : GET /healthz
+health -> ffmpeg : Probe -version
+health -> registry : Active session count
+health --> dev : Healthy or Unhealthy with ffmpeg flag and activeSessions (L2-094)
+dev -> page : ng serve; open the video player page
+page -> player : hubUrl, streamId lecture-hall-a, accessTokenFactory
+player -> hub : Describe then Subscribe
+hub -> registry : GetOrCreate; first subscriber starts ffmpeg (L2-089)
+registry -> ffmpeg : Start over the catalogued file
+ffmpeg -> media : Read in real time
+hub --> player : kind 0 then kind 1 chunks
+player --> dev : Live playback; lab-camera-short reaches ended after the file (L2-094)
+dev -> dev : Record browser, date, transport used, and defects in docs/verification/video-player-demo.md (L2-094)
+@enduml

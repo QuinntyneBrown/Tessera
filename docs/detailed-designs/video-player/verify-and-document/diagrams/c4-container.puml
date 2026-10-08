@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Verify and document
+
+Person(dev, "Consumer developer", "Adopts and tests")
+Person(tester, "Accessibility tester", "Records manual results")
+System_Boundary(repo, "Tessera repository") {
+  Container(pkg, "@tessera/video-player", "Angular library", "VideoPlayer and VideoPlayerHarness under testing/")
+  Container(examples, "components-examples/tessera/video-player", "Angular components", "Basic hub, custom transport, captions, i18n, themed")
+  Container(devapp, "dev-app", "Angular application", "Video player page; demo backend with fixture fallback")
+  Container(e2e, "e2e-app", "Angular application", "/video-player?scenario= route; FixtureVideoStreamTransport; window.__videoFixture")
+  Container(playwright, "Playwright acceptance suite", "Chromium only", "VideoPlayerPage, spec files, axe-core per state")
+  Container(vitest, "vitest unit tests", "Node", "SignalRVideoStreamTransport against a mocked HubConnection")
+  Container(docs, "Repository documents", "Markdown", "README, screen reader matrix, demo record, definition of done")
+}
+System_Ext(backend, "Tessera.VideoStream.Demo", "Opt-in, gated on TESSERA_VIDEO_HUB_URL")
+
+Rel(dev, pkg, "Imports VideoPlayerHarness")
+Rel(dev, docs, "Reads adoption guide")
+Rel(examples, pkg, "Uses")
+Rel(devapp, examples, "Renders")
+Rel(devapp, backend, "Requests /demo/token; falls back to fixture", "HTTPS")
+Rel(e2e, pkg, "Hosts production component with the fixture transport")
+Rel(playwright, e2e, "Drives and runs axe", "Chromium")
+Rel(playwright, backend, "Opt-in test plays lecture-hall-a", "SignalR")
+Rel(vitest, pkg, "Tests the SignalR adapter")
+Rel(tester, docs, "Fills matrix rows")
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Secure and perform
+
+Person(viewer, "Viewer", "Watches and operates the player")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular, zoneless", "Supplies hubUrl, accessTokenFactory, and the CSP")
+  Container(player, "@tessera/video-player", "Angular library", "Text-only rendering, bounded buffer, ordered teardown")
+  Container(signalr, "@microsoft/signalr", "Peer dependency", "HubConnection; sends access_token on the WebSocket query string")
+  Container(media, "Browser media pipeline", "MediaSource and <video>", "Decodes appended fragments; blob: object URL")
+}
+System_Boundary(verify, "Repository verification") {
+  Container(e2e, "e2e-app with FixtureVideoStreamTransport", "Angular, zoneless", "Replays lecture-10s.fmp4 for measurements")
+  Container(playwright, "Playwright Chromium", "Test runner", "4x CPU slowdown, longtask observer, listener counts")
+}
+System_Ext(hub, "Host SignalR hub", "Describe and Subscribe")
+
+Rel(viewer, player, "Operates")
+Rel(host, player, "Binds inputs; hosts under media-src blob: and connect-src hub")
+Rel(player, signalr, "Forwards hubUrl and accessTokenFactory unchanged")
+Rel(signalr, hub, "Connects", "WebSocket, TLS outside localhost")
+Rel(player, media, "Appends Uint8Array chunks; revokes URL on destroy")
+Rel(playwright, e2e, "Drives and measures")
+Rel(e2e, player, "Hosts for 100 create-and-destroy cycles")
+@enduml

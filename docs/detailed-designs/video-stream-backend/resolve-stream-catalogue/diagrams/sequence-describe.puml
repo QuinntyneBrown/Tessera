@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Describe a stream
+box "Frontend - Host application" #E0F2FE
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+  participant "StreamIdValidator" as validator
+end box
+box "Backend - Streaming" #ECFDF3
+  participant "StreamCatalogue" as catalogue
+  participant "StreamSessionRegistry" as registry
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "Filesystem under MediaRoot" as fs
+end box
+
+transport -> hub : invoke Describe(streamId)
+hub -> validator : IsValid(streamId) before any lookup (L2-085)
+alt Malformed identifier
+  validator --> hub : false
+  hub -> hub : Log rejection without the value (L2-085)
+  hub --> transport : HubException("unknown-stream")
+else Well-formed identifier
+  validator --> hub : true
+  hub -> catalogue : TryGet(streamId)
+  alt Absent from catalogue
+    catalogue --> hub : false; no filesystem access (L2-085)
+    hub --> transport : HubException("unknown-stream")
+  else Catalogued entry
+    catalogue --> hub : StreamCatalogueEntry
+    hub -> registry : TryGetSession(streamId)
+    registry --> hub : startedAt of active session or none
+    hub -> hub : Build StreamDescriptor from Title, Codecs, startedAt, dimensions (L2-085, L2-088)
+    hub --> transport : StreamDescriptor
+  end
+end
+note over fs : Describe never reads a media file or starts FFmpeg (L2-085, L2-091)
+@enduml

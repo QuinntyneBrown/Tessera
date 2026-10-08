@@ -1,0 +1,69 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Test and operate backend
+interface IFragmentSource {
+  +ReadAsync(ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+class FixtureFragmentSource {
+  -string fixturePath
+  -TimeSpan delayPerFragment
+  -bool loop
+  -int? failAfter
+  -Exception? failure
+  +ReadAsync(ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+class Mp4FragmentReaderTests {
+  +SplitReadsYieldSameEvents(sliceSize: int): Task
+  +InitSegmentPrecedesFragments(): Task
+  +FixtureYieldsOneInitAndTenFragments(): Task
+  +SizeZeroOrOneThrowsInvalidData(size: uint): Task
+}
+class LiveStreamSessionTests {
+  -FakeTimeProvider time
+  +StartsSourceOnFirstSubscriber(): Task
+  +StopsAfterGracePeriod(): Task
+  +LateJoinerReceivesInitFirst(): Task
+  +RestartReplacesInit(): Task
+  +DropsOldestWhenChannelFull(): Task
+  +EvictsSlowConsumer(): Task
+  +FailsAllWhenBudgetExhausted(): Task
+}
+class VideoStreamHubTests {
+  -WebApplicationFactory<Program> factory
+  -BuildConnection(protocol: IHubProtocol, token: string?): HubConnection
+  +NegotiateWithoutTokenReturns401(): Task
+  +UnknownStreamThrows(streamId: string): Task
+  +DescribeReturnsIntegerKeyedMembers(): Task
+  +SubscribeYieldsInitThenMediaThenCompletes(): Task
+  +JsonProtocolIsRefused(): Task
+}
+class FfmpegPipelineIntegrationTest <<Trait Category=Integration>> {
+  +RealPipelineReachesFirstFragment(): Task
+}
+class FfmpegHealthCheck <<IHealthCheck>> {
+  +CheckHealthAsync(context: HealthCheckContext, ct: CancellationToken): Task<HealthCheckResult>
+}
+class LiveStreamSession {
+  +Attach(subscriber: StreamSubscriber): Task
+}
+class Mp4FragmentReader {
+  +ReadAsync(input: Stream, ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+IFragmentSource <|.. FixtureFragmentSource
+FixtureFragmentSource ..> Mp4FragmentReader : parses fixture with
+Mp4FragmentReaderTests ..> Mp4FragmentReader : tests
+LiveStreamSessionTests ..> LiveStreamSession : tests
+LiveStreamSessionTests ..> FixtureFragmentSource : supplies
+VideoStreamHubTests ..> FixtureFragmentSource : registers in factory
+VideoStreamHubTests ..> FfmpegHealthCheck : GET /healthz
+FfmpegPipelineIntegrationTest ..> FfmpegHealthCheck : probes before running
+@enduml

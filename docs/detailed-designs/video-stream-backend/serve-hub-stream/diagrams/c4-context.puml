@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Serve hub stream
+
+Person(viewer, "Viewer", "Watches a live lecture stream in the LMS")
+System(host, "Host LMS browser application with @tessera/video-player", "Negotiates with a token and subscribes to chunks")
+System(demo, "Tessera.VideoStream.Demo", "Authenticates, applies CORS, and serves Describe and Subscribe over MessagePack")
+System_Ext(ffmpeg, "FFmpeg", "External transcoder")
+System_Ext(media, "MP4 media file", "Local file under MediaRoot")
+Rel(viewer, host, "Opens the player page", "Browser")
+Rel(host, demo, "GET /demo/token; negotiate; Describe; Subscribe", "HTTPS and WebSocket, MessagePack")
+Rel(demo, ffmpeg, "Runs on first subscriber")
+Rel(ffmpeg, media, "Reads")
+@enduml

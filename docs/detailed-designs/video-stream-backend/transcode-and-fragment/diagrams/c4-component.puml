@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Transcode and fragment
+
+Container_Boundary(hubapp, "SignalR hub application") {
+  Component(session, "LiveStreamSession", "Session", "Consumes FragmentEvents, caches CurrentInit, fans chunks out")
+  Component(source, "IFragmentSource", "Interface", "ReadAsync yields InitSegment and Fragment events")
+  Component(ffsource, "FfmpegFragmentSource", "IFragmentSource", "Composes FfmpegProcess and Mp4FragmentReader")
+  Component(process, "FfmpegProcess", "Process wrapper", "ArgumentList start, stdout stream, stderr ring buffer of 20 lines")
+  Component(reader, "Mp4FragmentReader", "Pure parser", "Reassembles boxes; ftyp+moov to InitSegment, moof+mdat to Fragment")
+  Component(subscriber, "StreamSubscriber", "Bounded channel", "Receives kind 0 seq 0 first, then media; seq counter")
+}
+Container_Ext(ffmpeg, "FFmpeg process", "ffmpeg child process", "Fragmented MP4 on pipe:1")
+Rel(session, source, "await foreach ReadAsync")
+Rel(ffsource, source, "Implements")
+Rel(ffsource, process, "Start(entry); Stdout")
+Rel(ffsource, reader, "ReadAsync(stdout)")
+Rel(process, ffmpeg, "Spawns and pipes", "stdout, stderr")
+Rel(session, subscriber, "Attach; Send(VideoChunk)")
+@enduml

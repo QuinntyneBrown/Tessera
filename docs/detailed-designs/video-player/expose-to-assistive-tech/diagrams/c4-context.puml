@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Expose to assistive tech
+
+Person(viewer, "Screen reader user", "Hears the region, control names, states, and announcements")
+System(app, "Host LMS application with @tessera/video-player", "Exposes the player's ARIA pattern and live region")
+System_Ext(sr, "Screen reader", "JAWS, NVDA, VoiceOver, TalkBack, or Narrator reading the accessibility tree")
+System_Ext(hub, "Host SignalR hub", "Supplies the descriptor whose title names the region")
+Rel(viewer, sr, "Listens to and navigates with")
+Rel(sr, app, "Reads names, roles, states, and live regions from", "Accessibility tree")
+Rel(app, hub, "Describe and Subscribe", "WebSocket, MessagePack")
+@enduml

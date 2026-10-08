@@ -1,0 +1,43 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Obtain the demonstration token
+actor "Developer" as dev
+box "Frontend - Host application" #E0F2FE
+  participant "Dev app video player page" as page
+  participant "VideoPlayer" as player
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "CORS policy" as cors
+  participant "DemoTokenEndpoint" as endpoint
+  participant "DemoTokenAuthenticationHandler" as auth
+end box
+box "Backend - Infrastructure" #FFF4E5
+  participant "appsettings.json" as config
+  participant "Development certificate" as cert
+end box
+
+dev -> page : Open the video player page
+page -> cors : GET https://localhost:{port}/demo/token from http://localhost:4200
+cors -> cors : Origin in Cors:AllowedOrigins; credentials for listed origins only (L2-092)
+cors -> endpoint : Forward request
+endpoint -> config : Read Demo:AccessToken (default tessera-demo)
+config --> endpoint : Token
+endpoint --> page : { token } so the dev app holds no secret (L2-092)
+page -> page : Keep the token in memory only
+page -> player : Bind hubUrl, streamId, accessTokenFactory returning the token
+player -> transport : Start HubConnection with MessagePackHubProtocol
+transport -> cert : TLS over the development certificate; HTTP only for localhost (L2-092)
+transport -> auth : Negotiate with access_token on /hubs/video (L2-092)
+auth --> transport : Principal; hub access granted
+note over auth : README: a real host replaces this handler with its identity provider and requires HTTPS outside localhost (L2-092)
+@enduml

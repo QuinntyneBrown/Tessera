@@ -1,0 +1,86 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Recover from interruptions
+class VideoPlayer {
+  +state: Signal<VideoPlayerState>
+  +error: OutputEmitterRef<VideoPlayerError>
+  +stateChange: OutputEmitterRef<VideoPlayerState>
+  #statusText: Signal<string>
+  #currentError: Signal<VideoPlayerError | null>
+  #showRetry: Signal<boolean>
+  -focusWasInside: boolean
+  #retry(): void
+  -focusErrorHeading(): void
+  -focusPlayPause(): void
+}
+class VideoStreamSession {
+  -attempt: Signal<number>
+  -pausedBeforeLoss: boolean
+  -subscription: Subscription | null
+  +start(): Promise<void>
+  +restart(): Promise<void>
+  +release(): void
+  -onReconnecting(): void
+  -onReconnected(): Promise<void>
+  -onClosed(): void
+  -toError(source: unknown): VideoPlayerError
+}
+class ReconnectPolicy {
+  +schedule: readonly number[]
+  +maxAttempts: number
+  +attempt: Signal<number>
+  -timer: number | null
+  +start(): void
+  +reset(): void
+}
+interface VideoStreamTransport {
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +connectionEvents: Observable<ConnectionEvent>
+}
+class SignalRVideoStreamTransport {
+  -connection: HubConnection | null
+  -accessTokenFactory: () => string | Promise<string>
+  -build(): HubConnection
+  +start(): Promise<void>
+  +stop(): Promise<void>
+}
+class VideoPlayerAnnouncer {
+  +status(message: string): void
+  +clear(): void
+}
+class MediaSourcePipeline {
+  +reset(mimeType: string): void
+}
+interface VideoPlayerError {
+  +code: VideoPlayerErrorCode
+  +message: string
+  +cause?: unknown
+}
+enum VideoPlayerErrorCode {
+  unsupported
+  unauthorized
+  not-found
+  connection
+  source
+  decode
+  stalled
+}
+VideoPlayer *-- VideoStreamSession : owns per streamId
+VideoStreamSession *-- ReconnectPolicy : owns
+VideoStreamSession --> MediaSourcePipeline : resets
+VideoStreamSession --> VideoPlayerAnnouncer : queues status
+VideoStreamSession ..> VideoStreamTransport : connectionEvents, subscribe
+SignalRVideoStreamTransport ..|> VideoStreamTransport
+VideoStreamSession ..> VideoPlayerError : creates
+VideoPlayerError --> VideoPlayerErrorCode : has
+@enduml

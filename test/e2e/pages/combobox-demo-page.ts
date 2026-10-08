@@ -286,6 +286,14 @@ export class ComboboxDemoPage {
     await expect(input).toBeFocused();
   }
 
+  async verifyPackedVideoPlayer(): Promise<void> {
+    await this.page.goto('/');
+    const player = this.page.locator('t-video-player');
+    await expect(player).toHaveAttribute('data-state', 'idle');
+    await expect(player.getByRole('region', { name: 'Video player', exact: true })).toBeVisible();
+    await expect(player.getByRole('group', { name: 'Player controls', exact: true })).toBeVisible();
+  }
+
   async verifyPackedThemes(): Promise<void> {
     await this.page.goto('/');
     await expect(this.page.getByRole('heading', { name: 'Course cannot start' })).toBeVisible();

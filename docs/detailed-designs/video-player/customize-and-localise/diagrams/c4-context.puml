@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Customize and localise
+
+Person(dev, "Consumer developer", "Configures, localises, and themes the player")
+Person(viewer, "Viewer", "Watches a live stream in the host LMS")
+System(app, "Host Angular application with @tessera/video-player", "Plays a live stream through t-video-player")
+System_Ext(hub, "Host SignalR hub", "Describe and Subscribe over MessagePack")
+System_Ext(registry, "Package registry", "Delivers @tessera/video-player and @tessera/theme")
+
+Rel(dev, app, "Binds inputs, provides VIDEO_STREAM_TRANSPORT and VIDEO_PLAYER_I18N, sets tokens")
+Rel(viewer, app, "Watches and operates the player in", "Browser")
+Rel(app, hub, "Connects through the default or a replaced transport", "WebSocket")
+Rel(registry, app, "Supplies the packages with their API goldens", "npm")
+@enduml

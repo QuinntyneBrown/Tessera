@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage stream sessions
+
+Container_Boundary(hubapp, "SignalR hub application") {
+  Component(hub, "VideoStreamHub", "SignalR hub", "Attaches and detaches subscribers")
+  Component(registry, "StreamSessionRegistry", "Singleton IHostedService", "GetOrCreate, Remove; kills all sessions within 5 s on ApplicationStopping")
+  Component(session, "LiveStreamSession", "Session", "Starting, Live, Restarting, Stopped; idle stop, sweep, restart budget")
+  Component(subscriber, "StreamSubscriber", "Bounded channel", "Capacity 30, DropOldest, drop counter, LastReadUtc")
+  Component(source, "FfmpegFragmentSource", "IFragmentSource", "Runs FfmpegProcess with the 15 s stdout watchdog")
+  Component(process, "FfmpegProcess", "Process wrapper", "Start, KillTree, stderr ring buffer")
+  Component(health, "FfmpegHealthCheck", "IHealthCheck", "/healthz: FFmpeg availability and active session count")
+}
+Container_Ext(ffmpeg, "FFmpeg process", "ffmpeg child process", "Transcoder")
+Rel(hub, registry, "GetOrCreate(streamId)")
+Rel(registry, session, "Creates, removes, stops all on shutdown")
+Rel(session, subscriber, "TryWrite; sweep every 10 s; evict after 60 s")
+Rel(session, source, "RunSourceAsync; restart 2 s, 3 per 60 s")
+Rel(source, process, "Start; KillTree")
+Rel(process, ffmpeg, "Spawns and kills tree")
+Rel(health, process, "Probes ffmpeg -version")
+Rel(health, registry, "Reads active session count")
+@enduml

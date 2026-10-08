@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System context - Resolve stream catalogue
+
+Person(viewer, "Viewer", "Watches a live lecture stream in the LMS")
+System(host, "Host LMS browser application with @tessera/video-player", "Names a stream by identifier and plays it")
+System(demo, "Tessera.VideoStream.Demo", "Resolves identifiers through a configured catalogue and serves the stream")
+System_Ext(ffmpeg, "FFmpeg", "External transcoder, not used by Describe")
+System_Ext(media, "MP4 media file", "Local file under MediaRoot")
+Rel(viewer, host, "Opens the player page", "Browser")
+Rel(host, demo, "Describe(streamId)", "SignalR MessagePack")
+Rel(demo, media, "Resolves catalogue File under MediaRoot at startup")
+Rel(demo, ffmpeg, "Starts only on Subscribe")
+@enduml

@@ -1,0 +1,85 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Connect and subscribe
+class VideoPlayer {
+  +hubUrl: InputSignal<string | null>
+  +streamId: InputSignal<string | null>
+  +accessTokenFactory: InputSignal<(() => string | Promise<string>) | undefined>
+  +titleOverride: InputSignal<string | undefined>
+  +stateChange: OutputEmitterRef<VideoPlayerState>
+  +error: OutputEmitterRef<VideoPlayerError>
+  #state: Signal<VideoPlayerState>
+  #descriptor: WritableSignal<VideoStreamDescriptor | null>
+  #regionName: Signal<string>
+  #aspectRatio: Signal<string>
+  -session: VideoStreamSession | null
+  -transport: VideoStreamTransport
+  -warnInsecureHubUrl(url: string): void
+}
+class VideoStreamSession {
+  -generation: number
+  -subscription: Subscription | null
+  +start(streamId: string): Promise<void>
+  +switchStream(streamId: string): Promise<void>
+  +release(stopConnection: boolean): void
+  -checkSupport(mimeType: string): boolean
+  -setState(next: VideoPlayerState): void
+}
+interface VideoStreamTransport {
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +connectionEvents: Observable<'reconnecting' | 'reconnected' | 'closed'>
+}
+class SignalRVideoStreamTransport {
+  -connection: HubConnection | null
+  -ensureStarted(): Promise<HubConnection>
+  +describe(streamId: string): Promise<VideoStreamDescriptor>
+  +subscribe(streamId: string): Observable<VideoChunk>
+  +stop(): Promise<void>
+}
+class MediaSourcePipeline {
+  +attach(video: HTMLVideoElement, mimeType: string): void
+  +push(chunk: VideoChunk): void
+  +rebuild(): void
+}
+interface VideoStreamDescriptor {
+  +streamId: string
+  +title: string
+  +mimeType: string
+  +startedAt: string
+  +width: number
+  +height: number
+}
+interface VideoChunk {
+  +kind: 0 | 1
+  +seq: number
+  +data: Uint8Array
+}
+enum VideoPlayerState {
+  idle
+  connecting
+  live
+  buffering
+  paused
+  reconnecting
+  ended
+  error
+}
+VideoPlayer "1" *-- "0..1" VideoStreamSession : creates per streamId
+VideoPlayer ..> VideoStreamTransport : injects VIDEO_STREAM_TRANSPORT or constructs default
+SignalRVideoStreamTransport ..|> VideoStreamTransport
+VideoStreamSession --> VideoStreamTransport : describe, subscribe
+VideoStreamSession --> MediaSourcePipeline : forwards chunks
+VideoStreamTransport ..> VideoStreamDescriptor : resolves
+VideoStreamTransport ..> VideoChunk : emits
+VideoPlayer --> VideoPlayerState : state signal
+@enduml

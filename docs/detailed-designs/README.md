@@ -8,13 +8,15 @@ Tessera is a browser component library for learning management systems (LMSs). I
 
 Its second package, `@tessera/combobox`, provides an asynchronous multi-select combobox. Its designs are in the [combobox subsystem](combobox/).
 
+Its third package, `@tessera/video-player`, plays a live fragmented-MP4 stream delivered over SignalR. Its designs are in the [video player subsystem](video-player/), and the demonstration .NET backend that produces the stream is designed in the [video stream backend subsystem](video-stream-backend/).
+
 The `scorm-player` subsystem follows the capability grouping in [L1 requirements](../specs/L1.md) and [L2 requirements](../specs/L2.md). The flat specification folder contains no predefined subsystem folders.
 
-The combobox designs describe the implemented browser package. The SCORM designs include capabilities beyond the current implementation; its delivery scope is recorded in [implementation status](implementation-status.md). HTML mocks provide visual references independently of production behavior.
+The combobox designs describe the implemented browser package. The video player and backend designs describe proposed packages that have no implementation yet. The SCORM designs include capabilities beyond the current implementation; its delivery scope is recorded in [implementation status](implementation-status.md). HTML mocks provide visual references independently of production behavior.
 
 ## Description
 
-Eight player features cover `L2-001` to `L2-021`. Ten [combobox features](combobox/) cover `L2-022` to `L2-050`:
+Eight player features cover `L2-001` to `L2-021`. Ten [combobox features](combobox/) cover `L2-022` to `L2-050`. Eleven [video player features](video-player/) cover `L2-057` to `L2-084` and five [video stream backend features](video-stream-backend/) cover `L2-085` to `L2-094`:
 
 | Feature | Capability |
 |---------|------------|

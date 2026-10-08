@@ -1,0 +1,75 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Transcode and fragment
+interface IFragmentSource {
+  +ReadAsync(ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+abstract class FragmentEvent <<record>> {
+  +ReadOnlyMemory<byte> Bytes
+}
+class InitSegment <<record>> {
+}
+class Fragment <<record>> {
+}
+class FfmpegFragmentSource {
+  -StreamCatalogueEntry entry
+  -FfmpegProcess process
+  -Mp4FragmentReader reader
+  +ReadAsync(ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+}
+class FfmpegProcess {
+  -Process process
+  -Queue<string> lastStderrLines
+  +Stream Stdout
+  +int? ExitCode
+  +Start(entry: StreamCatalogueEntry, ffmpegPath: string): void
+  +BuildArguments(entry: StreamCatalogueEntry): IReadOnlyList<string>
+  +KillTree(): void
+  +LastStderrLines(): IReadOnlyList<string>
+}
+class Mp4FragmentReader {
+  +ReadAsync(input: Stream, ct: CancellationToken): IAsyncEnumerable<FragmentEvent>
+  -TryReadBox(buffer: ReadOnlySequence<byte>, box: out BoxSlice): bool
+}
+class BoxSlice <<record struct>> {
+  +uint Size
+  +string Type
+  +ReadOnlySequence<byte> Bytes
+}
+class LiveStreamSession {
+  -ReadOnlyMemory<byte>? currentInit
+  -List<StreamSubscriber> subscribers
+  -OnInitSegment(bytes: ReadOnlyMemory<byte>): void
+  -OnFragment(bytes: ReadOnlyMemory<byte>): void
+}
+class StreamSubscriber {
+  -Channel<VideoChunk> channel
+  -uint nextSeq
+  +bool HasInit
+  +Send(kind: byte, data: ReadOnlyMemory<byte>): void
+}
+class VideoChunk <<MessagePackObject>> {
+  {field} +[Key(0)] byte Kind
+  {field} +[Key(1)] uint Seq
+  {field} +[Key(2)] byte[] Data
+}
+FragmentEvent <|-- InitSegment
+FragmentEvent <|-- Fragment
+IFragmentSource <|.. FfmpegFragmentSource
+FfmpegFragmentSource *-- FfmpegProcess : owns
+FfmpegFragmentSource ..> Mp4FragmentReader : parses stdout with
+Mp4FragmentReader ..> BoxSlice : reads
+Mp4FragmentReader ..> FragmentEvent : yields
+LiveStreamSession --> IFragmentSource : consumes
+LiveStreamSession "1" o-- "*" StreamSubscriber : fans out to
+StreamSubscriber ..> VideoChunk : enqueues
+@enduml

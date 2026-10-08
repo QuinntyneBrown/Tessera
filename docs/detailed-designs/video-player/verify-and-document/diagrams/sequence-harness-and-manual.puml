@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Harness, manual matrix, and documentation
+actor "Consumer developer" as dev
+actor "Accessibility tester" as tester
+box "Frontend - Host application" #E0F2FE
+  participant "Consumer test" as test
+  participant "TestbedHarnessEnvironment" as env
+  participant "dev-app video player page" as devapp
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayerHarness" as harness
+  participant "VideoPlayer" as player
+end box
+box "Repository documents" #FFF4E5
+  participant "Screen reader matrix" as matrix
+  participant "README, examples, definition of done" as docs
+end box
+box "Backend - Demo API" #D1FADF
+  participant "Tessera.VideoStream.Demo" as backend
+end box
+
+dev -> test : Write test against the public DOM only (L2-081)
+test -> env : getHarness(VideoPlayerHarness)
+env -> harness : Locate host t-video-player
+test -> harness : getState()
+harness -> player : Read data-state attribute
+harness --> test : 'live'
+test -> harness : pause(); toggleMute(); setVolume(40); goToLive(); retry() (L2-081)
+harness -> player : Click controls by role and name; set range input named Volume
+test -> harness : getVolume(); areCaptionsShowing(); isLive(); getStatusText(); getErrorMessage()
+harness --> test : Values read from aria-pressed, aria-disabled, status text, alert heading (L2-081)
+tester -> matrix : Open row for one combination, result Not run (L2-083)
+tester -> devapp : Enter the player with the screen reader running
+tester -> tester : Check region name, control states, Paused. and Back live., slider values, reconnect and failure speech, ended duration, captions, keyboard-only, zoom, 320 px, forced colours, reduced motion, swipe order (L2-083)
+tester -> matrix : Record date, versions, Pass or Fail, defects; sign off only when every item passes
+dev -> docs : Read inputs, outputs, tokens, i18n keys, keyboard map, CSP, transport contract, caption alignment duty (L2-084)
+dev -> docs : Open the five examples (L2-084)
+devapp -> backend : GET /demo/token
+alt Backend present
+  backend --> devapp : Token
+  devapp -> player : SignalRVideoStreamTransport with lecture-hall-a and lab-camera-short (L2-084)
+else Backend absent
+  devapp -> player : FixtureVideoStreamTransport and a notice (L2-084)
+end
+note over docs : Definition of done: L2-057 to L2-094 pass, zero axe violations, signed manual matrix, zoneless operation (L2-084)
+@enduml

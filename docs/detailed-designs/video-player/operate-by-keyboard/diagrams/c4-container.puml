@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Operate by keyboard
+
+Person(viewer, "Keyboard-only viewer", "Presses Tab and shortcuts")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host LMS application", "Angular", "Embeds t-video-player; supplies captions")
+  Container(player, "@tessera/video-player", "Angular library", "Handles keydown on the host, owns the Tab order, recovers focus")
+}
+Container_Ext(hub, "Host SignalR hub", "ASP.NET Core SignalR", "Streams VideoChunk")
+Rel(viewer, player, "Presses keys with focus inside", "Keyboard")
+Rel(host, player, "Binds captions, which adds the captions control")
+Rel(player, hub, "Streams from", "WebSocket, MessagePack")
+@enduml

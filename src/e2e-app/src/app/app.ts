@@ -4,14 +4,27 @@ import { CourseSource, PlayerEvent, ScormPlayer } from '@tessera/scorm-player';
 import { hostFixtureFor, SaveGate } from './host-fixtures';
 import { ComboboxFixture, ComboboxDialogFixture } from './combobox-fixture';
 import { ComboboxExamples } from '../../../components-examples/tessera/combobox';
+import { VideoPlayerFixture } from './video/video-player-fixture';
+import { VideoPlayerExamples } from '../../../components-examples/tessera/video-player';
 
 @Component({
-  imports: [ThemeExample, ScormPlayer, ComboboxFixture, ComboboxDialogFixture, ComboboxExamples],
+  imports: [
+    ThemeExample,
+    ScormPlayer,
+    ComboboxFixture,
+    ComboboxDialogFixture,
+    ComboboxExamples,
+    VideoPlayerFixture,
+    VideoPlayerExamples,
+  ],
   selector: 'tsr-root',
   templateUrl: './app.html',
   styles: ['.theme-playground { overflow-wrap: anywhere; }'],
 })
 export class App {
+  protected readonly videoExamplesMode =
+    new URLSearchParams(location.search).get('screen') === 'video-player-examples';
+  protected readonly videoPlayerMode = location.pathname.replace(/\/$/, '') === '/video-player';
   protected readonly themeMode = new URLSearchParams(location.search).get('screen') === 'theme';
   protected readonly examplesMode =
     new URLSearchParams(location.search).get('screen') === 'combobox-examples';

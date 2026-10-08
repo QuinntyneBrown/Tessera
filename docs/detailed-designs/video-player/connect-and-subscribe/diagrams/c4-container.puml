@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Connect and subscribe
+
+Person(viewer, "Viewer", "Opens the player page")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Binds hubUrl, streamId and accessTokenFactory")
+  Container(player, "@tessera/video-player", "Angular library", "Owns one hub connection per instance; describes, checks codec support, subscribes")
+}
+Container_Ext(hub, "Video stream hub", "ASP.NET Core SignalR, MessagePack", "Describe(streamId) and Subscribe(streamId)")
+Rel(viewer, host, "Uses", "Browser")
+Rel(host, player, "Binds inputs and observes stateChange, error")
+Rel(player, hub, "Invokes Describe, then streams Subscribe", "WebSocket, MessagePack, access_token")
+@enduml

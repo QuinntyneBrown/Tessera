@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Change, clear, or destroy during connection
+box "Frontend - Host application" #E0F2FE
+  participant "Host page" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "SignalRVideoStreamTransport" as transport
+  participant "MediaSourcePipeline" as pipeline
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+alt streamId changes to another value
+  host -> player : Set streamId = "b"
+  player -> session : switchStream("b")
+  session -> transport : Unsubscribe current stream (L2-057)
+  transport -> hub : Cancel Subscribe enumerator
+  session -> pipeline : rebuild()
+  session -> session : Increment generation
+  session -> transport : describe("b") on the same connection
+  transport -> hub : invoke Describe
+  hub --> transport : descriptor
+  session -> transport : subscribe("b")
+  transport -> hub : stream('Subscribe', "b")
+else streamId set to null
+  host -> player : Set streamId = null
+  player -> session : release(stopConnection = true)
+  session -> transport : Unsubscribe; stop() (L2-057)
+  transport -> hub : Close connection
+  session -> player : setState(idle)
+else Component destroyed while Describe is pending
+  host -> player : Destroy component
+  player -> session : release(stopConnection = true); generation incremented
+  session -> transport : stop()
+  hub --> transport : Describe resolves late
+  transport --> session : descriptor
+  session -> session : Generation mismatch: no state change, output, or DOM write (L2-057)
+end
+@enduml

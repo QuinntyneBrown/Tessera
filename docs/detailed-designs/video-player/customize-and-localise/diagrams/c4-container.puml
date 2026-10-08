@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Customize and localise
+
+Person(dev, "Consumer developer", "Adopts the package")
+System_Boundary(browser, "Host application in the browser") {
+  Container(host, "Host Angular application", "Angular", "Binds inputs, provides tokens, sets --t-video-player-* and --t-* properties")
+  Container(player, "@tessera/video-player", "Angular library", "VideoPlayer, transport token, i18n token, public types")
+  Container(theme, "@tessera/theme", "Angular library", "Shared --t-* semantic tokens with light and dark defaults")
+  Container(signalr, "@microsoft/signalr and msgpack protocol", "Peer dependencies", "HubConnection used by the default transport")
+}
+System_Boundary(build, "Repository build") {
+  Container(packagr, "ng-packagr", "Angular CLI", "Builds dist/video-player from src/video-player")
+  Container(extractor, "api-extractor", "tools/public_api_guard", "Compares dist exports with goldens/video-player/index.api.md")
+}
+System_Ext(hub, "Host SignalR hub", "Describe and Subscribe")
+
+Rel(dev, host, "Configures providers and styles in")
+Rel(host, player, "Binds inputs and listens to outputs")
+Rel(player, theme, "Falls back to shared tokens through theme.token()")
+Rel(player, signalr, "Default transport builds HubConnection with")
+Rel(signalr, hub, "Connects", "WebSocket, MessagePack")
+Rel(packagr, extractor, "Built package checked by api:check")
+@enduml

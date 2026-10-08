@@ -1,0 +1,55 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Reconnect after transport loss
+actor "Viewer" as viewer
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as vp
+  participant "VideoStreamSession" as session
+  participant "ReconnectPolicy" as policy
+  participant "VideoPlayerAnnouncer" as ann
+  participant "MediaSourcePipeline" as pipeline
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Backend - Demo API" #D1FADF
+  participant "VideoStreamHub" as hub
+end box
+
+
+hub ->x transport : WebSocket drops
+transport -> session : connectionEvents reconnecting (onreconnecting)
+session -> session : Stop stall timers; remember paused
+session -> vp : state reconnecting; last frame dimmed (L2-067)
+session -> ann : status "Connection lost. Reconnecting."
+session -> policy : start()
+policy --> vp : attempt 1; "Reconnecting… attempt 1 of 5"
+loop Delays 0, 2, 5, 10, 10 s until reconnected or exhausted
+  transport -> hub : Retry HubConnection (withAutomaticReconnect)
+  policy --> vp : attempt n+1 of 5 within 100 ms of the retry (L2-067)
+end
+alt Connection restored
+  hub --> transport : Reconnected
+  transport -> session : connectionEvents reconnected
+  session -> policy : reset()
+  session -> transport : subscribe(streamId) again on the same connection (L2-067)
+  transport -> hub : stream('Subscribe')
+  hub --> transport : VideoChunk kind 0, seq 0
+  transport --> session : VideoChunk kind 0
+  session -> pipeline : Rebuild MediaSource on the new initialisation chunk
+  session -> vp : state live, or paused when the viewer had paused
+  session -> ann : status "Reconnected. Live."
+else Fifth attempt fails
+  transport -> session : connectionEvents closed
+  session -> session : toError: code connection, raw cause
+  session -> vp : state error; Retry offered (L2-067)
+  vp --> viewer : Alert panel announced assertively
+end
+@enduml

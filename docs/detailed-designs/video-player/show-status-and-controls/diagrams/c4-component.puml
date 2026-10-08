@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Show status and controls
+Container_Boundary(pkg, "@tessera/video-player in the host application") {
+  Component(player, "VideoPlayer", "Angular component", "state signal, setState, stateChange, data-state, stage and control bar templates")
+  Component(session, "VideoStreamSession", "Internal orchestrator", "10 s and 30 s stall timers; marks the source ended on completion")
+  Component(pipeline, "MediaSourcePipeline", "Internal", "Calls endOfStream() once the queue drains after completion")
+  Component(visibility, "ControlsVisibility", "Internal", "3000 ms hide timer; visible, hover, focusWithin, narrow, touch")
+  Component(announcer, "VideoPlayerAnnouncer", "Text queue", "Buffering after 1000 ms; Stream ended with duration")
+}
+Container_Boundary(media, "Browser media") {
+  Component(video, "HTMLVideoElement", "Native video element", "waiting, playing, ended events")
+}
+Rel(session, player, "setState(next)")
+Rel(session, pipeline, "Source ended; drain then endOfStream()")
+Rel(video, player, "waiting, playing, ended")
+Rel(player, visibility, "Reports state; asks visible")
+Rel(player, announcer, "Queues status messages")
+Rel(visibility, player, "visible signal drives the hidden class")
+@enduml

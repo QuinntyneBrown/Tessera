@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Release resources on destroy
+box "Frontend - Host application" #E0F2FE
+  participant "Host component" as host
+end box
+box "Frontend - Package" #E0F2FE
+  participant "VideoPlayer" as player
+  participant "VideoStreamSession" as session
+  participant "ReconnectPolicy" as reconnect
+  participant "MediaSourcePipeline" as pipeline
+  participant "SignalRVideoStreamTransport" as transport
+end box
+box "Frontend - Browser media" #E0F2FE
+  participant "MediaSource and <video>" as media
+  participant "document and window" as doc
+end box
+
+host -> player : Remove from view while live (L2-080)
+player -> session : stop()
+session -> session : disposed = true
+session -> transport : Unsubscribe chunk subscription; stream disposed
+session -> reconnect : cancel(); no attempt runs after destroy (L2-067)
+session -> session : Clear stall, timeout, buffering-announce, and statistics timers
+session -> transport : stop()
+transport -> transport : HubConnection.stop(); pending automatic reconnect ends (L2-080)
+session -> pipeline : dispose()
+pipeline -> media : abort() pending append; endOfStream() when open
+pipeline -> media : URL.revokeObjectURL(objectUrl)
+pipeline -> media : video.src = ''; video.load() (L2-080)
+player -> doc : Remove fullscreenchange listener and matchMedia subscription via DestroyRef (L2-080)
+player -> player : ControlsVisibility and VideoPlayerAnnouncer timers cleared via DestroyRef
+player --> host : Template, <video>, and live region removed
+alt Destroyed during reconnect backoff
+  reconnect --> reconnect : Scheduled time passes; timer already cleared; nothing runs (L2-080)
+else Destroyed while Describe pending
+  transport --> session : describe resolves late
+  session -> session : disposed is true; return without state, output, or DOM write (L2-057)
+end
+doc --> player : Later fullscreenchange; no handler registered (L2-080)
+note over player : OnPush with signal writes; play, pause, mute, and reconnect update the view under provideZonelessChangeDetection() (L2-080)
+note over pipeline : Budgets: first frame within 2000 ms at 4x slowdown; behind-playhead buffer at most 60 s plus one fragment; no long task over 50 ms per append; paused state runs only the 1 Hz statistics timer (L2-079)
+@enduml
