@@ -50,8 +50,12 @@ test('names the region from the descriptor, announces it and starts the elapsed 
   const elapsed = await player.elapsedSeconds();
   expect(elapsed).toBeGreaterThanOrEqual(754);
   expect(elapsed).toBeLessThan(760);
-  await player.elapse(1000);
-  await expect.poll(() => player.elapsedSeconds()).toBe(elapsed + 1);
+  // The display follows the 1 Hz tick, whose phase is independent of when Describe resolved.
+  await player.elapse(2000);
+  await player.nextFrame();
+  const later = await player.elapsedSeconds();
+  expect(later).toBeGreaterThanOrEqual(elapsed + 1);
+  expect(later).toBeLessThanOrEqual(elapsed + 2);
   await player.expectElapsedHiddenFromAssistiveTech();
   await player.resumeTime();
   await player.expectNoAccessibilityViolations();
