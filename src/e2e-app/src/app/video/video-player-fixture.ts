@@ -83,6 +83,8 @@ export class FixtureTransport {}
       </div>
       <button type="button" (click)="streamId.set('lab-camera')">Change stream</button>
       <button type="button" (click)="streamId.set(null)">Clear stream</button>
+      <button type="button" (click)="runHarness()">Run harness contract</button>
+      <output aria-label="Harness contract">{{ json(harnessReport()) }}</output>
       <button type="button" (click)="mounted.set(false)">Unmount player</button>
       <button type="button" (click)="mounted.set(true)">Mount player</button>
       <button type="button" (click)="volume.set(40)">Set volume 40</button>
@@ -117,6 +119,17 @@ export class VideoPlayerFixture {
     last: null,
   });
   readonly json = JSON.stringify;
+  readonly harnessReport = signal<unknown>(null);
+
+  async runHarness(): Promise<void> {
+    try {
+      this.harnessReport.set(
+        await (await import('./video-player-harness-contract')).runHarnessContract(),
+      );
+    } catch (error) {
+      this.harnessReport.set({ error: String(error) });
+    }
+  }
   readonly hubUrl = parameters.get('hubUrl') ?? 'https://hub.example/hubs/video';
   /** The container width and the theme tokens a host page might set around the player. */
   readonly containerStyle =

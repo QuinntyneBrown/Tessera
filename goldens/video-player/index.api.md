@@ -4,6 +4,7 @@
 
 ```ts
 
+import { ComponentHarness } from '@angular/cdk/testing';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -23,7 +24,7 @@ export class SignalRVideoStreamTransport implements VideoStreamTransport {
     // (undocumented)
     configure(options: VideoStreamTransportOptions): void;
     // (undocumented)
-    readonly connectionEvents: Subject<"closed" | "reconnecting" | "reconnected">;
+    readonly connectionEvents: Subject<"reconnecting" | "reconnected" | "closed">;
     // (undocumented)
     describe(streamId: string): Promise<VideoStreamDescriptor>;
     // (undocumented)
@@ -286,6 +287,35 @@ export interface VideoPlayerError {
 
 // @public
 export type VideoPlayerErrorCode = 'unsupported' | 'unauthorized' | 'not-found' | 'connection' | 'source' | 'decode' | 'stalled';
+
+// @public
+export class VideoPlayerHarness extends ComponentHarness {
+    // (undocumented)
+    areCaptionsShowing(): Promise<boolean>;
+    // (undocumented)
+    getErrorMessage(): Promise<string | null>;
+    // (undocumented)
+    getState(): Promise<VideoPlayerState>;
+    // (undocumented)
+    getStatusText(): Promise<string>;
+    // (undocumented)
+    getVolume(): Promise<number>;
+    goToLive(): Promise<void>;
+    // (undocumented)
+    static hostSelector: string;
+    isLive(): Promise<boolean>;
+    // (undocumented)
+    isMuted(): Promise<boolean>;
+    pause(): Promise<void>;
+    play(): Promise<void>;
+    // (undocumented)
+    retry(): Promise<void>;
+    setVolume(volume: number): Promise<void>;
+    // (undocumented)
+    toggleCaptions(): Promise<void>;
+    // (undocumented)
+    toggleMute(): Promise<void>;
+}
 
 // @public
 export type VideoPlayerI18n = Partial<VideoPlayerStrings>;

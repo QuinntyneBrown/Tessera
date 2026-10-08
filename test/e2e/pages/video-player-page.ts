@@ -1704,6 +1704,21 @@ export class VideoPlayerPage {
     return frames;
   }
 
+  async verifyHarnessContract(report: Record<string, unknown>): Promise<void> {
+    await this.page.getByRole('button', { name: 'Run harness contract', exact: true }).click();
+    await expect
+      .poll(
+        async () =>
+          JSON.parse(
+            (await this.page
+              .getByRole('status', { name: 'Harness contract', exact: true })
+              .textContent()) || 'null',
+          ),
+        { timeout: 60000 },
+      )
+      .toEqual(report);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })
