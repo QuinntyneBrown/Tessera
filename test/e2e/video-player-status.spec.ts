@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-061, L2-066, L2-068, L2-071.
+// Acceptance tests. Traces to L2-061, L2-063, L2-065, L2-066, L2-068, L2-071.
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -95,4 +95,115 @@ test('ends with the live duration and disables every control except Fullscreen',
   await player.expectAnnounced('Stream ended. It was live for 2 minutes.');
   await player.expectStateHistoryInOrder(['connecting', 'live', 'ended']);
   await player.expectNoAccessibilityViolations();
+});
+
+test('hides the control bar 3000 ms after the pointer rests while live, keeping it focusable', async ({
+  page,
+}) => {
+  // L2-065 AC1: while live, 3000 ms after the pointer rests over the stage, the control bar gets its
+  // hidden class, stays in the DOM, keeps its controls focusable, and never gets aria-hidden.
+  const player = new VideoPlayerPage(page);
+  await player.open('live');
+  await player.expectState('live');
+  await player.freezeTime();
+  await player.restPointerOnStage();
+  await player.elapse(2999);
+  await player.expectControlsHidden(false);
+  await player.elapse(1);
+  await player.nextFrame();
+  await player.expectControlsHidden(true);
+  await player.resumeTime();
+  await player.expectNoAccessibilityViolations();
+});
+
+for (const reveal of ['pointer', 'key', 'focus'] as const) {
+  test(`reveals hidden controls on ${reveal} and restarts the timer`, async ({ page }) => {
+    // L2-065 AC2: pointer movement, a key press or focus on a control shows the controls and
+    // restarts the 3000 ms timer.
+    const player = new VideoPlayerPage(page);
+    await player.open('live');
+    await player.expectState('live');
+    await player.restPointerOnStage();
+    await player.freezeTime();
+    await player.elapse(3000);
+    await player.nextFrame();
+    await player.expectControlsHidden(true);
+    if (reveal === 'pointer') await player.movePointerOverStage();
+    else if (reveal === 'key') {
+      await player.focusRegion();
+      await player.pressKey('Shift');
+    } else await player.focusControl('mute');
+    await player.elapse(16);
+    await player.expectControlsHidden(false);
+    if (reveal !== 'focus') {
+      await player.elapse(2900);
+      await player.expectControlsHidden(false);
+      await player.elapse(100);
+      await player.nextFrame();
+      await player.expectControlsHidden(true);
+    }
+    await player.resumeTime();
+  });
+}
+
+for (const keep of ['focus', 'hover'] as const) {
+  test(`keeps the controls visible while ${keep === 'focus' ? 'a control has focus' : 'the pointer is over them'}`, async ({
+    page,
+  }) => {
+    // L2-065 AC3: with focus in the bar or the pointer over it, the controls stay visible.
+    const player = new VideoPlayerPage(page);
+    await player.open('live');
+    await player.expectState('live');
+    if (keep === 'focus') await player.focusControl('mute');
+    else await player.hoverControlBar();
+    await player.freezeTime();
+    await player.elapse(5000);
+    await player.expectControlsHidden(false);
+    await player.resumeTime();
+  });
+}
+
+test('keeps the controls visible whenever the player is not live', async ({ page }) => {
+  // L2-065 AC4: in paused (and every other non-live state) the controls are always visible.
+  const player = new VideoPlayerPage(page);
+  await player.open('live');
+  await player.expectState('live');
+  await player.clickPlayPause();
+  await player.expectState('paused');
+  await player.restPointerOnStage();
+  await player.freezeTime();
+  await player.elapse(5000);
+  await player.expectControlsHidden(false);
+  await player.resumeTime();
+});
+
+test('shows and hides the controls instantly under reduced motion', async ({ page }) => {
+  // L2-065 AC6: Given prefers-reduced-motion: reduce, the change is instant.
+  const player = new VideoPlayerPage(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectControlsTransition('0s');
+});
+
+test('hides the pointer over the stage in fullscreen while the controls are hidden', async ({
+  page,
+}) => {
+  // L2-063 AC4: Given fullscreen, when the controls auto-hide, then the cursor is hidden over the
+  // stage until the pointer moves.
+  const player = new VideoPlayerPage(page);
+  await player.stubFullscreen();
+  await player.open('live');
+  await player.expectState('live');
+  await player.clickFullscreen();
+  await player.expectFullscreen('Exit fullscreen', true);
+  await player.restPointerOnStage();
+  await player.freezeTime();
+  await player.elapse(3000);
+  await player.nextFrame();
+  await player.expectStageCursor('none');
+  await player.movePointerOverStage();
+  await player.elapse(16);
+  await player.expectStageCursor('auto');
+  await player.resumeTime();
 });

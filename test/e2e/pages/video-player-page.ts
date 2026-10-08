@@ -86,12 +86,19 @@ export class VideoPlayerPage {
     await expect(live).toHaveText(text);
   }
 
+  /** Stops the page clock where it is; timers then run only through elapse(). */
   async freezeTime(): Promise<void> {
-    await this.page.clock.pauseAt(new Date(Date.now() + 1000));
+    const now = await this.page.evaluate(() => Date.now());
+    await this.page.clock.pauseAt(now + 5);
   }
 
   async elapse(milliseconds: number): Promise<void> {
     await this.page.clock.runFor(milliseconds);
+  }
+
+  /** Lets a frozen page render once, as the next animation frame would. */
+  async nextFrame(): Promise<void> {
+    await this.page.clock.runFor(16);
   }
 
   async resumeTime(): Promise<void> {
@@ -960,6 +967,71 @@ export class VideoPlayerPage {
         ),
       )
       .toBe(count);
+  }
+
+  private stage() {
+    return this.host().locator('.t-video-player__stage');
+  }
+
+  /** Moves the pointer onto the middle of the stage and leaves it there. */
+  async restPointerOnStage(): Promise<void> {
+    const box = (await this.stage().boundingBox())!;
+    await this.page.mouse.move(box.x + box.width / 2, box.y + box.height / 3);
+  }
+
+  async movePointerOverStage(): Promise<void> {
+    const box = (await this.stage().boundingBox())!;
+    await this.page.mouse.move(box.x + box.width / 2 + 20, box.y + box.height / 3 + 10, {
+      steps: 2,
+    });
+  }
+
+  async hoverControlBar(): Promise<void> {
+    await this.control('live').hover();
+  }
+
+  async focusRegion(): Promise<void> {
+    await this.host().getByRole('region').focus();
+  }
+
+  async expectControlsHidden(hidden: boolean): Promise<void> {
+    const bar = this.host().getByRole('group', { name: 'Player controls', exact: true });
+    await expect(bar).toBeAttached();
+    await expect(bar).not.toHaveAttribute('aria-hidden', /.*/);
+    if (hidden) await expect(bar).toHaveClass(/t-video-player__bar--hidden/);
+    else await expect(bar).not.toHaveClass(/t-video-player__bar--hidden/);
+  }
+
+  async expectControlsTransition(duration: string): Promise<void> {
+    await expect(this.host().getByRole('group', { name: 'Player controls' })).toHaveCSS(
+      'transition-duration',
+      duration,
+    );
+  }
+
+  async expectStageCursor(cursor: string): Promise<void> {
+    await expect(this.stage()).toHaveCSS('cursor', cursor);
+  }
+
+  async tapStage(): Promise<void> {
+    const box = (await this.stage().boundingBox())!;
+    await this.page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 3);
+  }
+
+  async tapControl(name: string): Promise<void> {
+    await this.control(name).tap();
+  }
+
+  async expectContextMenuPrevented(target: 'stage' | 'page', prevented: boolean): Promise<void> {
+    const element =
+      target === 'stage' ? this.stage() : this.page.getByRole('heading', { level: 1 });
+    expect(
+      await element.evaluate((node) => {
+        const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+        node.dispatchEvent(event);
+        return event.defaultPrevented;
+      }),
+    ).toBe(prevented);
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {

@@ -8,7 +8,9 @@
   <div
     class="t-video-player__stage"
     [style.aspect-ratio]="aspectRatio()"
-    (click)="togglePlayback()"
+    (pointerup)="onStagePointerUp($event)"
+    (click)="onStageClick()"
+    (contextmenu)="$event.preventDefault()"
   >
     <video
       class="t-video-player__video"
@@ -86,7 +88,16 @@
       </div>
     }
   </div>
-  <div class="t-video-player__bar" role="group" #bar [attr.aria-label]="strings.controlsLabel">
+  <div
+    class="t-video-player__bar"
+    role="group"
+    #bar
+    [attr.aria-label]="strings.controlsLabel"
+    [class.t-video-player__bar--hidden]="!visibility.visible()"
+    (pointerenter)="$event.pointerType === 'mouse' && visibility.setHovered(true)"
+    (pointerleave)="visibility.setHovered(false)"
+    (pointerdown)="visibility.show()"
+  >
     <button
       type="button"
       class="t-video-player__control"

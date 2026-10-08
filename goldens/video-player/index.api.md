@@ -87,9 +87,14 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected onFocusin(event: FocusEvent): void;
     // (undocumented)
+    protected onFocusout(event: FocusEvent): void;
+    // (undocumented)
     protected onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected onPlaying(): void;
+    protected onStageClick(): void;
+    // (undocumented)
+    protected onStagePointerUp(event: PointerEvent): void;
     // (undocumented)
     protected onVideoError(): void;
     // (undocumented)
@@ -182,6 +187,8 @@ export class VideoPlayer implements VideoPlayerHost {
     protected readonly unmuteChip: WritableSignal<boolean>;
     // (undocumented)
     videoElement(): HTMLVideoElement;
+    // Warning: (ae-forgotten-export) The symbol "ControlsVisibility" needs to be exported by the entry point tessera-video-player.d.ts
+    protected readonly visibility: ControlsVisibility;
     readonly volume: InputSignal<number>;
     // (undocumented)
     protected readonly volumeValue: WritableSignal<number>;

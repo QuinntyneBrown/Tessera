@@ -163,3 +163,25 @@
 :host([data-state='reconnecting']) .t-video-player__video {
   filter: brightness(0.45);
 }
+
+.t-video-player__bar {
+  transition: opacity 200ms ease;
+}
+
+.t-video-player__bar--hidden {
+  opacity: 0;
+}
+
+:host(.t-video-player--cursor-hidden) .t-video-player__stage {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-video-player__bar {
+    transition-duration: 0s;
+  }
+
+  .t-video-player__spinner {
+    animation: none;
+  }
+}

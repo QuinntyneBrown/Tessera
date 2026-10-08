@@ -29,6 +29,7 @@ import {
 import { VIDEO_STREAM_TRANSPORT } from './video-stream-transport';
 import { VideoPlayerHost, VideoStreamSession } from './video-stream-session';
 import { VideoPlayerAnnouncer } from './video-player-announcer';
+import { ControlsVisibility } from './controls-visibility';
 
 /** Live video player that plays a fragmented-MP4 stream delivered by a hub. */
 @Component({
@@ -40,6 +41,9 @@ import { VideoPlayerAnnouncer } from './video-player-announcer';
     '[attr.data-state]': 'state()',
     '(keydown)': 'onKeydown($event)',
     '(focusin)': 'onFocusin($event)',
+    '(focusout)': 'onFocusout($event)',
+    '(pointermove)': 'visibility.show()',
+    '[class.t-video-player--cursor-hidden]': 'isFullscreen() && !visibility.visible()',
   },
 })
 export class VideoPlayer implements VideoPlayerHost {
@@ -126,6 +130,8 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly bar = viewChild.required<ElementRef<HTMLElement>>('bar');
   private readonly slider = viewChild.required<ElementRef<HTMLInputElement>>('slider');
   /** The control that last held focus and its position, for focus recovery. */
+  protected readonly visibility = new ControlsVisibility();
+  private lastPointerType = '';
   private focusedControl: { element: HTMLElement; index: number; wasDisabled: boolean } | undefined;
   private readonly announcer = new VideoPlayerAnnouncer(() => this.liveRegion().nativeElement);
   private readonly transport = inject(VIDEO_STREAM_TRANSPORT, { optional: true });
@@ -155,11 +161,13 @@ export class VideoPlayer implements VideoPlayerHost {
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     afterEveryRender({ write: () => this.recoverFocus() });
+    effect(() => this.visibility.setLive(this.state() === 'live'));
     inject(DestroyRef).onDestroy(() => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
       clearTimeout(this.bufferingAnnouncement);
       this.session?.stop();
       this.announcer.destroy();
+      this.visibility.destroy();
     });
   }
 
@@ -306,6 +314,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    this.visibility.show();
     if (event.ctrlKey || event.altKey || event.metaKey) return;
     const onSlider = event.target === this.slider().nativeElement;
     const key = event.key === ' ' ? 'space' : event.key.toLowerCase();
@@ -328,6 +337,24 @@ export class VideoPlayer implements VideoPlayerHost {
       index < 0
         ? undefined
         : { element, index, wasDisabled: element.getAttribute('aria-disabled') === 'true' };
+    // Keyboard focus keeps the bar visible; focus that follows a tap or click does not.
+    if (element) this.visibility.setFocused(element.matches(':focus-visible'));
+  }
+
+  protected onFocusout(event: FocusEvent): void {
+    if (!this.bar().nativeElement.contains(event.relatedTarget as Node | null))
+      this.visibility.setFocused(false);
+  }
+
+  /** A tap on the stage while the controls are hidden only reveals them. */
+  protected onStageClick(): void {
+    if (this.lastPointerType === 'touch' && !this.visibility.visible())
+      return this.visibility.show();
+    this.togglePlayback();
+  }
+
+  protected onStagePointerUp(event: PointerEvent): void {
+    this.lastPointerType = event.pointerType;
   }
 
   private controls(): HTMLElement[] {
