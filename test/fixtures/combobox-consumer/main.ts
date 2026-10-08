@@ -11,6 +11,7 @@ import {
 import { of } from 'rxjs';
 import { ScormPlayer, CourseSource } from '@tessera/scorm-player';
 import { applyTheme, clearTheme, createTheme, darkTheme, lightTheme } from '@tessera/theme';
+import { VideoPlayer } from '@tessera/video-player';
 
 @Component({
   selector: 'packed-root',
@@ -21,6 +22,7 @@ import { applyTheme, clearTheme, createTheme, darkTheme, lightTheme } from '@tes
     ComboboxEmptyTemplate,
     ReactiveFormsModule,
     ScormPlayer,
+    VideoPlayer,
   ],
   template: `<main>
     <h1>Packed combobox consumer</h1>
@@ -42,6 +44,7 @@ import { applyTheme, clearTheme, createTheme, darkTheme, lightTheme } from '@tes
     </t-combobox>
     <output aria-label="Packed value">{{ names() }}</output>
     <tsr-scorm-player [source]="source" />
+    <t-video-player [streamId]="null" />
   </main>`,
   styles: `
     @use '@tessera/theme/styles/tokens' as theme;

@@ -31,6 +31,7 @@ Every slice is one commit on the `video-player` branch; its message repeats the 
 | 23. Performance | L2-079 | Measurement only; passed once the probes were right | See below |
 | 24. Consumer harness | L2-081 | "VideoPlayerHarness unavailable" | Contract passes twice |
 | 25. Examples, dev app, documentation | L2-078 AC4, L2-082 AC6, L2-083 (record), L2-084 | Examples screen absent; backend spec skips | Examples pass twice; dev app shows the fallback notice and plays the fixture |
+| Packed consumer | L2-075 AC1, AC3 | The strict packed consumer had no video player | `pnpm e2e:packed` installs the video player tarball with its SignalR peers; all three packed tests pass. The script's `tar` call needs Windows' own tar locally (run from PowerShell); CI runs on Linux. |
 
 ## Measured performance (L2-079)
 

@@ -78,7 +78,6 @@ announcer and the strings. The slice-by-slice evidence is in the
 | Demonstration backend | `L2-085` to `L2-094` | Not started. `video-player-backend.spec.ts` skips unless `TESSERA_VIDEO_HUB_URL` is set; the dev app falls back to the replayed fixture. |
 | Manual screen reader verification | `L2-083` | Not done; every row of the [matrix](../verification/video-player-screen-reader-matrix.md) is Not run. |
 | Actual 400% browser zoom | `L2-073` AC3 | Manual; the automated check is the 320 by 256 CSS px reflow viewport. |
-| Packed-consumer smoke test | none | `e2e:packed` still packs and compiles only the theme, SCORM player and combobox. |
 
 ### Decisions made where the designs said `<TO SUPPLY>`
 

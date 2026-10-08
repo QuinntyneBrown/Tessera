@@ -10,7 +10,7 @@
     "test": "ng test scorm-player && ng test video-player",
     "e2e": "playwright test --grep-invert \"render-latency samples|performance budget\"",
     "e2e:performance": "playwright test test/e2e/combobox-performance.spec.ts test/e2e/video-player-performance.spec.ts --workers=1",
-    "e2e:packed": "node -e \"require('node:fs').mkdirSync('dist/packages', {recursive: true})\" && npm pack ./dist/theme ./dist/scorm-player ./dist/combobox --pack-destination ./dist/packages && node tools/combobox-packed-smoke.mjs",
+    "e2e:packed": "node -e \"require('node:fs').mkdirSync('dist/packages', {recursive: true})\" && npm pack ./dist/theme ./dist/scorm-player ./dist/combobox ./dist/video-player --pack-destination ./dist/packages && node tools/combobox-packed-smoke.mjs",
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "prepare": "husky",
