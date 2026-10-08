@@ -1,0 +1,31 @@
+@use '../theme/styles/tokens' as theme;
+@include theme.defaults(('colorScheme', 'fontFamilyBase'));
+
+:host {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  font-family: theme.token('fontFamilyBase');
+  color-scheme: theme.token('colorScheme');
+}
+
+.t-video-player__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.t-video-player__video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.t-video-player__announcer {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

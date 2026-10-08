@@ -11,5 +11,5 @@ export const commitMessage = {
     refactor: { description: 'A change that neither fixes a bug nor adds a feature' },
     test: { description: 'Adding or correcting tests' },
   },
-  scopes: ['scorm-player', 'dev-app', 'e2e-app', 'docs'],
+  scopes: ['scorm-player', 'video-player', 'dev-app', 'e2e-app', 'docs'],
 };

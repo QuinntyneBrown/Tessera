@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node tools/generate-theme-styles.mjs && ng serve dev-app",
-    "build": "node tools/generate-theme-styles.mjs && ng build theme && ng build scorm-player && ng build combobox",
+    "build": "node tools/generate-theme-styles.mjs && ng build theme && ng build scorm-player && ng build combobox && ng build video-player",
     "test": "ng test scorm-player",
     "e2e": "playwright test --grep-invert \"render-latency samples\"",
     "e2e:performance": "playwright test test/e2e/combobox-performance.spec.ts --workers=1",
@@ -14,8 +14,8 @@
     "lint": "prettier --check .",
     "format": "prettier --write .",
     "prepare": "husky",
-    "api:update": "pnpm build && api-extractor run --local -c tools/public_api_guard/api-extractor.json && api-extractor run --local -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run --local -c tools/public_api_guard/theme-api-extractor.json",
-    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json && api-extractor run -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run -c tools/public_api_guard/theme-api-extractor.json",
+    "api:update": "pnpm build && api-extractor run --local -c tools/public_api_guard/api-extractor.json && api-extractor run --local -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run --local -c tools/public_api_guard/theme-api-extractor.json && api-extractor run --local -c tools/public_api_guard/video-player-api-extractor.json",
+    "api:check": "api-extractor run -c tools/public_api_guard/api-extractor.json && api-extractor run -c tools/public_api_guard/combobox-api-extractor.json && api-extractor run -c tools/public_api_guard/theme-api-extractor.json && api-extractor run -c tools/public_api_guard/video-player-api-extractor.json",
     "demo:record": "node demo/run.mjs"
   },
   "dependencies": {

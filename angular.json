@@ -240,6 +240,32 @@
           "defaultConfiguration": "production"
         }
       }
+    },
+    "video-player": {
+      "projectType": "library",
+      "root": "src/video-player",
+      "sourceRoot": "src/video-player",
+      "prefix": "t",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "src/video-player/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "src/video-player/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "src/video-player/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

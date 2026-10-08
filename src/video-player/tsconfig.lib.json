@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/video-player",
+    "declaration": true,
+    "declarationMap": true,
+    "types": [],
+    "paths": {
+      "@tessera/theme": ["../../dist/theme/types/tessera-theme.d.ts"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts"]
+}
