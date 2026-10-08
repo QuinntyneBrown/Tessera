@@ -68,6 +68,7 @@ export class VideoPlayer implements VideoPlayerHost {
   });
 
   private readonly liveRegion = viewChild.required<ElementRef<HTMLElement>>('liveRegion');
+  private readonly video = viewChild.required<ElementRef<HTMLVideoElement>>('video');
   private readonly announcer = new VideoPlayerAnnouncer(() => this.liveRegion().nativeElement);
   private readonly transport = inject(VIDEO_STREAM_TRANSPORT, { optional: true });
   private session: VideoStreamSession | undefined;
@@ -121,6 +122,22 @@ export class VideoPlayer implements VideoPlayerHost {
       default:
         return this.strings.errorNotFound;
     }
+  }
+
+  videoElement(): HTMLVideoElement {
+    return this.video().nativeElement;
+  }
+
+  requestPlay(): void {
+    this.videoElement()
+      .play()
+      .catch(() => undefined);
+  }
+
+  protected onPlaying(): void {
+    if (this.state() !== 'connecting') return;
+    this.setState('live');
+    this.announcer.status(this.strings.liveAnnounced);
   }
 
   tick(): void {

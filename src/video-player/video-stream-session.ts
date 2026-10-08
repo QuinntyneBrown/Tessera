@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { VideoStreamTransport } from './video-stream-transport';
+import { MediaSourcePipeline } from './media-source-pipeline';
 import {
   VideoPlayerErrorCode,
   VideoPlayerState,
@@ -13,12 +14,15 @@ export interface VideoPlayerHost {
   applyDescriptor(descriptor: VideoStreamDescriptor): void;
   tick(): void;
   fail(code: VideoPlayerErrorCode, cause?: unknown): void;
+  videoElement(): HTMLVideoElement;
+  requestPlay(): void;
 }
 
 /** Orchestrates one stream: describe, subscribe, and the 1 Hz tick. */
 export class VideoStreamSession {
   private disposed = false;
   private subscription: Subscription | undefined;
+  private pipeline: MediaSourcePipeline | undefined;
   private readonly ticker = setInterval(() => this.host.tick(), 1000);
 
   constructor(
@@ -43,7 +47,13 @@ export class VideoStreamSession {
     if (this.disposed) return;
     this.host.applyDescriptor(descriptor);
     if (!isSupported(descriptor.mimeType)) return this.fail('unsupported');
-    this.subscription = this.transport.subscribe(this.streamId).subscribe();
+    const pipeline = new MediaSourcePipeline(this.host.videoElement(), descriptor.mimeType, {
+      firstMedia: () => this.host.requestPlay(),
+    });
+    this.pipeline = pipeline;
+    this.subscription = this.transport
+      .subscribe(this.streamId)
+      .subscribe((chunk) => pipeline.push(chunk));
   }
 
   private fail(code: VideoPlayerErrorCode, cause?: unknown): void {

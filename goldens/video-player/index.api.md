@@ -50,7 +50,11 @@ export class VideoPlayer implements VideoPlayerHost {
     fail(code: VideoPlayerErrorCode, cause?: unknown): void;
     readonly hubUrl: InputSignal<string | null>;
     // (undocumented)
+    protected onPlaying(): void;
+    // (undocumented)
     protected readonly regionName: Signal<string>;
+    // (undocumented)
+    requestPlay(): void;
     // (undocumented)
     setState(state: VideoPlayerState): void;
     readonly state: Signal<VideoPlayerState>;
@@ -61,6 +65,7 @@ export class VideoPlayer implements VideoPlayerHost {
         regionLabel: (title: string | null) => string;
         connectingStatus: string;
         connecting: (title: string) => string;
+        liveAnnounced: string;
         retry: string;
         errorUnsupported: (mimeType: string) => string;
         errorNotFound: string;
@@ -70,6 +75,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly title: Signal<string | null>;
     readonly titleOverride: InputSignal<string | undefined>;
+    // (undocumented)
+    videoElement(): HTMLVideoElement;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<VideoPlayer, "t-video-player", never, {
         "hubUrl": {
@@ -129,6 +136,8 @@ export interface VideoPlayerStrings {
     errorNotFound: string;
     // (undocumented)
     errorUnsupported: (mimeType: string) => string;
+    // (undocumented)
+    liveAnnounced: string;
     // (undocumented)
     regionLabel: (title: string | null) => string;
     // (undocumented)

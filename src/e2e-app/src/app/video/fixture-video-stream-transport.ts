@@ -1,4 +1,5 @@
 import { NEVER, Observable, Subject } from 'rxjs';
+import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
 import {
   VideoChunk,
   VideoStreamDescriptor,
@@ -55,6 +56,9 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
 
   subscribe(_streamId: string): Observable<VideoChunk> {
     this.controls.calls.push('subscribe');
-    return NEVER;
+    if (this.scenario === 'connecting') return NEVER;
+    return replayFragmentedMp4('/lecture-10s.fmp4', {
+      rate: Number(this.parameters.get('rate') || 1),
+    });
   }
 }

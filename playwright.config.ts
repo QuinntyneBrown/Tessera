@@ -13,7 +13,16 @@ export default defineConfig({
     baseURL: `http://localhost:${port}`,
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Media tests assume audible autoplay is allowed; blocked autoplay is stubbed per test.
+        launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
+      },
+    },
+  ],
   webServer: [
     {
       command: `node ./node_modules/@angular/cli/bin/ng.js serve e2e-app --port ${port}`,

@@ -5,6 +5,7 @@ export interface VideoPlayerStrings {
   regionLabel: (title: string | null) => string;
   connectingStatus: string;
   connecting: (title: string) => string;
+  liveAnnounced: string;
   retry: string;
   errorUnsupported: (mimeType: string) => string;
   errorNotFound: string;
@@ -15,6 +16,7 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   regionLabel: (title) => (title ? `Video player: ${title}` : 'Video player'),
   connectingStatus: 'Connecting…',
   connecting: (title) => `Connecting to ${title}.`,
+  liveAnnounced: 'Live.',
   retry: 'Retry',
   errorUnsupported: (mimeType) => `This browser can't play this stream (${mimeType}).`,
   errorNotFound: "This stream doesn't exist or is no longer available.",

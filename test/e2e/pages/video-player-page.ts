@@ -150,6 +150,119 @@ export class VideoPlayerPage {
     });
   }
 
+  async recordMediaSourceCalls(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const record = { addSourceBuffer: 0, appends: [] as { type: string; updating: boolean }[] };
+      (window as unknown as { __mse: typeof record }).__mse = record;
+      const add = MediaSource.prototype.addSourceBuffer;
+      MediaSource.prototype.addSourceBuffer = function (type: string) {
+        record.addSourceBuffer++;
+        return add.call(this, type);
+      };
+      const append = SourceBuffer.prototype.appendBuffer;
+      SourceBuffer.prototype.appendBuffer = function (data: BufferSource) {
+        const bytes = ArrayBuffer.isView(data)
+          ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
+          : new Uint8Array(data);
+        record.appends.push({
+          type: String.fromCharCode(...bytes.subarray(4, 8)),
+          updating: this.updating,
+        });
+        return append.call(this, data);
+      };
+    });
+  }
+
+  async expectSerialisedAppends(): Promise<void> {
+    const record = await this.page.evaluate(
+      () =>
+        (
+          window as unknown as {
+            __mse: { addSourceBuffer: number; appends: { type: string; updating: boolean }[] };
+          }
+        ).__mse,
+    );
+    expect(record.addSourceBuffer).toBe(1);
+    expect(record.appends.length).toBeGreaterThan(1);
+    expect(record.appends[0].type).toBe('ftyp');
+    expect(record.appends.slice(1).every((append) => append.type === 'moof')).toBe(true);
+    expect(record.appends.every((append) => !append.updating)).toBe(true);
+  }
+
+  private videoMetrics() {
+    return this.host()
+      .locator('video')
+      .evaluate((video: HTMLVideoElement) => ({
+        readyState: video.readyState,
+        currentTime: video.currentTime,
+        paused: video.paused,
+        muted: video.muted,
+        volume: video.volume,
+        ranges: Array.from({ length: video.buffered.length }, (_, index) => [
+          video.buffered.start(index),
+          video.buffered.end(index),
+        ]),
+      }));
+  }
+
+  async expectFirstFrame(): Promise<void> {
+    await expect
+      .poll(async () => {
+        const metrics = await this.videoMetrics();
+        return metrics.readyState >= 2 && metrics.currentTime > 0;
+      })
+      .toBe(true);
+  }
+
+  async expectStartedNearLiveEdge(): Promise<void> {
+    const metrics = await this.videoMetrics();
+    const [start, end] = metrics.ranges[metrics.ranges.length - 1];
+    expect(metrics.currentTime).toBeGreaterThanOrEqual(start);
+    expect(end - metrics.currentTime).toBeLessThanOrEqual(3.6);
+  }
+
+  async expectBufferedEndBeyond(seconds: number): Promise<void> {
+    await expect
+      .poll(async () => {
+        const { ranges } = await this.videoMetrics();
+        return ranges.length === 1 && ranges[0][1] > seconds;
+      })
+      .toBe(true);
+  }
+
+  async observeAnnouncements(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const messages: string[] = [];
+      (window as unknown as { __announcements: string[] }).__announcements = messages;
+      new MutationObserver((records) => {
+        for (const record of records) {
+          const region =
+            record.target.nodeType === Node.TEXT_NODE ? record.target.parentElement : record.target;
+          if (
+            region instanceof Element &&
+            region.matches('t-video-player [aria-live="polite"]') &&
+            region.textContent
+          )
+            messages.push(region.textContent);
+        }
+      }).observe(document, { subtree: true, childList: true, characterData: true });
+    });
+  }
+
+  private announcements(): Promise<string[]> {
+    return this.page.evaluate(
+      () => (window as unknown as { __announcements: string[] }).__announcements,
+    );
+  }
+
+  async expectAnnouncementHistoryToEndWith(message: string): Promise<void> {
+    await expect.poll(async () => (await this.announcements()).at(-1)).toBe(message);
+  }
+
+  async expectAnnouncementHistory(messages: string[]): Promise<void> {
+    await expect.poll(() => this.announcements()).toEqual(messages);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })
