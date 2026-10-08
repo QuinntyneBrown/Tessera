@@ -161,6 +161,12 @@ export class VideoPlayer implements VideoPlayerHost {
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
     afterEveryRender({ write: () => this.recoverFocus() });
+    // The narrow layout is a container query; the observer only tells the hide timer about it.
+    const resize = new ResizeObserver(([entry]) => {
+      const fontSize = parseFloat(getComputedStyle(this.host).fontSize);
+      this.visibility.setNarrow(entry.contentRect.width < 47.5 * fontSize);
+    });
+    resize.observe(this.host);
     effect(() => this.visibility.setLive(this.state() === 'live'));
     inject(DestroyRef).onDestroy(() => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
@@ -168,6 +174,7 @@ export class VideoPlayer implements VideoPlayerHost {
       this.session?.stop();
       this.announcer.destroy();
       this.visibility.destroy();
+      resize.disconnect();
     });
   }
 
@@ -366,7 +373,8 @@ export class VideoPlayer implements VideoPlayerHost {
     const focused = this.focusedControl;
     if (!focused) return;
     const active = document.activeElement;
-    const removed = !focused.element.isConnected && (!active || active === document.body);
+    const lost = !active || active === document.body;
+    const removed = lost && (!focused.element.isConnected || !focused.element.checkVisibility());
     const disabled =
       active === focused.element &&
       !focused.wasDisabled &&

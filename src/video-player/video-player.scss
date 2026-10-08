@@ -5,20 +5,45 @@
   display: block;
   min-width: 0;
   max-width: 100%;
+  container-type: inline-size;
   font-family: theme.token('fontFamilyBase');
   color-scheme: theme.token('colorScheme');
 }
 
+:host(:fullscreen) {
+  display: grid;
+  align-content: center;
+  background: #000;
+}
+
+.t-video-player__region {
+  position: relative;
+}
+
+.t-video-player__region:focus {
+  outline: none;
+}
+
 .t-video-player__stage {
   position: relative;
-  aspect-ratio: 16 / 9;
+  overflow: hidden;
   background: #000;
+  -webkit-touch-callout: none;
+}
+
+:host(:fullscreen) .t-video-player__stage {
+  max-block-size: 100vh;
+  margin-inline: auto;
 }
 
 .t-video-player__video {
   display: block;
   inline-size: 100%;
   block-size: 100%;
+}
+
+:host([data-state='reconnecting']) .t-video-player__video {
+  filter: brightness(0.45);
 }
 
 .t-video-player__announcer {
@@ -30,26 +55,50 @@
   white-space: nowrap;
 }
 
-.t-video-player__placeholder {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: #d8e2df;
-  color: #18312e;
-}
-
+/* Overlays fill the stage, scroll when enlarged text needs more room, and keep clear of the bar. */
+.t-video-player__placeholder,
+.t-video-player__overlay,
+.t-video-player__ended,
 .t-video-player__error {
   position: absolute;
   inset: 0;
   display: grid;
   place-content: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: #fff;
-  color: #18312e;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1rem 4rem;
+  overflow: auto;
   text-align: center;
   overflow-wrap: anywhere;
+}
+
+.t-video-player__placeholder {
+  background: #d8e2df;
+  color: #18312e;
+}
+
+.t-video-player__overlay .t-video-player__status,
+.t-video-player__ended {
+  color: #fff;
+}
+
+.t-video-player__ended {
+  background: rgb(24 49 46 / 0.82);
+}
+
+.t-video-player__ended h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.t-video-player__ended p,
+.t-video-player__status {
+  margin: 0;
+}
+
+.t-video-player__error {
+  background: #fff;
+  color: #18312e;
 }
 
 .t-video-player__error-heading {
@@ -58,32 +107,25 @@
   color: #8a1c12;
 }
 
-.t-video-player__live {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
+.t-video-player__retry {
   min-inline-size: 44px;
   min-block-size: 44px;
+  padding-inline: 1rem;
 }
 
-.t-video-player__live-dot {
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
+.t-video-player__spinner {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border: 0.375rem solid rgb(255 255 255 / 0.3);
+  border-block-start-color: #fff;
   border-radius: 50%;
-  background: #ff6b57;
+  animation: t-video-player-spin 0.9s linear infinite;
 }
 
-.t-video-player__control {
-  display: inline-grid;
-  place-items: center;
-  min-inline-size: 44px;
-  min-block-size: 44px;
-}
-
-.t-video-player__control svg {
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
-  fill: currentColor;
+@keyframes t-video-player-spin {
+  to {
+    transform: rotate(1turn);
+  }
 }
 
 .t-video-player__central-play {
@@ -123,48 +165,18 @@
   stroke-width: 2;
 }
 
-.t-video-player__overlay,
-.t-video-player__ended {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  text-align: center;
-  overflow-wrap: anywhere;
-}
-
-.t-video-player__overlay .t-video-player__status,
-.t-video-player__ended {
-  color: #fff;
-}
-
-.t-video-player__ended {
-  background: rgb(24 49 46 / 0.82);
-}
-
-.t-video-player__spinner {
-  inline-size: 3.5rem;
-  block-size: 3.5rem;
-  border: 0.375rem solid rgb(255 255 255 / 0.3);
-  border-block-start-color: #fff;
-  border-radius: 50%;
-  animation: t-video-player-spin 0.9s linear infinite;
-}
-
-@keyframes t-video-player-spin {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
-:host([data-state='reconnecting']) .t-video-player__video {
-  filter: brightness(0.45);
-}
-
+/* The bar overlays the bottom of the stage and wraps onto more rows before anything clips. */
 .t-video-player__bar {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgb(24 49 46 / 0.92);
+  color: #fff;
   transition: opacity 200ms ease;
 }
 
@@ -174,6 +186,94 @@
 
 :host(.t-video-player--cursor-hidden) .t-video-player__stage {
   cursor: none;
+}
+
+.t-video-player__control,
+.t-video-player__live {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.t-video-player__control svg {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  fill: currentColor;
+}
+
+.t-video-player__live-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: #ff6b57;
+}
+
+.t-video-player__elapsed {
+  margin-inline-start: auto;
+  padding-inline: 0.5rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.t-video-player__volume {
+  inline-size: 6rem;
+  min-block-size: 44px;
+  margin: 0;
+  background: transparent;
+  accent-color: #8fd5ba;
+  appearance: none;
+  cursor: pointer;
+}
+
+.t-video-player__volume::-webkit-slider-runnable-track {
+  block-size: 0.25rem;
+  border-radius: 0.125rem;
+  background: currentColor;
+}
+
+.t-video-player__volume::-webkit-slider-thumb {
+  inline-size: 24px;
+  block-size: 24px;
+  margin-block-start: -10px;
+  border-radius: 50%;
+  background: currentColor;
+  appearance: none;
+}
+
+.t-video-player__volume::-moz-range-thumb {
+  inline-size: 24px;
+  block-size: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Narrow containers put the bar in flow below the stage, where it never hides. */
+@container (width < 47.5em) {
+  .t-video-player__bar {
+    position: static;
+  }
+
+  .t-video-player__volume {
+    display: none;
+  }
+
+  .t-video-player__placeholder,
+  .t-video-player__overlay,
+  .t-video-player__ended,
+  .t-video-player__error {
+    padding-block-end: 1rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

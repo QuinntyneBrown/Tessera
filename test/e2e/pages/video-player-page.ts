@@ -88,8 +88,15 @@ export class VideoPlayerPage {
 
   /** Stops the page clock where it is; timers then run only through elapse(). */
   async freezeTime(): Promise<void> {
-    const now = await this.page.evaluate(() => Date.now());
-    await this.page.clock.pauseAt(now + 5);
+    for (const margin of [5, 20, 100, 500]) {
+      const now = await this.page.evaluate(() => Date.now());
+      try {
+        return await this.page.clock.pauseAt(now + margin);
+      } catch {
+        // The page clock moved past the target before the call arrived; aim further ahead.
+      }
+    }
+    throw new Error('Could not freeze the page clock');
   }
 
   async elapse(milliseconds: number): Promise<void> {
@@ -1032,6 +1039,117 @@ export class VideoPlayerPage {
         return event.defaultPrevented;
       }),
     ).toBe(prevented);
+  }
+
+  async useViewport(width: number, height = 900): Promise<void> {
+    await this.page.setViewportSize({ width, height });
+  }
+
+  async enlargeText(): Promise<void> {
+    await this.page.addStyleTag({ content: 'html {font-size: 200% !important}' });
+  }
+
+  async applyTextSpacing(): Promise<void> {
+    await this.page.addStyleTag({
+      content:
+        '* {line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important} p {margin-bottom: 2em !important}',
+    });
+  }
+
+  async expectNoHorizontalScroll(): Promise<void> {
+    await expect
+      .poll(() => this.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+      .toBe(true);
+  }
+
+  async expectControlsInsidePlayer(): Promise<void> {
+    const host = (await this.host().boundingBox())!;
+    for (const control of await this.host().locator('[data-control]').all()) {
+      if (!(await control.isVisible())) continue;
+      const box = (await control.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(host.x - 1);
+      expect(box.x + box.width).toBeLessThanOrEqual(host.x + host.width + 1);
+    }
+  }
+
+  async expectTargetSizes(): Promise<void> {
+    for (const button of await this.host().locator('button').all()) {
+      if (!(await button.isVisible())) continue;
+      const box = (await button.boundingBox())!;
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    // The narrow layout hides the slider; its thumb is measured wherever it is shown.
+    if (!(await this.control('volume').isVisible())) return;
+    const thumb = await this.control('volume').evaluate((slider) => {
+      const style = getComputedStyle(slider, '::-webkit-slider-thumb');
+      return { width: parseFloat(style.width), height: parseFloat(style.height) };
+    });
+    expect(thumb.width).toBeGreaterThanOrEqual(24);
+    expect(thumb.height).toBeGreaterThanOrEqual(24);
+  }
+
+  /** Each text element fits its box, and no two bar items overlap. */
+  private async expectWhole(selectors: string[]): Promise<void> {
+    const boxes = await this.host().evaluate((host, selectors) => {
+      return selectors
+        .map((selector) => host.querySelector<HTMLElement>(selector))
+        .filter((element): element is HTMLElement => !!element && element.checkVisibility())
+        .map((element) => ({
+          clipped:
+            element.scrollWidth > element.clientWidth + 1 ||
+            element.scrollHeight > element.clientHeight + 1,
+          rect: element.getBoundingClientRect().toJSON() as DOMRect,
+        }));
+    }, selectors);
+    expect(boxes.length).toBeGreaterThan(0);
+    for (const box of boxes) expect(box.clipped).toBe(false);
+    for (const [index, a] of boxes.entries())
+      for (const b of boxes.slice(index + 1))
+        expect(
+          a.rect.right <= b.rect.left + 1 ||
+            b.rect.right <= a.rect.left + 1 ||
+            a.rect.bottom <= b.rect.top + 1 ||
+            b.rect.bottom <= a.rect.top + 1,
+        ).toBe(true);
+  }
+
+  async expectBarTextWhole(): Promise<void> {
+    await this.expectWhole([
+      '.t-video-player__elapsed',
+      '[data-control="live"]',
+      '[data-control="play-pause"]',
+      '[data-control="mute"]',
+    ]);
+  }
+
+  async expectErrorTextWhole(): Promise<void> {
+    await this.expectWhole(['.t-video-player__error-heading', '.t-video-player__retry']);
+  }
+
+  async expectNarrowLayout(narrow: boolean): Promise<void> {
+    const stage = this.host().locator('.t-video-player__stage');
+    const bar = this.host().getByRole('group', { name: 'Player controls', exact: true });
+    await expect
+      .poll(async () => {
+        const stageBox = (await stage.boundingBox())!;
+        const barBox = (await bar.boundingBox())!;
+        return barBox.y >= stageBox.y + stageBox.height - 1;
+      })
+      .toBe(narrow);
+    if (narrow) await expect(this.control('volume')).toBeHidden();
+    else await expect(this.control('volume')).toBeVisible();
+    await expect(this.host().locator('.t-video-player__elapsed')).toBeVisible();
+  }
+
+  async resizeContainer(width: number): Promise<void> {
+    await this.page.locator('.fixture-container').evaluate((element, width) => {
+      (element as HTMLElement).style.width = `${width}px`;
+    }, width);
+  }
+
+  async blurPlayer(): Promise<void> {
+    await this.page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {

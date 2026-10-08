@@ -31,30 +31,37 @@ export class FixtureTransport {}
   template: `
     <main>
       <h1>Video player</h1>
-      @if (mounted()) {
-        <t-video-player
-          tsrFixtureTransport
-          hubUrl="https://hub.example/hubs/video"
-          [accessTokenFactory]="tokenFactory"
-          [streamId]="streamId()"
-          [titleOverride]="parameters.get('titleOverride') ?? undefined"
-          [autoplay]="parameters.get('autoplay') !== 'false'"
-          [muted]="muted()"
-          [volume]="volume()"
-          [captions]="captions()"
-          (stateChange)="record($event)"
-          (error)="recordError($event)"
-          (stats)="recordStats($event)"
-        />
-      }
-      @if (parameters.get('instances') === '2') {
-        <t-video-player
-          tsrFixtureTransport
-          hubUrl="https://hub.example/hubs/video"
-          streamId="lab-camera"
-          titleOverride="Lab camera"
-        />
-      }
+      <div
+        class="fixture-container"
+        [style.width]="
+          parameters.has('containerWidth') ? parameters.get('containerWidth') + 'px' : null
+        "
+      >
+        @if (mounted()) {
+          <t-video-player
+            tsrFixtureTransport
+            hubUrl="https://hub.example/hubs/video"
+            [accessTokenFactory]="tokenFactory"
+            [streamId]="streamId()"
+            [titleOverride]="parameters.get('titleOverride') ?? undefined"
+            [autoplay]="parameters.get('autoplay') !== 'false'"
+            [muted]="muted()"
+            [volume]="volume()"
+            [captions]="captions()"
+            (stateChange)="record($event)"
+            (error)="recordError($event)"
+            (stats)="recordStats($event)"
+          />
+        }
+        @if (parameters.get('instances') === '2') {
+          <t-video-player
+            tsrFixtureTransport
+            hubUrl="https://hub.example/hubs/video"
+            streamId="lab-camera"
+            titleOverride="Lab camera"
+          />
+        }
+      </div>
       <button type="button" (click)="mounted.set(false)">Unmount player</button>
       <button type="button" (click)="mounted.set(true)">Mount player</button>
       <button type="button" (click)="volume.set(40)">Set volume 40</button>

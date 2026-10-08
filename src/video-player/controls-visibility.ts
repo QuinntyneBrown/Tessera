@@ -32,6 +32,7 @@ export class ControlsVisibility {
   }
 
   setNarrow(narrow: boolean): void {
+    if (narrow === this.narrow) return;
     this.narrow = narrow;
     this.show();
   }
