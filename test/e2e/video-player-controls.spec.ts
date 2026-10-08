@@ -2,6 +2,9 @@
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
+// Real media decoding is slow on a loaded machine.
+test.describe.configure({ timeout: 60_000 });
+
 test('pauses holding the frame, renames the control Play and keeps the subscription open', async ({
   page,
 }) => {

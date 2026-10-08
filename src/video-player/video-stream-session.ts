@@ -21,6 +21,8 @@ export interface VideoPlayerHost {
   emitStats(stats: VideoPlayerStats): void;
   fellBehind(seconds: number): void;
   jumpedToLive(): void;
+  /** No chunk has arrived for 10 s (`true`), or chunks flow again (`false`). */
+  sourceWaiting(waiting: boolean): void;
 }
 
 const ACTIVE_STATES = new Set<VideoPlayerState>([
@@ -40,6 +42,7 @@ export class VideoStreamSession {
   private bytesReceived = 0;
   private ticksBehind = 0;
   private behindAnnounced = false;
+  private stallTimers: ReturnType<typeof setTimeout>[] = [];
 
   constructor(
     private readonly transport: VideoStreamTransport,
@@ -68,10 +71,33 @@ export class VideoStreamSession {
       failed: (cause) => this.fail('decode', cause),
     });
     this.pipeline = pipeline;
-    this.subscription = this.transport.subscribe(this.streamId).subscribe((chunk) => {
-      this.bytesReceived += chunk.data.byteLength;
-      pipeline.push(chunk);
+    this.watchForStall();
+    this.subscription = this.transport.subscribe(this.streamId).subscribe({
+      next: (chunk) => {
+        this.bytesReceived += chunk.data.byteLength;
+        this.watchForStall();
+        pipeline.push(chunk);
+      },
+      complete: () => {
+        this.clearStallTimers();
+        pipeline.endOfStream();
+      },
     });
+  }
+
+  /** Restarts the 10 s waiting and 30 s stalled timers; called for every received chunk. */
+  private watchForStall(): void {
+    this.clearStallTimers();
+    this.host.sourceWaiting(false);
+    this.stallTimers = [
+      setTimeout(() => this.host.sourceWaiting(true), 10000),
+      setTimeout(() => this.fail('stalled'), 30000),
+    ];
+  }
+
+  private clearStallTimers(): void {
+    this.stallTimers.forEach(clearTimeout);
+    this.stallTimers = [];
   }
 
   /** Seeks to the live edge on the viewer's request. */
@@ -110,6 +136,7 @@ export class VideoStreamSession {
 
   private fail(code: VideoPlayerErrorCode, cause?: unknown): void {
     clearInterval(this.ticker);
+    this.clearStallTimers();
     this.subscription?.unsubscribe();
     this.host.fail(code, cause);
   }
@@ -117,6 +144,7 @@ export class VideoStreamSession {
   stop(): void {
     this.disposed = true;
     clearInterval(this.ticker);
+    this.clearStallTimers();
     this.subscription?.unsubscribe();
   }
 }

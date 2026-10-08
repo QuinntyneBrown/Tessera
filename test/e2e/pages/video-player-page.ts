@@ -701,6 +701,85 @@ export class VideoPlayerPage {
     await this.page.getByRole('button', { name: 'Clear captions', exact: true }).click();
   }
 
+  async stallSource(): Promise<void> {
+    await this.page.evaluate(() =>
+      (window as unknown as { __videoFixture: { stall(): void } }).__videoFixture.stall(),
+    );
+  }
+
+  async resumeSource(): Promise<void> {
+    await this.page.evaluate(() =>
+      (window as unknown as { __videoFixture: { resume(): void } }).__videoFixture.resume(),
+    );
+  }
+
+  async expectSpinner(visible: boolean): Promise<void> {
+    await expect(this.host().locator('.t-video-player__spinner')).toHaveCount(visible ? 1 : 0);
+  }
+
+  async expectVideoVisible(): Promise<void> {
+    await expect(this.host().locator('video')).toBeVisible();
+  }
+
+  async expectNotAnnounced(message: string): Promise<void> {
+    expect(await this.announcements()).not.toContain(message);
+  }
+
+  async expectEndedPanel(duration: string): Promise<void> {
+    const panel = this.host().locator('.t-video-player__ended');
+    await expect(panel).toBeVisible();
+    await expect(panel.getByRole('heading')).toHaveText('Stream ended');
+    await expect(panel).toContainText(duration);
+  }
+
+  async expectControlsDisabledExceptFullscreen(): Promise<void> {
+    for (const name of ['play-pause', 'mute', 'volume', 'live', 'captions'])
+      await expect(this.control(name)).toHaveAttribute('aria-disabled', 'true');
+    await expect(this.control('fullscreen')).not.toHaveAttribute('aria-disabled', /.*/);
+  }
+
+  /** Stalls the source and resolves once the video waits at the end of its buffered media. */
+  async stallUntilVideoWaits(): Promise<void> {
+    await this.host()
+      .locator('video')
+      .evaluate(
+        (video) =>
+          new Promise<void>((resolve) => {
+            const onWaiting = () => {
+              const end = video.buffered.length ? video.buffered.end(video.buffered.length - 1) : 0;
+              if (end - video.currentTime > 0.5) return;
+              video.removeEventListener('waiting', onWaiting);
+              resolve();
+            };
+            video.addEventListener('waiting', onWaiting);
+            (window as unknown as { __videoFixture: { stall(): void } }).__videoFixture.stall();
+          }),
+      );
+  }
+
+  /**
+   * The history contains `states` in order, ends with the last of them, and never repeats a
+   * state twice in a row. Real playback may stutter into buffering and back in between.
+   */
+  async expectStateHistoryInOrder(states: string[]): Promise<void> {
+    await expect
+      .poll(async () => {
+        const history: string[] = JSON.parse(
+          (await this.page
+            .getByRole('status', { name: 'State changes', exact: true })
+            .textContent()) || '[]',
+        );
+        let next = 0;
+        for (const state of history) if (state === states[next]) next++;
+        return (
+          next === states.length &&
+          history.at(-1) === states.at(-1) &&
+          history.every((state, index) => state !== history[index - 1])
+        );
+      })
+      .toBe(true);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

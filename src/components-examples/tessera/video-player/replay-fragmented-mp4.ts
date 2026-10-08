@@ -35,6 +35,8 @@ export interface ReplayOptions {
   rate?: number;
   /** Fragments sent at once to a joining subscriber, as a server with a backlog would; default 0. */
   lead?: number;
+  /** While this returns true, no fragment is emitted and the timeline does not advance. */
+  stalled?: () => boolean;
 }
 
 /**
@@ -57,7 +59,9 @@ export function replayFragmentedMp4(
       seq++;
       subscriber.next({ kind: 1, seq, data: shiftFragment(fragment, loop, file.periods, seq) });
     };
-    const ticks = metronome(1000 / (options.rate ?? 1)).subscribe(emitFragment);
+    const ticks = metronome(1000 / (options.rate ?? 1)).subscribe(() => {
+      if (!options.stalled?.()) emitFragment();
+    });
     loadFragmentedMp4(url).then(
       (loaded) => {
         if (subscriber.closed) return;

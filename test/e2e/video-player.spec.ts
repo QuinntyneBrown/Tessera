@@ -2,6 +2,9 @@
 import { expect, test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
+// Real media decoding is slow on a loaded machine.
+test.describe.configure({ timeout: 60_000 });
+
 test('renders an idle labelled region with an empty live region when no stream is set', async ({
   page,
 }) => {

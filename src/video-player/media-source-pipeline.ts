@@ -20,6 +20,7 @@ export class MediaSourcePipeline {
   private seekedToLive = false;
   private quotaRetry: VideoChunk | undefined;
   private rangeCount = 0;
+  private sourceEnded = false;
 
   constructor(
     private readonly video: HTMLVideoElement,
@@ -41,6 +42,12 @@ export class MediaSourcePipeline {
       return;
     }
     this.queue.push(chunk);
+    this.appendNext();
+  }
+
+  /** Marks the source as ended; the MediaSource ends once every queued chunk is appended. */
+  endOfStream(): void {
+    this.sourceEnded = true;
     this.appendNext();
   }
 
@@ -98,7 +105,11 @@ export class MediaSourcePipeline {
 
   private appendNext(): void {
     const mediaSource = this.mediaSource;
-    if (mediaSource?.readyState !== 'open' || !this.queue.length) return;
+    if (mediaSource?.readyState !== 'open') return;
+    if (!this.queue.length) {
+      if (this.sourceEnded && !this.sourceBuffer?.updating) mediaSource.endOfStream();
+      return;
+    }
     if (!this.sourceBuffer) {
       const sourceBuffer = mediaSource.addSourceBuffer(this.mimeType);
       sourceBuffer.addEventListener('updateend', () => {

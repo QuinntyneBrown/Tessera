@@ -6,6 +6,11 @@ export interface VideoPlayerStrings {
   connectingStatus: string;
   connecting: (title: string) => string;
   liveAnnounced: string;
+  buffering: string;
+  waitingForSource: string;
+  streamEnded: string;
+  liveFor: (duration: string) => string;
+  endedAfter: (duration: string) => string;
   controlsLabel: string;
   play: string;
   pause: string;
@@ -45,6 +50,11 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   connectingStatus: 'Connecting…',
   connecting: (title) => `Connecting to ${title}.`,
   liveAnnounced: 'Live.',
+  buffering: 'Buffering.',
+  waitingForSource: 'Waiting for the source…',
+  streamEnded: 'Stream ended',
+  liveFor: (duration) => `Live for ${duration}`,
+  endedAfter: (duration) => `Stream ended. It was live for ${duration}.`,
   controlsLabel: 'Player controls',
   play: 'Play',
   pause: 'Pause',
@@ -86,3 +96,14 @@ export const VIDEO_PLAYER_I18N = new InjectionToken<VideoPlayerI18n>('VIDEO_PLAY
   providedIn: 'root',
   factory: () => ({}),
 });
+
+/** Formats a live duration in words: "less than a minute", "1 minute", "2 hours 5 minutes". */
+export function formatDuration(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60);
+  if (minutes < 1) return 'less than a minute';
+  const plural = (count: number, unit: string) => `${count} ${unit}${count === 1 ? '' : 's'}`;
+  const hours = Math.floor(minutes / 60);
+  return hours
+    ? `${plural(hours, 'hour')} ${plural(minutes % 60, 'minute')}`
+    : plural(minutes, 'minute');
+}

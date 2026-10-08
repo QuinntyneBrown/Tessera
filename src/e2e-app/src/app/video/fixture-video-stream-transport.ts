@@ -1,4 +1,4 @@
-import { NEVER, Observable, Subject, concatMap, filter, from, map } from 'rxjs';
+import { NEVER, Observable, Subject, concatMap, filter, from, map, take } from 'rxjs';
 import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
 import {
   VideoChunk,
@@ -10,6 +10,9 @@ import {
 /** Test controls and observations shared by every fixture transport on the page. */
 export interface VideoFixtureWindow {
   calls: string[];
+  stalled: boolean;
+  stall(): void;
+  resume(): void;
 }
 
 declare global {
@@ -24,7 +27,16 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
   private readonly controls: VideoFixtureWindow;
 
   constructor(private readonly parameters: URLSearchParams) {
-    this.controls = window.__videoFixture ??= { calls: [] };
+    this.controls = window.__videoFixture ??= {
+      calls: [],
+      stalled: false,
+      stall() {
+        this.stalled = true;
+      },
+      resume() {
+        this.stalled = false;
+      },
+    };
   }
 
   private get scenario(): string {
@@ -65,7 +77,11 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     return replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
       lead: Number(this.parameters.get('lead') || 0),
+      stalled: () => this.controls.stalled,
     }).pipe(
+      take(
+        this.parameters.has('endAfter') ? Number(this.parameters.get('endAfter')) + 1 : Infinity,
+      ),
       filter((chunk) => chunk.kind === 1 || this.parameters.get('skipInit') !== 'true'),
       filter((chunk) => chunk.kind === 0 || chunk.seq !== gapAt),
       map((chunk) => {

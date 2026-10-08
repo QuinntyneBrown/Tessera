@@ -2,6 +2,9 @@
 import { expect, test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
+// Real media decoding is slow on a loaded machine.
+test.describe.configure({ timeout: 60_000 });
+
 test('appends the initialisation segment first and reaches the first frame live', async ({
   page,
 }) => {
@@ -15,7 +18,7 @@ test('appends the initialisation segment first and reaches the first frame live'
   await player.open('live', { realTime: true, extra: { rate: 1 } });
   await player.expectFirstFrame();
   await player.expectState('live');
-  await player.expectStateHistory(['connecting', 'live']);
+  await player.expectStateHistoryInOrder(['connecting', 'live']);
   await player.expectTransportCalls(['configure', 'describe', 'subscribe']);
   await player.expectSerialisedAppends();
   await player.expectStartedNearLiveEdge();

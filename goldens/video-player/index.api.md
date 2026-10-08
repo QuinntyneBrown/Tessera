@@ -50,6 +50,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly captionTracks: Signal<VideoPlayerCaptions[]>;
     // (undocumented)
+    protected readonly controlsDisabled: Signal<boolean>;
+    // (undocumented)
     protected readonly currentError: WritableSignal<VideoPlayerError | null>;
     // (undocumented)
     protected dismissUnmuteChip(): void;
@@ -72,16 +74,22 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     jumpedToLive(): void;
     // (undocumented)
+    protected readonly liveDuration: WritableSignal<string>;
+    // (undocumented)
     protected readonly liveName: Signal<string>;
     readonly muted: InputSignal<boolean>;
     // (undocumented)
     protected readonly mutePressed: Signal<boolean>;
+    // (undocumented)
+    protected onEnded(): void;
     // (undocumented)
     protected onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected onPlaying(): void;
     // (undocumented)
     protected onVideoError(): void;
+    // (undocumented)
+    protected onWaiting(): void;
     // (undocumented)
     protected readonly playing: Signal<boolean>;
     // (undocumented)
@@ -93,7 +101,9 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     setState(state: VideoPlayerState): void;
     // (undocumented)
-    protected setVolume(value: number): void;
+    protected setVolume(value: number, slider?: HTMLInputElement): void;
+    // (undocumented)
+    sourceWaiting(waiting: boolean): void;
     readonly state: Signal<VideoPlayerState>;
     readonly stateChange: OutputEmitterRef<VideoPlayerState>;
     readonly stats: OutputEmitterRef<VideoPlayerStats>;
@@ -104,6 +114,11 @@ export class VideoPlayer implements VideoPlayerHost {
         connectingStatus: string;
         connecting: (title: string) => string;
         liveAnnounced: string;
+        buffering: string;
+        waitingForSource: string;
+        streamEnded: string;
+        liveFor: (duration: string) => string;
+        endedAfter: (duration: string) => string;
         controlsLabel: string;
         play: string;
         pause: string;
@@ -156,6 +171,8 @@ export class VideoPlayer implements VideoPlayerHost {
     readonly volume: InputSignal<number>;
     // (undocumented)
     protected readonly volumeValue: WritableSignal<number>;
+    // (undocumented)
+    protected readonly waitingForSource: WritableSignal<boolean>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<VideoPlayer, "t-video-player", never, {
         "hubUrl": {
@@ -254,6 +271,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     behindLive: (seconds: number) => string;
     // (undocumented)
+    buffering: string;
+    // (undocumented)
     captions: string;
     // (undocumented)
     captionsOff: string;
@@ -267,6 +286,8 @@ export interface VideoPlayerStrings {
     controlsLabel: string;
     // (undocumented)
     dismiss: string;
+    // (undocumented)
+    endedAfter: (duration: string) => string;
     // (undocumented)
     errorConnection: string;
     // (undocumented)
@@ -296,6 +317,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     liveAnnounced: string;
     // (undocumented)
+    liveFor: (duration: string) => string;
+    // (undocumented)
     mute: string;
     // (undocumented)
     muted: string;
@@ -310,6 +333,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     retry: string;
     // (undocumented)
+    streamEnded: string;
+    // (undocumented)
     unmute: string;
     // (undocumented)
     unmuteChip: string;
@@ -319,6 +344,8 @@ export interface VideoPlayerStrings {
     volumeLabel: string;
     // (undocumented)
     volumeValue: (volume: number) => string;
+    // (undocumented)
+    waitingForSource: string;
 }
 
 // @public

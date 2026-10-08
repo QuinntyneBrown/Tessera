@@ -9,6 +9,8 @@
       playsinline
       #video
       (playing)="onPlaying()"
+      (waiting)="onWaiting()"
+      (ended)="onEnded()"
       (error)="onVideoError()"
     >
       @for (captions of captionTracks(); track captions.src) {
@@ -24,6 +26,20 @@
     @if (state() === 'connecting') {
       <div class="t-video-player__placeholder">
         <p class="t-video-player__status">{{ strings.connectingStatus }}</p>
+      </div>
+    }
+    @if (state() === 'buffering') {
+      <div class="t-video-player__overlay">
+        <div class="t-video-player__spinner" aria-hidden="true"></div>
+        @if (waitingForSource()) {
+          <p class="t-video-player__status">{{ strings.waitingForSource }}</p>
+        }
+      </div>
+    }
+    @if (state() === 'ended') {
+      <div class="t-video-player__ended">
+        <h2>{{ strings.streamEnded }}</h2>
+        <p>{{ strings.liveFor(liveDuration()) }}</p>
       </div>
     }
     @if (state() === 'paused') {
@@ -75,6 +91,7 @@
       data-control="mute"
       [attr.aria-label]="mutePressed() ? strings.unmute : strings.mute"
       [attr.aria-pressed]="mutePressed()"
+      [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
       (click)="toggleMute()"
     >
       <svg
@@ -104,7 +121,8 @@
       [attr.aria-label]="strings.volumeLabel"
       [attr.aria-valuetext]="strings.volumeValue(volumeValue())"
       [value]="volumeValue()"
-      (input)="setVolume($any($event.target).valueAsNumber)"
+      [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
+      (input)="setVolume($any($event.target).valueAsNumber, $any($event.target))"
     />
     @if (state() !== 'idle' && state() !== 'connecting') {
       <button
@@ -112,7 +130,7 @@
         class="t-video-player__live"
         data-control="live"
         [attr.aria-label]="liveName()"
-        [attr.aria-disabled]="behindLive() ? null : 'true'"
+        [attr.aria-disabled]="behindLive() && !controlsDisabled() ? null : 'true'"
         (click)="goToLive()"
       >
         <span class="t-video-player__live-dot" aria-hidden="true"></span>
@@ -126,6 +144,7 @@
         data-control="captions"
         [attr.aria-label]="strings.captions"
         [attr.aria-pressed]="captionsShowing()"
+        [attr.aria-disabled]="controlsDisabled() ? 'true' : null"
         (click)="toggleCaptions()"
       >
         <svg

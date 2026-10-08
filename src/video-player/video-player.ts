@@ -14,7 +14,7 @@ import {
   viewChild,
   viewChildren,
 } from '@angular/core';
-import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N } from './i18n';
+import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N, formatDuration } from './i18n';
 import {
   VideoPlayerCaptions,
   VideoPlayerError,
@@ -67,6 +67,10 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly now = signal(Date.now());
   protected readonly currentError = signal<VideoPlayerError | null>(null);
   private readonly latency = signal(0);
+  protected readonly waitingForSource = signal(false);
+  protected readonly liveDuration = signal('');
+  protected readonly controlsDisabled = computed(() => this.state() === 'ended');
+  private bufferingAnnouncement: ReturnType<typeof setTimeout> | undefined;
   protected readonly volumeValue = linkedSignal(() => clampVolume(this.volume()));
   private readonly isMuted = linkedSignal(() => this.muted());
   protected readonly mutePressed = computed(() => this.isMuted() || this.volumeValue() === 0);
@@ -144,6 +148,7 @@ export class VideoPlayer implements VideoPlayerHost {
     document.addEventListener('fullscreenchange', onFullscreenChange);
     inject(DestroyRef).onDestroy(() => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
+      clearTimeout(this.bufferingAnnouncement);
       this.session?.stop();
       this.announcer.destroy();
     });
@@ -153,6 +158,12 @@ export class VideoPlayer implements VideoPlayerHost {
     if (state === this.stateValue()) return;
     this.stateValue.set(state);
     this.stateChange.emit(state);
+    clearTimeout(this.bufferingAnnouncement);
+    if (state === 'buffering')
+      this.bufferingAnnouncement = setTimeout(
+        () => this.announcer.status(this.strings.buffering),
+        1000,
+      );
   }
 
   applyDescriptor(descriptor: VideoStreamDescriptor): void {
@@ -207,6 +218,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected toggleMute(): void {
+    if (this.controlsDisabled()) return;
     if (this.mutePressed()) {
       if (this.volumeValue() === 0) this.volumeValue.set(this.rememberedVolume);
       this.isMuted.set(false);
@@ -218,7 +230,11 @@ export class VideoPlayer implements VideoPlayerHost {
     }
   }
 
-  protected setVolume(value: number): void {
+  protected setVolume(value: number, slider?: HTMLInputElement): void {
+    if (this.controlsDisabled()) {
+      if (slider) slider.value = String(this.volumeValue());
+      return;
+    }
     const volume = clampVolume(value);
     this.volumeValue.set(volume);
     if (volume === 0) return;
@@ -227,7 +243,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected toggleCaptions(): void {
-    if (!this.captions()) return;
+    if (!this.captions() || this.controlsDisabled()) return;
     this.captionsShowing.update((showing) => !showing);
     this.announcer.toggle(
       this.captionsShowing() ? this.strings.captionsOn : this.strings.captionsOff,
@@ -251,9 +267,27 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected onPlaying(): void {
-    if (this.state() !== 'connecting') return;
+    const state = this.state();
+    if (state !== 'connecting' && state !== 'buffering') return;
     this.setState('live');
-    this.announcer.status(this.strings.liveAnnounced);
+    if (state === 'connecting') this.announcer.status(this.strings.liveAnnounced);
+  }
+
+  protected onWaiting(): void {
+    if (this.state() === 'live') this.setState('buffering');
+  }
+
+  protected onEnded(): void {
+    const startedAt = this.descriptor()?.startedAt;
+    const duration = formatDuration(startedAt ? (Date.now() - Date.parse(startedAt)) / 1000 : 0);
+    this.liveDuration.set(duration);
+    this.setState('ended');
+    this.announcer.status(this.strings.endedAfter(duration));
+  }
+
+  sourceWaiting(waiting: boolean): void {
+    this.waitingForSource.set(waiting);
+    if (waiting) this.onWaiting();
   }
 
   emitStats(stats: VideoPlayerStats): void {
@@ -291,7 +325,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected goToLive(): void {
-    if (!this.behindLive()) return;
+    if (!this.behindLive() || this.controlsDisabled()) return;
     this.session?.goToLive();
     this.latency.set(0);
   }
