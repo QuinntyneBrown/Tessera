@@ -12,9 +12,11 @@ import {
   signal,
   untracked,
   viewChild,
+  viewChildren,
 } from '@angular/core';
 import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N } from './i18n';
 import {
+  VideoPlayerCaptions,
   VideoPlayerError,
   VideoPlayerErrorCode,
   VideoPlayerState,
@@ -42,6 +44,8 @@ export class VideoPlayer implements VideoPlayerHost {
   readonly accessTokenFactory = input<(() => string | Promise<string>) | undefined>(undefined);
   /** Replaces the descriptor title in the region name and announcements. */
   readonly titleOverride = input<string | undefined>(undefined);
+  /** Host-supplied WebVTT captions; `null` or unset removes the track and the control. */
+  readonly captions = input<VideoPlayerCaptions | null | undefined>(undefined);
   /** Starts playback as soon as the first frame is buffered. */
   readonly autoplay = input(true);
   /** Mutes the video element; changing it never restarts the stream. */
@@ -68,6 +72,12 @@ export class VideoPlayer implements VideoPlayerHost {
   protected readonly mutePressed = computed(() => this.isMuted() || this.volumeValue() === 0);
   protected readonly unmuteChip = signal(false);
   private rememberedVolume = 100;
+  protected readonly captionTracks = computed(() => {
+    const captions = this.captions();
+    return captions ? [captions] : [];
+  });
+  protected readonly captionsShowing = signal(false);
+  private readonly trackElements = viewChildren<ElementRef<HTMLTrackElement>>('track');
   protected readonly fullscreenSupported = document.fullscreenEnabled;
   protected readonly isFullscreen = signal(false);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
@@ -120,6 +130,10 @@ export class VideoPlayer implements VideoPlayerHost {
       const video = this.video().nativeElement;
       video.muted = this.isMuted();
       video.volume = this.volumeValue() / 100;
+    });
+    effect(() => {
+      const mode = this.captionsShowing() ? 'showing' : 'hidden';
+      for (const track of this.trackElements()) track.nativeElement.track.mode = mode;
     });
     const onFullscreenChange = () => {
       const fullscreen = document.fullscreenElement === this.host;
@@ -210,6 +224,14 @@ export class VideoPlayer implements VideoPlayerHost {
     if (volume === 0) return;
     this.rememberedVolume = volume;
     this.isMuted.set(false);
+  }
+
+  protected toggleCaptions(): void {
+    if (!this.captions()) return;
+    this.captionsShowing.update((showing) => !showing);
+    this.announcer.toggle(
+      this.captionsShowing() ? this.strings.captionsOn : this.strings.captionsOff,
+    );
   }
 
   protected toggleFullscreen(): void {

@@ -1,6 +1,7 @@
 export { VideoPlayer } from './video-player';
 export type {
   VideoChunk,
+  VideoPlayerCaptions,
   VideoPlayerError,
   VideoPlayerErrorCode,
   VideoPlayerState,

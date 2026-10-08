@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-060, L2-061, L2-062, L2-063, L2-070, L2-071, L2-075.
+// Acceptance tests. Traces to L2-060, L2-061, L2-062, L2-063, L2-064, L2-070, L2-071, L2-075.
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -270,5 +270,80 @@ test('derives the pressed state from fullscreenElement on every fullscreenchange
   await player.expectFullscreen('Exit fullscreen', true);
   await player.exitFullscreenExternally();
   await player.expectFullscreen('Fullscreen', false);
+  await player.expectNoAccessibilityViolations();
+});
+
+test('renders the host caption track hidden with an unpressed Captions control', async ({
+  page,
+}) => {
+  // L2-064 AC1: Given captions { src, srclang, label }, then the video holds a captions track with
+  // those attributes in mode hidden, and the Captions control shows with aria-pressed false.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true, extra: { captions: true } });
+  await player.expectState('live');
+  await player.expectTrack({
+    src: '/captions-en.vtt',
+    srclang: 'en',
+    label: 'English',
+    mode: 'hidden',
+  });
+  await player.expectCaptions(false);
+  await player.expectNoAccessibilityViolations();
+});
+
+test('toggles the caption track between showing and hidden with announcements', async ({
+  page,
+}) => {
+  // L2-064 AC2; L2-071 AC2: toggling on shows the track and announces "Captions on."; toggling off
+  // hides it and announces "Captions off.".
+  const player = new VideoPlayerPage(page);
+  await player.observeAnnouncements();
+  await player.open('live', { realTime: true, extra: { captions: true } });
+  await player.expectAnnouncementHistoryToEndWith('Live.');
+  await player.clickCaptions();
+  await player.expectCaptions(true);
+  await player.expectTrack({
+    src: '/captions-en.vtt',
+    srclang: 'en',
+    label: 'English',
+    mode: 'showing',
+  });
+  await player.expectAnnouncementHistoryToEndWith('Captions on.');
+  await player.expectNoAccessibilityViolations();
+  await player.clickCaptions();
+  await player.expectCaptions(false);
+  await player.expectTrack({
+    src: '/captions-en.vtt',
+    srclang: 'en',
+    label: 'English',
+    mode: 'hidden',
+  });
+  await player.expectAnnouncementHistoryToEndWith('Captions off.');
+});
+
+test('renders no caption track or control when captions is null', async ({ page }) => {
+  // L2-064 AC3: Given captions is null, then no captions control and no track exist.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectNoCaptions();
+  await player.expectNoAccessibilityViolations();
+});
+
+test('replaces the track on a source change and keeps the showing preference', async ({ page }) => {
+  // L2-064 AC4: Given captions.src changes, then the old track is removed, the new one added, and
+  // the showing preference is preserved.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true, extra: { captions: true } });
+  await player.expectState('live');
+  await player.clickCaptions();
+  await player.changeCaptionSource();
+  await player.expectTrack({
+    src: '/captions-en-b.vtt',
+    srclang: 'en',
+    label: 'English',
+    mode: 'showing',
+  });
+  await player.expectCaptions(true);
   await player.expectNoAccessibilityViolations();
 });

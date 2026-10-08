@@ -656,6 +656,51 @@ export class VideoPlayerPage {
     await expect(this.control('fullscreen')).toHaveCount(0);
   }
 
+  async expectTrack(track: {
+    src: string;
+    srclang: string;
+    label: string;
+    mode: string;
+  }): Promise<void> {
+    const tracks = this.host().locator('video > track');
+    await expect(tracks).toHaveCount(1);
+    await expect(tracks).toHaveAttribute('kind', 'captions');
+    await expect(tracks).toHaveAttribute('src', track.src);
+    await expect(tracks).toHaveAttribute('srclang', track.srclang);
+    await expect(tracks).toHaveAttribute('label', track.label);
+    await expect
+      .poll(() => tracks.evaluate((element: HTMLTrackElement) => element.track.mode))
+      .toBe(track.mode);
+  }
+
+  async expectCaptions(pressed: boolean): Promise<void> {
+    const control = this.control('captions');
+    await expect(control).toHaveRole('button');
+    await expect(control).toHaveAccessibleName('Captions');
+    await expect(control).toHaveAttribute('aria-pressed', String(pressed));
+    await expect(control.locator('svg')).toHaveAttribute(
+      'data-icon',
+      pressed ? 'captions-on' : 'captions-off',
+    );
+  }
+
+  async expectNoCaptions(): Promise<void> {
+    await expect(this.control('captions')).toHaveCount(0);
+    await expect(this.host().locator('video > track')).toHaveCount(0);
+  }
+
+  async clickCaptions(): Promise<void> {
+    await this.clickControl('captions');
+  }
+
+  async changeCaptionSource(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Change caption source', exact: true }).click();
+  }
+
+  async clearCaptions(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Clear captions', exact: true }).click();
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

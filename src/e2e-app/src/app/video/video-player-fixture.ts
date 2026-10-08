@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import {
   VIDEO_STREAM_TRANSPORT,
   VideoPlayer,
+  VideoPlayerCaptions,
   VideoPlayerError,
   VideoPlayerState,
   VideoPlayerStats,
@@ -31,12 +32,17 @@ const parameters = new URLSearchParams(location.search);
         [autoplay]="parameters.get('autoplay') !== 'false'"
         [muted]="muted()"
         [volume]="volume()"
+        [captions]="captions()"
         (stateChange)="record($event)"
         (error)="recordError($event)"
         (stats)="recordStats($event)"
       />
       <button type="button" (click)="volume.set(40)">Set volume 40</button>
       <button type="button" (click)="muted.set(true)">Set muted</button>
+      <button type="button" (click)="setCaptionSource('/captions-en-b.vtt')">
+        Change caption source
+      </button>
+      <button type="button" (click)="captions.set(null)">Clear captions</button>
       <output aria-label="State changes">{{ json(states()) }}</output>
       <output aria-label="Errors">{{ json(errors()) }}</output>
       <output aria-label="Stats">{{ json(stats()) }}</output>
@@ -48,6 +54,11 @@ export class VideoPlayerFixture {
   readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
   readonly states = signal<VideoPlayerState[]>([]);
   readonly muted = signal(parameters.get('muted') === 'true');
+  readonly captions = signal<VideoPlayerCaptions | null>(
+    parameters.get('captions') === 'true'
+      ? { src: '/captions-en.vtt', srclang: 'en', label: 'English' }
+      : null,
+  );
   readonly volume = signal(Number(parameters.get('volume') ?? 100));
   readonly errors = signal<Pick<VideoPlayerError, 'code' | 'message'>[]>([]);
   readonly stats = signal<{ count: number; last: VideoPlayerStats | null }>({
@@ -55,6 +66,10 @@ export class VideoPlayerFixture {
     last: null,
   });
   readonly json = JSON.stringify;
+
+  setCaptionSource(src: string): void {
+    this.captions.update((captions) => captions && { ...captions, src });
+  }
 
   recordStats(stats: VideoPlayerStats): void {
     this.stats.update(({ count }) => ({ count: count + 1, last: stats }));

@@ -20,6 +20,13 @@ export interface VideoChunk {
   data: Uint8Array;
 }
 
+/** A host-supplied WebVTT caption track. Cue times are on the stream's media timeline. */
+export interface VideoPlayerCaptions {
+  src: string;
+  srclang: string;
+  label: string;
+}
+
 /** Connection settings a transport may receive before the first `describe`. */
 export interface VideoStreamTransportOptions {
   hubUrl: string | null;

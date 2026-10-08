@@ -44,6 +44,11 @@ export class VideoPlayer implements VideoPlayerHost {
     readonly autoplay: InputSignal<boolean>;
     // (undocumented)
     protected readonly behindLive: Signal<boolean>;
+    readonly captions: InputSignal<VideoPlayerCaptions | null | undefined>;
+    // (undocumented)
+    protected readonly captionsShowing: WritableSignal<boolean>;
+    // (undocumented)
+    protected readonly captionTracks: Signal<VideoPlayerCaptions[]>;
     // (undocumented)
     protected readonly currentError: WritableSignal<VideoPlayerError | null>;
     // (undocumented)
@@ -111,6 +116,9 @@ export class VideoPlayer implements VideoPlayerHost {
         unmuted: (volume: number) => string;
         unmuteChip: string;
         dismiss: string;
+        captions: string;
+        captionsOn: string;
+        captionsOff: string;
         fullscreen: string;
         exitFullscreen: string;
         fullscreenOn: string;
@@ -133,6 +141,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly title: Signal<string | null>;
     readonly titleOverride: InputSignal<string | undefined>;
+    // (undocumented)
+    protected toggleCaptions(): void;
     // (undocumented)
     protected toggleFullscreen(): void;
     // (undocumented)
@@ -168,6 +178,11 @@ export class VideoPlayer implements VideoPlayerHost {
             "required": false;
             "isSignal": true;
         };
+        "captions": {
+            "alias": "captions";
+            "required": false;
+            "isSignal": true;
+        };
         "autoplay": {
             "alias": "autoplay";
             "required": false;
@@ -190,6 +205,16 @@ export class VideoPlayer implements VideoPlayerHost {
     }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<VideoPlayer, never>;
+}
+
+// @public
+export interface VideoPlayerCaptions {
+    // (undocumented)
+    label: string;
+    // (undocumented)
+    src: string;
+    // (undocumented)
+    srclang: string;
 }
 
 // @public
@@ -228,6 +253,12 @@ export interface VideoPlayerStrings {
     backLive: string;
     // (undocumented)
     behindLive: (seconds: number) => string;
+    // (undocumented)
+    captions: string;
+    // (undocumented)
+    captionsOff: string;
+    // (undocumented)
+    captionsOn: string;
     // (undocumented)
     connecting: (title: string) => string;
     // (undocumented)

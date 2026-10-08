@@ -10,7 +10,17 @@
       #video
       (playing)="onPlaying()"
       (error)="onVideoError()"
-    ></video>
+    >
+      @for (captions of captionTracks(); track captions.src) {
+        <track
+          #track
+          kind="captions"
+          [src]="captions.src"
+          [srclang]="captions.srclang"
+          [label]="captions.label"
+        />
+      }
+    </video>
     @if (state() === 'connecting') {
       <div class="t-video-player__placeholder">
         <p class="t-video-player__status">{{ strings.connectingStatus }}</p>
@@ -107,6 +117,31 @@
       >
         <span class="t-video-player__live-dot" aria-hidden="true"></span>
         <span aria-hidden="true">LIVE</span>
+      </button>
+    }
+    @if (captions()) {
+      <button
+        type="button"
+        class="t-video-player__control"
+        data-control="captions"
+        [attr.aria-label]="strings.captions"
+        [attr.aria-pressed]="captionsShowing()"
+        (click)="toggleCaptions()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+          [attr.data-icon]="captionsShowing() ? 'captions-on' : 'captions-off'"
+        >
+          @if (captionsShowing()) {
+            <path d="M3 5h18v14H3zm4 5v4h4v-1.5H8.5v-1H11V10zm6 0v4h4v-1.5h-2.5v-1H17V10z" />
+          } @else {
+            <path
+              d="M3 5h18v14H3zm2 2v10h14V7zm2 3h4v1.5H8.5v1H11V14H7zm6 0h4v1.5h-2.5v1H17V14h-4z"
+            />
+          }
+        </svg>
       </button>
     }
     <span class="t-video-player__elapsed" aria-hidden="true">{{ elapsed() }}</span>
