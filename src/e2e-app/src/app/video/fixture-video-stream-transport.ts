@@ -1,5 +1,6 @@
 import { NEVER, Observable, Subject, concatMap, filter, from, map, take } from 'rxjs';
 import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
+import { padFragment } from '../../../../components-examples/tessera/video-player/fmp4-boxes';
 import {
   VideoChunk,
   VideoStreamDescriptor,
@@ -164,6 +165,11 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
       map((chunk) => {
         if (chunk.kind === 0) init = chunk;
         else if (++media === decodeAt) return { ...chunk, data: corrupt(chunk.data) };
+        else if (this.parameters.has('chunkKb'))
+          return {
+            ...chunk,
+            data: padFragment(chunk.data, Number(this.parameters.get('chunkKb')) * 1000),
+          };
         return chunk;
       }),
       concatMap((chunk) =>

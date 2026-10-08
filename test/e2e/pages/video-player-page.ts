@@ -1477,6 +1477,233 @@ export class VideoPlayerPage {
     await expect(this.host()).toHaveAttribute('data-state', new RegExp(`^(${states.join('|')})$`));
   }
 
+  expectWithinBudget(values: number[], limit: number, required: number): void {
+    const within = values.filter((value) => value <= limit).length;
+    expect(
+      within,
+      `${within}/${values.length} within ${limit}; max ${Math.max(...values).toFixed(1)}`,
+    ).toBeGreaterThanOrEqual(required);
+  }
+
+  /** Mounts the player `runs` times under CPU throttling and times each first frame. */
+  async measureFirstFrames(runs: number, cpuSlowdown: number): Promise<number[]> {
+    const session = await this.page.context().newCDPSession(this.page);
+    await session.send('Emulation.setCPUThrottlingRate', { rate: cpuSlowdown });
+    const durations: number[] = [];
+    try {
+      for (let run = 0; run < runs; run++) {
+        const start = await this.page.evaluate(() => performance.now());
+        await this.page.getByRole('button', { name: 'Mount player', exact: true }).click();
+        durations.push(
+          await this.page.evaluate(
+            (start) =>
+              new Promise<number>((resolve) => {
+                const frame = () => {
+                  const video = document.querySelector(
+                    't-video-player video',
+                  ) as HTMLVideoElement | null;
+                  if (video && video.readyState >= 2 && video.currentTime > 0)
+                    resolve(performance.now() - start);
+                  else if (performance.now() - start > 20000) resolve(Infinity);
+                  else requestAnimationFrame(frame);
+                };
+                frame();
+              }),
+            start,
+          ),
+        );
+        await this.unmountPlayer();
+        await this.expectPlayerRemoved();
+      }
+    } finally {
+      await session.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+      await session.detach();
+    }
+    return durations;
+  }
+
+  async sampleBufferAndHeap(
+    samples: number,
+    intervalMs: number,
+  ): Promise<{ behind: number; heap: number | null }[]> {
+    const result: { behind: number; heap: number | null }[] = [];
+    for (let index = 0; index < samples; index++) {
+      await this.page.waitForTimeout(intervalMs);
+      result.push(
+        await this.host()
+          .locator('video')
+          .evaluate((video: HTMLVideoElement) => ({
+            behind: video.buffered.length ? video.currentTime - video.buffered.start(0) : 0,
+            heap:
+              (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory
+                ?.usedJSHeapSize ?? null,
+          })),
+      );
+    }
+    return result;
+  }
+
+  expectBoundedBuffer(samples: { behind: number }[], limit: number): void {
+    for (const sample of samples) expect(sample.behind).toBeLessThanOrEqual(limit);
+  }
+
+  expectHeapNotMonotonic(samples: { heap: number | null }[]): void {
+    const heaps = samples.map((sample) => sample.heap);
+    if (heaps.some((heap) => heap === null)) return;
+    const growing = heaps.every((heap, index) => index === 0 || heap! > heaps[index - 1]!);
+    expect(growing, `heap ${heaps.join(', ')}`).toBe(false);
+  }
+
+  async observeLongTasks(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const tasks: { start: number; duration: number }[] = [];
+      (window as unknown as { __longTasks: typeof tasks }).__longTasks = tasks;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries())
+          tasks.push({ start: entry.startTime, duration: entry.duration });
+      }).observe({ type: 'longtask', buffered: true });
+      const appends: number[] = [];
+      (window as unknown as { __appends: number[] }).__appends = appends;
+      const append = SourceBuffer.prototype.appendBuffer;
+      SourceBuffer.prototype.appendBuffer = function (data: BufferSource) {
+        appends.push(performance.now());
+        return append.call(this, data);
+      };
+    });
+  }
+
+  async measureLongTasksOverAppends(
+    appends: number,
+  ): Promise<{ appends: number[]; tasks: { start: number; duration: number }[] }> {
+    const start = await this.page.evaluate(
+      () => (window as unknown as { __appends: number[] }).__appends.length,
+    );
+    await expect
+      .poll(
+        () =>
+          this.page.evaluate(() => (window as unknown as { __appends: number[] }).__appends.length),
+        { timeout: 120000 },
+      )
+      .toBeGreaterThanOrEqual(start + appends);
+    return this.page.evaluate((start) => {
+      const state = window as unknown as {
+        __appends: number[];
+        __longTasks: { start: number; duration: number }[];
+      };
+      return { appends: state.__appends.slice(start, start + 100), tasks: state.__longTasks };
+    }, start);
+  }
+
+  /** An append counts against the budget when a long task overlaps the second that follows it. */
+  expectAppendsWithoutLongTasks(
+    result: { appends: number[]; tasks: { start: number; duration: number }[] },
+    required: number,
+  ): void {
+    const clean = result.appends.filter(
+      (time) =>
+        !result.tasks.some(
+          (task) =>
+            task.duration > 50 && task.start + task.duration >= time && task.start <= time + 50,
+        ),
+    ).length;
+    expect(
+      clean,
+      `${clean}/${result.appends.length} appends without a long task`,
+    ).toBeGreaterThanOrEqual(required);
+  }
+
+  /** Counts timer and frame callbacks created from video player code, by the creating stack. */
+  async countComponentTimers(): Promise<void> {
+    await this.page.addInitScript(() => {
+      // Most specific first; Angular's own change-detection scheduling is not component-owned.
+      const owners = [
+        'VideoPlayerAnnouncer',
+        'ControlsVisibility',
+        'ReconnectPolicy',
+        'MediaSourcePipeline',
+        'VideoStreamSession',
+        'VideoPlayer',
+      ];
+      const fired: Record<string, number> = {};
+      (window as unknown as { __componentTimers: Record<string, number> }).__componentTimers =
+        fired;
+      const owner = () => {
+        const stack = new Error().stack ?? '';
+        if (stack.includes('scheduleCallback') || stack.includes('ChangeDetectionScheduler'))
+          return;
+        return owners.find((name) => stack.includes(name));
+      };
+      const wrap = <T extends (...args: never[]) => number>(original: T, kind: string): T =>
+        ((callback: (...args: unknown[]) => void, ...rest: unknown[]) => {
+          const name = owner();
+          return (original as unknown as (...args: unknown[]) => number)(
+            name
+              ? (...args: unknown[]) => {
+                  const key = `${kind}:${name}`;
+                  fired[key] = (fired[key] ?? 0) + 1;
+                  callback(...args);
+                }
+              : callback,
+            ...rest,
+          );
+        }) as unknown as T;
+      window.setTimeout = wrap(window.setTimeout, 'timeout');
+      window.setInterval = wrap(window.setInterval, 'interval');
+      window.requestAnimationFrame = wrap(window.requestAnimationFrame, 'frame');
+    });
+  }
+
+  async componentTimersFiredOver(milliseconds: number): Promise<Record<string, number>> {
+    const before = await this.page.evaluate(() => ({
+      ...(window as unknown as { __componentTimers: Record<string, number> }).__componentTimers,
+    }));
+    await this.page.waitForTimeout(milliseconds);
+    const after = await this.page.evaluate(
+      () => (window as unknown as { __componentTimers: Record<string, number> }).__componentTimers,
+    );
+    return Object.fromEntries(
+      Object.entries(after)
+        .map(([key, count]) => [key, count - (before[key] ?? 0)] as const)
+        .filter(([, count]) => count > 0),
+    );
+  }
+
+  expectOnlyStatisticsTick(fired: Record<string, number>, seconds: number): void {
+    expect(Object.keys(fired)).toEqual(['interval:VideoStreamSession']);
+    expect(fired['interval:VideoStreamSession']).toBeGreaterThanOrEqual(seconds - 1);
+    expect(fired['interval:VideoStreamSession']).toBeLessThanOrEqual(seconds + 1);
+  }
+
+  /** Waits for the bar to hide, moves the pointer, and counts frames until it is shown. */
+  async measureRevealFrames(runs: number): Promise<number[]> {
+    const frames: number[] = [];
+    for (let run = 0; run < runs; run++) {
+      await this.restPointerOnStage();
+      await this.expectControlsHidden(true);
+      frames.push(
+        await this.host().evaluate(
+          (host) =>
+            new Promise<number>((resolve) => {
+              const bar = host.querySelector('.t-video-player__bar')!;
+              host
+                .querySelector('.t-video-player__stage')!
+                .dispatchEvent(
+                  new PointerEvent('pointermove', { bubbles: true, pointerType: 'mouse' }),
+                );
+              let count = 0;
+              const frame = () => {
+                if (!bar.classList.contains('t-video-player__bar--hidden')) resolve(count);
+                else if (++count > 30) resolve(count);
+                else requestAnimationFrame(frame);
+              };
+              requestAnimationFrame(frame);
+            }),
+        ),
+      );
+    }
+    return frames;
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

@@ -122,3 +122,14 @@ export function shiftFragment(
   }
   return copy;
 }
+
+/** Appends a `skip` box so a fragment reaches `bytes`; players ignore its contents. */
+export function padFragment(fragment: Uint8Array, bytes: number): Uint8Array {
+  if (fragment.length + 8 > bytes) return fragment;
+  const padded = new Uint8Array(bytes);
+  padded.set(fragment);
+  const view = new DataView(padded.buffer);
+  view.setUint32(fragment.length, bytes - fragment.length);
+  padded.set([0x73, 0x6b, 0x69, 0x70], fragment.length + 4);
+  return padded;
+}
