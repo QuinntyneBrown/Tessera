@@ -36,6 +36,14 @@
         }
       </div>
     }
+    @if (state() === 'reconnecting') {
+      <div class="t-video-player__overlay">
+        <div class="t-video-player__spinner" aria-hidden="true"></div>
+        <p class="t-video-player__status">
+          {{ strings.reconnecting(reconnectAttemptValue(), 5) }}
+        </p>
+      </div>
+    }
     @if (state() === 'ended') {
       <div class="t-video-player__ended">
         <h2>{{ strings.streamEnded }}</h2>
@@ -63,7 +71,9 @@
       <div class="t-video-player__error" role="alert">
         <h2 class="t-video-player__error-heading" tabindex="-1">{{ error.message }}</h2>
         @if (error.code !== 'unsupported') {
-          <button type="button" class="t-video-player__retry">{{ strings.retry }}</button>
+          <button type="button" class="t-video-player__retry" (click)="retry()">
+            {{ strings.retry }}
+          </button>
         }
       </div>
     }

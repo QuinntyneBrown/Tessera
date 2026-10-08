@@ -68,6 +68,8 @@ export class VideoPlayer implements VideoPlayerHost {
   protected readonly currentError = signal<VideoPlayerError | null>(null);
   private readonly latency = signal(0);
   protected readonly waitingForSource = signal(false);
+  protected readonly reconnectAttemptValue = signal(1);
+  private resumingAfterReconnect = false;
   protected readonly liveDuration = signal('');
   protected readonly controlsDisabled = computed(() => this.state() === 'ended');
   private bufferingAnnouncement: ReturnType<typeof setTimeout> | undefined;
@@ -116,19 +118,10 @@ export class VideoPlayer implements VideoPlayerHost {
 
   constructor() {
     effect(() => {
-      const hubUrl = this.hubUrl();
-      const streamId = this.streamId();
-      const accessTokenFactory = this.accessTokenFactory();
-      untracked(() => {
-        this.session?.stop();
-        this.session =
-          streamId && this.transport
-            ? new VideoStreamSession(this.transport, this, streamId, {
-                hubUrl,
-                accessTokenFactory,
-              })
-            : undefined;
-      });
+      this.hubUrl();
+      this.streamId();
+      this.accessTokenFactory();
+      untracked(() => this.startSession());
     });
     effect(() => {
       const video = this.video().nativeElement;
@@ -152,6 +145,39 @@ export class VideoPlayer implements VideoPlayerHost {
       this.session?.stop();
       this.announcer.destroy();
     });
+  }
+
+  private startSession(): void {
+    this.session?.stop();
+    const streamId = this.streamId();
+    this.session =
+      streamId && this.transport
+        ? new VideoStreamSession(this.transport, this, streamId, {
+            hubUrl: this.hubUrl(),
+            accessTokenFactory: this.accessTokenFactory(),
+          })
+        : undefined;
+  }
+
+  /** Closes the error panel and starts a fresh connection. */
+  retry(): void {
+    if (this.state() !== 'error' || this.currentError()?.code === 'unsupported') return;
+    this.currentError.set(null);
+    this.startSession();
+  }
+
+  connectionLost(): void {
+    this.resumingAfterReconnect = false;
+    this.announcer.status(this.strings.connectionLost);
+  }
+
+  reconnectAttempt(attempt: number): void {
+    this.reconnectAttemptValue.set(attempt);
+  }
+
+  reconnected(): void {
+    this.resumingAfterReconnect = true;
+    this.announcer.status(this.strings.reconnected);
   }
 
   setState(state: VideoPlayerState): void {
@@ -204,6 +230,7 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   requestPlay(): void {
+    if (this.state() === 'paused') return;
     if (!this.autoplay()) return this.setState('paused');
     const video = this.videoElement();
     video.play().catch((cause) => {
@@ -268,7 +295,9 @@ export class VideoPlayer implements VideoPlayerHost {
 
   protected onPlaying(): void {
     const state = this.state();
-    if (state !== 'connecting' && state !== 'buffering') return;
+    if (state === 'reconnecting' && !this.resumingAfterReconnect) return;
+    if (state !== 'connecting' && state !== 'buffering' && state !== 'reconnecting') return;
+    this.resumingAfterReconnect = false;
     this.setState('live');
     if (state === 'connecting') this.announcer.status(this.strings.liveAnnounced);
   }

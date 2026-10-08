@@ -50,6 +50,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly captionTracks: Signal<VideoPlayerCaptions[]>;
     // (undocumented)
+    connectionLost(): void;
+    // (undocumented)
     protected readonly controlsDisabled: Signal<boolean>;
     // (undocumented)
     protected readonly currentError: WritableSignal<VideoPlayerError | null>;
@@ -95,9 +97,16 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly playPauseDisabled: Signal<boolean>;
     // (undocumented)
+    reconnectAttempt(attempt: number): void;
+    // (undocumented)
+    protected readonly reconnectAttemptValue: WritableSignal<number>;
+    // (undocumented)
+    reconnected(): void;
+    // (undocumented)
     protected readonly regionName: Signal<string>;
     // (undocumented)
     requestPlay(): void;
+    retry(): void;
     // (undocumented)
     setState(state: VideoPlayerState): void;
     // (undocumented)
@@ -115,6 +124,9 @@ export class VideoPlayer implements VideoPlayerHost {
         connecting: (title: string) => string;
         liveAnnounced: string;
         buffering: string;
+        reconnecting: (attempt: number, max: number) => string;
+        connectionLost: string;
+        reconnected: string;
         waitingForSource: string;
         streamEnded: string;
         liveFor: (duration: string) => string;
@@ -283,6 +295,8 @@ export interface VideoPlayerStrings {
     // (undocumented)
     connectingStatus: string;
     // (undocumented)
+    connectionLost: string;
+    // (undocumented)
     controlsLabel: string;
     // (undocumented)
     dismiss: string;
@@ -328,6 +342,10 @@ export interface VideoPlayerStrings {
     paused: string;
     // (undocumented)
     play: string;
+    // (undocumented)
+    reconnected: string;
+    // (undocumented)
+    reconnecting: (attempt: number, max: number) => string;
     // (undocumented)
     regionLabel: (title: string | null) => string;
     // (undocumented)

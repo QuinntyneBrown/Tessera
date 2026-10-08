@@ -25,18 +25,23 @@ const parameters = new URLSearchParams(location.search);
   template: `
     <main>
       <h1>Video player</h1>
-      <t-video-player
-        hubUrl="https://hub.example/hubs/video"
-        [streamId]="streamId()"
-        [titleOverride]="parameters.get('titleOverride') ?? undefined"
-        [autoplay]="parameters.get('autoplay') !== 'false'"
-        [muted]="muted()"
-        [volume]="volume()"
-        [captions]="captions()"
-        (stateChange)="record($event)"
-        (error)="recordError($event)"
-        (stats)="recordStats($event)"
-      />
+      @if (mounted()) {
+        <t-video-player
+          hubUrl="https://hub.example/hubs/video"
+          [accessTokenFactory]="tokenFactory"
+          [streamId]="streamId()"
+          [titleOverride]="parameters.get('titleOverride') ?? undefined"
+          [autoplay]="parameters.get('autoplay') !== 'false'"
+          [muted]="muted()"
+          [volume]="volume()"
+          [captions]="captions()"
+          (stateChange)="record($event)"
+          (error)="recordError($event)"
+          (stats)="recordStats($event)"
+        />
+      }
+      <button type="button" (click)="mounted.set(false)">Unmount player</button>
+      <button type="button" (click)="mounted.set(true)">Mount player</button>
       <button type="button" (click)="volume.set(40)">Set volume 40</button>
       <button type="button" (click)="muted.set(true)">Set muted</button>
       <button type="button" (click)="setCaptionSource('/captions-en-b.vtt')">
@@ -53,6 +58,8 @@ export class VideoPlayerFixture {
   readonly parameters = parameters;
   readonly streamId = signal(parameters.get('scenario') === 'idle' ? null : 'lecture-hall-a');
   readonly states = signal<VideoPlayerState[]>([]);
+  readonly mounted = signal(true);
+  readonly tokenFactory = () => 'fixture-token';
   readonly muted = signal(parameters.get('muted') === 'true');
   readonly captions = signal<VideoPlayerCaptions | null>(
     parameters.get('captions') === 'true'

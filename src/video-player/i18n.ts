@@ -7,6 +7,9 @@ export interface VideoPlayerStrings {
   connecting: (title: string) => string;
   liveAnnounced: string;
   buffering: string;
+  reconnecting: (attempt: number, max: number) => string;
+  connectionLost: string;
+  reconnected: string;
   waitingForSource: string;
   streamEnded: string;
   liveFor: (duration: string) => string;
@@ -51,6 +54,9 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   connecting: (title) => `Connecting to ${title}.`,
   liveAnnounced: 'Live.',
   buffering: 'Buffering.',
+  reconnecting: (attempt, max) => `Reconnecting… attempt ${attempt} of ${max}`,
+  connectionLost: 'Connection lost. Reconnecting.',
+  reconnected: 'Reconnected. Live.',
   waitingForSource: 'Waiting for the source…',
   streamEnded: 'Stream ended',
   liveFor: (duration) => `Live for ${duration}`,

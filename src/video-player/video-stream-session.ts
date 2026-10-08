@@ -1,6 +1,7 @@
 import { Subscription } from 'rxjs';
 import { VideoStreamTransport } from './video-stream-transport';
 import { MediaSourcePipeline } from './media-source-pipeline';
+import { ReconnectPolicy } from './reconnect-policy';
 import {
   VideoPlayerErrorCode,
   VideoPlayerState,
@@ -23,6 +24,9 @@ export interface VideoPlayerHost {
   jumpedToLive(): void;
   /** No chunk has arrived for 10 s (`true`), or chunks flow again (`false`). */
   sourceWaiting(waiting: boolean): void;
+  connectionLost(): void;
+  reconnectAttempt(attempt: number): void;
+  reconnected(): void;
 }
 
 const ACTIVE_STATES = new Set<VideoPlayerState>([
@@ -43,6 +47,9 @@ export class VideoStreamSession {
   private ticksBehind = 0;
   private behindAnnounced = false;
   private stallTimers: ReturnType<typeof setTimeout>[] = [];
+  private readonly policy = new ReconnectPolicy();
+  private readonly connection: Subscription;
+  private pausedBeforeLoss = false;
 
   constructor(
     private readonly transport: VideoStreamTransport,
@@ -52,6 +59,11 @@ export class VideoStreamSession {
   ) {
     host.setState('connecting');
     transport.configure?.(options);
+    this.connection = transport.connectionEvents.subscribe((event) => {
+      if (event === 'reconnecting') this.onReconnecting();
+      else if (event === 'reconnected') this.onReconnected();
+      else if (host.state() === 'reconnecting') this.fail('connection');
+    });
     this.start();
   }
 
@@ -71,6 +83,10 @@ export class VideoStreamSession {
       failed: (cause) => this.fail('decode', cause),
     });
     this.pipeline = pipeline;
+    this.subscribeChunks(pipeline);
+  }
+
+  private subscribeChunks(pipeline: MediaSourcePipeline): void {
     this.watchForStall();
     this.subscription = this.transport.subscribe(this.streamId).subscribe({
       next: (chunk) => {
@@ -83,6 +99,25 @@ export class VideoStreamSession {
         pipeline.endOfStream();
       },
     });
+  }
+
+  private onReconnecting(): void {
+    if (this.disposed || this.host.state() === 'error') return;
+    this.clearStallTimers();
+    this.pausedBeforeLoss = this.host.state() === 'paused';
+    this.host.setState('reconnecting');
+    this.host.connectionLost();
+    this.policy.start((attempt) => this.host.reconnectAttempt(attempt));
+  }
+
+  /** Server streams do not survive a reconnect: subscribe again on the same connection. */
+  private onReconnected(): void {
+    if (this.disposed || this.host.state() !== 'reconnecting') return;
+    this.policy.reset();
+    this.subscription?.unsubscribe();
+    if (this.pausedBeforeLoss) this.host.setState('paused');
+    this.host.reconnected();
+    if (this.pipeline) this.subscribeChunks(this.pipeline);
   }
 
   /** Restarts the 10 s waiting and 30 s stalled timers; called for every received chunk. */
@@ -137,6 +172,7 @@ export class VideoStreamSession {
   private fail(code: VideoPlayerErrorCode, cause?: unknown): void {
     clearInterval(this.ticker);
     this.clearStallTimers();
+    this.policy.reset();
     this.subscription?.unsubscribe();
     this.host.fail(code, cause);
   }
@@ -145,6 +181,9 @@ export class VideoStreamSession {
     this.disposed = true;
     clearInterval(this.ticker);
     this.clearStallTimers();
+    this.policy.reset();
+    this.connection.unsubscribe();
+    this.transport.stop?.();
     this.subscription?.unsubscribe();
   }
 }

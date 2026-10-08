@@ -10,9 +10,14 @@ import {
 /** Test controls and observations shared by every fixture transport on the page. */
 export interface VideoFixtureWindow {
   calls: string[];
+  tokenRequests: number;
   stalled: boolean;
+  transports: FixtureVideoStreamTransport[];
   stall(): void;
   resume(): void;
+  /** Reports a transport loss; without restore() the connection closes after 27.1 s. */
+  drop(): void;
+  restore(): void;
 }
 
 declare global {
@@ -25,35 +30,65 @@ declare global {
 export class FixtureVideoStreamTransport implements VideoStreamTransport {
   readonly connectionEvents = new Subject<'reconnecting' | 'reconnected' | 'closed'>();
   private readonly controls: VideoFixtureWindow;
+  private options: VideoStreamTransportOptions | undefined;
+  private dropped = false;
+  private closeTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(private readonly parameters: URLSearchParams) {
     this.controls = window.__videoFixture ??= {
       calls: [],
+      tokenRequests: 0,
       stalled: false,
+      transports: [],
       stall() {
         this.stalled = true;
       },
       resume() {
         this.stalled = false;
       },
+      drop() {
+        this.transports.forEach((transport) => transport.drop());
+      },
+      restore() {
+        this.transports.forEach((transport) => transport.restore());
+      },
     };
+    this.controls.transports.push(this);
   }
 
   private get scenario(): string {
     return this.parameters.get('scenario') || 'live';
   }
 
-  configure(_options: VideoStreamTransportOptions): void {
+  configure(options: VideoStreamTransportOptions): void {
     this.controls.calls.push('configure');
+    this.options = options;
   }
 
-  describe(streamId: string): Promise<VideoStreamDescriptor> {
+  private drop(): void {
+    this.dropped = true;
+    this.connectionEvents.next('reconnecting');
+    this.closeTimer = setTimeout(() => this.connectionEvents.next('closed'), 27100);
+  }
+
+  private restore(): void {
+    clearTimeout(this.closeTimer);
+    this.dropped = false;
+    this.connectionEvents.next('reconnected');
+  }
+
+  async describe(streamId: string): Promise<VideoStreamDescriptor> {
     this.controls.calls.push('describe');
+    // Like a hub connection, starting asks the token factory for a token and never keeps it.
+    if (this.options?.accessTokenFactory) {
+      await this.options.accessTokenFactory();
+      this.controls.tokenRequests++;
+    }
     if (this.scenario === 'describe-pending') return new Promise(() => undefined);
-    if (this.scenario === 'not-found') return Promise.reject(new Error('unknown-stream'));
+    if (this.scenario === 'not-found') throw new Error('unknown-stream');
     const number = (name: string, fallback: number) =>
       this.parameters.has(name) ? Number(this.parameters.get(name)) : fallback;
-    return Promise.resolve({
+    return {
       streamId,
       title: 'Lecture hall A',
       mimeType:
@@ -63,7 +98,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
       startedAt: new Date(Date.now() - number('startedAgo', 60) * 1000).toISOString(),
       width: number('width', 1280),
       height: number('height', 720),
-    });
+    };
   }
 
   subscribe(_streamId: string): Observable<VideoChunk> {
@@ -77,7 +112,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     return replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
       lead: Number(this.parameters.get('lead') || 0),
-      stalled: () => this.controls.stalled,
+      stalled: () => this.controls.stalled || this.dropped,
     }).pipe(
       take(
         this.parameters.has('endAfter') ? Number(this.parameters.get('endAfter')) + 1 : Infinity,

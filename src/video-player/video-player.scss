@@ -159,3 +159,7 @@
     transform: rotate(1turn);
   }
 }
+
+:host([data-state='reconnecting']) .t-video-player__video {
+  filter: brightness(0.45);
+}

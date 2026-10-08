@@ -10,7 +10,7 @@ export class VideoPlayerPage {
   private readonly warnings: string[] = [];
 
   constructor(readonly page: Page) {
-    page.setDefaultTimeout(10000);
+    page.setDefaultTimeout(20000);
     page.on('pageerror', (error) => this.errors.push(error.message));
     page.on('console', (message) => {
       if (message.type() === 'error') this.errors.push(message.text());
@@ -778,6 +778,50 @@ export class VideoPlayerPage {
         );
       })
       .toBe(true);
+  }
+
+  async dropConnection(): Promise<void> {
+    await this.page.evaluate(() =>
+      (window as unknown as { __videoFixture: { drop(): void } }).__videoFixture.drop(),
+    );
+  }
+
+  async restoreConnection(): Promise<void> {
+    await this.page.evaluate(() =>
+      (window as unknown as { __videoFixture: { restore(): void } }).__videoFixture.restore(),
+    );
+  }
+
+  async expectStageDimmed(): Promise<void> {
+    await expect(this.host().locator('video')).toBeVisible();
+    await expect(this.host().locator('video')).toHaveCSS('filter', /brightness/);
+  }
+
+  async clickRetry(): Promise<void> {
+    await this.host()
+      .getByRole('alert')
+      .getByRole('button', { name: 'Retry', exact: true })
+      .click();
+  }
+
+  async expectTokenRequests(count: number): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () =>
+            (window as unknown as { __videoFixture: { tokenRequests: number } }).__videoFixture
+              .tokenRequests,
+        ),
+      )
+      .toBe(count);
+  }
+
+  async unmountPlayer(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Unmount player', exact: true }).click();
+  }
+
+  async expectPlayerRemoved(): Promise<void> {
+    await expect(this.host()).toHaveCount(0);
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {
