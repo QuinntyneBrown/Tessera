@@ -31,7 +31,7 @@ import { VideoPlayerAnnouncer } from './video-player-announcer';
   templateUrl: './video-player.html',
   styleUrl: './video-player.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[attr.data-state]': 'state()' },
+  host: { '[attr.data-state]': 'state()', '(keydown)': 'onKeydown($event)' },
 })
 export class VideoPlayer implements VideoPlayerHost {
   /** Hub endpoint passed unchanged to the transport. */
@@ -68,6 +68,9 @@ export class VideoPlayer implements VideoPlayerHost {
   protected readonly mutePressed = computed(() => this.isMuted() || this.volumeValue() === 0);
   protected readonly unmuteChip = signal(false);
   private rememberedVolume = 100;
+  protected readonly fullscreenSupported = document.fullscreenEnabled;
+  protected readonly isFullscreen = signal(false);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   protected readonly playing = computed(() => ['live', 'buffering'].includes(this.state()));
   protected readonly playPauseDisabled = computed(
     () => !['live', 'buffering', 'paused'].includes(this.state()),
@@ -118,7 +121,15 @@ export class VideoPlayer implements VideoPlayerHost {
       video.muted = this.isMuted();
       video.volume = this.volumeValue() / 100;
     });
+    const onFullscreenChange = () => {
+      const fullscreen = document.fullscreenElement === this.host;
+      if (fullscreen === this.isFullscreen()) return;
+      this.isFullscreen.set(fullscreen);
+      this.announcer.toggle(fullscreen ? this.strings.fullscreenOn : this.strings.fullscreenOff);
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
     inject(DestroyRef).onDestroy(() => {
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
       this.session?.stop();
       this.announcer.destroy();
     });
@@ -199,6 +210,18 @@ export class VideoPlayer implements VideoPlayerHost {
     if (volume === 0) return;
     this.rememberedVolume = volume;
     this.isMuted.set(false);
+  }
+
+  protected toggleFullscreen(): void {
+    if (this.isFullscreen()) document.exitFullscreen();
+    else this.host.requestFullscreen();
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.isFullscreen()) {
+      event.preventDefault();
+      document.exitFullscreen();
+    }
   }
 
   protected dismissUnmuteChip(): void {

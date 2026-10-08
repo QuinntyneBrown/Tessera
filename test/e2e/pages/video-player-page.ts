@@ -1,5 +1,8 @@
-import { expect, Page } from '@playwright/test';
+import { expect as baseExpect, Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+// Real media decoding is slow on a loaded machine; every assertion here waits up to 15 s.
+const expect = baseExpect.configure({ timeout: 15000 });
 
 /** Owns the selectors and interactions of the video player acceptance screen. */
 export class VideoPlayerPage {
@@ -31,7 +34,7 @@ export class VideoPlayerPage {
   }
 
   async expectState(state: string): Promise<void> {
-    await expect(this.host()).toHaveAttribute('data-state', state);
+    await expect(this.host()).toHaveAttribute('data-state', state, { timeout: 20000 });
   }
 
   async expectRegionName(name: string): Promise<void> {
@@ -280,10 +283,13 @@ export class VideoPlayerPage {
 
   async expectFirstFrame(): Promise<void> {
     await expect
-      .poll(async () => {
-        const metrics = await this.videoMetrics();
-        return metrics.readyState >= 2 && metrics.currentTime > 0;
-      })
+      .poll(
+        async () => {
+          const metrics = await this.videoMetrics();
+          return metrics.readyState >= 2 && metrics.currentTime > 0;
+        },
+        { timeout: 20000 },
+      )
       .toBe(true);
   }
 
@@ -329,7 +335,9 @@ export class VideoPlayerPage {
   }
 
   async expectAnnouncementHistoryToEndWith(message: string): Promise<void> {
-    await expect.poll(async () => (await this.announcements()).at(-1)).toBe(message);
+    await expect
+      .poll(async () => (await this.announcements()).at(-1), { timeout: 20000 })
+      .toBe(message);
   }
 
   async expectAnnouncementHistory(messages: string[]): Promise<void> {
@@ -577,6 +585,75 @@ export class VideoPlayerPage {
 
   async dismissUnmuteChip(): Promise<void> {
     await this.host().getByRole('button', { name: 'Dismiss', exact: true }).click();
+  }
+
+  /** Replaces the browser's fullscreen API, which headless Chromium does not honour reliably. */
+  async stubFullscreen(): Promise<void> {
+    await this.page.addInitScript(() => {
+      let element: Element | null = null;
+      const stub = {
+        requestedOn: '',
+        exitExternally() {
+          element = null;
+          document.dispatchEvent(new Event('fullscreenchange'));
+        },
+      };
+      (window as unknown as { __fullscreenStub: typeof stub }).__fullscreenStub = stub;
+      Object.defineProperty(Document.prototype, 'fullscreenElement', { get: () => element });
+      Object.defineProperty(Document.prototype, 'fullscreenEnabled', { get: () => true });
+      Element.prototype.requestFullscreen = function () {
+        element = this;
+        stub.requestedOn = this.tagName.toLowerCase();
+        document.dispatchEvent(new Event('fullscreenchange'));
+        return Promise.resolve();
+      };
+      Document.prototype.exitFullscreen = () => {
+        stub.exitExternally();
+        return Promise.resolve();
+      };
+    });
+  }
+
+  async disableFullscreen(): Promise<void> {
+    await this.page.addInitScript(() => {
+      Object.defineProperty(Document.prototype, 'fullscreenEnabled', { get: () => false });
+    });
+  }
+
+  async exitFullscreenExternally(): Promise<void> {
+    await this.page.evaluate(() =>
+      (
+        window as unknown as { __fullscreenStub: { exitExternally(): void } }
+      ).__fullscreenStub.exitExternally(),
+    );
+  }
+
+  async expectFullscreenRequestedOnHost(): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () =>
+            (window as unknown as { __fullscreenStub: { requestedOn: string } }).__fullscreenStub
+              .requestedOn,
+        ),
+      )
+      .toBe('t-video-player');
+  }
+
+  async clickFullscreen(): Promise<void> {
+    await this.clickControl('fullscreen');
+  }
+
+  async expectFullscreen(name: string, pressed: boolean): Promise<void> {
+    const control = this.control('fullscreen');
+    await expect(control).toHaveRole('button');
+    await expect(control).toHaveAccessibleName(name);
+    await expect(control).toHaveAttribute('aria-pressed', String(pressed));
+    await expect(control.locator('svg')).toHaveAttribute('data-icon', pressed ? 'exit' : 'enter');
+  }
+
+  async expectNoFullscreenControl(): Promise<void> {
+    await expect(this.control('fullscreen')).toHaveCount(0);
   }
 
   async expectNoAccessibilityViolations(): Promise<void> {

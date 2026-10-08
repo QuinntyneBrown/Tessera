@@ -18,6 +18,10 @@ export interface VideoPlayerStrings {
   unmuted: (volume: number) => string;
   unmuteChip: string;
   dismiss: string;
+  fullscreen: string;
+  exitFullscreen: string;
+  fullscreenOn: string;
+  fullscreenOff: string;
   backLive: string;
   live: string;
   goToLive: (seconds: number) => string;
@@ -50,6 +54,10 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   unmuted: (volume) => `Unmuted, volume ${volume}%.`,
   unmuteChip: 'Unmute',
   dismiss: 'Dismiss',
+  fullscreen: 'Fullscreen',
+  exitFullscreen: 'Exit fullscreen',
+  fullscreenOn: 'Fullscreen.',
+  fullscreenOff: 'Exited fullscreen.',
   backLive: 'Back live.',
   live: 'Live',
   goToLive: (seconds) => `Go to live, ${seconds} seconds behind`,

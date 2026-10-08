@@ -58,8 +58,12 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     fellBehind(seconds: number): void;
     // (undocumented)
+    protected readonly fullscreenSupported: boolean;
+    // (undocumented)
     protected goToLive(): void;
     readonly hubUrl: InputSignal<string | null>;
+    // (undocumented)
+    protected readonly isFullscreen: WritableSignal<boolean>;
     // (undocumented)
     jumpedToLive(): void;
     // (undocumented)
@@ -67,6 +71,8 @@ export class VideoPlayer implements VideoPlayerHost {
     readonly muted: InputSignal<boolean>;
     // (undocumented)
     protected readonly mutePressed: Signal<boolean>;
+    // (undocumented)
+    protected onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected onPlaying(): void;
     // (undocumented)
@@ -105,6 +111,10 @@ export class VideoPlayer implements VideoPlayerHost {
         unmuted: (volume: number) => string;
         unmuteChip: string;
         dismiss: string;
+        fullscreen: string;
+        exitFullscreen: string;
+        fullscreenOn: string;
+        fullscreenOff: string;
         backLive: string;
         live: string;
         goToLive: (seconds: number) => string;
@@ -123,6 +133,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected readonly title: Signal<string | null>;
     readonly titleOverride: InputSignal<string | undefined>;
+    // (undocumented)
+    protected toggleFullscreen(): void;
     // (undocumented)
     protected toggleMute(): void;
     // (undocumented)
@@ -238,6 +250,14 @@ export interface VideoPlayerStrings {
     errorUnauthorized: string;
     // (undocumented)
     errorUnsupported: (mimeType: string) => string;
+    // (undocumented)
+    exitFullscreen: string;
+    // (undocumented)
+    fullscreen: string;
+    // (undocumented)
+    fullscreenOff: string;
+    // (undocumented)
+    fullscreenOn: string;
     // (undocumented)
     goToLive: (seconds: number) => string;
     // (undocumented)

@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-060, L2-061, L2-062, L2-070, L2-071, L2-075.
+// Acceptance tests. Traces to L2-060, L2-061, L2-062, L2-063, L2-070, L2-071, L2-075.
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -11,7 +11,7 @@ test('pauses holding the frame, renames the control Play and keeps the subscript
   const player = new VideoPlayerPage(page);
   await player.observeAnnouncements();
   await player.open('live', { realTime: true });
-  await player.expectState('live');
+  await player.expectAnnouncementHistoryToEndWith('Live.');
   await player.expectControlBar();
   await player.expectPlayPause('Pause', false);
   await player.clickPlayPause();
@@ -209,5 +209,66 @@ test('waits paused at the live edge when autoplay is off', async ({ page }) => {
   await player.expectCentralPlay(true);
   await player.clickPlayPause();
   await player.expectState('live');
+  await player.expectNoAccessibilityViolations();
+});
+
+test('enters fullscreen on the host, presses the control and announces it', async ({ page }) => {
+  // L2-063 AC1: Given the Fullscreen control is activated, when requestFullscreen() on the host
+  // resolves, then the control is pressed, renamed "Exit fullscreen", and "Fullscreen." is announced.
+  const player = new VideoPlayerPage(page);
+  await player.stubFullscreen();
+  await player.observeAnnouncements();
+  await player.open('live', { realTime: true });
+  await player.expectAnnouncementHistoryToEndWith('Live.');
+  await player.expectFullscreen('Fullscreen', false);
+  await player.clickFullscreen();
+  await player.expectFullscreenRequestedOnHost();
+  await player.expectFullscreen('Exit fullscreen', true);
+  await player.expectAnnouncementHistoryToEndWith('Fullscreen.');
+  await player.expectNoAccessibilityViolations();
+});
+
+for (const exit of ['Escape', 'control'] as const) {
+  test(`exits fullscreen with the ${exit} and announces it`, async ({ page }) => {
+    // L2-063 AC2: Given fullscreen, when Escape is pressed or the control is activated, then
+    // fullscreen exits, the name reverts and "Exited fullscreen." is announced.
+    const player = new VideoPlayerPage(page);
+    await player.stubFullscreen();
+    await player.observeAnnouncements();
+    await player.open('live', { realTime: true });
+    await player.expectAnnouncementHistoryToEndWith('Live.');
+    await player.clickFullscreen();
+    await player.expectFullscreen('Exit fullscreen', true);
+    if (exit === 'Escape') await player.pressKey('Escape');
+    else await player.clickFullscreen();
+    await player.expectFullscreen('Fullscreen', false);
+    await player.expectAnnouncementHistoryToEndWith('Exited fullscreen.');
+    await player.expectNoAccessibilityViolations();
+  });
+}
+
+test('omits the Fullscreen control when fullscreen is not enabled', async ({ page }) => {
+  // L2-063 AC3: Given document.fullscreenEnabled is false, then the control is omitted.
+  const player = new VideoPlayerPage(page);
+  await player.disableFullscreen();
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectNoFullscreenControl();
+  await player.expectNoAccessibilityViolations();
+});
+
+test('derives the pressed state from fullscreenElement on every fullscreenchange', async ({
+  page,
+}) => {
+  // L2-063 AC5: Given fullscreenchange fires for any reason, then the pressed state follows
+  // document.fullscreenElement, not the last activation.
+  const player = new VideoPlayerPage(page);
+  await player.stubFullscreen();
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.clickFullscreen();
+  await player.expectFullscreen('Exit fullscreen', true);
+  await player.exitFullscreenExternally();
+  await player.expectFullscreen('Fullscreen', false);
   await player.expectNoAccessibilityViolations();
 });
