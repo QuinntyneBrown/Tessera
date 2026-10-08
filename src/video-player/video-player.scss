@@ -29,3 +29,12 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.t-video-player__placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #d8e2df;
+  color: #18312e;
+}

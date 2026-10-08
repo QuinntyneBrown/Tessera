@@ -6,6 +6,8 @@
 
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
 
@@ -16,17 +18,72 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings;
 export const VIDEO_PLAYER_I18N: InjectionToken<Partial<VideoPlayerStrings>>;
 
 // @public
-export class VideoPlayer {
+export const VIDEO_STREAM_TRANSPORT: InjectionToken<VideoStreamTransport>;
+
+// @public
+export interface VideoChunk {
+    // (undocumented)
+    data: Uint8Array;
+    // (undocumented)
+    kind: 0 | 1;
+    // (undocumented)
+    seq: number;
+}
+
+// Warning: (ae-forgotten-export) The symbol "VideoPlayerHost" needs to be exported by the entry point tessera-video-player.d.ts
+//
+// @public
+export class VideoPlayer implements VideoPlayerHost {
+    constructor();
+    readonly accessTokenFactory: InputSignal<(() => string | Promise<string>) | undefined>;
+    // (undocumented)
+    applyDescriptor(descriptor: VideoStreamDescriptor): void;
+    // (undocumented)
+    protected readonly aspectRatio: Signal<string>;
+    // (undocumented)
+    protected readonly elapsed: Signal<string>;
+    readonly hubUrl: InputSignal<string | null>;
     // (undocumented)
     protected readonly regionName: Signal<string>;
+    // (undocumented)
+    setState(state: VideoPlayerState): void;
     readonly state: Signal<VideoPlayerState>;
     readonly stateChange: OutputEmitterRef<VideoPlayerState>;
+    readonly streamId: InputSignal<string | null>;
     // (undocumented)
     protected readonly strings: {
         regionLabel: (title: string | null) => string;
+        connectingStatus: string;
+        connecting: (title: string) => string;
     };
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<VideoPlayer, "t-video-player", never, {}, {
+    tick(): void;
+    // (undocumented)
+    protected readonly title: Signal<string | null>;
+    readonly titleOverride: InputSignal<string | undefined>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<VideoPlayer, "t-video-player", never, {
+        "hubUrl": {
+            "alias": "hubUrl";
+            "required": false;
+            "isSignal": true;
+        };
+        "streamId": {
+            "alias": "streamId";
+            "required": false;
+            "isSignal": true;
+        };
+        "accessTokenFactory": {
+            "alias": "accessTokenFactory";
+            "required": false;
+            "isSignal": true;
+        };
+        "titleOverride": {
+            "alias": "titleOverride";
+            "required": false;
+            "isSignal": true;
+        };
+    }, {
         "stateChange": "stateChange";
     }, never, never, true, never>;
     // (undocumented)
@@ -42,7 +99,46 @@ export type VideoPlayerState = 'idle' | 'connecting' | 'live' | 'buffering' | 'p
 // @public
 export interface VideoPlayerStrings {
     // (undocumented)
+    connecting: (title: string) => string;
+    // (undocumented)
+    connectingStatus: string;
+    // (undocumented)
     regionLabel: (title: string | null) => string;
+}
+
+// @public
+export interface VideoStreamDescriptor {
+    // (undocumented)
+    height: number;
+    // (undocumented)
+    mimeType: string;
+    startedAt: string;
+    // (undocumented)
+    streamId: string;
+    // (undocumented)
+    title: string;
+    // (undocumented)
+    width: number;
+}
+
+// @public
+export interface VideoStreamTransport {
+    configure?(options: VideoStreamTransportOptions): void;
+    // (undocumented)
+    readonly connectionEvents: Observable<'reconnecting' | 'reconnected' | 'closed'>;
+    // (undocumented)
+    describe(streamId: string): Promise<VideoStreamDescriptor>;
+    stop?(): void | Promise<void>;
+    // (undocumented)
+    subscribe(streamId: string): Observable<VideoChunk>;
+}
+
+// @public
+export interface VideoStreamTransportOptions {
+    // (undocumented)
+    accessTokenFactory?: () => string | Promise<string>;
+    // (undocumented)
+    hubUrl: string | null;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -3,11 +3,15 @@ import { InjectionToken } from '@angular/core';
 /** Every user-visible or assistive-technology string the video player owns. */
 export interface VideoPlayerStrings {
   regionLabel: (title: string | null) => string;
+  connectingStatus: string;
+  connecting: (title: string) => string;
 }
 
 /** English defaults; consumers can replace any subset through VIDEO_PLAYER_I18N. */
 export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   regionLabel: (title) => (title ? `Video player: ${title}` : 'Video player'),
+  connectingStatus: 'Connecting…',
+  connecting: (title) => `Connecting to ${title}.`,
 };
 
 /** Partial string overrides merged over the English defaults. */

@@ -1,6 +1,14 @@
 <div class="t-video-player__region" role="region" [attr.aria-label]="regionName()">
-  <div class="t-video-player__stage">
+  <div class="t-video-player__stage" [style.aspect-ratio]="aspectRatio()">
     <video class="t-video-player__video" playsinline></video>
+    @if (state() === 'connecting') {
+      <div class="t-video-player__placeholder">
+        <p class="t-video-player__status">{{ strings.connectingStatus }}</p>
+      </div>
+    }
   </div>
-  <div class="t-video-player__announcer" aria-live="polite" aria-atomic="true"></div>
+  <div class="t-video-player__bar">
+    <span class="t-video-player__elapsed" aria-hidden="true">{{ elapsed() }}</span>
+  </div>
+  <div class="t-video-player__announcer" aria-live="polite" aria-atomic="true" #liveRegion></div>
 </div>
