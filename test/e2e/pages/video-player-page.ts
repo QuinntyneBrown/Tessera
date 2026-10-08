@@ -824,6 +824,43 @@ export class VideoPlayerPage {
     await expect(this.host()).toHaveCount(0);
   }
 
+  async failSource(): Promise<void> {
+    await this.page.evaluate(() =>
+      (window as unknown as { __videoFixture: { fail(): void } }).__videoFixture.fail(),
+    );
+  }
+
+  async expectRawTextOnlyInCause(text: string): Promise<void> {
+    await expect(this.host()).not.toContainText(text);
+    await expect(
+      this.page.getByRole('status', { name: 'Error causes', exact: true }),
+    ).toContainText(text);
+  }
+
+  async focusControl(name: string): Promise<void> {
+    await this.control(name).focus();
+  }
+
+  async focusOutside(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Set muted', exact: true }).focus();
+  }
+
+  async expectFocusOutside(): Promise<void> {
+    await expect(this.page.getByRole('button', { name: 'Set muted', exact: true })).toBeFocused();
+  }
+
+  async expectFocusedErrorHeading(): Promise<void> {
+    await expect(this.host().getByRole('alert').getByRole('heading')).toBeFocused();
+  }
+
+  async expectFocusedControl(name: string): Promise<void> {
+    await expect(this.control(name)).toBeFocused();
+  }
+
+  async expectNoError(): Promise<void> {
+    await expect(this.host().getByRole('alert')).toHaveCount(0);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

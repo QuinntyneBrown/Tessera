@@ -1,4 +1,16 @@
-import { NEVER, Observable, Subject, concatMap, filter, from, map, take } from 'rxjs';
+import {
+  NEVER,
+  Observable,
+  Subject,
+  concatMap,
+  filter,
+  from,
+  map,
+  merge,
+  mergeMap,
+  take,
+  throwError,
+} from 'rxjs';
 import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
 import {
   VideoChunk,
@@ -18,6 +30,8 @@ export interface VideoFixtureWindow {
   /** Reports a transport loss; without restore() the connection closes after 27.1 s. */
   drop(): void;
   restore(): void;
+  /** Fails every open subscription the way a HubException from the source would. */
+  fail(): void;
 }
 
 declare global {
@@ -33,6 +47,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
   private options: VideoStreamTransportOptions | undefined;
   private dropped = false;
   private closeTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly failures = new Subject<void>();
 
   constructor(private readonly parameters: URLSearchParams) {
     this.controls = window.__videoFixture ??= {
@@ -51,6 +66,9 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
       },
       restore() {
         this.transports.forEach((transport) => transport.restore());
+      },
+      fail() {
+        this.transports.forEach((transport) => transport.failures.next());
       },
     };
     this.controls.transports.push(this);
@@ -86,6 +104,8 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     }
     if (this.scenario === 'describe-pending') return new Promise(() => undefined);
     if (this.scenario === 'not-found') throw new Error('unknown-stream');
+    if (this.scenario === 'unauthorized')
+      throw Object.assign(new Error('Unauthorized'), { statusCode: 401 });
     const number = (name: string, fallback: number) =>
       this.parameters.has(name) ? Number(this.parameters.get(name)) : fallback;
     return {
@@ -109,7 +129,10 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     const gapAt = Number(this.parameters.get('gapAt') || 0);
     let init: VideoChunk | undefined;
     let media = 0;
-    return replayFragmentedMp4('/lecture-10s.fmp4', {
+    const failure = this.failures.pipe(
+      mergeMap(() => throwError(() => new Error('source-failed: encoder exited'))),
+    );
+    const replay = replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
       lead: Number(this.parameters.get('lead') || 0),
       stalled: () => this.controls.stalled || this.dropped,
@@ -128,6 +151,7 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
         from(chunk.kind === 1 && media === reinitAt && init ? [init, chunk] : [chunk]),
       ),
     );
+    return merge(replay, failure);
   }
 }
 

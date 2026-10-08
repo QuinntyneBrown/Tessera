@@ -50,6 +50,7 @@ const parameters = new URLSearchParams(location.search);
       <button type="button" (click)="captions.set(null)">Clear captions</button>
       <output aria-label="State changes">{{ json(states()) }}</output>
       <output aria-label="Errors">{{ json(errors()) }}</output>
+      <output aria-label="Error causes">{{ json(causes()) }}</output>
       <output aria-label="Stats">{{ json(stats()) }}</output>
     </main>
   `,
@@ -82,8 +83,11 @@ export class VideoPlayerFixture {
     this.stats.update(({ count }) => ({ count: count + 1, last: stats }));
   }
 
-  recordError({ code, message }: VideoPlayerError): void {
+  readonly causes = signal<string[]>([]);
+
+  recordError({ code, message, cause }: VideoPlayerError): void {
     this.errors.update((errors) => [...errors, { code, message }]);
+    this.causes.update((causes) => [...causes, String(cause)]);
   }
 
   record(state: VideoPlayerState): void {

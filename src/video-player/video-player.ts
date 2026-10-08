@@ -3,6 +3,8 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  Injector,
+  afterNextRender,
   computed,
   effect,
   inject,
@@ -112,6 +114,9 @@ export class VideoPlayer implements VideoPlayerHost {
 
   private readonly liveRegion = viewChild.required<ElementRef<HTMLElement>>('liveRegion');
   private readonly video = viewChild.required<ElementRef<HTMLVideoElement>>('video');
+  private readonly errorHeading = viewChild<ElementRef<HTMLElement>>('errorHeading');
+  private readonly playPause = viewChild.required<ElementRef<HTMLElement>>('playPause');
+  private readonly injector = inject(Injector);
   private readonly announcer = new VideoPlayerAnnouncer(() => this.liveRegion().nativeElement);
   private readonly transport = inject(VIDEO_STREAM_TRANSPORT, { optional: true });
   private session: VideoStreamSession | undefined;
@@ -164,6 +169,11 @@ export class VideoPlayer implements VideoPlayerHost {
     if (this.state() !== 'error' || this.currentError()?.code === 'unsupported') return;
     this.currentError.set(null);
     this.startSession();
+    this.afterRender(() => this.playPause().nativeElement.focus());
+  }
+
+  private afterRender(write: () => void): void {
+    afterNextRender({ write }, { injector: this.injector });
   }
 
   connectionLost(): void {
@@ -201,6 +211,8 @@ export class VideoPlayer implements VideoPlayerHost {
   fail(code: VideoPlayerErrorCode, cause?: unknown): void {
     if (this.state() === 'error') return;
     const error: VideoPlayerError = { code, message: this.errorMessage(code), cause };
+    if (this.host.contains(document.activeElement))
+      this.afterRender(() => this.errorHeading()?.nativeElement.focus());
     this.announcer.clear();
     this.currentError.set(error);
     this.setState('error');

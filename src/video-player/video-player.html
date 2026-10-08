@@ -69,7 +69,9 @@
     }
     @if (currentError(); as error) {
       <div class="t-video-player__error" role="alert">
-        <h2 class="t-video-player__error-heading" tabindex="-1">{{ error.message }}</h2>
+        <h2 class="t-video-player__error-heading" tabindex="-1" #errorHeading>
+          {{ error.message }}
+        </h2>
         @if (error.code !== 'unsupported') {
           <button type="button" class="t-video-player__retry" (click)="retry()">
             {{ strings.retry }}
@@ -83,6 +85,7 @@
       type="button"
       class="t-video-player__control"
       data-control="play-pause"
+      #playPause
       [attr.aria-label]="playing() ? strings.pause : strings.play"
       [attr.aria-disabled]="playPauseDisabled() ? 'true' : null"
       (click)="togglePlayback()"

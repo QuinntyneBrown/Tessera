@@ -98,6 +98,7 @@ export class VideoStreamSession {
         this.clearStallTimers();
         pipeline.endOfStream();
       },
+      error: (cause) => this.fail(failureCode(cause, 'source'), cause),
     });
   }
 
@@ -196,9 +197,17 @@ function isSupported(mimeType: string): boolean {
   }
 }
 
-function failureCode(cause: unknown): VideoPlayerErrorCode {
+/** Maps a transport failure to its code; raw details stay in the error's cause. */
+function failureCode(
+  cause: unknown,
+  fallback: VideoPlayerErrorCode = 'connection',
+): VideoPlayerErrorCode {
+  const status = (cause as { statusCode?: number } | null)?.statusCode;
+  if (status === 401 || status === 403) return 'unauthorized';
   const message = cause instanceof Error ? cause.message : String(cause);
-  return message.includes('unknown-stream') ? 'not-found' : 'connection';
+  if (message.includes('unknown-stream')) return 'not-found';
+  if (message.includes('source-failed') || message.includes('slow-consumer')) return 'source';
+  return fallback;
 }
 
 function round(seconds: number): number {

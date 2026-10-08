@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-067, L2-068, L2-071.
+// Acceptance tests. Traces to L2-063, L2-067, L2-068, L2-070, L2-071.
 import { test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -140,4 +140,85 @@ test('runs no further attempts after the player is destroyed during backoff', as
   await player.expectStateHistoryInOrder(['connecting', 'live', 'reconnecting']);
   await player.expectErrorOutputs([]);
   await player.resumeTime();
+});
+
+for (const [failure, code, message] of [
+  [
+    'unauthorized',
+    'unauthorized',
+    "You don't have access to this stream. Sign in again or ask the organiser.",
+  ],
+  ['source', 'source', 'The video source stopped unexpectedly.'],
+] as const) {
+  test(`maps a ${failure} failure to its plain message with Retry`, async ({ page }) => {
+    // L2-068 AC1, AC2, AC5; L2-070 AC6: each failure shows an alert with a heading, its distinct
+    // message and Retry; error emits the code, and raw server text appears only in cause.
+    const player = new VideoPlayerPage(page);
+    if (failure === 'unauthorized') await player.open('unauthorized', { realTime: true });
+    else {
+      await player.open('live', { realTime: true });
+      await player.expectState('live');
+      await player.failSource();
+    }
+    await player.expectError(message);
+    await player.expectRetry(true);
+    await player.expectErrorOutputs([{ code, message }]);
+    if (failure === 'source')
+      await player.expectRawTextOnlyInCause('source-failed: encoder exited');
+    await player.expectNoAccessibilityViolations();
+  });
+}
+
+test('moves focus to the alert heading when focus was inside the player', async ({ page }) => {
+  // L2-068 AC1: the heading receives focus if focus was inside the player.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.focusControl('mute');
+  await player.failSource();
+  await player.expectFocusedErrorHeading();
+  await player.expectNoAccessibilityViolations();
+});
+
+test('leaves focus outside the player where it was when an error appears', async ({ page }) => {
+  // L2-068 AC1: focus moves only if it was inside the player.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.focusOutside();
+  await player.failSource();
+  await player.expectError('The video source stopped unexpectedly.');
+  await player.expectFocusOutside();
+});
+
+test('closes the panel on Retry, connects again and focuses Play/Pause', async ({ page }) => {
+  // L2-068 AC3: Given Retry is activated, then the panel closes, the state is connecting and
+  // focus moves to the play/pause control.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.failSource();
+  await player.expectState('error');
+  await player.clickRetry();
+  await player.expectNoError();
+  await player.expectFocusedControl('play-pause');
+  await player.expectStateHistoryInOrder(['connecting', 'live', 'error', 'connecting', 'live']);
+  await player.expectNoAccessibilityViolations();
+});
+
+test('keeps fullscreen and shows the panel inside the host when an error occurs', async ({
+  page,
+}) => {
+  // L2-068 AC4: Given fullscreen, when an error is shown, then fullscreen is kept and the panel is
+  // inside the fullscreen element.
+  const player = new VideoPlayerPage(page);
+  await player.stubFullscreen();
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.clickFullscreen();
+  await player.expectFullscreen('Exit fullscreen', true);
+  await player.failSource();
+  await player.expectError('The video source stopped unexpectedly.');
+  await player.expectFullscreen('Exit fullscreen', true);
+  await player.expectNoAccessibilityViolations();
 });
