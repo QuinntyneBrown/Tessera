@@ -75,6 +75,13 @@ export class VideoPlayerFixture {
   });
   readonly json = JSON.stringify;
 
+  constructor() {
+    // Lets a test change inputs without moving focus out of the player.
+    (window as unknown as { __videoFixtureHost: unknown }).__videoFixtureHost = {
+      clearCaptions: () => this.captions.set(null),
+    };
+  }
+
   setCaptionSource(src: string): void {
     this.captions.update((captions) => captions && { ...captions, src });
   }

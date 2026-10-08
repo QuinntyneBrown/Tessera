@@ -1,4 +1,10 @@
-<div class="t-video-player__region" role="region" [attr.aria-label]="regionName()">
+<div
+  class="t-video-player__region"
+  role="region"
+  tabindex="-1"
+  #region
+  [attr.aria-label]="regionName()"
+>
   <div
     class="t-video-player__stage"
     [style.aspect-ratio]="aspectRatio()"
@@ -80,7 +86,7 @@
       </div>
     }
   </div>
-  <div class="t-video-player__bar" role="group" [attr.aria-label]="strings.controlsLabel">
+  <div class="t-video-player__bar" role="group" #bar [attr.aria-label]="strings.controlsLabel">
     <button
       type="button"
       class="t-video-player__control"
@@ -128,6 +134,7 @@
       type="range"
       class="t-video-player__volume"
       data-control="volume"
+      #slider
       min="0"
       max="100"
       step="5"

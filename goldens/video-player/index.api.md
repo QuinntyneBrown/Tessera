@@ -85,6 +85,8 @@ export class VideoPlayer implements VideoPlayerHost {
     // (undocumented)
     protected onEnded(): void;
     // (undocumented)
+    protected onFocusin(event: FocusEvent): void;
+    // (undocumented)
     protected onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     protected onPlaying(): void;

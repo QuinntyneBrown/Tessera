@@ -861,6 +861,63 @@ export class VideoPlayerPage {
     await expect(this.host().getByRole('alert')).toHaveCount(0);
   }
 
+  async recordKeyDefaults(): Promise<void> {
+    await this.page.addInitScript(() => {
+      window.addEventListener('keydown', (event) => {
+        (window as unknown as { __lastKeyPrevented: boolean }).__lastKeyPrevented =
+          event.defaultPrevented;
+      });
+    });
+  }
+
+  async expectLastKeyPrevented(prevented: boolean): Promise<void> {
+    await expect
+      .poll(() =>
+        this.page.evaluate(
+          () => (window as unknown as { __lastKeyPrevented: boolean }).__lastKeyPrevented,
+        ),
+      )
+      .toBe(prevented);
+  }
+
+  async expectTabOrder(controls: string[]): Promise<void> {
+    await this.focusControl(controls[0]);
+    const order = [await this.focusedControl()];
+    for (let index = 1; index < controls.length; index++) {
+      await this.page.keyboard.press('Tab');
+      order.push(await this.focusedControl());
+    }
+    expect(order).toEqual(controls);
+  }
+
+  private focusedControl(): Promise<string | null> {
+    return this.page.evaluate(() => document.activeElement?.getAttribute('data-control') ?? null);
+  }
+
+  async expectStageNotFocusable(): Promise<void> {
+    const stage = this.host().locator('.t-video-player__stage');
+    await expect(stage).not.toHaveAttribute('tabindex', /.*/);
+    await this.focusControl('play-pause');
+    await this.page.keyboard.press('Shift+Tab');
+    expect(
+      await this.page.evaluate(() => !!document.activeElement?.closest('.t-video-player__stage')),
+    ).toBe(false);
+  }
+
+  /** Removes the captions input from script so that focus stays where it is. */
+  async removeCaptionsKeepingFocus(): Promise<void> {
+    await this.page.evaluate(() =>
+      (
+        window as unknown as { __videoFixtureHost: { clearCaptions(): void } }
+      ).__videoFixtureHost.clearCaptions(),
+    );
+    await expect(this.control('captions')).toHaveCount(0);
+  }
+
+  async expectFocusedRegion(): Promise<void> {
+    await expect(this.host().getByRole('region')).toBeFocused();
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

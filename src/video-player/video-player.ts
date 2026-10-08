@@ -4,6 +4,7 @@ import {
   DestroyRef,
   ElementRef,
   Injector,
+  afterEveryRender,
   afterNextRender,
   computed,
   effect,
@@ -35,7 +36,11 @@ import { VideoPlayerAnnouncer } from './video-player-announcer';
   templateUrl: './video-player.html',
   styleUrl: './video-player.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[attr.data-state]': 'state()', '(keydown)': 'onKeydown($event)' },
+  host: {
+    '[attr.data-state]': 'state()',
+    '(keydown)': 'onKeydown($event)',
+    '(focusin)': 'onFocusin($event)',
+  },
 })
 export class VideoPlayer implements VideoPlayerHost {
   /** Hub endpoint passed unchanged to the transport. */
@@ -117,6 +122,11 @@ export class VideoPlayer implements VideoPlayerHost {
   private readonly errorHeading = viewChild<ElementRef<HTMLElement>>('errorHeading');
   private readonly playPause = viewChild.required<ElementRef<HTMLElement>>('playPause');
   private readonly injector = inject(Injector);
+  private readonly region = viewChild.required<ElementRef<HTMLElement>>('region');
+  private readonly bar = viewChild.required<ElementRef<HTMLElement>>('bar');
+  private readonly slider = viewChild.required<ElementRef<HTMLInputElement>>('slider');
+  /** The control that last held focus and its position, for focus recovery. */
+  private focusedControl: { element: HTMLElement; index: number; wasDisabled: boolean } | undefined;
   private readonly announcer = new VideoPlayerAnnouncer(() => this.liveRegion().nativeElement);
   private readonly transport = inject(VIDEO_STREAM_TRANSPORT, { optional: true });
   private session: VideoStreamSession | undefined;
@@ -144,6 +154,7 @@ export class VideoPlayer implements VideoPlayerHost {
       this.announcer.toggle(fullscreen ? this.strings.fullscreenOn : this.strings.fullscreenOff);
     };
     document.addEventListener('fullscreenchange', onFullscreenChange);
+    afterEveryRender({ write: () => this.recoverFocus() });
     inject(DestroyRef).onDestroy(() => {
       document.removeEventListener('fullscreenchange', onFullscreenChange);
       clearTimeout(this.bufferingAnnouncement);
@@ -295,10 +306,54 @@ export class VideoPlayer implements VideoPlayerHost {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.isFullscreen()) {
-      event.preventDefault();
-      document.exitFullscreen();
-    }
+    if (event.ctrlKey || event.altKey || event.metaKey) return;
+    const onSlider = event.target === this.slider().nativeElement;
+    const key = event.key === ' ' ? 'space' : event.key.toLowerCase();
+    if ((key === 'space' || key === 'k') && !onSlider) this.togglePlayback();
+    else if (key === 'm') this.toggleMute();
+    else if (key === 'f' && this.fullscreenSupported) this.toggleFullscreen();
+    else if (key === 'c' && this.captions()) this.toggleCaptions();
+    else if ((key === 'arrowup' || key === 'arrowdown') && !onSlider)
+      this.setVolume(this.volumeValue() + (key === 'arrowup' ? 5 : -5));
+    else if (key === 'escape' && this.isFullscreen()) document.exitFullscreen();
+    else return;
+    event.preventDefault();
+  }
+
+  protected onFocusin(event: FocusEvent): void {
+    const controls = this.controls();
+    const index = controls.indexOf(event.target as HTMLElement);
+    const element = controls[index];
+    this.focusedControl =
+      index < 0
+        ? undefined
+        : { element, index, wasDisabled: element.getAttribute('aria-disabled') === 'true' };
+  }
+
+  private controls(): HTMLElement[] {
+    return Array.from(this.bar().nativeElement.querySelectorAll<HTMLElement>('button, input'));
+  }
+
+  /** Moves focus off a focused control that was removed or disabled, never to body. */
+  private recoverFocus(): void {
+    const focused = this.focusedControl;
+    if (!focused) return;
+    const active = document.activeElement;
+    const removed = !focused.element.isConnected && (!active || active === document.body);
+    const disabled =
+      active === focused.element &&
+      !focused.wasDisabled &&
+      focused.element.getAttribute('aria-disabled') === 'true';
+    if (!removed && !disabled) return;
+    const controls = this.controls();
+    const usable = (control: HTMLElement) =>
+      control.getAttribute('aria-disabled') !== 'true' && control.checkVisibility();
+    const start = Math.min(focused.index, controls.length) - 1;
+    const candidates = [
+      ...controls.slice(0, start + 1).reverse(),
+      ...controls.slice(start + 1),
+    ].filter((control) => control !== focused.element);
+    (candidates.find(usable) ?? this.region().nativeElement).focus();
   }
 
   protected dismissUnmuteChip(): void {
