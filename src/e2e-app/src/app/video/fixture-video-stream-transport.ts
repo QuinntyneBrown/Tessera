@@ -1,16 +1,4 @@
-import {
-  NEVER,
-  Observable,
-  Subject,
-  concatMap,
-  filter,
-  from,
-  map,
-  merge,
-  mergeMap,
-  take,
-  throwError,
-} from 'rxjs';
+import { NEVER, Observable, Subject, concatMap, filter, from, map, take } from 'rxjs';
 import { replayFragmentedMp4 } from '../../../../components-examples/tessera/video-player/replay-fragmented-mp4';
 import {
   VideoChunk,
@@ -129,9 +117,6 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
     const gapAt = Number(this.parameters.get('gapAt') || 0);
     let init: VideoChunk | undefined;
     let media = 0;
-    const failure = this.failures.pipe(
-      mergeMap(() => throwError(() => new Error('source-failed: encoder exited'))),
-    );
     const replay = replayFragmentedMp4('/lecture-10s.fmp4', {
       rate: Number(this.parameters.get('rate') || 1),
       lead: Number(this.parameters.get('lead') || 0),
@@ -151,7 +136,17 @@ export class FixtureVideoStreamTransport implements VideoStreamTransport {
         from(chunk.kind === 1 && media === reinitAt && init ? [init, chunk] : [chunk]),
       ),
     );
-    return merge(replay, failure);
+    // A failure errors the stream; completion of the replay still completes it.
+    return new Observable<VideoChunk>((subscriber) => {
+      const chunks = replay.subscribe(subscriber);
+      const failures = this.failures.subscribe(() =>
+        subscriber.error(new Error('source-failed: encoder exited')),
+      );
+      return () => {
+        chunks.unsubscribe();
+        failures.unsubscribe();
+      };
+    });
   }
 }
 
