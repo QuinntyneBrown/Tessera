@@ -1,6 +1,8 @@
 import { Component, Directive, signal } from '@angular/core';
 import {
+  VIDEO_PLAYER_I18N,
   VIDEO_STREAM_TRANSPORT,
+  VideoPlayerI18n,
   VideoPlayer,
   VideoPlayerCaptions,
   VideoPlayerError,
@@ -10,6 +12,22 @@ import {
 import { FixtureVideoStreamTransport } from './fixture-video-stream-transport';
 
 const parameters = new URLSearchParams(location.search);
+
+/** A partial French override; every other key keeps its English default. */
+const FRENCH: VideoPlayerI18n = {
+  regionLabel: (title) => (title ? `Lecteur vidéo : ${title}` : 'Lecteur vidéo'),
+  controlsLabel: 'Commandes du lecteur',
+  mute: 'Couper le son',
+  live: 'Direct',
+  liveBadge: 'DIRECT',
+  connecting: (title) => `Connexion à ${title}.`,
+  liveAnnounced: 'En direct.',
+  unmuted: (volume) => `Son à ${volume} %.`,
+  behindLive: (seconds) => `${seconds} s de retard.`,
+  reconnecting: (attempt, max) => `Tentative ${attempt} sur ${max}`,
+  duration: (seconds) => `${Math.floor(seconds / 60)} min`,
+  endedAfter: (duration) => `Terminé après ${duration}.`,
+};
 
 /** Gives the player on the same element its own fixture transport, as a hub connection would. */
 @Directive({
@@ -27,6 +45,12 @@ export class FixtureTransport {}
 @Component({
   selector: 'tsr-video-player-fixture',
   imports: [VideoPlayer, FixtureTransport],
+  providers: [
+    {
+      provide: VIDEO_PLAYER_I18N,
+      useFactory: () => (parameters.get('localized') === 'true' ? FRENCH : {}),
+    },
+  ],
   styles: ['output { display: block; overflow-wrap: anywhere; }'],
   template: `
     <main>

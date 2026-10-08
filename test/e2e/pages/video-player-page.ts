@@ -1337,6 +1337,28 @@ export class VideoPlayerPage {
       .toEqual([hubUrl]);
   }
 
+  async expectNames(names: {
+    region: string;
+    controls: string;
+    playPause: string;
+    mute: string;
+    volume: string;
+    live: string;
+  }): Promise<void> {
+    await this.expectRegionName(names.region);
+    await expect(
+      this.host().getByRole('group', { name: names.controls, exact: true }),
+    ).toBeVisible();
+    await expect(this.control('play-pause')).toHaveAccessibleName(names.playPause);
+    await expect(this.control('mute')).toHaveAccessibleName(names.mute);
+    await expect(this.control('volume')).toHaveAccessibleName(names.volume);
+    await expect(this.control('live')).toHaveAccessibleName(names.live);
+  }
+
+  async expectLiveBadgeText(text: string): Promise<void> {
+    await expect(this.control('live')).toHaveText(text);
+  }
+
   async expectNoAccessibilityViolations(): Promise<void> {
     expect(this.errors).toEqual([]);
     const result = await new AxeBuilder({ page: this.page })

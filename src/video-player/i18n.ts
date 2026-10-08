@@ -12,6 +12,8 @@ export interface VideoPlayerStrings {
   reconnected: string;
   waitingForSource: string;
   streamEnded: string;
+  /** Words for a live duration; endedAfter and liveFor receive its result. */
+  duration: (totalSeconds: number) => string;
   liveFor: (duration: string) => string;
   endedAfter: (duration: string) => string;
   controlsLabel: string;
@@ -35,6 +37,7 @@ export interface VideoPlayerStrings {
   fullscreenOff: string;
   backLive: string;
   live: string;
+  liveBadge: string;
   goToLive: (seconds: number) => string;
   behindLive: (seconds: number) => string;
   retry: string;
@@ -59,6 +62,7 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   reconnected: 'Reconnected. Live.',
   waitingForSource: 'Waiting for the source…',
   streamEnded: 'Stream ended',
+  duration: (totalSeconds) => formatDuration(totalSeconds),
   liveFor: (duration) => `Live for ${duration}`,
   endedAfter: (duration) => `Stream ended. It was live for ${duration}.`,
   controlsLabel: 'Player controls',
@@ -82,6 +86,7 @@ export const DEFAULT_VIDEO_PLAYER_STRINGS: VideoPlayerStrings = {
   fullscreenOff: 'Exited fullscreen.',
   backLive: 'Back live.',
   live: 'Live',
+  liveBadge: 'LIVE',
   goToLive: (seconds) => `Go to live, ${seconds} seconds behind`,
   behindLive: (seconds) => `${seconds} seconds behind live. Press Live to catch up.`,
   retry: 'Retry',

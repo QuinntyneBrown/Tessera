@@ -153,6 +153,7 @@ export class VideoPlayer implements VideoPlayerHost {
         reconnected: string;
         waitingForSource: string;
         streamEnded: string;
+        duration: (totalSeconds: number) => string;
         liveFor: (duration: string) => string;
         endedAfter: (duration: string) => string;
         controlsLabel: string;
@@ -176,6 +177,7 @@ export class VideoPlayer implements VideoPlayerHost {
         fullscreenOff: string;
         backLive: string;
         live: string;
+        liveBadge: string;
         goToLive: (seconds: number) => string;
         behindLive: (seconds: number) => string;
         retry: string;
@@ -326,6 +328,7 @@ export interface VideoPlayerStrings {
     controlsLabel: string;
     // (undocumented)
     dismiss: string;
+    duration: (totalSeconds: number) => string;
     // (undocumented)
     endedAfter: (duration: string) => string;
     // (undocumented)
@@ -356,6 +359,8 @@ export interface VideoPlayerStrings {
     live: string;
     // (undocumented)
     liveAnnounced: string;
+    // (undocumented)
+    liveBadge: string;
     // (undocumented)
     liveFor: (duration: string) => string;
     // (undocumented)

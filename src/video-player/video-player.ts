@@ -18,7 +18,7 @@ import {
   viewChild,
   viewChildren,
 } from '@angular/core';
-import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N, formatDuration } from './i18n';
+import { DEFAULT_VIDEO_PLAYER_STRINGS, VIDEO_PLAYER_I18N } from './i18n';
 import {
   VideoPlayerCaptions,
   VideoPlayerError,
@@ -434,7 +434,9 @@ export class VideoPlayer implements VideoPlayerHost {
 
   protected onEnded(): void {
     const startedAt = this.descriptor()?.startedAt;
-    const duration = formatDuration(startedAt ? (Date.now() - Date.parse(startedAt)) / 1000 : 0);
+    const duration = this.strings.duration(
+      startedAt ? (Date.now() - Date.parse(startedAt)) / 1000 : 0,
+    );
     this.liveDuration.set(duration);
     this.setState('ended');
     this.announcer.status(this.strings.endedAfter(duration));

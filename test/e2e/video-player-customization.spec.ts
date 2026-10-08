@@ -1,4 +1,4 @@
-// Acceptance tests. Traces to L2-057, L2-075, L2-077, L2-078.
+// Acceptance tests. Traces to L2-057, L2-070, L2-075, L2-076, L2-077, L2-078.
 import { expect, test } from '@playwright/test';
 import { VideoPlayerPage } from './pages/video-player-page';
 
@@ -77,3 +77,68 @@ for (const hubUrl of ['http://localhost:5180/hubs/video', 'https://hub.example/h
     await player.expectWarningCount('hubUrl', 0);
   });
 }
+
+test('uses English defaults without a VIDEO_PLAYER_I18N provider', async ({ page }) => {
+  // L2-076 AC1: without a provider, names, status and announcements use the English defaults.
+  const player = new VideoPlayerPage(page);
+  await player.observeAnnouncements();
+  await player.open('live', { realTime: true });
+  await player.expectAnnouncementHistoryToEndWith('Live.');
+  await player.expectNames({
+    region: 'Video player: Lecture hall A',
+    controls: 'Player controls',
+    playPause: 'Pause',
+    mute: 'Mute',
+    volume: 'Volume',
+    live: 'Live',
+  });
+  await player.expectLiveBadgeText('LIVE');
+});
+
+test('applies a partial override to names, status and announcements', async ({ page }) => {
+  // L2-076 AC2, AC4; L2-070 AC7: overridden keys are used everywhere, other keys keep defaults.
+  const player = new VideoPlayerPage(page);
+  await player.observeAnnouncements();
+  await player.open('live', { realTime: true, extra: { localized: true } });
+  await player.expectAnnouncementHistoryToEndWith('En direct.');
+  await player.expectNames({
+    region: 'Lecteur vidéo : Lecture hall A',
+    controls: 'Commandes du lecteur',
+    playPause: 'Pause',
+    mute: 'Couper le son',
+    volume: 'Volume',
+    live: 'Direct',
+  });
+  await player.expectLiveBadgeText('DIRECT');
+  await player.expectAnnounced('Connexion à Lecture hall A.');
+  await player.expectNoAccessibilityViolations();
+});
+
+test('calls number strings with the volume, seconds behind, attempt and duration', async ({
+  page,
+}) => {
+  // L2-076 AC3: unmuted, behindLive, reconnecting and endedAfter (through duration) receive the
+  // volume, the seconds behind, the attempt and maximum, and the live duration.
+  const player = new VideoPlayerPage(page);
+  await player.observeAnnouncements();
+  await player.open('live', { realTime: true, extra: { localized: true, lead: 11 } });
+  await player.expectAnnounced('10 s de retard.');
+  await player.focusControl('play-pause');
+  await player.pressKey('m');
+  await player.pressKey('m');
+  await player.expectAnnounced('Son à 100 %.');
+  await player.dropConnection();
+  await player.expectStatusText('Tentative 1 sur 5');
+});
+
+test('localises the ended message through the duration string', async ({ page }) => {
+  // L2-076 AC3: endedAfter receives the duration produced by the duration string.
+  const player = new VideoPlayerPage(page);
+  await player.observeAnnouncements();
+  await player.open('live', {
+    realTime: true,
+    extra: { localized: true, endAfter: 3, startedAgo: 125 },
+  });
+  await player.expectState('ended');
+  await player.expectAnnounced('Terminé après 2 min.');
+});
