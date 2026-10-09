@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkbox — Tessera design system</title>
+<meta name="description" content="Native checkboxes for independent yes-or-no choices: single, grouped in a fieldset, with description, card-style. Checked, indeterminate, invalid and disabled, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Checkbox</h1>
+      <p class="ds-lead">A checkbox turns one independent option on or off as part of a form: agree to the course terms, choose which reminders to send, pick the sessions a learner attends. Several checkboxes answering one question sit in a fieldset with a legend.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;input type="checkbox"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a checkbox when each option can be on or off independently of the others, and the choice takes effect when the form is submitted. Tessera uses the native input, sized to 20px and tinted with <code>accent-color</code>, exactly as the combobox mock's "Right-to-left" control does.</p>
+      <ul>
+        <li>Exactly one option from a set: use a <a href="radio-group.html">radio group</a>.</li>
+        <li>A setting that applies immediately, with no submit (captions on, right-to-left preview): use a <a href="switch.html">switch</a>.</li>
+        <li>Choosing many items from a long or searchable list (assigning learners): use the <a href="combobox.html">combobox</a>, whose options show a check mark (<code>.combobox__check</code>) but are listbox options, not checkboxes.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="check">
+            <input type="checkbox" id="anatomy-remind" checked aria-describedby="anatomy-remind-desc">
+            <span class="check__text"><label for="anatomy-remind">Remind learners before the due date</label><span class="check__description" id="anatomy-remind-desc">Sent by email one week and one day before.</span></span>
+          </div>
+          <span class="ds-callout" style="left: 4%; top: 22%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 40%; top: 22%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 52%; top: 76%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 92%; top: 50%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Box</b><small>Native checkbox, 1.25rem (20px) square, <code>accent-color: --color-accent</code>. Aligned to the first line of the label (2px top margin).</small></div></li>
+          <li><div><b>Label</b><small>16px <code>--text-body</code>, <code>--color-fg-default</code>; 8px (<code>--space-2</code>) from the box. Clicking it toggles the box.</small></div></li>
+          <li><div><b>Description (optional)</b><small><code>.check__description</code>: 14px <code>--color-fg-muted</code>, linked with <code>aria-describedby</code>.</small></div></li>
+          <li><div><b>Row</b><small><code>.check</code>: at least 44px tall (<code>--control-height-md</code>) with 8px block padding, so stacked rows are 44px targets with no gap.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Single</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <label class="check"><input type="checkbox" id="v-terms"> I have read the course code of conduct</label>
+          <label class="check"><input type="checkbox" id="v-rtl"> Right-to-left</label>
+        </div>
+        <div class="ds-example__caption"><span>A wrapping <code>&lt;label&gt;</code> makes the whole row the target. "Right-to-left" is the combobox mock's control.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="check"&gt;&lt;input type="checkbox" name="conduct"&gt; I have read the course code of conduct&lt;/label&gt;</code></pre></details>
+      </div>
+
+      <h3>Group in a fieldset</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="fieldset" style="max-width: 32rem;">
+            <legend>Send reminders</legend>
+            <div class="check-group">
+              <label class="check"><input type="checkbox" name="remind" value="week" checked> One week before the due date</label>
+              <label class="check"><input type="checkbox" name="remind" value="day" checked> One day before the due date</label>
+              <label class="check"><input type="checkbox" name="remind" value="overdue"> When the assignment is overdue</label>
+            </div>
+          </fieldset>
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Captions</legend>
+            <div class="check-group check-group--horizontal">
+              <label class="check"><input type="checkbox" name="captions" value="en" checked> English</label>
+              <label class="check"><input type="checkbox" name="captions" value="fr"> French</label>
+              <label class="check"><input type="checkbox" name="captions" value="es"> Spanish</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Bordered and bare fieldsets; vertical and horizontal groups. The legend is announced when focus enters the group.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;fieldset class="fieldset"&gt;
+  &lt;legend&gt;Send reminders&lt;/legend&gt;
+  &lt;div class="check-group"&gt;
+    &lt;label class="check"&gt;&lt;input type="checkbox" name="remind" value="week"&gt; One week before the due date&lt;/label&gt;
+    &lt;label class="check"&gt;&lt;input type="checkbox" name="remind" value="day"&gt; One day before the due date&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre></details>
+      </div>
+
+      <h3>Select all (indeterminate parent)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Sessions Alan Turing attends</legend>
+            <div class="check-group">
+              <label class="check"><input type="checkbox" id="v-all" aria-controls="v-s1 v-s2 v-s3"> All sessions</label>
+              <div class="check-group" style="padding-inline-start: var(--space-6);">
+                <label class="check"><input type="checkbox" id="v-s1" checked> Monday, Lecture hall A</label>
+                <label class="check"><input type="checkbox" id="v-s2"> Wednesday, Lecture hall A</label>
+                <label class="check"><input type="checkbox" id="v-s3" checked> Friday, online</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Some children checked: the parent is indeterminate (set by script; announced "mixed"). Activating it checks all.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="check"&gt;&lt;input type="checkbox" id="all" aria-controls="s1 s2 s3"&gt; All sessions&lt;/label&gt;
+&lt;script&gt;document.getElementById('all').indeterminate = true;&lt;/script&gt;</code></pre></details>
+      </div>
+
+      <h3>With description</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="check-group" style="max-width: 32rem;">
+            <div class="check"><input type="checkbox" id="v-cert" checked aria-describedby="v-cert-desc"><span class="check__text"><label for="v-cert">Issue a certificate</label><span class="check__description" id="v-cert-desc">Learners can download it once they score 80% or more.</span></span></div>
+            <div class="check"><input type="checkbox" id="v-retake" aria-describedby="v-retake-desc"><span class="check__text"><label for="v-retake">Allow retakes</label><span class="check__description" id="v-retake-desc">The highest score is kept.</span></span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The label is the name; the description is linked with <code>aria-describedby</code> so it is read after the name and state.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="check"&gt;
+  &lt;input type="checkbox" id="cert" aria-describedby="cert-desc"&gt;
+  &lt;span class="check__text"&gt;
+    &lt;label for="cert"&gt;Issue a certificate&lt;/label&gt;
+    &lt;span class="check__description" id="cert-desc"&gt;Learners can download it once they score 80% or more.&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Card-style</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="fieldset fieldset--bare" style="max-width: 32rem;">
+            <legend>Course formats</legend>
+            <div class="check-group" style="gap: var(--space-3);">
+              <label class="check check--card"><input type="checkbox" checked aria-labelledby="v-card-live-t" aria-describedby="v-card-live-d"><span class="check__text"><b id="v-card-live-t">Live session</b><span class="check__description" id="v-card-live-d">Streamed from Lecture hall A with captions.</span></span></label>
+              <label class="check check--card"><input type="checkbox" aria-labelledby="v-card-scorm-t" aria-describedby="v-card-scorm-d"><span class="check__text"><b id="v-card-scorm-t">Self-paced lessons</b><span class="check__description" id="v-card-scorm-d">SCORM package; progress is saved to the LMS.</span></span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>The whole card is the target. Checked cards get the accent edge and tint, but the box is still the state cue.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="check check--card"&gt;
+  &lt;input type="checkbox" aria-labelledby="live-t" aria-describedby="live-d"&gt;
+  &lt;span class="check__text"&gt;
+    &lt;b id="live-t"&gt;Live session&lt;/b&gt;
+    &lt;span class="check__description" id="live-d"&gt;Streamed from Lecture hall A with captions.&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/label&gt;</code></pre></details>
+      </div>
+
+      <h3>Selection mark in a listbox</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="combobox" style="width: min(100%, 22rem);">
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Ada Lovelace<span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li>
+                <li class="combobox__option" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Grace Hopper<span class="combobox__option-detail">grace.hopper@example.edu</span></span></li>
+                <li class="combobox__option" role="option" aria-selected="false" aria-disabled="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Alan Turing<span class="combobox__option-detail">Account inactive</span></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Not a checkbox: <code>.combobox__check</code> draws the same 20px box for <code>aria-selected</code> options, dashed when the option is disabled. See <a href="combobox.html">combobox</a>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size: a 20px box in a 44px row. Scaling the box separately from the text breaks alignment; it grows with browser zoom instead."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size: a 20px box in a 44px row. Scaling the box separately from the text breaks alignment; it grows with browser zoom instead.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The box is drawn by the browser, tinted with <code>accent-color</code>, so its hover and pressed shading come from the browser and cannot be forced in a static page; those cells use <code>data-state</code> for reference and show the browser default. Focus is forced with <code>data-state="focus"</code>. Indeterminate boxes are set by the short script at the end of this page.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Invalid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Unchecked</th>
+            <td><label class="check"><input type="checkbox"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" data-state="hover"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" data-state="focus"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" data-state="active"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" disabled> Agree</label></td>
+            <td><label class="check"><input type="checkbox" aria-invalid="true"> Agree</label></td>
+          </tr>
+          <tr><th scope="row">Checked</th>
+            <td><label class="check"><input type="checkbox" checked> Agree</label></td>
+            <td><label class="check"><input type="checkbox" checked data-state="hover"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" checked data-state="focus"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" checked data-state="active"> Agree</label></td>
+            <td><label class="check"><input type="checkbox" checked disabled> Agree</label></td>
+            <td><label class="check"><input type="checkbox" checked aria-invalid="true"> Agree</label></td>
+          </tr>
+          <tr><th scope="row">Indeterminate</th>
+            <td><label class="check"><input type="checkbox" id="m-ind-default"> All sessions</label></td>
+            <td><label class="check"><input type="checkbox" id="m-ind-hover" data-state="hover"> All sessions</label></td>
+            <td><label class="check"><input type="checkbox" id="m-ind-focus" data-state="focus"> All sessions</label></td>
+            <td><label class="check"><input type="checkbox" id="m-ind-active" data-state="active"> All sessions</label></td>
+            <td><label class="check"><input type="checkbox" id="m-ind-disabled" disabled> All sessions</label></td>
+            <td><label class="check"><input type="checkbox" id="m-ind-invalid" aria-invalid="true"> All sessions</label></td>
+          </tr>
+          <tr><th scope="row">Card</th>
+            <td><label class="check check--card" style="min-width: 10rem;"><input type="checkbox"> Live session</label></td>
+            <td><label class="check check--card" style="min-width: 10rem; border-color: var(--color-fg-default);"><input type="checkbox" data-state="hover"> Live session</label></td>
+            <td><label class="check check--card" style="min-width: 10rem;"><input type="checkbox" checked data-state="focus"> Live session</label></td>
+            <td><label class="check check--card" style="min-width: 10rem;"><input type="checkbox" checked data-state="active"> Live session</label></td>
+            <td><label class="check check--card" style="min-width: 10rem; border-style: dashed;"><input type="checkbox" disabled> Live session</label></td>
+            <td><label class="check check--card" style="min-width: 10rem; border-color: var(--color-danger-solid); border-width: var(--border-width-thick);"><input type="checkbox" aria-invalid="true"> Live session</label></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>Card hover, disabled and invalid edges are shown with token-only inline styles; <code>components.css</code> styles only the checked card today.</p>
+      <h3>Invalid group</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="fieldset" style="max-width: 32rem;" aria-describedby="st-group-error st-group-hint">
+            <legend>Send reminders <span class="field__required">(required)</span></legend>
+            <div class="check-group">
+              <label class="check"><input type="checkbox" name="st-remind" aria-invalid="true"> One week before the due date</label>
+              <label class="check"><input type="checkbox" name="st-remind" aria-invalid="true"> One day before the due date</label>
+              <label class="check"><input type="checkbox" name="st-remind" aria-invalid="true"> When the assignment is overdue</label>
+            </div>
+            <div class="field" style="margin-top: var(--space-2);">
+              <p class="field__error" id="st-group-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Choose at least one reminder.</span></p>
+              <div class="field__below"><p class="field__hint" id="st-group-hint">Learners can turn reminders off in their profile.</p></div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Same order as a form field: options, then the error with its icon, then the hint. The fieldset is described by both.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="check-group">
+            <label class="check"><input type="checkbox" checked> Checked</label>
+            <label class="check"><input type="checkbox"> Unchecked</label>
+            <label class="check"><input type="checkbox" id="th-ind-light"> Indeterminate</label>
+            <label class="check"><input type="checkbox" aria-invalid="true"> Invalid</label>
+            <label class="check"><input type="checkbox" checked disabled> Disabled</label>
+          </div>
+          <label class="check check--card"><input type="checkbox" checked aria-labelledby="th-card-light-t" aria-describedby="th-card-light-d"><span class="check__text"><b id="th-card-light-t">Live session</b><span class="check__description" id="th-card-light-d">Lecture hall A, with captions.</span></span></label>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="check-group">
+            <label class="check"><input type="checkbox" checked> Checked</label>
+            <label class="check"><input type="checkbox"> Unchecked</label>
+            <label class="check"><input type="checkbox" id="th-ind-dark"> Indeterminate</label>
+            <label class="check"><input type="checkbox" aria-invalid="true"> Invalid</label>
+            <label class="check"><input type="checkbox" checked disabled> Disabled</label>
+          </div>
+          <label class="check check--card"><input type="checkbox" checked aria-labelledby="th-card-dark-t" aria-describedby="th-card-dark-d"><span class="check__text"><b id="th-card-dark-t">Live session</b><span class="check__description" id="th-card-dark-d">Lecture hall A, with captions.</span></span></label>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Checked</b> fills the box with <code>--color-accent</code> and draws a tick in a contrasting colour chosen by the browser; the tick shape, not the colour, is the cue.</li>
+        <li><b>Indeterminate</b> (a dash) only exists on a parent that summarises children. It is a script property, never set by markup; activating it checks every child.</li>
+        <li><b>Invalid</b> draws a 2px <code>--color-danger-solid</code> outline 1px outside the box, plus the error message below the group.</li>
+        <li><b>Disabled</b> keeps the label readable in <code>--color-fg-disabled</code>; the browser greys the box. Explain why nearby if the option could become available.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Long labels wrap beside the box; the box stays aligned to the first line. Labels never truncate.</li>
+        <li>Horizontal groups (<code>.check-group--horizontal</code>) wrap onto new lines with a 24px column gap; at 320px they become a column naturally. Use them only for two to four short options.</li>
+        <li>Cards are full width. In a wide form, place them in a <a href="form-layout.html">form layout</a> row to get two columns from <code>--layout-breakpoint-md</code>.</li>
+        <li>At 200% text and with WCAG text spacing, rows grow taller; the 44px minimum height is a floor, not a fixed height.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The checkbox reads <code>--color-accent</code> through <code>accent-color</code>; the browser picks the tick colour for contrast. Text uses <code>--color-fg-default</code>, <code>--color-fg-muted</code> and <code>--color-fg-disabled</code>; cards use <code>--color-border-strong</code>, and when checked <code>--color-accent</code> and <code>--color-accent-subtle</code>. There are no checkbox component tokens: theme it by scoping the semantic tokens.</p>
+      <pre><code>/* A host LMS whose brand is a different hue */
+.host-brand { --color-accent: var(--palette-teal-700); }</code></pre>
+      <p>In dark the accent lightens to <code>--palette-teal-300</code> and the browser draws a dark tick on it; the checked card tint becomes <code>--palette-sage-800</code>. The shipped combobox exposes the selection mark as <code>--t-combobox-selected-mark</code> (aliases <code>--t-colorBrandBackground</code>). See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input type="checkbox"&gt;</code>, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/">WAI-ARIA APG Checkbox pattern</a> (dual-state, and mixed-state for "select all"). Groups use <code>&lt;fieldset&gt;</code> and <code>&lt;legend&gt;</code>, not <code>role="group"</code>. No ARIA role is added; the indeterminate property is exposed as <code>mixed</code> automatically.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves to the next or previous checkbox. Every checkbox is its own tab stop (unlike radios). Disabled ones are skipped.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Toggles the focused checkbox. On an indeterminate parent, checks all children.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>No effect on the checkbox; it does not toggle.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (3px <code>--color-focus-ring</code>, 2px offset) on the box itself, on <code>:focus-visible</code>. On a card the ring is still on the box; the card edge does not change with focus. On a failed submit, the error summary links to the first checkbox in the group.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>Every checkbox has a label: a wrapping <code>&lt;label&gt;</code>, or <code>&lt;label for&gt;</code> when a description sits beside it. Cards use <code>aria-labelledby</code> on the title so the description is not part of the name.</li>
+        <li>Descriptions use <code>aria-describedby</code>.</li>
+        <li>A group's question is its <code>&lt;legend&gt;</code>; "(required)" goes in the legend; the fieldset is described by the error and hint.</li>
+        <li>A "select all" parent names its children with <code>aria-controls</code>.</li>
+        <li>The combobox check mark is <code>aria-hidden</code>; the option's <code>aria-selected</code> carries the state.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Checked fill on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Checked fill on canvas</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Description on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Disabled label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid outline on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Card edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Checked card edge on its tint</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Text on checked card</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Description on checked card</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Listbox tick on selected mark</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <p>The unchecked box border is drawn by the browser (Chromium and Firefox use a mid-grey above 3:1 on light and dark surfaces); forced-colours mode hands the box to system colours.</p>
+      <h3>Motion</h3>
+      <p>No animation: the tick appears instantly. Nothing to reduce.</p>
+      <h3>Touch</h3>
+      <p>The box is 20px, but the target is the whole row: the label is part of it, and each row is at least 44px tall with no dead gap between rows (the 44px row comes from the combobox mock's control row). Cards are the target in full. Hover changes are not relied on.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Write the label as the thing that becomes true when checked: "Issue a certificate", "Allow retakes". Avoid negatives ("Don't send reminders").</li>
+        <li>Sentence case, no trailing full stop, no "Click to…".</li>
+        <li>The legend asks the question or names the set: "Send reminders", "Course formats", "Sessions Alan Turing attends".</li>
+        <li>Descriptions explain consequences in one sentence: "The highest score is kept."</li>
+        <li>Errors say what to do: "Choose at least one reminder." For a required single checkbox: "Confirm you have read the code of conduct."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="check-group"><label class="check"><input type="checkbox" checked> One week before</label><label class="check"><input type="checkbox"> One day before</label></div></div><figcaption>20px boxes in 44px rows, the label inside the target (combobox mock control row).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div style="display: flex; flex-direction: column; gap: 0;"><span><input type="checkbox" id="dd-small-1" checked style="width: 0.8125rem; height: 0.8125rem; margin: 0;"><label for="dd-small-1" style="font-size: var(--font-size-sm);">One week before</label></span><span><input type="checkbox" id="dd-small-2" style="width: 0.8125rem; height: 0.8125rem; margin: 0;"><label for="dd-small-2" style="font-size: var(--font-size-sm);">One day before</label></span></div></div><figcaption>Browser-default 13px boxes packed tight: below a comfortable target and easy to mis-tap.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><label class="switch"><input type="checkbox" role="switch" checked> Right-to-left preview</label></div><figcaption>A setting that applies the moment it changes is a switch.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><label class="check"><input type="checkbox" checked> Right-to-left</label></div><figcaption>A checkbox that flips the page direction instantly, as the mocks' state panel does; people expect checkboxes to wait for Submit.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="combobox" style="width: 100%;"><ul class="combobox__listbox" role="listbox" aria-label="Learners, check mark" aria-multiselectable="true"><li class="combobox__option" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span>Grace Hopper</li><li class="combobox__option" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span>Katherine Johnson</li></ul></div></div><figcaption>Show selection with the check mark: a shape, not just a colour.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="combobox" style="width: 100%;"><ul class="combobox__listbox" role="listbox" aria-label="Learners, tint only" aria-multiselectable="true"><li class="combobox__option" role="option" aria-selected="true" style="background: var(--color-accent-subtle);">Grace Hopper</li><li class="combobox__option" role="option" aria-selected="false">Katherine Johnson</li></ul></div></div><figcaption>A green row tint alone; the Fluent 2 review dropped it because colour was the only cue and it looked like a second active row.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Checked fill (<code>accent-color</code>)</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Description</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Disabled label</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Invalid outline</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Card edge</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Checked card tint</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Fieldset edge (decorative)</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Listbox tick</td><td><code>--color-fg-on-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Row minimum height</td><td><code>--control-height-md</code></td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Box to label / row padding</td><td><code>--space-2</code></td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+          <tr><td>Horizontal group column gap</td><td><code>--space-6</code></td><td colspan="2"><span data-token="--space-6"></span></td></tr>
+          <tr><td>Card padding / radius</td><td><code>--space-4</code> / <code>--radius-md</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--radius-md"></span></td></tr>
+          <tr><td>Fieldset padding / radius</td><td><code>--space-4</code> / <code>--radius-md</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--radius-md"></span></td></tr>
+          <tr><td>Listbox mark radius</td><td><code>--radius-sm</code></td><td colspan="2"><span data-token="--radius-sm"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;fieldset class="fieldset" aria-describedby="remind-error"&gt;
+  &lt;legend&gt;Send reminders &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/legend&gt;
+  &lt;div class="check-group"&gt;
+    &lt;label class="check"&gt;&lt;input type="checkbox" name="remind" value="week" aria-invalid="true"&gt; One week before the due date&lt;/label&gt;
+    &lt;label class="check"&gt;&lt;input type="checkbox" name="remind" value="day" aria-invalid="true"&gt; One day before the due date&lt;/label&gt;
+  &lt;/div&gt;
+  &lt;p class="field__error" id="remind-error"&gt;&lt;svg class="icon" aria-hidden="true" …&gt;&lt;/svg&gt;&lt;span&gt;Choose at least one reminder.&lt;/span&gt;&lt;/p&gt;
+&lt;/fieldset&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.check</code></td><td>Row: 20px box, 8px gap, 44px minimum height. Use on a wrapping <code>&lt;label&gt;</code>, or on a <code>&lt;div&gt;</code> when a description sits beside a <code>&lt;label for&gt;</code>.</td></tr>
+        <tr><td><code>.check__text</code> / <code>.check__description</code></td><td>Stacks label and muted description.</td></tr>
+        <tr><td><code>.check--card</code></td><td>Bordered, padded card; accent edge and tint when checked.</td></tr>
+        <tr><td><code>.check-group</code> / <code>.check-group--horizontal</code></td><td>Vertical stack with no gap (rows supply the target), or wrapping row with a 24px column gap.</td></tr>
+        <tr><td><code>.fieldset</code> / <code>.fieldset--bare</code></td><td>Group with legend, bordered or plain.</td></tr>
+        <tr><td><code>checked</code>, <code>disabled</code></td><td>Native state.</td></tr>
+        <tr><td><code>el.indeterminate = true</code></td><td>Mixed state for a "select all" parent; script only.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>Danger outline around the box.</td></tr>
+        <tr><td><code>.combobox__check</code></td><td>Drawn selection mark inside listbox options; not a form control.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the "Right-to-left" checkbox in the "Mock states" control row (1.25rem box, <code>accent-color</code>, 44px label rows, 0.5rem gap); the option check mark <code>.combobox__check</code> (1.25rem, 4px radius, accent fill when selected, dashed when disabled); the Fluent 2 comparison's decision to show selection by the check mark, not a row tint.</li>
+      </ul>
+      <p>Derived: groups, descriptions, cards, indeterminate and invalid states are not in the mocks; they follow the system rules.</p>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The mock's checkbox changed the page direction immediately; documented as a switch case, with checkboxes reserved for values submitted with a form.</li>
+        <li>Combobox selected options had both a check mark and a green row tint; the tint is dropped, the mark is the cue.</li>
+        <li>Disabled options were meant to be italic with a dashed mark but rendered upright; <code>.combobox__option[aria-disabled]</code> now sets italic and the dashed mark.</li>
+        <li>Mock state panel text at 0.85rem snapped to <code>--font-size-sm</code>; checkbox labels in forms use 16px.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+<script>['v-all', 'm-ind-default', 'm-ind-hover', 'm-ind-focus', 'm-ind-active', 'm-ind-disabled', 'm-ind-invalid', 'th-ind-light', 'th-ind-dark'].forEach(function (id) { var el = document.getElementById(id); if (el) el.indeterminate = true; });</script>
+</body>
+</html>

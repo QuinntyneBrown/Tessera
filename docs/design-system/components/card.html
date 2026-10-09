@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card — Tessera design system</title>
+<meta name="description" content="Cards group one subject's content on a 12px-radius surface: default, interactive with one stretched link, header and footer, media, selected.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers</p>
+      <h1>Card</h1>
+      <p class="ds-lead">A card is a bordered surface that holds everything about one subject: a course, a live session, a lesson outline, the notes beside a player. It separates that subject from the page without adding meaning of its own.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>&lt;article&gt;</code> / <code>&lt;section&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a card for a self-contained unit that sits beside others or beside a main panel: a course in a catalogue grid, the "Try the interaction" notes beside a player, the SCORM course outline. Every mock uses this surface: a white (dark: sage-900) panel with a hairline <code>--color-border-default</code> edge and 12px corners.</p>
+      <ul>
+        <li><b>Default</b>: static content with a heading.</li>
+        <li><b>Interactive</b>: the whole card is clickable through <em>one</em> real link in its heading, stretched over the card. The card itself is never the control.</li>
+        <li><b>With header and footer</b>: a header row with title and meta or a badge, a footer row with actions above a divider.</li>
+        <li><b>Media</b>: a 16:9 image or poster flush with the top edge.</li>
+        <li><b>Selected</b>: accent edge and fill driven by a checkbox inside the card.</li>
+      </ul>
+      <p>Do not use a card for a single line of text (use a <a href="list.html">list</a>), for a status message (use an <a href="alert.html">alert</a>), or to wrap a whole page. Do not nest cards.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <article class="card" style="width: min(100%, 20rem);" aria-labelledby="card-anat-title">
+            <div class="card__header"><h3 id="card-anat-title">Workplace safety essentials</h3><span class="badge badge--success">Complete</span></div>
+            <div class="card__body"><p class="card__eyebrow">Required learning · 35 minutes</p></div>
+            <div class="card__footer"><span class="card__eyebrow">Due 14 Nov</span><button class="btn btn--sm" type="button">Review</button></div>
+          </article>
+          <span class="ds-callout" style="left: 10%; top: 10%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 18%; top: 28%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 18%; top: 50%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 18%; top: 74%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Container</b><small><code>.card</code>: <code>--color-bg-surface</code>, 1px <code>--color-border-default</code>, <code>--radius-lg</code> (12px). No shadow at rest.</small></div></li>
+          <li><div><b>Header</b><small><code>.card__header</code>: heading (<code>--text-h4</code>) and an optional badge or action; wraps; 20px padding, 12px below.</small></div></li>
+          <li><div><b>Body</b><small><code>.card__body</code>: 20px padding (<code>--space-5</code>); top padding drops after a header. Secondary text uses <code>.card__eyebrow</code>.</small></div></li>
+          <li><div><b>Footer</b><small><code>.card__footer</code>: hairline top divider, 16 × 20px padding, wrapping row with meta at the start and actions at the end.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: stretch;">
+          <div class="grid grid--auto" style="width: 100%;">
+            <section class="card" aria-labelledby="card-v-default">
+              <div class="card__body">
+                <h3 id="card-v-default" style="font: var(--text-h4);">Try the interaction</h3>
+                <ul style="margin: var(--space-2) 0 0; padding-inline-start: var(--space-5); color: var(--color-fg-muted); font: var(--text-body-sm);">
+                  <li><kbd class="kbd">Space</kbd> or <kbd class="kbd">K</kbd> pauses and resumes.</li>
+                  <li><kbd class="kbd">C</kbd> toggles captions.</li>
+                </ul>
+              </div>
+            </section>
+            <article class="card card--interactive" aria-labelledby="card-v-int">
+              <div class="card__header"><h3 id="card-v-int"><a class="card__link" href="#variants">Better conversations at work</a></h3><span class="badge badge--info">In progress</span></div>
+              <div class="card__body"><p class="card__eyebrow">4 activities · 2 of 4 complete</p></div>
+            </article>
+            <article class="card" aria-labelledby="card-v-hf">
+              <div class="card__header"><h3 id="card-v-hf">Thermal transfer, week 7</h3><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Live</span></div>
+              <div class="card__body"><p class="card__eyebrow">Lecture hall A · Dr. A. Okafor</p></div>
+              <div class="card__footer"><span class="card__eyebrow">Started 10:30</span><button class="btn btn--primary btn--sm" type="button">Join session</button></div>
+            </article>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Default (notes panel), interactive (one stretched link), with header and footer.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;article class="card card--interactive" aria-labelledby="c1"&gt;
+  &lt;div class="card__header"&gt;
+    &lt;h3 id="c1"&gt;&lt;a class="card__link" href="/courses/better-conversations"&gt;Better conversations at work&lt;/a&gt;&lt;/h3&gt;
+    &lt;span class="badge badge--info"&gt;In progress&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="card__body"&gt;&lt;p class="card__eyebrow"&gt;4 activities · 2 of 4 complete&lt;/p&gt;&lt;/div&gt;
+&lt;/article&gt;</code></pre></details>
+      </div>
+      <h3>Media and selected</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: stretch;">
+          <div class="grid grid--auto" style="width: 100%;">
+            <article class="card card--interactive" aria-labelledby="card-v-media">
+              <svg class="card__media" viewBox="0 0 160 90" aria-hidden="true" focusable="false"><rect x="20" y="50" width="120" height="30" rx="4" style="fill: var(--color-accent-subtle);"/><rect x="60" y="14" width="40" height="28" rx="3" style="fill: var(--color-border-default);"/></svg>
+              <div class="card__header"><h4 id="card-v-media" style="font: var(--text-h4);"><a class="card__link" href="#variants">Lecture hall A: recorded sessions</a></h4></div>
+              <div class="card__body"><p class="card__eyebrow">12 recordings · captions available</p></div>
+            </article>
+            <article class="card card--selected" aria-labelledby="card-v-sel">
+              <div class="card__header"><h4 id="card-v-sel" style="font: var(--text-h4);">Workplace safety essentials</h4></div>
+              <div class="card__body">
+                <p class="card__eyebrow">Required learning · 35 minutes</p>
+                <label class="check"><input type="checkbox" checked aria-describedby="card-v-sel"> <span>Assign this course</span></label>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Media is decorative (<code>aria-hidden</code>) unless it carries information; selected state comes from the checkbox inside.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Cards have one padding scale (20px, from the mocks' panels). Their width comes from the layout (grid columns or the wrapping sidebar layout), not from a size modifier."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">Cards have one padding scale (20px, from the mocks' panels). Their width comes from the layout (grid columns or the wrapping sidebar layout), not from a size modifier.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Only interactive and selectable cards have states. Hover and focus are forced with <code>data-state</code>; in products focus comes from <code>:has(.card__link:focus-visible)</code>, so the ring is drawn around the whole card while DOM focus stays on the link.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Unavailable</th><th scope="col">Selected</th><th scope="col">Loading</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Interactive</th>
+            <td><article class="card card--interactive" style="width: 12rem;" aria-labelledby="cs-1"><div class="card__body"><h3 id="cs-1" style="font: var(--text-h4);"><a class="card__link" href="#states">Ask better questions</a></h3></div></article></td>
+            <td><article class="card card--interactive" data-state="hover" style="width: 12rem;" aria-labelledby="cs-2"><div class="card__body"><h3 id="cs-2" style="font: var(--text-h4);"><a class="card__link" href="#states">Ask better questions</a></h3></div></article></td>
+            <td><article class="card card--interactive" data-state="focus" style="width: 12rem;" aria-labelledby="cs-3"><div class="card__body"><h3 id="cs-3" style="font: var(--text-h4);"><a class="card__link" href="#states">Ask better questions</a></h3></div></article></td>
+            <td><article class="card card--interactive" data-state="hover" style="width: 12rem;" aria-labelledby="cs-4"><div class="card__body"><h3 id="cs-4" style="font: var(--text-h4);"><a class="card__link" href="#states">Ask better questions</a></h3></div></article></td>
+            <td><article class="card" style="width: 12rem; border-style: dashed; --card-border: var(--color-border-strong);" aria-labelledby="cs-5"><div class="card__body"><h3 id="cs-5" style="font: var(--text-h4); color: var(--color-fg-disabled);">Put it into practice</h3><p class="card__eyebrow">Locked until "Give useful feedback" is complete.</p></div></article></td>
+            <td><article class="card card--interactive card--selected" style="width: 12rem;" aria-labelledby="cs-6"><div class="card__body"><h3 id="cs-6" style="font: var(--text-h4);"><a class="card__link" href="#states" aria-current="page">Ask better questions</a></h3><p class="card__eyebrow">Current activity</p></div></article></td>
+            <td><article class="card" style="width: 12rem;" aria-busy="true" aria-label="Loading course"><div class="card__body stack" style="--stack-gap: var(--space-2);"><span class="skeleton skeleton--title" aria-hidden="true"></span><span class="skeleton skeleton--text" style="--skeleton-width: 70%;" aria-hidden="true"></span></div></article></td>
+          </tr>
+          <tr><th scope="row">Selectable</th>
+            <td><article class="card" style="width: 12rem;" aria-labelledby="cs-7"><div class="card__body"><h3 id="cs-7" style="font: var(--text-h4);">Fire safety</h3><label class="check"><input type="checkbox" aria-describedby="cs-7"> <span>Assign</span></label></div></article></td>
+            <td><article class="card" style="width: 12rem; --card-border: var(--color-border-strong);" aria-labelledby="cs-8"><div class="card__body"><h3 id="cs-8" style="font: var(--text-h4);">Fire safety</h3><label class="check"><input type="checkbox" aria-describedby="cs-8"> <span>Assign</span></label></div></article></td>
+            <td><article class="card" style="width: 12rem;" aria-labelledby="cs-9"><div class="card__body"><h3 id="cs-9" style="font: var(--text-h4);">Fire safety</h3><label class="check"><input type="checkbox" data-state="focus" aria-describedby="cs-9"> <span>Assign</span></label></div></article></td>
+            <td><article class="card card--selected" style="width: 12rem;" aria-labelledby="cs-10"><div class="card__body"><h3 id="cs-10" style="font: var(--text-h4);">Fire safety</h3><label class="check"><input type="checkbox" checked aria-describedby="cs-10"> <span>Assign</span></label></div></article></td>
+            <td><article class="card" style="width: 12rem; border-style: dashed; --card-border: var(--color-border-strong);" aria-labelledby="cs-11"><div class="card__body"><h3 id="cs-11" style="font: var(--text-h4); color: var(--color-fg-disabled);">Fire safety</h3><label class="check"><input type="checkbox" disabled aria-describedby="cs-11"> <span>Assign</span></label></div></article></td>
+            <td><article class="card card--selected" style="width: 12rem;" aria-labelledby="cs-12"><div class="card__body"><h3 id="cs-12" style="font: var(--text-h4);">Fire safety</h3><label class="check"><input type="checkbox" checked aria-describedby="cs-12"> <span>Assign</span></label></div></article></td>
+            <td>–</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Hover</b>: the edge strengthens to <code>--color-border-strong</code> and <code>--shadow-2</code> appears. No movement.</li>
+        <li><b>Focus</b>: the shared amber ring around the whole card, 2px outside it.</li>
+        <li><b>Active</b>: same as hover; navigation starts on release.</li>
+        <li><b>Unavailable</b>: no link, dashed strong edge, and the reason in text ("Locked until…"), the SCORM outline's locked-activity rule. Never a link that does nothing.</li>
+        <li><b>Selected / current</b>: <code>.card--selected</code> (accent edge plus 1px inset ring and <code>--color-accent-subtle</code> fill), backed by a checked checkbox or <code>aria-current</code>, never by colour alone.</li>
+        <li><b>Loading</b>: <code>aria-busy="true"</code> on the card with <a href="skeleton.html">skeleton</a> lines; the grid's live region says when results arrive.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack">
+          <article class="card card--interactive" aria-labelledby="ct-l1"><div class="card__header"><h4 id="ct-l1" style="font: var(--text-h4);"><a class="card__link" href="#states">Better conversations at work</a></h4><span class="badge badge--info">In progress</span></div><div class="card__body"><p class="card__eyebrow">2 of 4 complete</p></div></article>
+          <article class="card card--selected" aria-labelledby="ct-l2"><div class="card__body"><h4 id="ct-l2" style="font: var(--text-h4);">Workplace safety essentials</h4><p class="card__eyebrow">Selected</p></div></article>
+        </div></div>
+        <div data-theme="dark"><div class="stack">
+          <article class="card card--interactive" aria-labelledby="ct-d1"><div class="card__header"><h4 id="ct-d1" style="font: var(--text-h4);"><a class="card__link" href="#states">Better conversations at work</a></h4><span class="badge badge--info">In progress</span></div><div class="card__body"><p class="card__eyebrow">2 of 4 complete</p></div></article>
+          <article class="card card--selected" aria-labelledby="ct-d2"><div class="card__body"><h4 id="ct-d2" style="font: var(--text-h4);">Workplace safety essentials</h4><p class="card__eyebrow">Selected</p></div></article>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Cards fill their grid track. Catalogue grids use <code>.grid--auto</code> (<code>minmax(min(100%, 18rem), 1fr)</code>): one column on phones, as many 18rem columns as fit above.</li>
+        <li>Panel cards beside a main area use the wrapping <a href="layout-grid.html">sidebar layout</a>: the side card stacks above the main one as soon as the main cannot keep 30rem, as the SCORM outline and the notes panels do.</li>
+        <li>Header and footer rows wrap: the badge drops under the title and actions under the meta rather than squeezing. Text never truncates inside a card; titles wrap.</li>
+        <li>Below <code>--layout-breakpoint-md</code> the mocks reduced panel padding to 16px; cards keep 20px, which still leaves 248px of content at 320px.</li>
+        <li>Media keeps 16:9 at every width and scales with the card.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The card reads <code>--card-bg</code> (<code>--color-bg-surface</code>) and <code>--card-border</code> (<code>--color-border-default</code>); hover sets the border to <code>--color-border-strong</code>, selected sets both to the accent pair. A host changes card surfaces by overriding these two tokens.</p>
+      <pre><code>/* Cards on a sunken host page */
+.host-dashboard .card { --card-bg: var(--color-bg-surface-raised); }</code></pre>
+      <p>In the dark theme the surface is <code>--palette-sage-900</code> on a <code>--palette-sage-950</code> canvas with a <code>--palette-sage-700</code> edge; elevation comes from the lighter surface, not the shadow. In the shipped packages these are <code>--t-colorNeutralBackground1</code> and <code>--t-colorNeutralStroke1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No widget role. Use <code>&lt;article&gt;</code> for a self-contained item in a collection (a course) and <code>&lt;section&gt;</code> or <code>&lt;aside&gt;</code> for a panel (notes, outline), labelled by its heading via <code>aria-labelledby</code>. A collection of cards is a <code>&lt;ul&gt;</code> when the count matters. The interactive card follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/link/">APG Link pattern</a>: one real link in the heading, stretched over the card with a pseudo-element.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches the card's link once, then any other control inside the card (checkbox, footer buttons) in DOM order.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows the card's link.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Toggles the selection checkbox when it has focus.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The ring is drawn around the card (<code>outline</code> on <code>.card--interactive:has(.card__link:focus-visible)</code>) while the link keeps DOM focus, so screen readers announce the link name and sighted keyboard users see the whole target. Buttons inside an interactive card must sit above the stretched link (<code>position: relative; z-index: var(--z-raised)</code>) or they cannot be clicked.</p>
+      <h3>Labelling</h3>
+      <p>The link text is the card's title, so the accessible name is short ("Better conversations at work, link"). Do not wrap the whole card in <code>&lt;a&gt;</code>: it makes the name the entire card text. Badges and meta follow the link in reading order and are read as plain text. Selection checkboxes reference the card heading with <code>aria-describedby</code> so "Assign this course" is announced with the course name.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Title on card</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Meta on card</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Title on selected card</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Meta on selected card</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Selected edge on page</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Hover edge on page</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on page</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-canvas" data-min="3"></span></div>
+      </div>
+      <p>The resting edge (<code>--color-border-default</code>) is decorative: the card is not a control, so 1.4.11 does not apply. Interactive cards are identified by their underlined-on-hover title and focus ring, not by the edge. Under <code>prefers-contrast: more</code> the edge becomes <code>--color-border-strong</code>.</p>
+      <h3>Motion</h3>
+      <p>Border colour and shadow transition over <code>--duration-fast</code>; reduced motion zeroes it. Cards never lift, scale or tilt on hover.</p>
+      <h3>Touch</h3>
+      <p>The whole interactive card is the target, far above 44px. Inner buttons are separate targets with at least 8px from the card edge. Hover styles are cosmetic and not needed to find the link.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Lead with the title: the course or session name, in sentence case as the author wrote it.</li>
+        <li>Meta is one line of facts separated by middle dots: "Required learning · 35 minutes", "Lecture hall A · Dr. A. Okafor".</li>
+        <li>Status goes in a <a href="badge.html">badge</a> in the header ("In progress", "Complete", "Live"), never as coloured card edges alone.</li>
+        <li>Footer actions are verbs naming the next step: "Join session", "Resume lesson", "Review".</li>
+        <li>No "Read more" link: the title is the link.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><article class="card card--interactive" style="width: 100%;" aria-labelledby="cdd-1"><div class="card__body"><h3 id="cdd-1" style="font: var(--text-h4);"><a class="card__link" href="#do-dont">Give useful feedback</a></h3><p class="card__eyebrow">Activity 3 of 4</p></div></article></div><figcaption>Make the heading the one real link and stretch it over the card.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><a href="#do-dont" class="card" style="width: 100%; text-decoration: none;"><span class="card__body"><span style="font: var(--text-h4);">Give useful feedback</span><span class="card__eyebrow" style="display: block;">Activity 3 of 4 · 10 minutes · Not reported · Last opened 3 days ago</span></span></a></div><figcaption>Wrap the whole card in a link; the accessible name becomes every word inside it.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><article class="card" style="width: 100%;" aria-labelledby="cdd-3"><div class="card__header"><h3 id="cdd-3">Thermal transfer, week 7</h3><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Live</span></div></article></div><figcaption>State status in text with a badge.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><article class="card" style="width: 100%; border-inline-start: var(--border-width-stripe) solid var(--color-danger-solid);" aria-labelledby="cdd-4"><div class="card__header"><h3 id="cdd-4">Thermal transfer, week 7</h3></div></article></div><figcaption>Signal status with a coloured edge only; it fails 1.4.1 and reads like an error notice.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><article class="card" style="width: 100%;" aria-labelledby="cdd-5"><div class="card__body"><h3 id="cdd-5" style="font: var(--text-h4);">Course outline</h3></div></article></div><figcaption>One radius for every panel: <code>--radius-lg</code> (12px), as the SCORM and video panels use.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><article class="card" style="width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-3);" aria-labelledby="cdd-6"><div class="card__body"><h3 id="cdd-6" style="font: var(--text-h4);">Course outline</h3></div></article></div><figcaption>A one-off radius and a popup shadow on a resting card; it reads as floating UI.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Surface (<code>--card-bg</code>)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Edge (<code>--card-border</code>)</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Edge, hover</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Title</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Meta (<code>.card__eyebrow</code>)</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Selected edge</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Selected fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Media placeholder</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-lg</code></td><td colspan="2"><span data-token="--radius-lg"></span></td></tr>
+          <tr><td>Padding</td><td><code>--space-5</code></td><td colspan="2"><span data-token="--space-5"></span></td></tr>
+          <tr><td>Header bottom / footer block padding</td><td><code>--space-3</code> / <code>--space-4</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Hover shadow</td><td><code>--shadow-2</code></td><td colspan="2"><span data-token="--shadow-2"></span></td></tr>
+          <tr><td>Transition</td><td><code>--duration-fast</code>, <code>--ease-standard</code></td><td colspan="2"><span data-token="--duration-fast"></span> / <span data-token="--ease-standard"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;ul class="grid grid--auto" role="list"&gt;
+  &lt;li&gt;
+    &lt;article class="card card--interactive" aria-labelledby="course-42"&gt;
+      &lt;img class="card__media" src="poster.jpg" alt=""&gt;
+      &lt;div class="card__header"&gt;
+        &lt;h3 id="course-42"&gt;&lt;a class="card__link" href="/courses/42"&gt;Better conversations at work&lt;/a&gt;&lt;/h3&gt;
+        &lt;span class="badge badge--info"&gt;In progress&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class="card__body"&gt;&lt;p class="card__eyebrow"&gt;4 activities · 2 of 4 complete&lt;/p&gt;&lt;/div&gt;
+    &lt;/article&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.card</code></td><td>Surface, hairline edge, 12px radius, column flex.</td></tr>
+        <tr><td><code>.card__header</code> <code>.card__body</code> <code>.card__footer</code></td><td>Regions with 20px padding; footer adds a top divider.</td></tr>
+        <tr><td><code>.card__eyebrow</code></td><td>Muted small meta text.</td></tr>
+        <tr><td><code>.card__media</code></td><td>Flush 16:9 media with top corners rounded.</td></tr>
+        <tr><td><code>.card--interactive</code> + <code>.card__link</code></td><td>Stretched link; hover edge and shadow; focus ring on the card.</td></tr>
+        <tr><td><code>.card--selected</code></td><td>Accent edge, inset ring and subtle fill; pair with a checked checkbox or <code>aria-current</code>.</td></tr>
+        <tr><td><code>aria-busy="true"</code></td><td>Loading content; fill with skeletons.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the assignment form <code>.card</code> (1.5rem padding, 12px radius, divider edge) and the <code>.notes</code> panel beside it.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the player <code>.card</code> and <code>.notes</code> panel (12px radius, 1.25rem padding, divider edge), session metadata.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: the <code>.sidebar</code> outline and <code>.player</code> panels, the current-lesson accent treatment and the locked-activity reason.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Panel padding was 1.5rem (combobox), 1.25rem (video, SCORM sidebar head) and 1rem / 0.5rem on narrow screens; normalised to <code>--space-5</code> (20px) at every width.</li>
+        <li>Radius was written as <code>0.75rem</code> and <code>12px</code>; both are <code>--radius-lg</code>.</li>
+        <li>Notes panels used 0.9rem text and 1.2rem list indent; snapped to <code>--font-size-sm</code> and <code>--space-5</code>.</li>
+        <li>The SCORM sidebar used a 15.5rem flex basis; kept in <code>.sidebar-layout</code>, see <a href="layout-grid.html">container, grid and stack</a>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

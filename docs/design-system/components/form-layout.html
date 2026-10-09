@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form layout — Tessera design system</title>
+<meta name="description" content="Form layout arranges fields, fieldsets and actions: single column, two column, inline, the actions bar, the error summary and the submitting state.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Form layout</h1>
+      <p class="ds-lead">Form layout places fields, groups and actions so a form reads top to bottom in one pass: one column by default, paired fields only where they belong together, and one actions bar at the end.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;form&gt;</code>, <code>&lt;fieldset&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use these layout classes for every form: assigning learners, scheduling a session, editing course settings, filtering a table. Each control inside is a <a href="form-field.html">form field</a> (label, control, hint, error); this page covers how fields sit together, how groups are named, where actions go, and how a form reports errors and progress.</p>
+      <ul>
+        <li><b>Single column</b> is the default. People scan down one edge and never miss a field.</li>
+        <li><b>Two column</b> only for short fields that are read as a pair: start and end date, first and last name.</li>
+        <li><b>Inline</b> for one-line filter or search forms above a table.</li>
+        <li><b>Settings that apply immediately</b> need no form or actions bar; use <a href="switch.html">switches</a>.</li>
+        <li>For the end-to-end flow (validation timing, saving, success) see the <a href="../patterns/forms.html">forms pattern</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <form class="form" style="width: 100%;" novalidate aria-label="Anatomy example">
+            <div class="field"><label class="field__label" for="an-title">Session title</label><input class="input" id="an-title" value="Workplace safety essentials"></div>
+            <div class="form__row form__row--2">
+              <div class="field"><label class="field__label" for="an-start">Start date</label><input class="input" type="date" id="an-start" value="2026-11-02"></div>
+              <div class="field"><label class="field__label" for="an-end">End date</label><input class="input" type="date" id="an-end" value="2026-11-30"></div>
+            </div>
+            <fieldset class="fieldset"><legend>Session format</legend><div class="check-group check-group--horizontal"><label class="check"><input type="radio" name="an-format" checked><span class="check__text">In person</span></label><label class="check"><input type="radio" name="an-format"><span class="check__text">Online</span></label></div></fieldset>
+            <div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Save session</button></div>
+          </form>
+          <span class="ds-callout" style="left: 4%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 52%; top: 34%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 4%; top: 58%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 4%; top: 84%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Form and field stack</b><small><code>.form</code>: a column, max 40rem wide, 24px (<code>--space-6</code>) between fields and rows.</small></div></li>
+          <li><div><b>Row</b><small><code>.form__row</code>, one column; <code>.form__row--2</code> becomes two equal columns from 48rem, 24px apart.</small></div></li>
+          <li><div><b>Fieldset</b><small><code>.fieldset</code> with a <code>&lt;legend&gt;</code> names a group (radios, checkboxes, an address). 1px <code>--color-border-default</code>, 16px padding; <code>.fieldset--bare</code> drops the frame.</small></div></li>
+          <li><div><b>Actions bar</b><small><code>.form__actions</code>: top divider, 16px above, buttons at the end edge with 12px between; primary last. Stacks full width, primary on top, below 48rem.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Single column</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <form class="form" style="width: 100%;" novalidate aria-label="Single column example">
+            <div class="field"><label class="field__label" for="v1-title">Session title</label><input class="input" id="v1-title" autocomplete="off" value="Workplace safety essentials"></div>
+            <div class="field"><label class="field__label" for="v1-room">Location</label><select class="select" id="v1-room"><option>Lecture hall A</option><option>Lecture hall B</option><option>Online</option></select></div>
+            <div class="field"><label class="field__label" for="v1-notes">Notes for learners <span class="field__required">(optional)</span></label><textarea class="textarea" id="v1-notes" aria-describedby="v1-notes-hint"></textarea><p class="field__hint" id="v1-notes-hint">Shown on the session page.</p></div>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>The default. Labels above controls, one field per row.</span><span><code>.form</code></span></div>
+      </div>
+      <h3>Two column</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <form class="form" style="width: 100%;" novalidate aria-label="Two column example">
+            <div class="form__row form__row--2">
+              <div class="field"><label class="field__label" for="v2-start">Start date</label><input class="input" type="date" id="v2-start" value="2026-11-02"></div>
+              <div class="field"><label class="field__label" for="v2-end">End date</label><input class="input" type="date" id="v2-end" value="2026-11-30"></div>
+            </div>
+            <div class="form__row form__row--2">
+              <div class="field"><label class="field__label" for="v2-given">Given name</label><input class="input" id="v2-given" autocomplete="given-name" value="Katherine"></div>
+              <div class="field"><label class="field__label" for="v2-family">Family name</label><input class="input" id="v2-family" autocomplete="family-name" value="Johnson"></div>
+            </div>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>Pairs only. Below 48rem the row collapses to one column in the same order.</span><span><code>.form__row--2</code></span></div>
+      </div>
+      <h3>Inline</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <form class="form__inline" role="search" aria-label="Filter learners" novalidate>
+            <div class="field" style="flex: 1 1 14rem;"><label class="field__label" for="v3-q">Search learners</label><input class="input" type="search" id="v3-q" placeholder="Name or email"></div>
+            <div class="field" style="flex: 0 1 12rem;"><label class="field__label" for="v3-status">Status</label><select class="select" id="v3-status"><option>All statuses</option><option>Not started</option><option>In progress</option><option>Completed</option></select></div>
+            <button class="btn btn--primary" type="submit">Apply filters</button>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>Fields and the button align on their bottom edge and wrap as a group.</span><span><code>.form__inline</code></span></div>
+      </div>
+      <h3>Actions bar</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="form__actions" style="justify-content: space-between; align-items: center;">
+            <p class="field__hint">2 learners selected</p>
+            <button class="btn btn--primary" type="button">Preview assignment</button>
+          </div>
+          <div class="form__actions">
+            <button class="btn btn--ghost" type="button" style="margin-inline-end: auto;">Reset</button>
+            <button class="btn" type="button">Cancel</button>
+            <button class="btn btn--primary" type="button">Save session</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Top: the combobox mock's footer, a live count at the start and the one primary action at the end. Bottom: a low-emphasis Reset kept apart from Cancel and Save.</span><span><code>.form__actions</code></span></div>
+      </div>
+      <h3>Error summary</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="error-summary" tabindex="-1" aria-labelledby="v5-title">
+            <h3 id="v5-title">There are 2 problems with this session</h3>
+            <ul>
+              <li><a href="#s-inv-title">Enter a session title</a></li>
+              <li><a href="#s-inv-learners">Select at least one learner</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Appears at the top of the form on submit when there is more than one error; takes focus; each link moves focus to its field. See the invalid state below.</span><span><code>.error-summary</code></span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. Form spacing is fixed to the 4px scale (24px between fields, 12px between actions); controls inside use their own sizes, which default to 44px."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. Form spacing is fixed to the 4px scale (24px between fields, 12px between actions); controls inside use their own sizes, which default to 44px.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The form's own states live in its actions bar and its error reporting. Pointer and focus states are forced with <code>data-state</code>; products get them from <code>:hover</code>, <code>:focus-visible</code>, <code>:active</code>, <code>disabled</code> and <code>aria-busy</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Action</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Submitting</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Primary (submit)</th><td><button class="btn btn--primary" type="button">Save session</button></td><td><button class="btn btn--primary" type="button" data-state="hover">Save session</button></td><td><button class="btn btn--primary" type="button" data-state="focus">Save session</button></td><td><button class="btn btn--primary" type="button" data-state="active">Save session</button></td><td><button class="btn btn--primary" type="button" disabled>Save session</button></td><td><button class="btn btn--primary" type="button" aria-busy="true"><span>Save session</span></button></td></tr>
+          <tr><th scope="row">Secondary (cancel)</th><td><button class="btn" type="button">Cancel</button></td><td><button class="btn" type="button" data-state="hover">Cancel</button></td><td><button class="btn" type="button" data-state="focus">Cancel</button></td><td><button class="btn" type="button" data-state="active">Cancel</button></td><td><button class="btn" type="button" disabled>Cancel</button></td><td><button class="btn" type="button">Cancel</button></td></tr>
+          <tr><th scope="row">Error summary link</th><td><a class="link" href="#s-inv-title">Enter a session title</a></td><td><a class="link" href="#s-inv-title" data-state="hover">Enter a session title</a></td><td><a class="link" href="#s-inv-title" data-state="focus">Enter a session title</a></td><td><a class="link" href="#s-inv-title" data-state="active">Enter a session title</a></td><td><small>Not applicable: links are never disabled.</small></td><td><small>Summary hidden while submitting.</small></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Invalid (after submit)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <form class="form" style="width: 100%;" novalidate aria-label="Invalid example">
+            <div class="error-summary" tabindex="-1" aria-labelledby="s-inv-sum">
+              <h3 id="s-inv-sum">There are 2 problems with this session</h3>
+              <ul><li><a href="#s-inv-title">Enter a session title</a></li><li><a href="#s-inv-learners">Select at least one learner</a></li></ul>
+            </div>
+            <div class="field"><label class="field__label" for="s-inv-title">Session title</label><input class="input" id="s-inv-title" aria-invalid="true" aria-describedby="s-inv-title-err"><p class="field__error" id="s-inv-title-err"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Enter a session title.</span></p></div>
+            <div class="field combobox combobox--invalid">
+              <label class="field__label" for="s-inv-learners">Learners <span class="field__required">(required)</span></label>
+              <div class="combobox__field"><div class="combobox__input-row"><input class="combobox__input" id="s-inv-learners" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-required="true" aria-invalid="true" aria-describedby="s-inv-learners-err s-inv-learners-hint" autocomplete="off" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div>
+              <p class="field__error" id="s-inv-learners-err"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Select at least one learner.</span></p>
+              <div class="field__below"><p class="field__hint" id="s-inv-learners-hint">Select one or more learners. Search to narrow the results.</p></div>
+            </div>
+            <div class="form__actions" style="justify-content: space-between; align-items: center;"><p class="field__hint">0 learners selected</p><button class="btn btn--primary" type="button">Preview assignment</button></div>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>With one error, focus goes straight to that field (the combobox mock focuses the learner input). With two or more, the summary appears, takes focus and lists them in field order.</span></div>
+      </div>
+
+      <h3>Submitting</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <form class="form" style="width: 100%;" novalidate aria-label="Submitting example">
+            <div class="field"><label class="field__label" for="s-sub-title">Session title</label><input class="input" id="s-sub-title" value="Workplace safety essentials" readonly></div>
+            <div class="field"><label class="field__label" for="s-sub-room">Location</label><select class="select" id="s-sub-room"><option>Lecture hall A</option></select></div>
+            <div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="submit" aria-busy="true"><span>Save session</span></button></div>
+            <p class="visually-hidden" role="status">Saving session…</p>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>The primary button keeps its width and name, shows a spinner and sets <code>aria-busy="true"</code>; repeat clicks are ignored. Fields stay readable; "Saving session…" goes to a status region. Cancel stays available for long saves.</span></div>
+      </div>
+
+      <h3>Submitted</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="form__actions" style="justify-content: space-between; align-items: center;"><p class="field__hint">2 learners selected</p><button class="btn btn--primary" type="button">Preview assignment</button></div>
+          <p class="message message--success" role="status">Preview only: 2 learners would be assigned to Workplace safety essentials.</p>
+        </div>
+        <div class="ds-example__caption"><span>The combobox mock confirms in a <code>role="status"</code> line under the actions bar. A save that leaves the page uses a <a href="toast.html">toast</a> instead.</span></div>
+      </div>
+
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="form"><div class="error-summary" aria-labelledby="t-light-sum"><h3 id="t-light-sum">There is 1 problem</h3><ul><li><a href="#t-light-title">Enter a session title</a></li></ul></div><div class="field"><label class="field__label" for="t-light-title">Session title</label><input class="input" id="t-light-title" aria-invalid="true"></div><div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Save</span></button></div></div></div>
+        <div data-theme="dark"><div class="form"><div class="error-summary" aria-labelledby="t-dark-sum"><h3 id="t-dark-sum">There is 1 problem</h3><ul><li><a href="#t-dark-title">Enter a session title</a></li></ul></div><div class="field"><label class="field__label" for="t-dark-title">Session title</label><input class="input" id="t-dark-title" aria-invalid="true"></div><div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Save</span></button></div></div></div>
+      </div>
+      <ul>
+        <li><b>Required</b> fields say "(required)" in the label and set <code>required</code> or <code>aria-required</code>; when most fields are required, mark the optional ones "(optional)" instead.</li>
+        <li><b>Validation timing</b>: errors appear when a field is left (touched) or on submit, never while typing the first time. The form uses <code>novalidate</code> so the system's messages replace browser bubbles.</li>
+        <li><b>Disabled form</b>: put <code>disabled</code> on a wrapping <code>&lt;fieldset&gt;</code> and explain why above it; do not disable only the submit button without a reason.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><code>.form</code> is fluid up to 40rem, so lines of labels and hints stay readable on wide screens; on phones it takes the full column with <code>--layout-margin</code> on each side.</li>
+        <li><code>.form__row--2</code> is one column below <code>--layout-breakpoint-md</code> (48rem / 768px) and two equal columns from there; the DOM order (start, then end) is the reading order at every width.</li>
+        <li><code>.form__actions</code> below 48rem stacks buttons full width in reverse order, so the primary action is on top and nearest the thumb; from 48rem they sit in a row at the end edge.</li>
+        <li><code>.form__inline</code> wraps fields and the button onto new rows as space runs out; at 320px each item is full width.</li>
+        <li>At 400% zoom or with 200% text every layout reaches its one-column form; nothing scrolls horizontally.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Form layout has no component tokens. It reads spacing (<code>--space-3</code>, <code>--space-4</code>, <code>--space-6</code>), <code>--color-border-default</code> for the actions divider and fieldset frame, and the danger tokens for the error summary (<code>--color-danger-bg</code>, <code>--color-danger-border</code>, <code>--color-danger-solid</code> stripe, <code>--color-danger-fg</code> heading and links). The dark theme swaps those semantic values; in forced colours the summary keeps its border and stripe as system colours. Re-skin the fields and buttons through their own component tokens.</p>
+      <p>See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native <code>&lt;form&gt;</code> with <code>novalidate</code> and the system's own messages, following the <a href="https://www.w3.org/WAI/tutorials/forms/">W3C WAI forms tutorial</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">Understanding SC 3.3.1 Error Identification</a>. Groups are <code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code>. A filter form takes <code>role="search"</code>. The error summary is <code>role="alert"</code> with <code>tabindex="-1"</code> so it can receive focus.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through fields in visual order, then the actions bar (Cancel, then the primary action).</td></tr>
+        <tr><td><kbd>Enter</kbd> in a text field</td><td>Submits the form (native). In the combobox, Enter submits only when the popup is closed.</td></tr>
+        <tr><td><kbd>Enter</kbd> on an error summary link</td><td>Moves focus to the field and scrolls it into view with its label visible.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>No form-level action. Inside a dialog it closes the dialog (confirm first if there are unsaved changes).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>On submit with one error, focus moves to that field; with several, to the error summary. After a successful save, focus stays on the primary button and the result is announced, or moves to the new page's heading. Fields use the shared 3px amber ring. <code>scroll-padding-top</code> keeps focused fields clear of sticky headers.</p>
+      <h3>Labelling</h3>
+      <p>Every control has a visible label; required and optional are in the label text. Hints and errors are linked with <code>aria-describedby</code>, error first. Invalid fields set <code>aria-invalid="true"</code>. Each summary link repeats the field's error text so it makes sense alone. Form names: a form that is a landmark (search) has an <code>aria-label</code>; others take their name from the page heading.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Summary heading on its background</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Summary text on its background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Summary stripe on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Field error on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Legend and labels on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hints on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Primary label on primary</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="4.5"></span></div>
+      </div>
+      <p>The actions divider and fieldset frame use <code>--color-border-default</code>; they are decorative grouping, exempt from 3:1, and the legend carries the group's meaning.</p>
+      <h3>Motion</h3>
+      <p>None in the layout. The submitting spinner keeps turning under reduced motion, slowed to 2 s per revolution, because it reports status.</p>
+      <h3>Touch</h3>
+      <p>Stacked full-width actions below 48rem give 44px-tall, full-width targets with 12px between them. Fields are 44px tall; 24px between fields keeps neighbouring targets apart.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The primary action names the outcome: "Save session", "Preview assignment", "Assign 2 learners". Never "Submit" or "OK".</li>
+        <li>The summary heading counts the problems: "There are 2 problems with this session". Each link uses the field's error message: "Enter a session title".</li>
+        <li>Error messages say what to do, in the field's terms: "Select at least one learner.", "Enter an end date after the start date."</li>
+        <li>Legends are short noun phrases or questions: "Session format", "Who should attend?"</li>
+        <li>Live counts beside the primary action use numbers and the item noun: "2 learners selected".</li>
+        <li>Confirmations state the result and the object: "Preview only: 2 learners would be assigned to Workplace safety essentials."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="form__row form__row--2"><div class="field"><label class="field__label" for="dd-s">Start date</label><input class="input" type="date" id="dd-s"></div><div class="field"><label class="field__label" for="dd-e">End date</label><input class="input" type="date" id="dd-e"></div></div></div><figcaption>Pair two short fields that are read together.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="form__row form__row--2"><div class="field"><label class="field__label" for="dd-t">Session title</label><input class="input" id="dd-t"></div><div class="field"><label class="field__label" for="dd-n">Notes for learners</label><input class="input" id="dd-n"></div></div></div><figcaption>Put unrelated fields side by side; people skip the right-hand column.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="form__actions" style="justify-content: space-between; align-items: center; width: 100%;"><p class="field__hint">2 learners selected</p><button class="btn btn--primary" type="button">Preview assignment</button></div></div><figcaption>One primary action at the end of the actions bar, with context beside it (combobox mock footer).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="cluster"><button class="btn btn--primary" type="button">Preview assignment</button><button class="btn btn--primary" type="button">Reset</button></div></div><figcaption>Two primaries, or a destructive Reset that looks as important as the main action.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="form__actions" style="width: 100%;"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Save session</span></button></div></div><figcaption>Show progress on the button with <code>aria-busy</code> and keep its width.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="form__actions" style="width: 100%;"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" disabled>Saving…</button></div></div><figcaption>Swap the label and disable the button: the name changes under the cursor and focus is lost.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Actions divider, fieldset frame</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Summary background</td><td><code>--color-danger-bg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td></tr>
+          <tr><td>Summary border</td><td><code>--color-danger-border</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-border" data-swatch></i><span data-token="--color-danger-border"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-border" data-swatch></i><span data-token="--color-danger-border"></span></span></td></tr>
+          <tr><td>Summary stripe</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Summary heading and links, field errors</td><td><code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td></tr>
+          <tr><td>Legend and labels</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Field gap / row gap</td><td><code>--space-6</code></td><td colspan="2"><span data-token="--space-6"></span></td></tr>
+          <tr><td>Action gap / actions top padding</td><td><code>--space-3</code> / <code>--space-4</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Fieldset padding / radius</td><td><code>--space-4</code> / <code>--radius-md</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--radius-md"></span></td></tr>
+          <tr><td>Summary padding / stripe width</td><td><code>--space-4</code> <code>--space-5</code> / <code>--border-width-stripe</code></td><td colspan="2"><span data-token="--space-4"></span> <span data-token="--space-5"></span> / <span data-token="--border-width-stripe"></span></td></tr>
+          <tr><td>Two-column breakpoint, action stacking</td><td><code>--layout-breakpoint-md</code></td><td colspan="2"><span data-token="--layout-breakpoint-md"></span></td></tr>
+          <tr><td>Legend font / summary heading</td><td><code>--text-label</code> / <code>--text-h4</code></td><td colspan="2"><span data-token="--text-label"></span> / <span data-token="--text-h4"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;form class="form" novalidate aria-labelledby="page-title"&gt;
+  &lt;div class="error-summary" role="alert" tabindex="-1" aria-labelledby="errors-title" hidden&gt;
+    &lt;h2 id="errors-title"&gt;There are 2 problems with this session&lt;/h2&gt;
+    &lt;ul&gt;&lt;li&gt;&lt;a href="#title"&gt;Enter a session title&lt;/a&gt;&lt;/li&gt;…&lt;/ul&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;label class="field__label" for="title"&gt;Session title&lt;/label&gt;
+    &lt;input class="input" id="title" name="title" required&gt;
+  &lt;/div&gt;
+
+  &lt;div class="form__row form__row--2"&gt;
+    &lt;div class="field"&gt;…Start date…&lt;/div&gt;
+    &lt;div class="field"&gt;…End date…&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;fieldset class="fieldset"&gt;&lt;legend&gt;Session format&lt;/legend&gt;…&lt;/fieldset&gt;
+
+  &lt;div class="form__actions"&gt;
+    &lt;button class="btn" type="button"&gt;Cancel&lt;/button&gt;
+    &lt;button class="btn btn--primary" type="submit"&gt;&lt;span&gt;Save session&lt;/span&gt;&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p class="visually-hidden" role="status"&gt;&lt;/p&gt;
+&lt;/form&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.form</code></td><td>Column of fields and rows, 24px apart, max 40rem.</td></tr>
+        <tr><td><code>.form__row</code></td><td>Grid row, one column.</td></tr>
+        <tr><td><code>.form__row--2</code></td><td>Two equal columns from 48rem.</td></tr>
+        <tr><td><code>.form__inline</code></td><td>Wrapping row aligned to the bottom edge, 12px gaps.</td></tr>
+        <tr><td><code>.form__actions</code></td><td>Divider and end-aligned buttons; full-width reversed stack below 48rem.</td></tr>
+        <tr><td><code>.fieldset</code>, <code>.fieldset--bare</code></td><td>Framed or unframed group with a legend.</td></tr>
+        <tr><td><code>.error-summary</code></td><td>Danger panel with a stripe, heading and list of links.</td></tr>
+        <tr><td><code>novalidate</code></td><td>Turns off browser bubbles so the system's messages show.</td></tr>
+        <tr><td><code>aria-busy="true"</code> on the submit button</td><td>Submitting: spinner, label hidden, width and name kept, clicks ignored.</td></tr>
+        <tr><td><code>data-state="hover|focus|active"</code></td><td>Documentation only: forces a pointer or focus state.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the assignment card is a <code>novalidate</code> form whose footer holds the live count ("2 learners selected") and the primary "Preview assignment"; submitting with no learner shows the required error under the field and moves focus to the input; a valid submit closes the popup and writes "Preview only: 2 learners would be assigned to Workplace safety essentials." to a <code>role="status"</code> line; the Preview controls are a dashed <code>&lt;fieldset&gt;</code> with a legend.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: the actions row (Previous / Continue / Exit course) informs the actions-bar wrapping.</li>
+      </ul>
+      <p>Two-column rows, inline forms, the error summary and the submitting state are derived; they follow the system rules.</p>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The combobox mock's footer used 2rem top margin and 1.25rem padding; normalised to <code>--space-4</code> above the actions and <code>--space-6</code> between fields.</li>
+        <li>Button radius 6px (0.375rem) normalised to <code>--radius-md</code> 8px.</li>
+        <li>Breakpoint 40em written as <code>max-width</code>; actions now stack below <code>--layout-breakpoint-md</code> (48rem), min-width first.</li>
+        <li>Count text 0.875rem kept as <code>--font-size-sm</code>; focus offset 3px normalised to 2px.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

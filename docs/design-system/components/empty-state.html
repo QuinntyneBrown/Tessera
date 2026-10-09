@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empty state — Tessera design system</title>
+<meta name="description" content="Empty states explain why a region has nothing to show and what to do next: first-run, no results, no permission and error, in compact and full sizes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Empty state</h1>
+      <p class="ds-lead">An empty state fills a region that has nothing to show yet, or nothing that matches. It says what happened and what to do next, so an empty list never looks like a broken one.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">What happened + what to do next</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use an empty state inside a region (a list, a table, a panel, a popup, the video stage) when the region loaded successfully but has no items to show. There are four reasons a region is empty, and each gets its own copy:</p>
+      <ul>
+        <li><b>First run</b>: nothing has been created yet ("No assignments yet").</li>
+        <li><b>No results</b>: a search or filter matched nothing ("No learners match “Hoper”").</li>
+        <li><b>No permission</b>: content exists but this person cannot see it.</li>
+        <li><b>Error as empty</b>: the region could not load and has nothing to fall back on ("Learners could not be loaded").</li>
+      </ul>
+      <p>A finished session is a fifth, media-specific case: the video player's ended card ("Session ended · Live for 00:48:12") replaces the picture once a stream is over.</p>
+      <p>Use an <a href="error-page.html">error page</a> when the whole page cannot be shown, an <a href="alert.html">alert</a> when content is still shown but something is wrong, and a <a href="skeleton.html">skeleton</a> or <a href="spinner.html">spinner</a> while content is still loading. Never show an empty state before loading has finished. See the <a href="../patterns/empty-and-error-states.html">empty and error states pattern</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="empty-state" style="padding: var(--space-6);">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M9 11h6M12 8v6"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg></span>
+            <p class="empty-state__title">No assignments yet</p>
+            <p class="empty-state__body">Assign Better conversations at work to learners to track their progress here.</p>
+            <div class="empty-state__actions"><button class="btn btn--primary" type="button">Assign course</button><a href="#content">How assignments work</a></div>
+          </div>
+          <span class="ds-callout" style="left: 40%; top: 12%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 18%; top: 34%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 10%; top: 54%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 18%; top: 82%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Icon</b><small>48px circle (32px compact) in <code>--color-accent-subtle</code> with a 24px line icon; <code>aria-hidden</code>. No illustrations: they add weight without meaning.</small></div></li>
+          <li><div><b>Title</b><small><code>--text-h3</code> (18px bold; <code>--text-h4</code> compact). What happened. A heading at the right level in product.</small></div></li>
+          <li><div><b>Body</b><small>Muted, one sentence: what to do next, or why.</small></div></li>
+          <li><div><b>Actions (optional)</b><small>One primary action that resolves the emptiness, and optionally one link for help. Centred in full, start-aligned in compact.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>First run</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="justify-content: center;">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5"/></svg></span>
+            <p class="empty-state__title">No assignments yet</p>
+            <p class="empty-state__body">Assign a course to learners to track their progress here.</p>
+            <div class="empty-state__actions"><button class="btn btn--primary" type="button">Assign course</button></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>No results</h3>
+      <p>Echo the query, suggest the likely fix, and offer to clear filters. This is the combobox's custom guiding empty message.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="justify-content: center;">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span>
+            <p class="empty-state__title">No learners match “Hoper”</p>
+            <p class="empty-state__body">Check the spelling or search by email.</p>
+            <div class="empty-state__actions"><button class="btn" type="button">Clear search</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The default combobox popup says only "No results"; a host supplies the guiding message through <code>tComboboxEmpty</code>.</span></div>
+      </div>
+
+      <h3>No permission</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="justify-content: center;">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <p class="empty-state__title">You can’t see this team’s results</p>
+            <p class="empty-state__body">Only managers of Lecture hall A can view learner progress. Ask Grace Hopper for access.</p>
+            <div class="empty-state__actions"><button class="btn" type="button">Request access</button></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Error as empty</h3>
+      <p><code>.empty-state--danger</code> tints the icon. Use it when a region failed to load and has nothing else to show; keep the rest of the page working.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="justify-content: center;">
+          <div class="empty-state empty-state--danger">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg></span>
+            <p class="empty-state__title">Learners could not be loaded</p>
+            <p class="empty-state__body">Your selections are safe. Try again in a moment.</p>
+            <div class="empty-state__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>Retry</button></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Ended (media)</h3>
+      <p>On the video stage the ended state is a scrim card over the last frame: title and duration, no actions. Focus moves to its heading if focus was inside the player.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="media-player" style="width: 100%; max-width: 32rem;">
+            <div class="media-player__stage">
+              <div class="media-player__overlay">
+                <div class="media-player__card">
+                  <p style="margin: 0; font: var(--text-h3); font-size: var(--font-size-xl);" tabindex="-1">Session ended</p>
+                  <p>Live for 00:48:12</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The player announces "Stream ended. It was live for 48 minutes." and disables play, mute and captions.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="media-player__overlay"&gt;
+  &lt;div class="media-player__card"&gt;
+    &lt;h3 id="ended-heading" tabindex="-1"&gt;Session ended&lt;/h3&gt;
+    &lt;p&gt;Live for 00:48:12&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p><b>Full</b> (default) is centred, up to 28rem wide, with 48px block padding; use it when the empty region is the main content of a page or panel. <b>Compact</b> (<code>.empty-state--compact</code>) is a start-aligned row with a 32px icon and 16px padding; use it inside popups, table bodies, sidebars and cards.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span>
+            <p class="empty-state__title">No courses match your filters</p>
+            <p class="empty-state__body">Remove a filter or search all courses.</p>
+            <div class="empty-state__actions"><button class="btn" type="button">Clear filters</button></div>
+          </div>
+          <div class="card" style="max-width: 24rem;">
+            <div class="empty-state empty-state--compact">
+              <span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span>
+              <div><p class="empty-state__title">No results</p><p class="empty-state__body">Try a different name or email.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Full in a page region; compact in a combobox-sized popup or card.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The empty state container is not interactive; its states are those of its action. States are forced with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Loading</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">First run</th>
+            <td><button class="btn btn--primary btn--sm" type="button">Assign course</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="hover">Assign course</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="focus">Assign course</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="active">Assign course</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" aria-disabled="true">Assign course</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" aria-busy="true"><span>Assign course</span></button></td></tr>
+          <tr><th scope="row">No results</th>
+            <td><button class="btn btn--sm" type="button">Clear search</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="hover">Clear search</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="focus">Clear search</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="active">Clear search</button></td>
+            <td><button class="btn btn--sm" type="button" disabled>Clear search</button></td>
+            <td>Not used: clearing is instant.</td></tr>
+          <tr><th scope="row">No permission</th>
+            <td><button class="btn btn--sm" type="button">Request access</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="hover">Request access</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="focus">Request access</button></td>
+            <td><button class="btn btn--sm" type="button" data-state="active">Request access</button></td>
+            <td><button class="btn btn--sm" type="button" aria-disabled="true">Request sent</button></td>
+            <td><button class="btn btn--sm" type="button" aria-busy="true"><span>Request access</span></button></td></tr>
+          <tr><th scope="row">Error</th>
+            <td><button class="btn btn--primary btn--sm" type="button">Retry</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="hover">Retry</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="focus">Retry</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" data-state="active">Retry</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" disabled>Retry</button></td>
+            <td><button class="btn btn--primary btn--sm" type="button" aria-busy="true"><span>Retry</span></button></td></tr>
+          <tr><th scope="row">Ended (media)</th>
+            <td colspan="2">No actions.</td>
+            <td colspan="4"><div class="media-player" style="max-width: 18rem;"><div class="media-player__stage" style="aspect-ratio: 16 / 7;"><div class="media-player__overlay"><div class="media-player__card"><p style="margin: 0; font: var(--text-h4);" tabindex="-1" data-state="focus">Session ended</p></div></div></div></div><small>Heading focused after the stream ends.</small></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light">
+          <div class="empty-state" style="padding: var(--space-4) 0;"><span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><p class="empty-state__title">No learners match “Hoper”</p><p class="empty-state__body">Check the spelling or search by email.</p></div>
+          <div class="empty-state empty-state--compact empty-state--danger" style="padding: var(--space-2) 0;"><span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg></span><div><p class="empty-state__title">Learners could not be loaded</p><p class="empty-state__body">Your selections are safe.</p></div></div>
+        </div>
+        <div data-theme="dark">
+          <div class="empty-state" style="padding: var(--space-4) 0;"><span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><p class="empty-state__title">No learners match “Hoper”</p><p class="empty-state__body">Check the spelling or search by email.</p></div>
+          <div class="empty-state empty-state--compact empty-state--danger" style="padding: var(--space-2) 0;"><span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg></span><div><p class="empty-state__title">Learners could not be loaded</p><p class="empty-state__body">Your selections are safe.</p></div></div>
+        </div>
+      </div>
+      <ul>
+        <li><b>Appearing</b>: only after loading completes. In the combobox, "No results" replaces "Loading learners…" in the status row and "No results found." is announced.</li>
+        <li><b>Resolved</b>: when the person acts (clears the search, creates the first item), the empty state is replaced by content; focus goes to the new item or stays on the control that was used.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Full empty states centre within their region and cap at 28rem; on phones they keep 24px inline padding and actions wrap, centred.</li>
+        <li>Compact empty states stay a row (icon + text) down to 320px; the text wraps beside the icon.</li>
+        <li>Use compact automatically inside containers narrower than about 20rem (popups, sidebars), even when the content type would normally get full.</li>
+        <li>On the video stage the ended card centres over the picture and wraps its text; at 320px the card's padding stays 20 × 24px.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The empty state reads <code>--color-accent-subtle</code> and <code>--color-fg-accent</code> (icon), <code>--color-fg-default</code> (title) and <code>--color-fg-muted</code> (body); the danger variant swaps the icon to <code>--color-danger-bg</code> / <code>--color-danger-icon</code>. The ended card reads <code>--color-media-scrim</code> and <code>--color-media-fg</code>, the same in both themes. There are no component tokens; re-skin by overriding semantic tokens on a wrapper. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Plain content: a heading, a paragraph and native buttons or links; no ARIA role. When an empty state replaces results after a search, announce it through the component's existing polite live region ("No results found.") rather than giving the empty state its own role. In a combobox the message lives in the popup's status row, outside the listbox, so the listbox never contains a fake option. See <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">Understanding 4.1.3 Status Messages</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Reaches the action and help link in order. The icon, title and body are not tab stops.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Activates the action.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>In a combobox popup, closes the popup (then clears the query), as with results.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Showing an empty state does not move focus, so a person typing in a search keeps their place. The exception is the media ended card: if focus was inside the player, focus moves to its heading (<code>tabindex="-1"</code>) because the controls it was on are now disabled.</p>
+      <h3>Labelling</h3>
+      <p>The title is a heading so the empty region is findable by heading navigation. The icon is <code>aria-hidden</code>. Actions name their result ("Clear search", "Assign course").</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Title on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Body on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Icon on icon circle</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Danger icon on circle</span><span class="ds-pair__ratio" data-contrast="--color-danger-icon|--color-danger-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>Ended card text on scrim</span><span class="ds-pair__ratio" data-contrast="--color-media-fg|--color-media-scrim" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Empty states appear in place without animation.</p>
+      <h3>Touch</h3>
+      <p>Actions are full 44px buttons with 12px between them; the help link has a 24px minimum target height.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <p>Formula: <b>what happened</b> (title) + <b>what to do next</b> (body and action).</p>
+      <table class="ds-table"><thead><tr><th scope="col">Case</th><th scope="col">Title</th><th scope="col">Body</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td>First run</td><td>No assignments yet</td><td>Assign a course to learners to track their progress here.</td><td>Assign course</td></tr>
+        <tr><td>No results</td><td>No learners match “Hoper”</td><td>Check the spelling or search by email.</td><td>Clear search</td></tr>
+        <tr><td>No permission</td><td>You can’t see this team’s results</td><td>Only managers of Lecture hall A can view learner progress. Ask Grace Hopper for access.</td><td>Request access</td></tr>
+        <tr><td>Error</td><td>Learners could not be loaded</td><td>Your selections are safe. Try again in a moment.</td><td>Retry</td></tr>
+        <tr><td>Ended</td><td>Session ended</td><td>Live for 00:48:12</td><td>(none)</td></tr>
+      </tbody></table>
+      <ul>
+        <li>Be specific: echo the query in curly quotes; name the course or team.</li>
+        <li>Don't blame ("You have no…" is fine; "You didn't…" is not) and don't joke; an empty assignment list can mean missed training.</li>
+        <li>One sentence of body text. If you need more, link to help.</li>
+        <li>Keep "No results" as a short fallback where space is tight (combobox status row), but prefer the guiding version.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="empty-state empty-state--compact"><span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><div><p class="empty-state__title">No learners match “Hoper”</p><p class="empty-state__body">Check the spelling or search by email.</p></div></div></div><figcaption>Echo the query and say what to try next (the combobox's custom empty template).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0; color: var(--color-fg-muted);">No results</p></div><figcaption>A bare "No results" when there is room for guidance; the person cannot tell a typo from a missing learner.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="empty-state empty-state--compact empty-state--danger"><span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg></span><div><p class="empty-state__title">Learners could not be loaded</p><p class="empty-state__body">Your selections are safe.</p><div class="empty-state__actions" style="justify-content: flex-start;"><button class="btn btn--sm" type="button">Retry</button></div></div></div></div><figcaption>Show a failed load as an error with Retry.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="empty-state empty-state--compact"><span class="empty-state__icon" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><div><p class="empty-state__title">No learners found</p></div></div></div><figcaption>Disguise a failed request as "no results"; people conclude the learners don't exist.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Icon circle</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Icon</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Danger circle / icon</td><td><code>--color-danger-bg</code> / <code>--color-danger-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><i data-token="--color-danger-icon" data-swatch></i><span data-token="--color-danger-icon"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><i data-token="--color-danger-icon" data-swatch></i><span data-token="--color-danger-icon"></span></span></td></tr>
+          <tr><td>Title</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Body</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Ended card</td><td><code>--color-media-scrim</code>, <code>--color-media-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-media-scrim" data-swatch></i><span data-token="--color-media-scrim"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-media-scrim" data-swatch></i><span data-token="--color-media-scrim"></span></span></td></tr>
+          <tr><td>Title font full / compact</td><td><code>--text-h3</code> / <code>--text-h4</code></td><td colspan="2"><span data-token="--text-h3"></span></td></tr>
+          <tr><td>Padding full / compact</td><td><code>--space-12</code> × <code>--space-6</code> / <code>--space-4</code></td><td colspan="2"><span data-token="--space-12"></span> × <span data-token="--space-6"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+          <tr><td>Icon shape</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+          <tr><td>Ended card radius / padding</td><td><code>--radius-lg</code> / <code>--space-5</code> × <code>--space-6</code></td><td colspan="2"><span data-token="--radius-lg"></span> / <span data-token="--space-5"></span> × <span data-token="--space-6"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="empty-state"&gt;
+  &lt;span class="empty-state__icon" aria-hidden="true"&gt;&lt;svg class="icon" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;&lt;/span&gt;
+  &lt;h2 class="empty-state__title"&gt;No assignments yet&lt;/h2&gt;
+  &lt;p class="empty-state__body"&gt;Assign a course to learners to track their progress here.&lt;/p&gt;
+  &lt;div class="empty-state__actions"&gt;
+    &lt;button class="btn btn--primary" type="button"&gt;Assign course&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.empty-state</code></td><td>Full, centred column, max 28rem.</td></tr>
+        <tr><td><code>.empty-state--compact</code></td><td>Start-aligned row with a 32px icon; wrap title and body in one <code>&lt;div&gt;</code>.</td></tr>
+        <tr><td><code>.empty-state--danger</code></td><td>Danger-tinted icon for failed loads.</td></tr>
+        <tr><td><code>.empty-state__icon</code> <code>__title</code> <code>__body</code> <code>__actions</code></td><td>Parts.</td></tr>
+        <tr><td><code>.media-player__card</code></td><td>Scrim card for the ended state on the video stage.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: "No results" in the popup status row and "No results found." announced; the custom template's guiding message "No learners match “…”. Check the spelling or search by email."; "Learners could not be loaded. Your selections are safe." with Retry.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the ended card (scrim card, 1.25rem title, "Live for 00:48:12"), heading focus when focus was inside the player, "Stream ended. It was live for … minutes." announcement.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "No course loaded · Loading was cancelled. Waiting for the LMS to supply a course." as a first-run style message.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Ended card padding 1.25rem 1.75rem; snapped to <code>--space-5</code> × <code>--space-6</code>.</li>
+        <li>Ended card title 1.25rem kept as <code>--font-size-xl</code>; detail margin 0.25rem as <code>--space-1</code>.</li>
+        <li>The mock's ended title reads "Stream ended"; LMS copy uses "Session ended", matching the term learners see in the schedule.</li>
+      </ul>
+      <p>First-run, permission and full-size layouts are derived: not present in the mocks; they follow the system rules.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

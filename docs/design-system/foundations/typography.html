@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typography — Tessera design system</title>
+<meta name="description" content="Tessera typography: Inter and a monospace stack, a nine-step size scale, four weights, line heights, letter spacing, twelve role shorthands, measure and responsive type.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Typography</h1>
+      <p class="ds-lead">One sans family, nine sizes and twelve named roles. Body text is 16px and never smaller than 12px anywhere; headings are bold and tight, reading text is relaxed and capped at a comfortable measure.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">rem-based, zooms to 400%</span><span class="ds-pill">12 roles</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#families">Families</a></li><li><a href="#scale">Size scale</a></li><li><a href="#weights">Weights</a></li><li><a href="#line-height">Line height</a></li><li><a href="#letter-spacing">Letter spacing</a></li><li><a href="#roles">Roles</a></li><li><a href="#measure">Measure</a></li><li><a href="#responsive">Responsive type</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#snapped">Snapped values</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Type has two tiers. Primitives (<code>--font-family-*</code>, <code>--font-size-*</code>, <code>--font-weight-*</code>, <code>--line-height-*</code>, <code>--letter-spacing-*</code>) are the raw scale. Roles (<code>--text-*</code>) are complete <code>font</code> shorthands that components use: <code>font: var(--text-label)</code>. A component that needs a different size keeps the role and overrides only <code>font-size</code> with another step, never a raw value.</p>
+      <ul>
+        <li>Sizes are in <code>rem</code>, so browser text size and zoom scale everything together.</li>
+        <li>Headings and labels are bold (700); body is regular (400). The mocks' 750 renders as 700 in every fallback, so the system uses 700.</li>
+        <li>Page titles are tight (1.15) with negative tracking; body is 1.5; long-form and code are 1.6.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="families"><h2><a href="#families">Families</a></h2>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-family-sans</span><span style="font-family: var(--font-family-sans); font-size: var(--font-size-2xl);">Assign learners to Data privacy basics</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-family-mono</span><span style="font: var(--text-code); font-size: var(--font-size-lg);">cmi.core.lesson_status = "completed"</span></div>
+      </div>
+      <p><b>Sans</b> is Inter with Segoe UI, the system UI font and Arial as fallbacks, as in every mock. Tessera does not ship the font file: the host LMS loads Inter or the stack falls back cleanly. <b>Mono</b> is used for SCORM data-model values, keyboard keys and code; the video mock's <code>ui-monospace, Consolas, monospace</code> gains a Liberation Mono fallback for Linux.</p>
+      <table class="ds-table"><thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead><tbody>
+        <tr><td><code>--font-family-sans</code></td><td data-token="--font-family-sans"></td></tr>
+        <tr><td><code>--font-family-mono</code></td><td data-token="--font-family-mono"></td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="scale"><h2><a href="#scale">Size scale</a></h2>
+      <p>Nine steps from 12px to 40px. Steps below 16px are for metadata and controls; 16px is the floor for anything a learner reads as content.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-5xl · 40px</span><span style="font-size: var(--font-size-5xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);">Tessera</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-4xl · 32px</span><span style="font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);">Data privacy basics</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-3xl · 28px</span><span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);">Data privacy basics</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-2xl · 24px</span><span style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug);">Assign learners</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-xl · 20px</span><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug);">The session has ended</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-lg · 18px</span><span style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold);">Lesson 3: Handling learner records</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-md · 16px</span><span style="font-size: var(--font-size-md);">Grace Hopper joined Lecture hall A at 14:02.</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-sm · 14px</span><span style="font-size: var(--font-size-sm);">3 learners selected · Type at least 2 characters</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-size-xs · 12px</span><span style="font-size: var(--font-size-xs);">12 minutes · Lesson 3 of 6</span></div>
+      </div>
+      <table class="ds-table"><thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Used for</th></tr></thead><tbody>
+        <tr><td><code>--font-size-xs</code></td><td data-token="--font-size-xs"></td><td>Captions, badges, lesson numbers, overlines</td></tr>
+        <tr><td><code>--font-size-sm</code></td><td data-token="--font-size-sm"></td><td>Button and chip labels, hints, metadata, table cells</td></tr>
+        <tr><td><code>--font-size-md</code></td><td data-token="--font-size-md"></td><td>Body, field labels and values, card headings</td></tr>
+        <tr><td><code>--font-size-lg</code></td><td data-token="--font-size-lg"></td><td>Panel titles (SCORM player bar), dialog titles, lead text</td></tr>
+        <tr><td><code>--font-size-xl</code></td><td data-token="--font-size-xl"></td><td>Ended-session card title</td></tr>
+        <tr><td><code>--font-size-2xl</code></td><td data-token="--font-size-2xl"></td><td>Section headings</td></tr>
+        <tr><td><code>--font-size-3xl</code></td><td data-token="--font-size-3xl"></td><td>Page title below 768px</td></tr>
+        <tr><td><code>--font-size-4xl</code></td><td data-token="--font-size-4xl"></td><td>Page title</td></tr>
+        <tr><td><code>--font-size-5xl</code></td><td data-token="--font-size-5xl"></td><td>Display (documentation and marketing only)</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="weights"><h2><a href="#weights">Weights</a></h2>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-weight-regular · 400</span><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-regular);">Katherine Johnson</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-weight-medium · 500</span><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-medium);">Katherine Johnson</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-weight-semibold · 600</span><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold);">Katherine Johnson</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--font-weight-bold · 700</span><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">Katherine Johnson</span></div>
+      </div>
+      <p>Regular for reading, bold for headings, labels, buttons and the LIVE badge. Medium and semibold exist for hosts whose brand font is heavier than Inter; the shipped components use only 400 and 700, which keeps fallback rendering identical.</p>
+    </section>
+
+    <section class="ds-section" id="line-height"><h2><a href="#line-height">Line height</a></h2>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--line-height-tight · 1.15</span><span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); max-width: 16ch;">Introduction to safeguarding learners</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--line-height-snug · 1.25</span><span style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug); max-width: 22ch;">Lesson 4: Reporting a concern and what happens next</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--line-height-normal · 1.5</span><span style="line-height: var(--line-height-normal); max-width: var(--layout-measure);">The live stream starts when the presenter goes live. Captions are on by default and can be turned off from the control bar at any time.</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--line-height-relaxed · 1.6</span><span style="line-height: var(--line-height-relaxed); max-width: var(--layout-measure);">Long-form lesson text and code use a looser line so the eye finds the next line easily, especially with enlarged text.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="letter-spacing"><h2><a href="#letter-spacing">Letter spacing</a></h2>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--letter-spacing-tight · -0.04em</span><span style="font: var(--text-h1); letter-spacing: var(--letter-spacing-tight);">Live session</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--letter-spacing-normal · 0</span><span style="font: var(--text-body); letter-spacing: var(--letter-spacing-normal);">Alan Turing, Ada Lovelace and 4 more</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--letter-spacing-wide · 0.06em</span><span style="font: var(--text-overline); letter-spacing: var(--letter-spacing-wide); text-transform: uppercase;">Course · Live</span></div>
+      </div>
+      <p>Tight tracking is for titles at 28px and above only. Wide tracking is for uppercase overlines and the LIVE badge only; uppercase text without it looks cramped. Everything else is normal.</p>
+    </section>
+
+    <section class="ds-section" id="roles"><h2><a href="#roles">Roles</a></h2>
+      <p>Twelve shorthands cover every text style in the components. Use the role, not the primitives: <code>font: var(--text-h3)</code>.</p>
+      <div class="ds-example">
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-display</span><span style="font: var(--text-display); letter-spacing: var(--letter-spacing-tight);">Learn anywhere</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-h1</span><span style="font: var(--text-h1); letter-spacing: var(--letter-spacing-tight);">Data privacy basics</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-h2</span><span style="font: var(--text-h2);">Assign learners</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-h3</span><span style="font: var(--text-h3);">Lesson 3: Handling learner records</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-h4</span><span style="font: var(--text-h4);">Course outline</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-body-lg</span><span style="font: var(--text-body-lg);">Join the session from Lecture hall A or watch here.</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-body</span><span style="font: var(--text-body);">Your progress is saved after each lesson.</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-body-sm</span><span style="font: var(--text-body-sm);">Complete this lesson to continue.</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-caption</span><span style="font: var(--text-caption);">Updated 2 minutes ago</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-label</span><span style="font: var(--text-label);">Preview assignment</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-overline</span><span style="font: var(--text-overline); letter-spacing: var(--letter-spacing-wide); text-transform: uppercase;">Course</span></div>
+        <div class="ds-specimen"><span class="ds-specimen__meta">--text-code</span><span style="font: var(--text-code);">cmi.core.score.raw = 85</span></div>
+      </div>
+      <table class="ds-table"><thead><tr><th scope="col">Role</th><th scope="col">Size / line height / weight</th><th scope="col">Where</th></tr></thead><tbody>
+        <tr><td><code>--text-display</code></td><td>40 / 1.15 / 700</td><td>Docs and marketing headers only</td></tr>
+        <tr><td><code>--text-h1</code></td><td>32 / 1.15 / 700 (28 below 768px)</td><td>Page title: course name, session name, "Assign learners"</td></tr>
+        <tr><td><code>--text-h2</code></td><td>24 / 1.25 / 700</td><td>Section headings</td></tr>
+        <tr><td><code>--text-h3</code></td><td>18 / 1.25 / 700</td><td>Panel and dialog titles, the SCORM player bar, empty-state titles</td></tr>
+        <tr><td><code>--text-h4</code></td><td>16 / 1.25 / 700</td><td>Card headings, the outline heading, alert titles, top bar title</td></tr>
+        <tr><td><code>--text-body-lg</code></td><td>18 / 1.5 / 400</td><td>Lead paragraphs, large fields</td></tr>
+        <tr><td><code>--text-body</code></td><td>16 / 1.5 / 400</td><td>Body, field values, options, captions over video</td></tr>
+        <tr><td><code>--text-body-sm</code></td><td>14 / 1.5 / 400</td><td>Hints, errors, metadata, table cells, tooltips</td></tr>
+        <tr><td><code>--text-caption</code></td><td>12 / 1.5 / 400</td><td>Lesson detail, badges, timestamps</td></tr>
+        <tr><td><code>--text-label</code></td><td>14 / 1.5 / 700</td><td>Buttons, chips, nav links; field labels at 16px</td></tr>
+        <tr><td><code>--text-overline</code></td><td>12 / 1.5 / 700, uppercase, wide</td><td>Eyebrows ("Course"), lesson numbers, nav group headings</td></tr>
+        <tr><td><code>--text-code</code></td><td>14 / 1.6 / 400 mono</td><td>Keys, data-model values, code</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="measure"><h2><a href="#measure">Measure</a></h2>
+      <p>Reading text stops at 60 characters (<code>--layout-measure</code>, from the video mock's intro), so lines stay comfortable at every width and with 200% text. Lead paragraphs, page-header leads, empty-state bodies and alert bodies all cap at the measure; tables, forms and the player do not. The measure token belongs to <a href="layout.html#container">layout</a>.</p>
+      <div class="ds-example"><div class="ds-example__canvas"><p style="max-width: var(--layout-measure);">Watch the session live from Lecture hall A. Captions are on by default. If the stream drops, the player reconnects on its own and keeps your place; you can return to live at any time.</p></div><div class="ds-example__caption"><span>A paragraph capped at <code>--layout-measure</code>.</span></div></div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive type</a></h2>
+      <ul>
+        <li><b>The page title</b> is 28px (<code>--font-size-3xl</code>) on phones and 32px (<code>--font-size-4xl</code>) from <code>--layout-breakpoint-md</code> (768px), via <code>.page-header__title</code>. This replaces the combobox mock's <code>max-width: 40em</code> override.</li>
+        <li><b>Everything else is fixed</b> in rem. Body never shrinks on phones; 16px is already the floor.</li>
+        <li><b>Captions</b> over video are the only fluid text: <code>clamp(0.9rem, 2.2vw, 1.3rem)</code> from the video mock, because they scale with the picture. They stay on the <code>--text-body</code> role.</li>
+        <li><b>Wrapping beats truncating</b>: titles use <code>text-wrap: balance</code>; long course and learner names wrap (<code>overflow-wrap: anywhere</code>), never ellipsis, so nothing is lost at 400% zoom.</li>
+      </ul>
+      <div class="ds-example"><div class="ds-example__canvas ds-example__canvas--stack"><div class="page-header"><div><p class="page-header__eyebrow">Course</p><p class="page-header__title">Data privacy basics</p><p class="page-header__lead">Six short lessons on handling learner records.</p></div></div></div><div class="ds-example__caption"><span>Resize the window across 768px: the title steps between 28px and 32px.</span></div></div>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li>Use roles in components; reach for a size primitive only to step a role up or down (<code>font: var(--text-label); font-size: var(--font-size-md)</code> for field labels).</li>
+        <li>One <code>h1</code> per page. Do not choose a heading level for its size; choose the level for the outline and the role for the look.</li>
+        <li>Sentence case everywhere. Uppercase only through <code>--text-overline</code> with wide tracking, and only for a few words.</li>
+        <li>Numbers that update (elapsed time, counts) use <code>font-variant-numeric: tabular-nums</code> so they do not jitter.</li>
+        <li>Never set text below <code>--font-size-xs</code>, and never in <code>px</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Resize text (WCAG 1.4.4)</b>: all sizes are rem, and no container has a fixed height around text, so 200% text reflows without clipping.</li>
+        <li><b>Text spacing (WCAG 1.4.12)</b>: components survive line height 1.5, paragraph spacing 2em, letter spacing 0.12em and word spacing 0.16em, because heights are min-heights and rows wrap.</li>
+        <li><b>Reflow (WCAG 1.4.10)</b>: at 320px wide or 400% zoom, text wraps; there is no horizontal scrolling except inside data tables.</li>
+        <li><b>Contrast</b>: muted and subtle text pass 4.5:1 on every surface, so small text never relies on the large-text 3:1 exception. See <a href="color.html#accessibility">colour contrast</a>.</li>
+        <li><b>Minimum size</b>: 12px is used only for captions and badges, never for body copy, instructions or errors.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="snapped"><h2><a href="#snapped">Snapped values</a></h2>
+      <p>The mocks used 22 distinct font sizes; they collapse onto the nine steps.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Mock value</th><th scope="col">Where</th><th scope="col">Token</th></tr></thead>
+        <tbody>
+          <tr><td><code>.75rem</code>, <code>.76rem</code>, <code>.8rem</code>, <code>0.8125rem</code>, <code>.85rem</code> (lesson numbers, lesson detail, eyebrow, mock notes, kbd)</td><td>all</td><td><code>--font-size-xs</code> (12px) or <code>--font-size-sm</code> (14px) by role</td></tr>
+          <tr><td><code>0.875rem</code>, <code>.87rem</code>, <code>.9rem</code>, <code>.91rem</code> (buttons, chips, lesson title, metadata)</td><td>all</td><td><code>--font-size-sm</code> (14px)</td></tr>
+          <tr><td><code>1.1rem</code>, <code>1.15rem</code> (panel titles)</td><td>scorm, video</td><td><code>--font-size-lg</code> (18px)</td></tr>
+          <tr><td><code>1.25rem</code> (ended card)</td><td>video</td><td><code>--font-size-xl</code> (20px)</td></tr>
+          <tr><td><code>1.4rem</code>, <code>1.6rem</code></td><td>video</td><td><code>--font-size-2xl</code> (24px) / <code>--font-size-3xl</code> (28px)</td></tr>
+          <tr><td><code>1.75rem</code> (phone title), <code>2rem</code> (page title)</td><td>all</td><td><code>--font-size-3xl</code> / <code>--font-size-4xl</code></td></tr>
+          <tr><td>Weight <code>750</code></td><td>all</td><td><code>--font-weight-bold</code> (700)</td></tr>
+          <tr><td>Line height <code>1.2</code> (combobox title)</td><td>combobox</td><td><code>--line-height-tight</code> (1.15)</td></tr>
+          <tr><td>Letter spacing <code>-0.035em</code>, <code>-.04em</code></td><td>combobox, scorm, video</td><td><code>--letter-spacing-tight</code> (-0.04em)</td></tr>
+          <tr><td>Letter spacing <code>0.08em</code>, <code>0.06em</code>, <code>0.04em</code></td><td>combobox, video</td><td><code>--letter-spacing-wide</code> (0.06em)</td></tr>
+          <tr><td><code>0.85em/1.6 ui-monospace, Consolas, monospace</code></td><td>video kbd</td><td><code>--text-code</code></td></tr>
+        </tbody>
+      </table></div>
+      <p>Sources: <a href="../../mocks/scorm-player/index.html">scorm-player</a>, <a href="../../mocks/combobox/index.html">combobox</a>, <a href="../../mocks/video-player/index.html">video-player</a>.</p>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+        <tbody>
+          <tr><td><code>--font-family-sans</code></td><td><span data-token="--font-family-sans"></span></td></tr>
+          <tr><td><code>--font-family-mono</code></td><td><span data-token="--font-family-mono"></span></td></tr>
+          <tr><td><code>--font-size-xs</code></td><td><span data-token="--font-size-xs"></span></td></tr>
+          <tr><td><code>--font-size-sm</code></td><td><span data-token="--font-size-sm"></span></td></tr>
+          <tr><td><code>--font-size-md</code></td><td><span data-token="--font-size-md"></span></td></tr>
+          <tr><td><code>--font-size-lg</code></td><td><span data-token="--font-size-lg"></span></td></tr>
+          <tr><td><code>--font-size-xl</code></td><td><span data-token="--font-size-xl"></span></td></tr>
+          <tr><td><code>--font-size-2xl</code></td><td><span data-token="--font-size-2xl"></span></td></tr>
+          <tr><td><code>--font-size-3xl</code></td><td><span data-token="--font-size-3xl"></span></td></tr>
+          <tr><td><code>--font-size-4xl</code></td><td><span data-token="--font-size-4xl"></span></td></tr>
+          <tr><td><code>--font-size-5xl</code></td><td><span data-token="--font-size-5xl"></span></td></tr>
+          <tr><td><code>--font-weight-regular</code></td><td><span data-token="--font-weight-regular"></span></td></tr>
+          <tr><td><code>--font-weight-medium</code></td><td><span data-token="--font-weight-medium"></span></td></tr>
+          <tr><td><code>--font-weight-semibold</code></td><td><span data-token="--font-weight-semibold"></span></td></tr>
+          <tr><td><code>--font-weight-bold</code></td><td><span data-token="--font-weight-bold"></span></td></tr>
+          <tr><td><code>--line-height-tight</code></td><td><span data-token="--line-height-tight"></span></td></tr>
+          <tr><td><code>--line-height-snug</code></td><td><span data-token="--line-height-snug"></span></td></tr>
+          <tr><td><code>--line-height-normal</code></td><td><span data-token="--line-height-normal"></span></td></tr>
+          <tr><td><code>--line-height-relaxed</code></td><td><span data-token="--line-height-relaxed"></span></td></tr>
+          <tr><td><code>--letter-spacing-tight</code></td><td><span data-token="--letter-spacing-tight"></span></td></tr>
+          <tr><td><code>--letter-spacing-normal</code></td><td><span data-token="--letter-spacing-normal"></span></td></tr>
+          <tr><td><code>--letter-spacing-wide</code></td><td><span data-token="--letter-spacing-wide"></span></td></tr>
+          <tr><td><code>--text-display</code></td><td><span data-token="--text-display"></span></td></tr>
+          <tr><td><code>--text-h1</code></td><td><span data-token="--text-h1"></span></td></tr>
+          <tr><td><code>--text-h2</code></td><td><span data-token="--text-h2"></span></td></tr>
+          <tr><td><code>--text-h3</code></td><td><span data-token="--text-h3"></span></td></tr>
+          <tr><td><code>--text-h4</code></td><td><span data-token="--text-h4"></span></td></tr>
+          <tr><td><code>--text-body-lg</code></td><td><span data-token="--text-body-lg"></span></td></tr>
+          <tr><td><code>--text-body</code></td><td><span data-token="--text-body"></span></td></tr>
+          <tr><td><code>--text-body-sm</code></td><td><span data-token="--text-body-sm"></span></td></tr>
+          <tr><td><code>--text-caption</code></td><td><span data-token="--text-caption"></span></td></tr>
+          <tr><td><code>--text-label</code></td><td><span data-token="--text-label"></span></td></tr>
+          <tr><td><code>--text-overline</code></td><td><span data-token="--text-overline"></span></td></tr>
+          <tr><td><code>--text-code</code></td><td><span data-token="--text-code"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

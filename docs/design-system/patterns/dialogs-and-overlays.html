@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialogs and overlays — Tessera design system</title>
+<meta name="description" content="When to use a dialog, drawer, popover, inline popup or tooltip; the combobox's inline popover decision; stacking with z-index tokens; mobile sheets; focus return.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Dialogs and overlays</h1>
+      <p class="ds-lead">Anything that floats above the page interrupts it. Pick the lightest layer that does the job: inline first, then a popup tied to its trigger, and a modal dialog only when the learner must decide before going on.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes: dialog, combobox, menu, tooltip, alert</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive behaviour</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Tessera has five overlay kinds. They differ in whether they block the page, where they sit in the DOM, and where focus goes.</p>
+      <ul>
+        <li><b><a href="../components/dialog.html">Dialog</a></b> (modal): blocks the page, traps focus, returns it to the trigger. For decisions and short focused tasks.</li>
+        <li><b>Drawer / sheet</b>: a dialog anchored to an edge. Below 640px every dialog becomes a bottom sheet.</li>
+        <li><b>Popover</b> (<a href="../components/menu.html">menu</a>, account panel): non-modal, light dismiss, tied to a trigger button.</li>
+        <li><b>Inline popup</b> (<a href="../components/combobox.html">combobox</a> listbox): non-modal, focus stays in the input, rendered directly after its field in the DOM.</li>
+        <li><b><a href="../components/tooltip.html">Tooltip</a></b>: non-interactive supplementary text on hover and focus; never the only place information lives.</li>
+      </ul>
+      <p>Before any of these, ask whether the content can be inline. The SCORM player's unsaved-exit warning is inline: it reuses the save-error notice and moves focus to its heading instead of opening a dialog.</p>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Use</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr><td>Confirm removing 3 learners from an assignment</td><td>Modal dialog, danger action</td><td>Destructive and irreversible; the learner must choose.</td></tr>
+          <tr><td>Exit a course with unsaved progress</td><td>Inline notice with "Retry save" and "Exit without saving"</td><td>The fix (retry) is on the page already; a dialog would hide the save status it explains.</td></tr>
+          <tr><td>Edit a learner's due date without leaving the list</td><td>Drawer (sheet on phones)</td><td>Short form that needs list context visible on wide screens.</td></tr>
+          <tr><td>Row actions (Remove, Resend reminder)</td><td>Popover menu from a "More actions" button</td><td>A few actions, dismissed by any outside click or <kbd>Esc</kbd>.</td></tr>
+          <tr><td>Search and pick learners</td><td>Inline popup (combobox listbox)</td><td>Focus stays typing in the input; the list follows the field in reading order.</td></tr>
+          <tr><td>Full label of a truncated chip; name of an icon button</td><td>Tooltip</td><td>Supplementary, short, no interaction.</td></tr>
+          <tr><td>A long task (create a course, upload a package)</td><td>A page</td><td>Needs a URL, Back, autosave and room; dialogs are not pages.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>The combobox decision (ADR-0001)</h3>
+      <p>The combobox list is a CDK overlay rendered as a native popover with the inline location: the panel's host is inserted <b>directly after the field</b>, inside the component, yet it still enters the browser's top layer, so no ancestor <code>overflow</code> clips it and it stacks above dialogs. The reading order is label, field, list, error, hint. This is what lets VoiceOver on iOS reach the options by swiping on from the input, which a panel appended to the end of <code>&lt;body&gt;</code> cannot do (Safari has no <code>aria-owns</code>). The mock models it with a fixed-position popup placed right after the field. The live region stays outside the popup. Without the Popover API, the panel falls back to a container inside the nearest open native dialog, or the shared overlay container.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <h3>Modal dialog: destructive confirmation</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="justify-content: center;">
+          <div class="dialog dialog--static dialog--sm" role="group" aria-labelledby="dlg-title" aria-describedby="dlg-desc">
+            <div class="dialog__header"><span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></span><p id="dlg-title" style="flex: 1 1 auto; margin: 0; font: var(--text-h3);">Remove 3 learners?</p><button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="dialog__body"><p id="dlg-desc" style="margin: 0;">Ada Lovelace, Grace Hopper and Alan Turing will lose access to Workplace safety essentials. Their progress is kept if you assign them again.</p></div>
+            <div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove 3 learners</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Shown statically. Products use <code>&lt;dialog class="dialog" aria-labelledby aria-describedby&gt;</code> opened with <code>showModal()</code>; the title is an <code>h2</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;dialog class="dialog dialog--sm" aria-labelledby="remove-title" aria-describedby="remove-desc"&gt;
+  &lt;div class="dialog__header"&gt;
+    &lt;span class="dialog__icon" aria-hidden="true"&gt;…&lt;/span&gt;
+    &lt;h2 id="remove-title"&gt;Remove 3 learners?&lt;/h2&gt;
+    &lt;button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"&gt;…&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="dialog__body"&gt;&lt;p id="remove-desc"&gt;…&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="dialog__footer"&gt;
+    &lt;button class="btn" type="button" autofocus&gt;Cancel&lt;/button&gt;
+    &lt;button class="btn btn--danger" type="button"&gt;Remove 3 learners&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;
+&lt;script&gt;
+  trigger.addEventListener('click', () =&gt; dialog.showModal());
+  dialog.addEventListener('close', () =&gt; trigger.focus());
+&lt;/script&gt;</code></pre></details>
+      </div>
+
+      <h3>Inline popup: combobox list after its field</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="ov-learners">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row"><input class="combobox__input" id="ov-learners" role="combobox" aria-expanded="true" aria-controls="ov-list" aria-autocomplete="list" aria-activedescendant="ov-opt-2" aria-describedby="ov-hint" autocomplete="off" value="Gr"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="ov-list" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option" id="ov-opt-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Grace Hopper<span class="combobox__option-detail">grace.hopper@example.edu</span></span></li>
+                <li class="combobox__option combobox__option--active" id="ov-opt-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Greta Ruiz<span class="combobox__option-detail">greta.ruiz@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p style="margin: 0;">2 learners available</p></div>
+            </div>
+            <p class="field__hint" id="ov-hint">Select one or more learners. Search to narrow the results.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>DOM and reading order: label → field → list → error → hint. In products the list is a top-layer popover with fixed position; here it is static.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label for="learners"&gt;Learners&lt;/label&gt;
+&lt;div class="combobox__field"&gt;… &lt;input id="learners" role="combobox" aria-controls="results" …&gt;&lt;/div&gt;
+&lt;!-- CDK withPopoverLocation('inline'): inserted here, after the field --&gt;
+&lt;div class="combobox__popup" popover="manual"&gt;
+  &lt;div id="results" role="listbox" aria-multiselectable="true"&gt;…&lt;/div&gt;
+  &lt;div class="combobox__status"&gt;…&lt;/div&gt;
+&lt;/div&gt;
+&lt;p class="field__error" id="validation" hidden&gt;…&lt;/p&gt;
+&lt;p class="field__hint" id="hint"&gt;…&lt;/p&gt;
+&lt;div class="visually-hidden" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt; &lt;!-- outside the popup --&gt;</code></pre></details>
+      </div>
+
+      <h3>Popover menu and tooltip</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start;">
+          <div class="stack" style="--stack-gap: var(--space-1);">
+            <button class="btn" type="button" aria-haspopup="menu" aria-expanded="true" aria-controls="ov-menu">More actions</button>
+            <ul class="menu" id="ov-menu" role="menu" aria-label="More actions">
+              <li role="none"><button class="menu__item" role="menuitem" type="button" tabindex="-1">Resend reminder</button></li>
+              <li role="none"><button class="menu__item" role="menuitem" type="button" tabindex="-1">Change due date</button></li>
+              <li role="separator" class="menu__separator"></li>
+              <li role="none"><button class="menu__item menu__item--danger" role="menuitem" type="button" tabindex="-1">Remove learner…</button></li>
+            </ul>
+          </div>
+          <div class="stack" style="--stack-gap: var(--space-2);">
+            <span class="chip" style="max-width: 9rem;"><span class="chip__label">Katherine Johnson-Goble</span></span>
+            <span class="tooltip tooltip--static">Katherine Johnson-Goble</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>"Remove learner…" ends in an ellipsis because it opens a confirmation dialog. The tooltip shows a truncated chip's full label.</span></div>
+      </div>
+
+      <h3>Stacking order</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Layer</th><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Used by</th></tr></thead>
+        <tbody>
+          <tr><td>Sticky headers</td><td><code>--z-sticky</code></td><td><span data-token="--z-sticky"></span></td><td>Sticky top bar, table headers</td></tr>
+          <tr><td>Dropdown</td><td><code>--z-dropdown</code></td><td><span data-token="--z-dropdown"></span></td><td>Menu, combobox popup (fallback placement)</td></tr>
+          <tr><td>Backdrop</td><td><code>--z-overlay</code></td><td><span data-token="--z-overlay"></span></td><td><code>.backdrop</code> for non-native modals</td></tr>
+          <tr><td>Modal</td><td><code>--z-modal</code></td><td><span data-token="--z-modal"></span></td><td>Dialog, drawer, sheet</td></tr>
+          <tr><td>Popover</td><td><code>--z-popover</code></td><td><span data-token="--z-popover"></span></td><td>Menus and popups opened from inside a dialog</td></tr>
+          <tr><td>Toast</td><td><code>--z-toast</code></td><td><span data-token="--z-toast"></span></td><td>Toast region</td></tr>
+          <tr><td>Tooltip</td><td><code>--z-tooltip</code></td><td><span data-token="--z-tooltip"></span></td><td>Tooltips, the skip link</td></tr>
+        </tbody>
+      </table></div>
+      <p>Native <code>&lt;dialog&gt;</code> and <code>popover</code> enter the top layer, where the last one opened sits on top regardless of <code>z-index</code>; the tokens order the fallbacks and non-native layers. Never invent a number between tokens.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Overlay</th><th scope="col">Closed (trigger)</th><th scope="col">Trigger focus</th><th scope="col">Open</th><th scope="col">Busy</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Dialog</th>
+            <td><button class="btn btn--danger" type="button">Remove 3 learners</button></td>
+            <td><button class="btn btn--danger" type="button" data-state="focus">Remove 3 learners</button></td>
+            <td><button class="btn btn--danger" type="button" aria-expanded="true">Remove 3 learners</button></td>
+            <td><div class="dialog__footer" style="padding: 0;"><button class="btn" type="button" disabled>Cancel</button><button class="btn btn--danger" type="button" aria-busy="true"><span>Remove</span></button></div></td></tr>
+          <tr><th scope="row">Menu</th>
+            <td><button class="btn" type="button" aria-haspopup="menu" aria-expanded="false">More actions</button></td>
+            <td><button class="btn" type="button" aria-haspopup="menu" aria-expanded="false" data-state="focus">More actions</button></td>
+            <td><button class="btn" type="button" aria-haspopup="menu" aria-expanded="true">More actions</button></td>
+            <td><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading actions…</span></td></tr>
+          <tr><th scope="row">Outline (disclosure)</th>
+            <td><button class="btn" type="button" aria-expanded="false">Show outline</button></td>
+            <td><button class="btn" type="button" aria-expanded="false" data-state="focus">Show outline</button></td>
+            <td><button class="btn" type="button" aria-expanded="true">Hide outline</button></td>
+            <td><span class="ds-na" style="display: inline-block;">No busy state</span></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="dialog dialog--static" role="group" aria-labelledby="dlg-l-title" style="width: 100%;"><div class="dialog__header"><p id="dlg-l-title" style="margin: 0; font: var(--text-h3);">Remove 3 learners?</p></div><div class="dialog__body"><p style="margin: 0;">Their progress is kept if you assign them again.</p></div><div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div>
+        <div data-theme="dark"><div class="dialog dialog--static" role="group" aria-labelledby="dlg-d-title" style="width: 100%;"><div class="dialog__header"><p id="dlg-d-title" style="margin: 0; font: var(--text-h3);">Remove 3 learners?</p></div><div class="dialog__body"><p style="margin: 0;">Their progress is kept if you assign them again.</p></div><div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove</button></div></div></div>
+      </div>
+      <ul>
+        <li><b>Busy</b>: while the confirmed action runs, the dialog sets <code>aria-busy="true"</code>, the confirm button shows its spinner, Cancel is disabled, and the dialog stays open. On failure it shows an inline <code>.field__error</code>-style message in the body; on success it closes and a toast confirms.</li>
+        <li><b>Inline confirmation</b> (SCORM "Exit course" while unsaved): the save-error notice opens with "Retry save" and "Exit without saving", its heading takes focus, and its alert text is not replayed when the notice reopens.</li>
+        <li><b>Nested</b>: a menu or combobox inside a dialog opens above it (top layer, or <code>--z-popover</code> in fallback). Never open a dialog from a dialog; replace the content or go to a page.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Mobile sheets</b>: below <code>--layout-breakpoint-sm</code> (640px) <code>.dialog</code> becomes a full-width bottom sheet with <code>--radius-xl</code> top corners, at most 90dvh tall; the footer is sticky, buttons share the row, and the safe-area inset is respected.</li>
+        <li>Dialog width is <code>min(--dialog-width, 100vw − 32px)</code>; the body scrolls, never the page behind it. At 400% zoom the header and footer stay reachable because the sheet body scrolls.</li>
+        <li><b>Combobox popup</b>: at most <code>min(24rem, 60dvh)</code>, bounded by the visual viewport. When status plus a visible option cannot fit around the full field, the popup anchors to the input row, keeping the input visible (it may cover chips).</li>
+        <li><b>Menus</b> cap at <code>min(20rem, 100vw − 32px)</code> and flip above the trigger near the bottom edge.</li>
+        <li><b>Tooltips</b> cap at <code>min(24rem, 100vw − 32px)</code>; on touch they appear on long-press or focus and never hold required content.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Dialogs follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">APG modal dialog pattern</a> using native <code>&lt;dialog&gt;</code>. The combobox follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">combobox pattern</a> (focus stays in the input; <code>aria-activedescendant</code>). Menus follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">menu button pattern</a>; the outline toggle follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">disclosure pattern</a>; tooltips follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/">tooltip pattern</a> and meet <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">1.4.13 Content on hover or focus</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the topmost layer only: tooltip first, then a popup, then a dialog. In the combobox: dismiss tooltip, then close the list, then clear the query.</td></tr>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Dialog: cycles within the dialog. Combobox and menus: close the popup and continue in the page order.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Opens a dialog, menu or disclosure from its trigger; activates the focused dialog button.</td></tr>
+        <tr><td><kbd>↓</kbd> / <kbd>↑</kbd></td><td>Menu and combobox: move through items without wrapping (combobox) or with wrapping (menu).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <ul>
+        <li><b>Into</b>: a dialog focuses its least destructive action (Cancel) or, for a form, the first field. An inline notice focuses its heading (<code>tabindex="-1"</code>).</li>
+        <li><b>Within</b>: <code>showModal()</code> makes the rest of the page inert; nothing behind is reachable by Tab or a screen reader's virtual cursor.</li>
+        <li><b>Return</b>: on close, focus returns to the trigger. If the trigger is gone (the removed learner's row), focus moves to the next row, else the previous one, else the list heading. Never to <code>&lt;body&gt;</code>.</li>
+        <li>Popups never take focus from the combobox input; the active option is shown with a 2px accent outline, and the field keeps the amber ring.</li>
+      </ul>
+      <h3>Labelling</h3>
+      <p>Dialogs set <code>aria-labelledby</code> to the title and <code>aria-describedby</code> to the consequence text, so both are read on open. Menus are named by their trigger. The combobox listbox is named "Learners"; the popup's status row is outside the Tab sequence and its messages are announced by the host's live region, which sits outside the popup.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Dialog text on raised surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface-raised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Danger label on danger fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-danger|--color-danger-solid" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Tooltip text on inverse</span><span class="ds-pair__ratio" data-contrast="--color-fg-inverse|--color-bg-inverse" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Popup border on raised surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface-raised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Active option outline on raised surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface-raised" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Dialogs and sheets fade and rise over <code>--duration-slow</code> with <code>--ease-enter</code>; exits use <code>--ease-exit</code>. Popups appear instantly. Under <code>prefers-reduced-motion</code> the durations are zeroed.</p>
+      <h3>Touch</h3>
+      <p>Dialog buttons and the close button are 44px; on sheets the buttons fill the row. Tapping the backdrop closes non-destructive dialogs only; a destructive confirmation closes by Cancel, Close or <kbd>Esc</kbd>, never by a stray tap.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Dialog titles ask the question or name the task: "Remove 3 learners?", "Change due date". Not "Are you sure?" or "Warning".</li>
+        <li>The body states the consequence and what is kept: "Their progress is kept if you assign them again."</li>
+        <li>The confirm button repeats the verb and object: "Remove 3 learners"; the escape is "Cancel". Never "OK" / "Yes" / "No".</li>
+        <li>Menu items that open a dialog end with an ellipsis: "Remove learner…".</li>
+        <li>Tooltips are a few words, no period, no links: the full chip label, or "Show outline" for an icon button.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--danger" style="width: 100%;"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button><button class="btn" type="button">Exit without saving</button></div></div></div><figcaption>Unsaved exit reuses the inline save-error notice and focuses its heading (SCORM mock); one Retry, no dialog.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="dialog dialog--static dialog--sm" role="group" aria-label="Bad example dialog"><div class="dialog__body" style="padding-top: var(--space-4);"><p style="margin: 0;">Are you sure?</p></div><div class="dialog__footer"><button class="btn" type="button">No</button><button class="btn btn--primary" type="button">OK</button></div></div></div><figcaption>A generic modal that hides the save status and its Retry, with vague title and buttons.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><p style="margin: 0;">Label → field → <b>list</b> → error → hint, in DOM order.</p></div><figcaption>Render the combobox list right after its field (inline popover, ADR-0001) so VoiceOver on iOS can swipe to it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p style="margin: 0;">Label → field → error → hint … <b>list</b> at the end of <code>&lt;body&gt;</code>.</p></div><figcaption>Append the list to a global overlay container; touch screen reader users cannot reach the options.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="chip" style="max-width: 9rem;"><span class="chip__label">Katherine Johnson-Goble</span></span><span class="tooltip tooltip--static">Katherine Johnson-Goble</span></div><figcaption>Tooltip repeats text that is truncated; hoverable, dismissable with <kbd>Esc</kbd>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="tooltip tooltip--static">Due 14 Nov. <a href="#do-dont" style="color: inherit;">Change</a></span></div><figcaption>Put a link or the only copy of a due date in a tooltip; use a popover or inline text.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks and decisions:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: fixed-position popup placed directly after the field, status row outside the Tab sequence, live region outside the popup, <kbd>Esc</kbd> order (tooltip, popup, query), full-label tooltip that stays while hovered.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Exit course" with unsaved progress reusing the save-error region, focus to its heading, alert text cleared on close so it is not replayed; outline disclosure.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: error panel whose heading takes focus only when focus was inside the player.</li>
+        <li>ADR-0001, render the combobox panel as an inline popover (<code>docs/adr/frontend/0001-render-combobox-panel-as-inline-popover.md</code>).</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Popup and menu radius 6px (combobox); normalised to <code>--radius-md</code>.</li>
+        <li>Combobox motion duration hard-coded to 0ms in light; overlay motion now comes from <code>--duration-*</code>, zeroed only by reduced motion.</li>
+        <li>No z-index scale in the mocks; stacking now uses <code>--z-dropdown</code> to <code>--z-tooltip</code>.</li>
+        <li>Field 40px vs 44px buttons; the field driving the popup is <code>--control-height-md</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

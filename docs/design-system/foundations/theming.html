@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theming — Tessera design system</title>
+<meta name="description" content="How Tessera themes work: light and dark, the three token tiers, adding a theme, forced colours, tokens.json, and the map to the shipped @tessera/theme properties.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Theming</h1>
+      <p class="ds-lead">A theme is a set of values for the semantic tokens, nothing more. Light and dark ship with the system; an LMS can add its own brand theme, and the shipped Angular packages read the same decisions through <code>@tessera/theme</code>.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA in both themes</span><span class="ds-pill">Light · Dark · System</span><span class="ds-pill">No tokens owned</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#how">How themes work</a></li><li><a href="#tiers">Token tiers</a></li><li><a href="#adding">Adding a theme</a></li><li><a href="#preferences">Contrast and forced colours</a></li><li><a href="#json">tokens.json</a></li><li><a href="#mapping">@tessera/theme map</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Components never read a raw value. They read a semantic token such as <code>--color-accent</code> (directly or through a component token such as <code>--btn-bg</code>), and a theme decides what that token is. Switching theme therefore changes every component at once and cannot leave one behind.</p>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><button class="btn btn--primary" type="button">Continue</button><button class="btn" type="button">Exit course</button><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Complete</span><a href="#overview">Course outline</a></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><button class="btn btn--primary" type="button">Continue</button><button class="btn" type="button">Exit course</button><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Complete</span><a href="#overview">Course outline</a></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="how"><h2><a href="#how">How themes work</a></h2>
+      <ul>
+        <li><b>Light</b> is the default and lives on <code>:root</code>.</li>
+        <li><b>Dark</b> applies when an element (usually <code>&lt;html&gt;</code>) has <code>data-theme="dark"</code>, <b>or</b> when the operating system prefers dark (<code>prefers-color-scheme: dark</code>) and the page has not forced <code>data-theme="light"</code>. <code>tokens.css</code> repeats the dark block in both places, and the two copies stay identical.</li>
+        <li><b>Scoped themes:</b> <code>data-theme</code> works on any element, so a dark video panel can sit on a light page. Everything inside inherits it.</li>
+        <li><b><code>color-scheme</code></b> is set by each theme (<code>light</code> or <code>dark</code>), so native scrollbars, form controls and the SCORM content frame's default canvas follow the theme.</li>
+        <li><b>Persisting a choice:</b> an LMS that offers a theme switch writes <code>data-theme</code> on <code>&lt;html&gt;</code> before first paint and stores the choice; "System" removes the attribute.</li>
+      </ul>
+      <pre><code>&lt;html lang="en" data-theme="dark"&gt;           &lt;!-- force dark --&gt;
+&lt;html lang="en"&gt;                             &lt;!-- follow the OS --&gt;
+&lt;section class="media-player" data-theme="dark"&gt;…&lt;/section&gt;  &lt;!-- scoped --&gt;</code></pre>
+      <p>Dark is not inverted light. Surfaces get lighter as they rise (canvas, then surface, then raised), the teal accent lightens to <code>--palette-teal-300</code>, text on the accent flips to dark ink, and status backgrounds become deep tints with light text. See <a href="color.html">colour</a> for every value and contrast pair.</p>
+    </section>
+
+    <section class="ds-section" id="tiers"><h2><a href="#tiers">Token tiers</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Tier</th><th scope="col">Prefix</th><th scope="col">Example</th><th scope="col">Who reads it</th><th scope="col">Who changes it</th></tr></thead>
+        <tbody>
+          <tr><td>1. Primitive</td><td><code>--palette-*</code>, <code>--font-*</code></td><td><code>--palette-teal-600</code></td><td>Semantic tokens only</td><td>The design system, rarely</td></tr>
+          <tr><td>2. Semantic</td><td><code>--color-*</code>, <code>--text-*</code>, <code>--space-*</code>, <code>--radius-*</code>, <code>--shadow-*</code>, <code>--duration-*</code>, <code>--ease-*</code>, <code>--z-*</code>, <code>--layout-*</code>, <code>--target-*</code>, <code>--control-height-*</code></td><td><code>--color-accent: var(--palette-teal-600)</code></td><td>Components and pages</td><td>Themes</td></tr>
+          <tr><td>3. Component</td><td><code>--btn-*</code>, <code>--field-*</code>, <code>--combobox-*</code>, <code>--media-*</code>, <code>--alert-*</code>…</td><td><code>--btn-bg: var(--color-accent)</code></td><td>One component</td><td>A host re-skinning one component</td></tr>
+        </tbody>
+      </table></div>
+      <p>A theme overrides tier 2. A host that wants one component to look different overrides tier 3 on a container. Nobody overrides tier 1 from outside the system, and no component reads tier 1 directly.</p>
+    </section>
+
+    <section class="ds-section" id="adding"><h2><a href="#adding">Adding a theme</a></h2>
+      <ol>
+        <li>Add a block <code>[data-theme="&lt;name&gt;"]</code> to your own stylesheet, after <code>tokens.css</code>.</li>
+        <li>Override semantic tokens only, mapping each to a primitive or to a new primitive you add beside it.</li>
+        <li>Set <code>color-scheme</code>.</li>
+        <li>Check every pair in <code>tokens/contrast-pairs.json</code> in the new theme: 4.5:1 for text, 3:1 for control edges, icons and the focus ring.</li>
+        <li>Check forced colours and reduced motion still behave; your theme should not touch those blocks.</li>
+      </ol>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="--color-accent: var(--palette-blue-600); --color-accent-hover: var(--palette-blue-800); --color-accent-active: var(--palette-blue-800); --color-accent-subtle: var(--palette-blue-50); --color-fg-accent: var(--palette-blue-800); --color-fg-link: var(--palette-blue-800);">
+          <button class="btn btn--primary" type="button">Preview assignment</button>
+          <button class="btn" type="button">Reset</button>
+          <span class="chip chip--static">Grace Hopper</span>
+          <a href="#adding">Assignment settings</a>
+        </div>
+        <div class="ds-example__caption"><span>A customer brand theme: six semantic overrides on a container retint buttons, chips and links. The focus ring stays amber.</span></div>
+        <details class="ds-example__code"><summary>CSS</summary><pre><code>[data-theme="northwind"] {
+  --color-accent: var(--palette-blue-600);
+  --color-accent-hover: var(--palette-blue-800);
+  --color-accent-active: var(--palette-blue-800);
+  --color-accent-subtle: var(--palette-blue-50);
+  --color-fg-accent: var(--palette-blue-800);
+  --color-fg-link: var(--palette-blue-800);
+  color-scheme: light;
+}</code></pre></details>
+      </div>
+      <p>A brand theme that also needs a dark variant writes <code>[data-theme="northwind-dark"]</code> with its own values; it does not try to derive them from the light ones. In the shipped packages the same customer theme is <code>createTheme({ colorBrandBackground: …, colorBrandForeground1: … })</code> applied with <code>applyTheme(container, theme)</code>.</p>
+    </section>
+
+    <section class="ds-section" id="preferences"><h2><a href="#preferences">Contrast and forced colours</a></h2>
+      <h3><code>prefers-contrast: more</code></h3>
+      <p>Decorative borders (<code>--color-border-default</code>) take the strong border value, and muted and subtle text (<code>--color-fg-muted</code>, <code>--color-fg-subtle</code>) take the default text colour. Hierarchy then comes from size and weight alone.</p>
+      <h3><code>forced-colors: active</code></h3>
+      <p>Windows contrast themes replace author colours with system colours. <code>tokens.css</code> hands the focus ring and media focus ring to <code>Highlight</code>, borders to <code>CanvasText</code> and <code>ButtonText</code>, the media scrim to <code>Canvas</code>, and the media accent and LIVE dot to <code>Highlight</code>. <code>components.css</code> adds a 1px <code>ButtonText</code> border to buttons, chips, badges, media controls, toasts and tooltips (whose shape otherwise came from a background), and marks selected options, the current lesson and the current page with <code>Highlight</code>. The shipped combobox does the same through its <code>--t-combobox-*</code> properties.</p>
+      <h3><code>prefers-reduced-motion: reduce</code></h3>
+      <p>Durations drop to near zero in the tokens; the spinner slows to 2 s. See <a href="motion.html#accessibility">motion</a>.</p>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><code>@media (forced-colors: active) { .chip { border: 1px solid ButtonText; } }</code></div><figcaption>Give anything whose edge came from a background a real border in forced colours.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>[data-theme="dark"] { --color-focus-ring: var(--color-accent); }</code></div><figcaption>Reuse the brand colour for focus; the ring must stay distinct from primary buttons and selected states.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="json"><h2><a href="#json">Consuming tokens.json</a></h2>
+      <p><a href="../tokens/tokens.json">tokens/tokens.json</a> is a <a href="https://www.w3.org/community/design-tokens/">Design Tokens Community Group</a> (DTCG) export of <code>tokens.css</code>, for platforms that cannot read CSS (native apps, e-mail templates, a design tool plug-in). <code>tokens.css</code> stays the source of truth; regenerate the JSON when it changes.</p>
+      <ul>
+        <li>Groups follow the CSS names: <code>color.accent</code> is <code>--color-accent</code>, <code>space.4</code> is <code>--space-4</code>.</li>
+        <li>Each token has <code>$type</code> and <code>$value</code>. Semantic values are aliases such as <code>{palette.teal.600}</code>.</li>
+        <li><code>$extensions["com.agent-toolkit"]</code> carries the CSS name, the resolved light value and per-theme overrides under <code>themes.dark</code>.</li>
+      </ul>
+      <pre><code>"accent": {
+  "$type": "color",
+  "$value": "{palette.teal.600}",
+  "$extensions": { "com.agent-toolkit": {
+    "css": "--color-accent",
+    "themes": { "dark": { "$value": "{palette.teal.300}" } }
+  } }
+}</code></pre>
+      <pre><code>// Read the dark value of a token, falling back to light.
+const tokens = await (await fetch('tokens/tokens.json')).json();
+const accent = tokens.color.accent;
+const dark = accent.$extensions['com.agent-toolkit'].themes?.dark?.$value ?? accent.$value;</code></pre>
+    </section>
+
+    <section class="ds-section" id="mapping"><h2><a href="#mapping">Map to <code>@tessera/theme</code></a></h2>
+      <p>The shipped Angular packages (<code>@tessera/scorm-player</code>, <code>@tessera/combobox</code>, <code>@tessera/video-player</code>) read <code>@tessera/theme</code>: Fluent-style semantic names exposed as <code>--t-&lt;name&gt;</code> CSS properties and set with <code>applyTheme()</code>. The table maps each one to the closest design-system token. "Same" means the light and dark values match exactly.</p>
+      <h3>Colour</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col"><code>@tessera/theme</code></th><th scope="col">Design-system token</th><th scope="col">Values</th></tr></thead>
+        <tbody>
+          <tr><td><code>--t-colorNeutralForeground1</code></td><td><code>--color-fg-default</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralForeground2</code></td><td><code>--color-fg-muted</code> (also <code>--color-fg-subtle</code>)</td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralForegroundDisabled</code></td><td><code>--color-fg-disabled</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralForegroundOnBrand</code></td><td><code>--color-fg-on-accent</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralBackground1</code></td><td><code>--color-bg-surface</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralBackground1Hover</code></td><td><code>--color-bg-subtle</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralBackground1Pressed</code></td><td><code>--color-accent-subtle</code></td><td>Same values; the system's neutral pressed state is <code>--color-bg-subtle-hover</code>, which the package lacks</td></tr>
+          <tr><td><code>--t-colorNeutralBackground2</code></td><td><code>--color-accent-subtle</code></td><td>Same values despite the "neutral" name (chips, option highlight); not <code>--color-bg-surface-sunken</code></td></tr>
+          <tr><td><code>--t-colorNeutralStroke1</code></td><td><code>--color-border-strong</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorNeutralStrokeAccessible</code></td><td><code>--color-border-strong</code></td><td>Same; the package has no decorative divider colour (<code>--color-border-default</code>)</td></tr>
+          <tr><td><code>--t-colorBrandForeground1</code></td><td><code>--color-fg-accent</code> (also <code>--color-fg-link</code>)</td><td>Same</td></tr>
+          <tr><td><code>--t-colorBrandBackground</code></td><td><code>--color-accent</code></td><td>Same; the package has no hover or active step (<code>--color-accent-hover</code>, <code>--color-accent-active</code>)</td></tr>
+          <tr><td><code>--t-colorBrandStroke1</code></td><td><code>--color-accent</code> used as a border</td><td>Same</td></tr>
+          <tr><td><code>--t-colorStrokeFocus2</code></td><td><code>--color-focus-ring</code></td><td>Same</td></tr>
+          <tr><td><code>--t-colorPaletteRedForeground1</code></td><td><code>--color-danger-fg</code> (also <code>--color-danger-solid</code>)</td><td>Same</td></tr>
+          <tr><td><code>colorScheme</code> (not a <code>--t-</code> property)</td><td><code>color-scheme</code> set by each theme</td><td>Same</td></tr>
+          <tr><td>none</td><td><code>--color-bg-canvas</code>, <code>--color-bg-surface-raised</code>, <code>--color-info-*</code>, <code>--color-success-*</code>, <code>--color-warning-*</code>, <code>--color-media-*</code>, <code>--color-skeleton</code></td><td>System only; hosts set page canvas themselves</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Typography</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col"><code>@tessera/theme</code></th><th scope="col">Design-system token</th><th scope="col">Values</th></tr></thead>
+        <tbody>
+          <tr><td><code>--t-fontFamilyBase</code></td><td><code>--font-family-sans</code></td><td><b>Differs:</b> package <code>system-ui, sans-serif</code>; system <code>"Inter", "Segoe UI", system-ui, Arial, sans-serif</code>. Both fall back to the platform UI font.</td></tr>
+          <tr><td><code>--t-fontSizeBase100</code></td><td><code>--font-size-xs</code></td><td>Same (12px)</td></tr>
+          <tr><td><code>--t-fontSizeBase200</code></td><td><code>--font-size-sm</code></td><td>Same (14px)</td></tr>
+          <tr><td><code>--t-fontSizeBase300</code></td><td><code>--font-size-md</code></td><td>Same (16px)</td></tr>
+          <tr><td><code>--t-fontSizeBase400</code></td><td><code>--font-size-xl</code></td><td>Same (20px); the system's <code>--font-size-lg</code> (18px) has no package step</td></tr>
+          <tr><td><code>--t-fontSizeBase500</code></td><td><code>--font-size-2xl</code></td><td>Same (24px)</td></tr>
+          <tr><td><code>--t-fontSizeBase600</code></td><td><code>--font-size-4xl</code></td><td>Same (32px); <code>--font-size-3xl</code> and <code>--font-size-5xl</code> have no package step</td></tr>
+          <tr><td><code>--t-fontWeightRegular</code></td><td><code>--font-weight-regular</code></td><td>Same (400)</td></tr>
+          <tr><td><code>--t-fontWeightSemibold</code></td><td><code>--font-weight-semibold</code></td><td>Same (600); <code>--font-weight-medium</code> has no package step</td></tr>
+          <tr><td><code>--t-fontWeightBold</code></td><td><code>--font-weight-bold</code></td><td>Same (700)</td></tr>
+          <tr><td><code>--t-lineHeightBase300</code></td><td><code>--line-height-normal</code></td><td>Same (1.5)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Spacing, shape, elevation, motion</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col"><code>@tessera/theme</code></th><th scope="col">Design-system token</th><th scope="col">Values</th></tr></thead>
+        <tbody>
+          <tr><td><code>--t-spacingHorizontalXXS</code>, <code>--t-spacingVerticalXXS</code></td><td><code>--space-0-5</code></td><td>Same (2px)</td></tr>
+          <tr><td><code>--t-spacingHorizontalXS</code>, <code>--t-spacingVerticalXS</code></td><td><code>--space-1</code></td><td>Same (4px)</td></tr>
+          <tr><td><code>--t-spacingHorizontalS</code>, <code>--t-spacingVerticalS</code></td><td><code>--space-2</code></td><td>Same (8px)</td></tr>
+          <tr><td><code>--t-spacingHorizontalM</code>, <code>--t-spacingVerticalM</code></td><td><code>--space-3</code></td><td>Same (12px)</td></tr>
+          <tr><td><code>--t-spacingHorizontalL</code>, <code>--t-spacingVerticalL</code></td><td><code>--space-4</code></td><td>Same (16px)</td></tr>
+          <tr><td><code>--t-spacingHorizontalXL</code>, <code>--t-spacingVerticalXL</code></td><td><code>--space-6</code></td><td>Same (24px); <code>--space-5</code> and <code>--space-8</code> upward have no package step</td></tr>
+          <tr><td><code>--t-borderRadiusSmall</code></td><td><code>--radius-sm</code></td><td>Same (4px)</td></tr>
+          <tr><td><code>--t-borderRadiusMedium</code></td><td><code>--radius-md</code></td><td>Same (8px); <code>--radius-lg</code> (cards, players), <code>--radius-xl</code> and <code>--radius-full</code> have no package step</td></tr>
+          <tr><td><code>--t-strokeWidthThin</code></td><td><code>--border-width-hairline</code></td><td>Same (1px)</td></tr>
+          <tr><td><code>--t-strokeWidthThick</code></td><td><code>--border-width-thick</code></td><td>Same (2px). The focus ring is 3px (<code>--focus-ring-width</code>), which the package has no token for</td></tr>
+          <tr><td><code>--t-shadow4</code></td><td><code>--shadow-2</code></td><td>Same in light. <b>Differs</b> in dark: the system deepens shadows to 45% opacity; the package keeps 14%</td></tr>
+          <tr><td><code>--t-durationNormal</code></td><td><code>--duration-base</code></td><td><b>Differs:</b> package <code>0ms</code> in both themes (motion off by default); system <code>200ms</code>, near zero only under reduced motion</td></tr>
+          <tr><td><code>--t-curveEasyEase</code></td><td><code>--ease-standard</code></td><td>Same</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Combobox properties</h3>
+      <p>Each <code>--t-combobox-*</code> property takes precedence over the shared <code>--t-*</code> token in the package.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Package property</th><th scope="col">Package fallback</th><th scope="col">Design-system token</th></tr></thead>
+        <tbody>
+          <tr><td><code>--t-combobox-text</code></td><td><code>colorNeutralForeground1</code></td><td><code>--color-fg-default</code> (no component token)</td></tr>
+          <tr><td><code>--t-combobox-surface</code></td><td><code>colorNeutralBackground1</code></td><td><code>--combobox-surface</code></td></tr>
+          <tr><td><code>--t-combobox-border</code></td><td><code>colorNeutralStrokeAccessible</code></td><td><code>--combobox-border</code></td></tr>
+          <tr><td><code>--t-combobox-focus-ring</code></td><td><code>colorStrokeFocus2</code></td><td><code>--color-focus-ring</code></td></tr>
+          <tr><td><code>--t-combobox-error</code></td><td><code>colorPaletteRedForeground1</code></td><td><code>--color-danger-solid</code> (invalid border) and <code>--color-danger-fg</code> (error text)</td></tr>
+          <tr><td><code>--t-combobox-disabled-text</code></td><td><code>colorNeutralForegroundDisabled</code></td><td><code>--color-fg-disabled</code></td></tr>
+          <tr><td><code>--t-combobox-placeholder</code></td><td><code>colorNeutralForeground2</code></td><td><code>--color-fg-subtle</code></td></tr>
+          <tr><td><code>--t-combobox-chip-bg</code></td><td><code>colorNeutralBackground2</code></td><td><code>--combobox-chip-bg</code></td></tr>
+          <tr><td><code>--t-combobox-hover-bg</code></td><td><code>colorNeutralBackground1Hover</code></td><td><code>--combobox-hover-bg</code></td></tr>
+          <tr><td><code>--t-combobox-active-outline</code></td><td><code>colorBrandStroke1</code></td><td><code>--combobox-active-outline</code></td></tr>
+          <tr><td><code>--t-combobox-selected-mark</code></td><td><code>colorBrandBackground</code></td><td><code>--combobox-selected-mark</code></td></tr>
+          <tr><td><code>--t-combobox-chip-list-max-height</code></td><td><code>8rem</code></td><td><code>--combobox-chip-list-max-height</code> (same, 8rem)</td></tr>
+          <tr><td><code>--t-combobox-panel-max-height</code></td><td><code>24rem</code></td><td>No token; <code>.combobox__popup</code> uses <code>min(24rem, 60dvh)</code></td></tr>
+          <tr><td><code>--t-combobox-motion-duration</code> (mock only)</td><td><code>0ms</code> in the mock</td><td><code>--duration-*</code>; not carried over (see <a href="motion.html#usage">motion</a>)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Video player properties</h3>
+      <p>Where the package falls back to a page-neutral token, the result differs from the system, which keeps controls on a dark media scrim in both themes. The video mock set these properties explicitly on the host; set them the same way to match the system.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Package property</th><th scope="col">Package fallback</th><th scope="col">Design-system token</th><th scope="col">Values</th></tr></thead>
+        <tbody>
+          <tr><td><code>--t-video-player-scrim</code></td><td><code>colorNeutralBackground1</code></td><td><code>--media-scrim</code> (<code>--color-media-scrim</code>)</td><td><b>Differs:</b> fallback is the page surface (white in light); system is translucent dark sage in both themes</td></tr>
+          <tr><td><code>--t-video-player-control-fg</code></td><td><code>colorNeutralForeground1</code></td><td><code>--media-fg</code> (<code>--color-media-fg</code>)</td><td><b>Differs</b> in light: fallback is dark ink; system is white on the scrim</td></tr>
+          <tr><td><code>--t-video-player-control-bg-hover</code></td><td><code>colorNeutralBackground1Hover</code></td><td><code>--media-hover</code> (<code>--color-media-hover</code>)</td><td><b>Differs:</b> system is a 14% white wash</td></tr>
+          <tr><td><code>--t-video-player-accent</code></td><td><code>colorBrandBackground</code></td><td><code>--media-accent</code> (<code>--color-media-accent</code>)</td><td><b>Differs</b> in light: system keeps <code>--palette-teal-300</code> in both themes</td></tr>
+          <tr><td><code>--t-video-player-accent-fg</code></td><td><code>colorNeutralForegroundOnBrand</code></td><td><code>--media-fg-on-accent</code></td><td><b>Differs</b> in light: system is dark ink on the light teal</td></tr>
+          <tr><td><code>--t-video-player-live</code></td><td><code>colorPaletteRedForeground1</code></td><td><code>--media-live</code> (<code>--color-media-live</code>)</td><td><b>Differs:</b> system uses <code>--palette-red-300</code> in both themes; the mock's light red failed 3:1 over a white frame</td></tr>
+          <tr><td><code>--t-video-player-focus-ring</code></td><td><code>colorStrokeFocus2</code></td><td><code>--media-focus-ring</code> (<code>--color-media-focus-ring</code>)</td><td><b>Differs</b> in light: system keeps the light amber because the ring sits on the dark scrim</td></tr>
+          <tr><td><code>--t-video-player-error</code></td><td><code>colorPaletteRedForeground1</code></td><td><code>--color-danger-solid</code></td><td>Same</td></tr>
+          <tr><td><code>--t-video-player-error-fg</code></td><td><code>colorNeutralForeground1</code></td><td><code>--color-fg-on-danger</code></td><td><b>Differs</b> in light: system is white on the solid red, as in the mock</td></tr>
+          <tr><td><code>--t-video-player-skeleton</code></td><td><code>colorNeutralBackground2</code></td><td><code>--color-skeleton</code></td><td><b>Differs:</b> system uses sage, not the accent tint</td></tr>
+          <tr><td><code>--t-video-player-caption-bg</code></td><td>black at 85%</td><td><code>--color-media-caption-bg</code></td><td><b>Differs:</b> system black at 75% (from the mock)</td></tr>
+          <tr><td><code>--t-video-player-caption-fg</code></td><td>white</td><td><code>--color-media-caption-fg</code></td><td>Same</td></tr>
+          <tr><td><code>--t-video-player-motion-duration</code></td><td><code>durationNormal</code> (0ms)</td><td><code>--duration-base</code></td><td><b>Differs:</b> 200ms in the system and the mock</td></tr>
+          <tr><td><code>--t-video-player-radius</code></td><td><code>borderRadiusMedium</code> (8px)</td><td><code>--media-radius</code> (<code>--radius-lg</code>)</td><td><b>Differs:</b> 12px in the system and the mock</td></tr>
+        </tbody>
+      </table></div>
+      <p>The SCORM player has no component-specific properties; it reads the shared <code>--t-*</code> tokens directly. Course content inside its frame keeps its own styles and is never themed.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <ul>
+        <li>Theme with semantic tokens; re-skin one component with its component tokens; never edit <code>components.css</code> to change a colour.</li>
+        <li>Put <code>data-theme</code> on the highest element that should change. Do not toggle classes on individual components.</li>
+        <li>Never hard-code a colour in a component, even one that "never changes"; forced colours and future themes both need it to be a token.</li>
+        <li>A custom theme is the host's accessibility responsibility (as the <code>@tessera/theme</code> README says): keep 4.5:1 text, 3:1 controls and focus, 44px targets and a visible focus ring.</li>
+      </ul>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><code>.learning-area { --btn-bg: var(--color-accent); }</code></div><figcaption>Re-skin through a component token that aliases a semantic one.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>.learning-area .btn--primary { background: teal; }</code></div><figcaption>Override the component's own declarations with a literal; it ignores dark mode, hover and forced colours.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><code>[data-theme="dark"] { --color-accent: var(--palette-teal-300); }</code></div><figcaption>Choose dark values per role, checking each contrast pair.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>[data-theme="dark"] { filter: invert(1); }</code></div><figcaption>Invert the light theme; video, course content and status colours all come out wrong.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <p>Every theme must pass the same pairs. These are checked live for the current theme:</p>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Body text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Muted text on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Label on accent</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Control edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on canvas</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-canvas" data-min="3"></span></div>
+      </div>
+      <p>Switch the page theme with the toggle in the navigation (or press <kbd>t</kbd>) to check the other theme. The full list lives in <a href="color.html">colour</a> and in <code>tokens/contrast-pairs.json</code>.</p>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Theming owns no tokens: it changes the values of the semantic tokens documented on <a href="color.html">colour</a>, <a href="typography.html">typography</a>, <a href="spacing.html">spacing</a>, <a href="shape.html">shape</a>, <a href="elevation.html">elevation</a> and <a href="motion.html">motion</a>. The tokens a theme normally overrides are the <code>--color-*</code> group, <code>--shadow-*</code> (dark shadows are deeper) and <code>color-scheme</code>.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><code>src/theme/README.md</code> and <code>src/theme/theme-values.json</code> (<code>@tessera/theme</code>).</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a> and <a href="../../mocks/video-player/index.html">video-player</a>: <code>--t-combobox-*</code> and <code>--t-video-player-*</code> overrides, light and dark.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: light and dark page palettes.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

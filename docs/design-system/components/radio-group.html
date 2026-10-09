@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radio group — Tessera design system</title>
+<meta name="description" content="Radio groups choose exactly one option from a short visible list. Vertical, horizontal and card layouts; checked, invalid and disabled states in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Radio group</h1>
+      <p class="ds-lead">A radio group asks for exactly one choice from a short list that stays visible: how a course decides completion, which format a session uses, whether an assignment is required.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;input type="radio"&gt;</code></span><span class="ds-pill ds-pill--warn">Derived</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a radio group when a person must pick one option, there are two to about seven options, and comparing them side by side helps. Every option is visible, so nobody has to open anything to learn what is possible.</p>
+      <ul>
+        <li><b>More than about seven options, or a long familiar list</b> (countries, time zones): use a <a href="select.html">select</a>.</li>
+        <li><b>A large, searched set</b> (learners, courses): use the <a href="combobox.html">combobox</a>.</li>
+        <li><b>Several choices allowed</b>: use <a href="checkbox.html">checkboxes</a>.</li>
+        <li><b>A single on/off setting that applies at once</b>: use a <a href="switch.html">switch</a>. A radio group's choice is submitted with its form.</li>
+        <li><b>Switching a view</b> ("Outline" / "Transcript"): use <a href="tabs.html">tabs</a> or a segmented <a href="button-group.html">button group</a>, not radios.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <fieldset class="fieldset" aria-describedby="an-hint" style="width: 100%; max-width: 24rem;">
+            <legend>Completion rule</legend>
+            <p class="field__hint" id="an-hint">How the course decides a learner has finished.</p>
+            <div class="check-group">
+              <label class="check"><input type="radio" name="an-rule" checked><span class="check__text">All lessons viewed<span class="check__description">Every SCORM lesson reports "completed".</span></span></label>
+              <label class="check"><input type="radio" name="an-rule"><span class="check__text">Passing score on the final quiz</span></label>
+            </div>
+          </fieldset>
+          <span class="ds-callout" style="left: 10%; top: 12%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 70%; top: 30%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 6%; top: 50%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 52%; top: 46%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 70%; top: 62%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Legend</b><small><code>&lt;legend&gt;</code> inside <code>.fieldset</code>: bold 16px. It is the group's accessible name and is read before each option.</small></div></li>
+          <li><div><b>Group hint (optional)</b><small><code>.field__hint</code>, linked to the fieldset with <code>aria-describedby</code>.</small></div></li>
+          <li><div><b>Radio</b><small>Native input, 20px, <code>accent-color: --color-accent</code>, aligned to the first line of the label.</small></div></li>
+          <li><div><b>Label</b><small><code>.check__text</code>, body 16px. The wrapping <code>&lt;label class="check"&gt;</code> makes the whole 44px row the target.</small></div></li>
+          <li><div><b>Description (optional)</b><small><code>.check__description</code>, 14px muted, part of the label, so it is announced with the option.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>The layout changes; the behaviour does not. Choose by label length and how much each option needs explaining.</p>
+      <h3>Vertical (default)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Completion rule</legend>
+            <div class="check-group">
+              <label class="check"><input type="radio" name="v-rule" checked><span class="check__text">All lessons viewed</span></label>
+              <label class="check"><input type="radio" name="v-rule"><span class="check__text">Passing score on the final quiz</span></label>
+              <label class="check"><input type="radio" name="v-rule"><span class="check__text">Instructor sign-off</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>One option per row; the easiest layout to scan and the only one that works for long labels.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;fieldset class="fieldset fieldset--bare"&gt;
+  &lt;legend&gt;Completion rule&lt;/legend&gt;
+  &lt;div class="check-group"&gt;
+    &lt;label class="check"&gt;&lt;input type="radio" name="rule" value="viewed" checked&gt;&lt;span class="check__text"&gt;All lessons viewed&lt;/span&gt;&lt;/label&gt;
+    &lt;label class="check"&gt;&lt;input type="radio" name="rule" value="quiz"&gt;&lt;span class="check__text"&gt;Passing score on the final quiz&lt;/span&gt;&lt;/label&gt;
+    &lt;label class="check"&gt;&lt;input type="radio" name="rule" value="signoff"&gt;&lt;span class="check__text"&gt;Instructor sign-off&lt;/span&gt;&lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre></details>
+      </div>
+      <h3>Horizontal</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Session format</legend>
+            <div class="check-group check-group--horizontal">
+              <label class="check"><input type="radio" name="v-format" checked><span class="check__text">In person</span></label>
+              <label class="check"><input type="radio" name="v-format"><span class="check__text">Online</span></label>
+              <label class="check"><input type="radio" name="v-format"><span class="check__text">Hybrid</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>For two to four one- or two-word options. Wraps onto further rows instead of scrolling.</span><span><code>.check-group--horizontal</code></span></div>
+      </div>
+      <h3>Card</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <fieldset class="fieldset fieldset--bare" style="width: 100%; max-width: 32rem;">
+            <legend>Assignment type</legend>
+            <div class="check-group stack" style="--stack-gap: var(--space-3);">
+              <label class="check check--card"><input type="radio" name="v-type" checked><span class="check__text">Required<span class="check__description">Learners see a due date and get reminders until they finish.</span></span></label>
+              <label class="check check--card"><input type="radio" name="v-type"><span class="check__text">Recommended<span class="check__description">Shown on the learner's home page; no due date.</span></span></label>
+              <label class="check check--card"><input type="radio" name="v-type"><span class="check__text">Optional<span class="check__description">Listed in the catalogue only.</span></span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>When each option needs a sentence of explanation. The checked card gets the accent edge and fill; the radio stays visible as the non-colour cue.</span><span><code>.check--card</code></span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. Radios are 20px inside a 44px row (--control-height-md); the row, not the dot, is the target, so a smaller size would fail the comfortable target and a larger one adds nothing."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. Radios are 20px inside a 44px row (--control-height-md); the row, not the dot, is the target, so a smaller size would fail the comfortable target and a larger one adds nothing.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Native radios draw their own hover and pressed feedback; the system adds the focus ring, the invalid outline and the readable disabled text. Focus is forced here with <code>data-state="focus"</code>; hover and active columns show the native control, which differs slightly per browser.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Invalid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Unchecked</th>
+            <td><label class="check"><input type="radio" name="m-u1"><span class="check__text">Online</span></label></td>
+            <td><label class="check"><input type="radio" name="m-u2" data-state="hover"><span class="check__text">Online</span></label></td>
+            <td><label class="check"><input type="radio" name="m-u3" data-state="focus"><span class="check__text">Online</span></label></td>
+            <td><label class="check"><input type="radio" name="m-u4" data-state="active"><span class="check__text">Online</span></label></td>
+            <td><label class="check"><input type="radio" name="m-u5" disabled><span class="check__text">Online</span></label></td>
+            <td><label class="check"><input type="radio" name="m-u6" aria-invalid="true"><span class="check__text">Online</span></label></td></tr>
+          <tr><th scope="row">Checked</th>
+            <td><label class="check"><input type="radio" name="m-c1" checked><span class="check__text">In person</span></label></td>
+            <td><label class="check"><input type="radio" name="m-c2" checked data-state="hover"><span class="check__text">In person</span></label></td>
+            <td><label class="check"><input type="radio" name="m-c3" checked data-state="focus"><span class="check__text">In person</span></label></td>
+            <td><label class="check"><input type="radio" name="m-c4" checked data-state="active"><span class="check__text">In person</span></label></td>
+            <td><label class="check"><input type="radio" name="m-c5" checked disabled><span class="check__text">In person</span></label></td>
+            <td><label class="check"><input type="radio" name="m-c6" checked aria-invalid="true"><span class="check__text">In person</span></label></td></tr>
+          <tr><th scope="row">Card</th>
+            <td><label class="check check--card" style="width: 11rem;"><input type="radio" name="m-k1"><span class="check__text">Optional</span></label></td>
+            <td><label class="check check--card" style="width: 11rem; border-color: var(--color-fg-default);"><input type="radio" name="m-k2" data-state="hover"><span class="check__text">Optional</span></label></td>
+            <td><label class="check check--card" style="width: 11rem;"><input type="radio" name="m-k3" data-state="focus"><span class="check__text">Optional</span></label></td>
+            <td><label class="check check--card" style="width: 11rem;"><input type="radio" name="m-k4" checked data-state="active"><span class="check__text">Optional</span></label></td>
+            <td><label class="check check--card" style="width: 11rem; border-style: dashed;"><input type="radio" name="m-k5" disabled><span class="check__text">Optional</span></label></td>
+            <td><label class="check check--card" style="width: 11rem;"><input type="radio" name="m-k6" aria-invalid="true"><span class="check__text">Optional</span></label></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Group invalid</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <fieldset class="fieldset fieldset--bare" aria-describedby="s-inv-err">
+            <legend>Completion rule <span class="field__required">(required)</span></legend>
+            <p class="field__error" id="s-inv-err"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Choose how the course is completed.</span></p>
+            <div class="check-group">
+              <label class="check"><input type="radio" name="s-inv" aria-invalid="true" required><span class="check__text">All lessons viewed</span></label>
+              <label class="check"><input type="radio" name="s-inv" aria-invalid="true" required><span class="check__text">Passing score on the final quiz</span></label>
+              <label class="check"><input type="radio" name="s-inv" aria-invalid="true" required><span class="check__text">Instructor sign-off</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Invalid applies to the group: every radio gets <code>aria-invalid="true"</code> and a 2px danger outline; the message sits under the legend, before the options, and is linked to the fieldset.</span></div>
+      </div>
+      <h3>Disabled option and disabled group</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start;">
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Completion rule</legend>
+            <div class="check-group">
+              <label class="check"><input type="radio" name="s-dis1" checked><span class="check__text">All lessons viewed</span></label>
+              <label class="check"><input type="radio" name="s-dis1" disabled><span class="check__text">Passing score on the final quiz<span class="check__description">This course has no quiz.</span></span></label>
+            </div>
+          </fieldset>
+          <fieldset class="fieldset fieldset--bare" disabled>
+            <legend>Session format</legend>
+            <div class="check-group">
+              <label class="check"><input type="radio" name="s-dis2" checked><span class="check__text">In person</span></label>
+              <label class="check"><input type="radio" name="s-dis2"><span class="check__text">Online</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Disabled text stays readable (<code>--color-fg-disabled</code>). Say why an option is unavailable in its description. <code>&lt;fieldset disabled&gt;</code> disables the whole group.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light">
+          <fieldset class="fieldset fieldset--bare"><legend>Assignment type</legend>
+            <div class="check-group stack" style="--stack-gap: var(--space-3);">
+              <label class="check check--card"><input type="radio" name="t-light" checked><span class="check__text">Required<span class="check__description">Due date and reminders.</span></span></label>
+              <label class="check check--card"><input type="radio" name="t-light"><span class="check__text">Optional<span class="check__description">Catalogue only.</span></span></label>
+              <label class="check"><input type="radio" name="t-light" disabled><span class="check__text">Recommended</span></label>
+            </div></fieldset>
+        </div>
+        <div data-theme="dark">
+          <fieldset class="fieldset fieldset--bare"><legend>Assignment type</legend>
+            <div class="check-group stack" style="--stack-gap: var(--space-3);">
+              <label class="check check--card"><input type="radio" name="t-dark" checked><span class="check__text">Required<span class="check__description">Due date and reminders.</span></span></label>
+              <label class="check check--card"><input type="radio" name="t-dark"><span class="check__text">Optional<span class="check__description">Catalogue only.</span></span></label>
+              <label class="check"><input type="radio" name="t-dark" disabled><span class="check__text">Recommended</span></label>
+            </div></fieldset>
+        </div>
+      </div>
+      <ul>
+        <li><b>Checked</b> is the native filled dot in <code>--color-accent</code>; card radios also get the accent border, an inset 1px accent ring and <code>--color-accent-subtle</code> fill. The dot remains the non-colour cue.</li>
+        <li><b>Invalid</b> never relies on colour alone: the message with its icon says what to do.</li>
+        <li><b>Read-only</b> does not exist for native radios; show the chosen value as text (a <a href="description-list.html">description list</a>) instead of a frozen group.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Vertical groups and cards reflow naturally down to 320px; labels and descriptions wrap, never truncate.</li>
+        <li>Horizontal groups wrap onto extra rows (24px column gap). If a label would wrap inside a horizontal group at 320px or at 200% text, use the vertical layout instead.</li>
+        <li>Cards are full width on phones. From <code>--layout-breakpoint-md</code> (768px) up, short card sets may sit side by side in <code>.grid--auto</code>; keep them in a single column when descriptions run longer than one line.</li>
+        <li>Every row is at least 44px tall at every width, so the target never shrinks on touch.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>Radios have no component tokens: the native control paints itself with <code>accent-color: var(--color-accent)</code>, so changing the accent re-themes every radio. Cards read <code>--color-border-strong</code>, <code>--color-accent</code> and <code>--color-accent-subtle</code>. In the dark theme the accent lightens to teal-300 and the selected card fill becomes sage-800, keeping text above 4.5:1. In forced-colours mode the browser draws the radio in system colours and the card keeps its 1px border.</p>
+      <pre><code>/* A host area with its own accent re-themes radios through the semantic token */
+.learner-portal { --color-accent: var(--palette-teal-700); }</code></pre>
+      <p>See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input type="radio"&gt;</code> elements sharing one <code>name</code>, grouped in a <code>&lt;fieldset&gt;</code> whose <code>&lt;legend&gt;</code> names the group. This gives the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/radio/">WAI-ARIA APG Radio Group pattern</a> behaviour for free; do not rebuild it with <code>role="radio"</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves into the group onto the checked radio (or the first radio when none is checked), and out of the group. The group is one Tab stop.</td></tr>
+        <tr><td><kbd>↓</kbd> / <kbd>→</kbd></td><td>Moves to and checks the next radio, wrapping to the first. In RTL, <kbd>←</kbd> moves forward.</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>←</kbd></td><td>Moves to and checks the previous radio, wrapping to the last.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Checks the focused radio if it is not already checked.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Submits the surrounding form (native).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 3px amber ring with 2px offset is drawn around the radio itself on <code>:focus-visible</code>. On cards it is still drawn on the radio, so the selected card's accent edge and the focus ring never merge. Disabled radios are skipped by arrow keys.</p>
+      <h3>Labelling</h3>
+      <p>Every radio sits inside its <code>&lt;label class="check"&gt;</code>, so the label text and description are its name. The legend names the group; screen readers announce "Completion rule, group" before the first option. Group hints and errors are linked to the fieldset with <code>aria-describedby</code>; required groups say "(required)" in the legend.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Description on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Checked dot on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Card border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Label on selected card</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Selected card edge on its fill</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid outline on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Disabled label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. The dot appears instantly; cards change colour without a transition.</p>
+      <h3>Touch</h3>
+      <p>The whole 44px label row (or the whole card) is the target, not the 20px dot. Vertical rows have no gap, but each is 44px tall; horizontal options are 24px apart.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The legend is a short noun phrase or question: "Completion rule", "How should learners attend?" Add "(required)" when required.</li>
+        <li>Option labels are parallel, sentence case and short: "In person", "Online", "Hybrid". Do not start every option with the same word.</li>
+        <li>Put the safest or most common option first and check it by default when a default is reasonable. Leave the group unchecked only when choosing is the point, and then validate it.</li>
+        <li>Include "None" or "Not applicable" if it is a valid answer, rather than letting people skip the group.</li>
+        <li>Descriptions explain consequences, not the label again: "Learners see a due date and get reminders until they finish."</li>
+        <li>Error messages say what to do: "Choose how the course is completed."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><fieldset class="fieldset fieldset--bare"><legend>Completion rule</legend><div class="check-group"><label class="check"><input type="radio" name="dd-1" checked><span class="check__text">All lessons viewed</span></label><label class="check"><input type="radio" name="dd-1"><span class="check__text">Passing score on the final quiz</span></label></div></fieldset></div><figcaption>Stack options with longer labels vertically inside a fieldset with a legend.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="check-group check-group--horizontal" style="max-width: 18rem;"><label class="check"><input type="radio" name="dd-2" checked><span class="check__text">All lessons viewed</span></label><label class="check"><input type="radio" name="dd-2"><span class="check__text">Passing score on the final quiz</span></label></div></div><figcaption>Lay long labels out horizontally with no legend: they wrap into a ragged grid and the group has no name.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><fieldset class="fieldset fieldset--bare"><legend>Reminder emails</legend><div class="check-group"><label class="check"><input type="checkbox"><span class="check__text">Send reminders before the due date</span></label></div></fieldset></div><figcaption>Use a single checkbox (or a switch) for one yes/no choice.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><fieldset class="fieldset fieldset--bare"><legend>Reminder emails</legend><div class="check-group"><label class="check"><input type="radio" name="dd-3"><span class="check__text">Send reminders before the due date</span></label></div></fieldset></div><figcaption>Use a lone radio: once checked it cannot be unchecked.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><label class="check check--card" style="max-width: 18rem;"><input type="radio" name="dd-4" checked><span class="check__text">Required<span class="check__description">Due date and reminders.</span></span></label></div><figcaption>Keep the radio visible on cards so selection is not shown by colour alone.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="card card--selected" style="max-width: 18rem; padding: var(--space-4);"><b>Required</b><span class="check__description">Due date and reminders.</span></div></div><figcaption>Hide the radio and rely on the teal fill; the choice is invisible in forced colours and to some colour-blind users.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Checked dot (<code>accent-color</code>)</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Description</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Card border</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Selected card fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Invalid outline</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Disabled label</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Row height</td><td><code>--control-height-md</code></td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Radio to label / horizontal gap</td><td><code>--space-2</code> / <code>--space-6</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-6"></span></td></tr>
+          <tr><td>Card padding / radius</td><td><code>--space-4</code> / <code>--radius-md</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--radius-md"></span></td></tr>
+          <tr><td>Label / description font</td><td><code>--text-body</code> / <code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body"></span> / <span data-token="--text-body-sm"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;fieldset class="fieldset fieldset--bare" aria-describedby="rule-error"&gt;
+  &lt;legend&gt;Completion rule &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/legend&gt;
+  &lt;p class="field__error" id="rule-error"&gt;…icon…&lt;span&gt;Choose how the course is completed.&lt;/span&gt;&lt;/p&gt;
+  &lt;div class="check-group"&gt;
+    &lt;label class="check"&gt;
+      &lt;input type="radio" name="rule" value="viewed" required aria-invalid="true"&gt;
+      &lt;span class="check__text"&gt;All lessons viewed
+        &lt;span class="check__description"&gt;Every SCORM lesson reports "completed".&lt;/span&gt;&lt;/span&gt;
+    &lt;/label&gt;
+    …
+  &lt;/div&gt;
+&lt;/fieldset&gt;
+
+&lt;label class="check check--card"&gt;&lt;input type="radio" name="type" value="required" checked&gt;…&lt;/label&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.fieldset</code>, <code>.fieldset--bare</code></td><td>Group container with legend; bare removes the border and padding.</td></tr>
+        <tr><td><code>.check-group</code></td><td>Vertical list of options.</td></tr>
+        <tr><td><code>.check-group--horizontal</code></td><td>Wrapping row, 24px between options.</td></tr>
+        <tr><td><code>.check</code></td><td>Label row: 44px minimum, radio aligned to the first line.</td></tr>
+        <tr><td><code>.check--card</code></td><td>Bordered card; accent edge and fill when its radio is checked.</td></tr>
+        <tr><td><code>.check__text</code>, <code>.check__description</code></td><td>Label text and muted second line.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>2px danger outline on the radio.</td></tr>
+        <tr><td><code>disabled</code> (input or fieldset)</td><td>Skipped by arrows; readable disabled text.</td></tr>
+        <tr><td><code>data-state="focus"</code></td><td>Documentation only: forces the focus ring.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. The <a href="../../mocks/scorm-player/index.html">scorm-player</a>, <a href="../../mocks/combobox/index.html">combobox</a> and <a href="../../mocks/video-player/index.html">video-player</a> mocks use selects for their scenario and theme controls and no radios. The 20px native control with <code>accent-color</code>, the 44px row and the readable disabled text come from the combobox mock's "Right-to-left" checkbox and the system's checkbox rules.</p>
+      <p>Drift fixed during extraction: none specific to radios. The system-wide rules apply: one 3px focus ring with a 2px offset, disabled shown by readable text and dashed edges rather than fading, 4px spacing scale.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback and loading — Tessera design system</title>
+<meta name="description" content="Which feedback answers which action, when to show a skeleton, a spinner or a progress bar, how to delay announcements, and how to update optimistically with undo.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Feedback and loading</h1>
+      <p class="ds-lead">Every action gets an answer at the place and weight it deserves: an inline message beside the field, a toast for a finished background task, a banner for a page-wide condition, a dialog only when the learner must decide. While work is in progress, the shape of the wait chooses the indicator: skeleton, spinner or progress bar.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes: skeleton, spinner, progress bar, inline message, alert, toast, dialog</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Feedback has two jobs: show that the system heard the action, and say how it ended. Tessera's three mocks each solve one of these well, and this pattern generalises them.</p>
+      <ul>
+        <li><b>Acknowledge within 100 ms.</b> Visual state changes immediately: the combobox spinner appears in the field as soon as a request starts; the video player shows its connecting skeleton the moment it mounts.</li>
+        <li><b>Announce only what lasts.</b> Screen reader announcements of a wait are delayed by 1 s, so fast responses never produce "Loading… 6 results available" chatter. The combobox says "Loading results." after 1 s; the video player says "Buffering." only after buffering has lasted 1 s.</li>
+        <li><b>End every wait with an outcome.</b> Success, empty or failure, each in words: "6 results available.", "No results found.", "Results could not be loaded."</li>
+        <li><b>Keep what the learner did.</b> A failure never discards input or selections: "Learners could not be loaded. Your selections are safe." "Your latest progress is kept on this page."</li>
+      </ul>
+      <p>For the components themselves see <a href="../components/skeleton.html">skeleton</a>, <a href="../components/spinner.html">spinner</a>, <a href="../components/progress-bar.html">progress bar</a>, <a href="../components/inline-message.html">inline message</a>, <a href="../components/alert.html">alert</a> and <a href="../components/toast.html">toast</a>. How messages are prioritised and dismissed is in <a href="notifications.html">notifications</a>; what to say when there is nothing or something broke is in <a href="empty-and-error-states.html">empty and error states</a>.</p>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <h3>Which feedback for which action</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">The action or event</th><th scope="col">Feedback</th><th scope="col">Example from the mocks</th></tr></thead>
+        <tbody>
+          <tr><td>Input to one field is wrong or missing</td><td><a href="../components/inline-message.html">Inline message</a> under the field (<code>.field__error</code>)</td><td>"Select at least one learner." under the combobox</td></tr>
+          <tr><td>Result scoped to one component (search, load, stream)</td><td>Status inside the component, plus its own polite live region</td><td>Combobox status row "6 of 24 learners"; video "Connecting…"</td></tr>
+          <tr><td>A background task finished and the learner can carry on</td><td><a href="../components/toast.html">Toast</a>, optionally with Undo</td><td>"Ada Lovelace removed from the assignment. Undo"</td></tr>
+          <tr><td>A condition affects the whole page or course until resolved</td><td><a href="../components/alert.html">Alert</a> at the top of the region, persistent, with the recovery action</td><td>SCORM "Progress not saved" with Retry save</td></tr>
+          <tr><td>The learner must decide before anything else happens</td><td><a href="../components/dialog.html">Dialog</a></td><td>"Remove 3 learners?" confirmation</td></tr>
+          <tr><td>A transient change that is already visible in the UI</td><td>Live region only; optional decorative pill</td><td>Video "Back live." with the 1.5 s "Back live" pill</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Skeleton, spinner or progress</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Indicator</th><th scope="col">Use when</th><th scope="col">Tessera example</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../components/skeleton.html">Skeleton</a></td><td>The layout of what is coming is known and the first load takes more than a moment. Holds the space so nothing jumps.</td><td>Video connecting state: a shimmering 16:9 stage with "Lecture hall A" and "Connecting…"; "Still connecting…" after 5 s.</td></tr>
+          <tr><td><a href="../components/spinner.html">Spinner</a></td><td>Short, indeterminate work inside an existing surface, or a refresh of content already shown.</td><td>Combobox field spinner while results load; video buffering and reconnecting overlays; a loading button (<code>aria-busy</code>).</td></tr>
+          <tr><td><a href="../components/progress-bar.html">Progress bar</a></td><td>Measurable work, or long work with known steps. Show the value as text too.</td><td>SCORM course progress "2 of 4 activities complete"; "Reconnecting… attempt 1 of 5" is progress in words.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Optimistic updates and undo</h3>
+      <p>Update the UI before the server confirms when the action is reversible, very likely to succeed, and cheap to roll back: selecting a learner, removing a chip, toggling captions. Offer Undo in a toast for removals that cannot be redone with one click. Do not update optimistically when the result is the learner's record of achievement (SCORM completion and saves): the SCORM player shows "Last saved at 10:42" only after the save succeeded, and "Not saved" otherwise. Completion comes only from the content, never from player chrome.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>One view, three waits. The live video is connecting (skeleton), the learner search is fetching (spinner in the field, status row in the popup), and the course reports measurable progress (progress bar with its value in text). A finished removal confirms in a toast with Undo.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <div class="grid grid--auto">
+            <div class="media-player" role="region" aria-label="Video player: Lecture hall A">
+              <div class="media-player__stage">
+                <div class="media-player__overlay media-player__overlay--skeleton"><div><p>Lecture hall A</p><p>Connecting…</p></div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__header"><h3>Better conversations at work</h3></div>
+              <div class="card__body stack">
+                <div class="progress">
+                  <div class="progress__header"><span id="fl-progress-label">Course progress</span><span class="progress__value">2 of 4 activities complete</span></div>
+                  <div class="progress__track" role="progressbar" aria-labelledby="fl-progress-label" aria-valuemin="0" aria-valuemax="4" aria-valuenow="2" aria-valuetext="2 of 4 activities complete"><div class="progress__bar" style="--progress: 50%;"></div></div>
+                </div>
+                <dl class="dl dl--inline"><div><dt>Completion:</dt><dd>Unknown</dd></div><div><dt>Save status:</dt><dd>Last saved at 10:42</dd></div></dl>
+              </div>
+            </div>
+          </div>
+          <div class="field combobox">
+            <label class="field__label" for="fl-learners">Learners</label>
+            <div class="combobox__field">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="fl-learners" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="fl-results" autocomplete="off" value="Gra">
+                <span class="spinner spinner--sm" aria-hidden="true"></span>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <div class="combobox__listbox" id="fl-results" role="listbox" aria-label="Learners" aria-multiselectable="true"></div>
+              <div class="combobox__status"><span class="loading-inline">Loading learners…</span></div>
+            </div>
+          </div>
+          <div class="toast-region toast-region--static">
+            <div class="toast toast--success">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>
+              <div class="toast__body">Ada Lovelace removed from the assignment.</div>
+              <button class="btn btn--sm" type="button">Undo</button>
+              <button class="btn btn--icon btn--sm" type="button" aria-label="Dismiss notification"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Skeleton for a known layout, spinner inside the field, progress with its value in text, toast with Undo for a reversible removal.</span><span>Live regions omitted from the static demo.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;!-- Video: connecting skeleton; the component's polite region says "Connecting to Lecture hall A." --&gt;
+&lt;div class="media-player__overlay media-player__overlay--skeleton"&gt;
+  &lt;div&gt;&lt;p&gt;Lecture hall A&lt;/p&gt;&lt;p&gt;Connecting…&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Combobox: spinner is decorative; the status row and live region carry the words --&gt;
+&lt;div class="combobox__input-row"&gt;
+  &lt;input class="combobox__input" role="combobox" aria-expanded="true" aria-controls="results"&gt;
+  &lt;span class="spinner spinner--sm" aria-hidden="true"&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div class="combobox__status"&gt;&lt;span class="loading-inline"&gt;Loading learners…&lt;/span&gt;&lt;/div&gt;
+&lt;div class="visually-hidden" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt; &lt;!-- "Loading results." after 1 s --&gt;
+
+&lt;!-- SCORM: measurable progress --&gt;
+&lt;div class="progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="4"
+     aria-valuenow="2" aria-valuetext="2 of 4 activities complete"&gt;
+  &lt;div class="progress__bar" style="--progress: 50%"&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Toast region exists on page load, empty --&gt;
+&lt;div class="toast-region" role="status" aria-live="polite"&gt;&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Delayed announcements</h3>
+      <p>The visual indicator and the spoken one run on different clocks. Show the spinner at once; start a 1 s timer for the announcement; cancel the timer if the work finishes first. When it finishes, announce the outcome either way.</p>
+      <pre><code>// Combobox (mock): spinner now, words after 1 s, outcome always
+spinner.hidden = false;
+loadingTimer = setTimeout(() =&gt; announce('Loading results.'), 1000);
+onResponse(() =&gt; { clearTimeout(loadingTimer); announce(n ? `${n} results available.` : 'No results found.'); });
+
+// Video (mock): buffering spinner now, "Buffering." only if it lasts 1 s
+later(() =&gt; { if (state === 'buffering') announce('Buffering.'); }, 1000);</code></pre>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Every waiting surface moves through the same states. Each has a visual and a spoken form.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">State</th><th scope="col">Visual</th><th scope="col">Announced</th></tr></thead>
+        <tbody>
+          <tr><td>Idle</td><td>Nothing; or the last result</td><td>Nothing</td></tr>
+          <tr><td>Waiting, under 1 s</td><td>Spinner or skeleton</td><td>Nothing</td></tr>
+          <tr><td>Waiting, over 1 s</td><td>Same indicator</td><td>"Loading results." / "Buffering." (once)</td></tr>
+          <tr><td>Still waiting (5 s)</td><td>Reassuring text: "Still connecting…"</td><td>Nothing new unless the learner can act</td></tr>
+          <tr><td>Success</td><td>Content replaces the indicator in place</td><td>"6 results available." / "Live." / "Progress saved."</td></tr>
+          <tr><td>Empty</td><td>Empty state with next step</td><td>"No results found."</td></tr>
+          <tr><td>Failure</td><td>Error message with Retry where retrying can help</td><td>"Results could not be loaded." / "Progress not saved. Try saving again."</td></tr>
+          <tr><td>Optimistic, then rolled back</td><td>Change reverts; toast or inline error says why</td><td>"Couldn't remove Ada Lovelace. She is still assigned."</td></tr>
+        </tbody>
+      </table></div>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</span>
+          <p class="message message--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>6 results available.</p>
+          <p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>Learners could not be loaded. Your selections are safe.</p>
+          <button class="btn btn--sm" type="button">Retry</button>
+          <button class="btn btn--primary" type="button" aria-busy="true"><span>Retry save</span></button>
+        </div>
+        <div class="ds-example__caption"><span>Loading, success, failure with Retry, and a busy button that keeps its name.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack">
+          <div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text" style="--skeleton-width: 80%;"></div>
+          <span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</span>
+          <div class="progress"><div class="progress__header"><span>Course progress</span><span class="progress__value">2 of 4</span></div><div class="progress__track"><div class="progress__bar" style="--progress: 50%;"></div></div></div>
+          <div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack">
+          <div class="skeleton skeleton--title"></div><div class="skeleton skeleton--text" style="--skeleton-width: 80%;"></div>
+          <span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</span>
+          <div class="progress"><div class="progress__header"><span>Course progress</span><span class="progress__value">2 of 4</span></div><div class="progress__track"><div class="progress__bar" style="--progress: 50%;"></div></div></div>
+          <div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Skeletons take the exact box of the content they stand for (the video stage keeps 16:9), so nothing shifts when it arrives at any width.</li>
+        <li>Spinners stay inside their component: in the combobox input row, in the video stage, in a busy button. Never a full-page spinner over content that is still usable.</li>
+        <li>Progress text wraps under the label at 320px rather than truncating; the bar keeps full width.</li>
+        <li>Toasts span the viewport minus 16px margins below <code>--layout-breakpoint-sm</code> and sit bottom-right at 24rem wide above it, clear of the safe-area inset.</li>
+        <li>At 200% text and 400% zoom, status rows wrap ("Learners could not be loaded. Your selections are safe." then Retry on its own line); they never clip.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Status messages reach assistive technology without moving focus (<a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 4.1.3 Status Messages</a>). Each component owns one polite live region (<code>aria-live="polite" aria-atomic="true"</code>) that exists, empty, from first render; failures that block the learner use <code>role="alert"</code>. The progress bar uses <code>role="progressbar"</code> with <code>aria-valuetext</code>. Spinners and skeletons are <code>aria-hidden</code>; the region that is loading may set <code>aria-busy="true"</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches Retry, Undo and Dismiss in DOM order. Loading never removes the focused element; a busy button keeps focus.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>In the combobox, retries a failed load or loads more when no option is active.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the combobox popup; does not cancel a save. Long waits offer a visible Cancel (SCORM "Loading course" has Cancel).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Feedback does not steal focus. The exceptions follow the mocks: when a blocking error replaces the surface that had focus, focus moves to the error heading (video error panel, SCORM "Progress not saved" on exit); when loading replaces the course while focus was inside it, focus moves to the "Loading course" heading and that is the announcement. Otherwise use the polite region. A closing region never strands focus on <code>&lt;body&gt;</code>.</p>
+      <h3>Labelling</h3>
+      <p>Indicators are named by text next to them, never by the animation: "Loading learners…", "Connecting…", "2 of 4 activities complete". Retry buttons say what they retry when context is not obvious ("Retry save").</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Loading text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Spinner arc and progress fill on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Progress track edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Text on skeleton (video connecting)</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-skeleton" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error message on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Toast text</span><span class="ds-pair__ratio" data-contrast="--color-fg-inverse|--color-bg-inverse" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Under <code>prefers-reduced-motion</code> skeleton shimmer stops (flat <code>--color-skeleton</code>), the indeterminate bar becomes a static half-opacity track, and spinners keep turning but slow to 2 s per revolution, because they report status. Progress width changes over <code>--duration-deliberate</code>, zeroed under reduced motion.</p>
+      <h3>Touch</h3>
+      <p>Retry, Undo and Dismiss are at least 32px with 8px spacing inside toasts and status rows, whose rows are themselves larger targets; standalone recovery buttons are 44px.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Waiting text names the thing and ends with an ellipsis: "Loading learners…", "Connecting…", "Checking the course package…". Spoken versions end with a full stop: "Loading results."</li>
+        <li>Outcomes are short past-tense or state sentences: "Progress saved.", "Back live.", "3 more results loaded."</li>
+        <li>Failures follow the formula: what happened, what is safe, what to do. "Learners could not be loaded. Your selections are safe." with Retry.</li>
+        <li>Undo toasts name the object: "Ada Lovelace removed from the assignment." Button: "Undo".</li>
+        <li>Never "Please wait", "Oops" or "Success!".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</span></div><figcaption>Show the spinner at once and announce "Loading results." only if the wait passes 1 s (combobox mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading…</span></div><figcaption>Announce "Loading" on every keystroke; a 450 ms search becomes "Loading. 6 results. Loading. 4 results." chatter.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="dl dl--inline"><div><dt>Save status:</dt><dd>Not saved</dd></div></dl><button class="btn btn--primary" type="button">Retry save</button></div><figcaption>Report the learner's record only after the LMS confirms it; say "Not saved" when it fails (SCORM mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><dl class="dl dl--inline"><div><dt>Save status:</dt><dd>Saved</dd></div></dl></div><figcaption>Optimistically show "Saved" for progress that may not have reached the LMS.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas" style="width: 100%;"><div class="skeleton skeleton--rect" style="max-width: 16rem;"></div></div><figcaption>Use a skeleton with the final 16:9 box for the first video load, so controls do not jump.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="spinner spinner--lg" aria-hidden="true"></span></div><figcaption>Put a large page spinner over a whole view whose layout is known and partly usable.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: field spinner, "Loading learners…" status row, "Loading results." after 1 s, outcome announcements, failure with Retry ("Your selections are safe").</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: connecting skeleton, "Still connecting…" at 5 s, buffering spinner announced after 1 s, reconnect attempts, "Back live" pill.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Loading course" with Cancel, "Last saved at" only after a successful save, "Progress not saved" with Retry save, completion only from content.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Spinners were drawn two ways (SVG dash circle in the combobox, bordered div in the video); unified on <code>.spinner</code>.</li>
+        <li>Skeleton shimmer used one-off colours per mock; now <code>--color-skeleton</code> and <code>--duration-loop-shimmer</code>, stopped under reduced motion.</li>
+        <li>Video error stripe 5px and SCORM notice stripe 4px; unified on <code>--border-width-stripe</code>.</li>
+        <li><code>.sr-only</code> implemented with <code>clip</code> and <code>clip-path</code>; unified on <code>.visually-hidden</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

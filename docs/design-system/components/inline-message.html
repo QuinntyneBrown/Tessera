@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inline message — Tessera design system</title>
+<meta name="description" content="Inline messages sit under a single field: hint, error, success and warning, linked to the field with aria-describedby.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Inline message</h1>
+      <p class="ds-lead">An inline message is one short line of guidance or feedback tied to a single field: how to fill it in, what is wrong with it, or that it checked out. It lives directly under the field and is read with it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Linked by <code>aria-describedby</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use an inline message for anything that concerns one control: a hint ("Select one or more learners"), a validation error ("Select at least one learner"), a confirmation that a value was accepted, or a soft warning that does not block submission. The <a href="form-field.html">form field</a> wrapper places it; this page defines the message itself.</p>
+      <ul>
+        <li><b>Hint</b> (<code>.message</code>): neutral, muted, always present when the field needs explaining.</li>
+        <li><b>Error</b> (<code>.message--error</code>): icon + text, shown after validation, directly below the field and before the hint.</li>
+        <li><b>Success</b> (<code>.message--success</code>): icon + text, for checks the person would otherwise wonder about ("Course code is available").</li>
+        <li><b>Warning</b> (<code>.message--warning</code>): icon + text, for a valid but risky value ("Due date is on a weekend").</li>
+      </ul>
+      <p>For a condition that affects a whole form or region, use an <a href="alert.html">alert</a>; for an error summary at the top of a long form, see the <a href="../patterns/forms.html">forms pattern</a>. For feedback about an action, use a <a href="toast.html">toast</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: 100%; max-width: 24rem;">
+            <label class="field__label" for="anat-learners">Learners <span class="field__required">(required)</span></label>
+            <input class="input" id="anat-learners" type="text" aria-invalid="true" aria-describedby="anat-error anat-hint" placeholder="Name or email">
+            <p class="message message--error" id="anat-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p>
+            <p class="message" id="anat-hint">Select one or more learners. Search to narrow the results.</p>
+          </div>
+          <span class="ds-callout" style="left: 18%; top: 58%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 34%; top: 58%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 34%; top: 76%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Status icon (error, success, warning)</b><small>16px, <code>aria-hidden="true"</code>, aligned to the first line with <code>--space-0-5</code>. Hints have no icon.</small></div></li>
+          <li><div><b>Message text</b><small><code>--text-body-sm</code> (14px), tone colour. One sentence that names the fix.</small></div></li>
+          <li><div><b>Hint</b><small>Muted <code>--color-fg-muted</code>. Stays visible when an error appears; the error goes above it.</small></div></li>
+        </ol>
+      </div>
+      <p>Spacing: <code>--space-2</code> (8px) between the field and the first message and between messages, set by the <code>.field</code> gap; <code>--space-2</code> between icon and text.</p>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <div class="field">
+            <label class="field__label" for="v-hint">Course code</label>
+            <input class="input" id="v-hint" type="text" aria-describedby="v-hint-msg" value="">
+            <p class="message" id="v-hint-msg">Six characters, for example COM-101.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-error">Learners <span class="field__required">(required)</span></label>
+            <input class="input" id="v-error" type="text" aria-invalid="true" aria-describedby="v-error-msg v-error-hint" placeholder="Name or email">
+            <p class="message message--error" id="v-error-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p>
+            <p class="message" id="v-error-hint">Select one or more learners. Search to narrow the results.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-success">Course code</label>
+            <input class="input" id="v-success" type="text" aria-describedby="v-success-msg" value="COM-204">
+            <p class="message message--success" id="v-success-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="v-warning">Due date</label>
+            <input class="input" id="v-warning" type="date" aria-describedby="v-warning-msg" value="2026-10-17">
+            <p class="message message--warning" id="v-warning-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>Saturday, 17 October is a weekend. Learners may not see it until Monday.</span></p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Hint, error (with hint kept), success, warning. Each message is in the field's <code>aria-describedby</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="learners"&gt;Learners &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/label&gt;
+  &lt;input class="input" id="learners" aria-invalid="true" aria-describedby="learners-error learners-hint"&gt;
+  &lt;p class="message message--error" id="learners-error"&gt;
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+    &lt;span&gt;Select at least one learner.&lt;/span&gt;
+  &lt;/p&gt;
+  &lt;p class="message" id="learners-hint"&gt;Select one or more learners. Search to narrow the results.&lt;/p&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>In a group</h3>
+      <p>For a <a href="checkbox.html">checkbox</a> or <a href="radio-group.html">radio group</a>, the message belongs to the <code>&lt;fieldset&gt;</code> and sits under the legend's options, referenced from the fieldset with <code>aria-describedby</code>.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <fieldset class="fieldset fieldset--bare" aria-describedby="g-error">
+            <legend>Notify learners by</legend>
+            <div class="check-group">
+              <label class="check"><input type="checkbox" name="notify-g" aria-invalid="true"><span class="check__text">Email</span></label>
+              <label class="check"><input type="checkbox" name="notify-g" aria-invalid="true"><span class="check__text">LMS inbox</span></label>
+            </div>
+            <p class="message message--error" id="g-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Choose at least one way to notify learners.</span></p>
+          </fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Inline messages use one size (14px body-small); they follow the field's width.">
+      <h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">Inline messages use one size (14px body-small); they follow the field's width.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A message is not interactive. It appears with its field in every field state; the field's own states come from <a href="text-field.html">text field</a>. Pointer and focus states are forced with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Message</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Disabled</th><th scope="col">Read-only</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Hint</th>
+            <td><div class="field"><input class="input" type="text" aria-label="Course code, default" aria-describedby="m-h1"><p class="message" id="m-h1">Six characters.</p></div></td>
+            <td><div class="field"><input class="input" type="text" data-state="hover" aria-label="Course code, hover" aria-describedby="m-h2"><p class="message" id="m-h2">Six characters.</p></div></td>
+            <td><div class="field"><input class="input" type="text" data-state="focus" aria-label="Course code, focus" aria-describedby="m-h3"><p class="message" id="m-h3">Six characters.</p></div></td>
+            <td><div class="field"><input class="input" type="text" disabled aria-label="Course code, disabled" aria-describedby="m-h4"><p class="message" id="m-h4">Six characters.</p></div></td>
+            <td><div class="field"><input class="input" type="text" readonly value="COM-101" aria-label="Course code, read-only" aria-describedby="m-h5"><p class="message" id="m-h5">Set by the LMS.</p></div></td></tr>
+          <tr><th scope="row">Error (invalid)</th>
+            <td><div class="field"><input class="input" type="text" aria-invalid="true" aria-label="Learners, invalid" aria-describedby="m-e1"><p class="message message--error" id="m-e1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" aria-invalid="true" data-state="hover" aria-label="Learners, invalid hover" aria-describedby="m-e2"><p class="message message--error" id="m-e2"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" aria-invalid="true" data-state="focus" aria-label="Learners, invalid focus" aria-describedby="m-e3"><p class="message message--error" id="m-e3"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p></div></td>
+            <td>Never: a disabled field cannot be invalid; clear the error when disabling.</td>
+            <td>Never: read-only values are not validated by the person.</td></tr>
+          <tr><th scope="row">Success</th>
+            <td><div class="field"><input class="input" type="text" value="COM-204" aria-label="Course code, valid" aria-describedby="m-s1"><p class="message message--success" id="m-s1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" value="COM-204" data-state="hover" aria-label="Course code, valid hover" aria-describedby="m-s2"><p class="message message--success" id="m-s2"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" value="COM-204" data-state="focus" aria-label="Course code, valid focus" aria-describedby="m-s3"><p class="message message--success" id="m-s3"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p></div></td>
+            <td>Remove on disable.</td>
+            <td>Not shown.</td></tr>
+          <tr><th scope="row">Warning</th>
+            <td><div class="field"><input class="input" type="text" value="17/10/2026" aria-label="Due date, warning" aria-describedby="m-w1"><p class="message message--warning" id="m-w1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>That date is a Saturday.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" value="17/10/2026" data-state="hover" aria-label="Due date, warning hover" aria-describedby="m-w2"><p class="message message--warning" id="m-w2"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>That date is a Saturday.</span></p></div></td>
+            <td><div class="field"><input class="input" type="text" value="17/10/2026" data-state="focus" aria-label="Due date, warning focus" aria-describedby="m-w3"><p class="message message--warning" id="m-w3"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>That date is a Saturday.</span></p></div></td>
+            <td>Remove on disable.</td>
+            <td><div class="field"><input class="input" type="text" readonly value="17/10/2026" aria-label="Due date, read-only warning" aria-describedby="m-w5"><p class="message message--warning" id="m-w5"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>Set by the LMS; falls on a Saturday.</span></p></div></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <p class="message">Select one or more learners.</p>
+          <p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p>
+          <p class="message message--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p>
+          <p class="message message--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>That date is a Saturday.</span></p>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <p class="message">Select one or more learners.</p>
+          <p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p>
+          <p class="message message--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><span>COM-204 is available.</span></p>
+          <p class="message message--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><span>That date is a Saturday.</span></p>
+        </div></div>
+      </div>
+      <h3>Timing</h3>
+      <ul>
+        <li><b>Errors</b> appear on blur or on submit, never while the person is still typing the first time. Once shown, they re-validate on input and disappear as soon as the value is valid.</li>
+        <li><b>Success</b> appears only after an asynchronous check finishes (availability, enrolment); a spinner (<code>.loading-inline</code>) stands in while it runs.</li>
+        <li><b>Hints</b> never change with validation state.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The message takes the field's full width and wraps; it never truncates and never sits beside the field, even on wide screens.</li>
+        <li>The icon stays aligned to the first line as the text wraps (<code>align-items: flex-start</code>).</li>
+        <li>In <code>.field__below</code> the hint shares a row with a counter or a text button ("Clear all selections"); below about 20rem the button wraps to its own line, end-aligned.</li>
+        <li>200% text and text-spacing overrides only make the message taller.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The message reads only the status foreground tokens: <code>--color-fg-muted</code> (hint), <code>--color-danger-fg</code>, <code>--color-success-fg</code>, <code>--color-warning-fg</code>. The icon inherits the text colour. There are no component tokens; to re-skin, override the semantic tokens on a wrapper. In dark theme the foregrounds lighten to the 200–300 steps of each ramp. In the shipped combobox the error colour is <code>--t-combobox-error</code>, fed by <code>--t-colorPaletteRedForeground1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A plain <code>&lt;p&gt;</code> referenced by the control's <code>aria-describedby</code>; no role. The field sets <code>aria-invalid="true"</code> while an error is shown. List the error id before the hint id so the error is read first, matching visual order. See <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">Understanding 3.3.1 Error Identification</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Moves to the field; the message is read as the field's description. Messages are never tab stops.</td></tr>
+        <tr><td>(none)</td><td>A message contains no controls. If a fix needs an action, put a button next to the field, not inside the message.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>On submit with errors, focus moves to the first invalid field (or to the error summary in long forms); its description then reads the error. Showing an error on blur does not move focus.</p>
+      <h3>Labelling</h3>
+      <p>Errors are not announced by a live region on blur; they are read when the person returns to the field. Components that validate asynchronously (the combobox) announce the result in their own polite live region. Errors name the field or the fix in words, so "Error" is never the only cue; the icon is <code>aria-hidden</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Hint on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Success on surface</span><span class="ds-pair__ratio" data-contrast="--color-success-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warning on surface</span><span class="ds-pair__ratio" data-contrast="--color-warning-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid field border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Messages appear and disappear in place; no slide or shake.</p>
+      <h3>Touch</h3>
+      <p>Messages are not targets. Keep them out of the field's tap area so a tap on the message does not trigger anything; a text button in <code>.field__below</code> keeps its own 24px minimum target.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Errors</b> say how to fix it: "Select at least one learner.", "Enter a course code like COM-101." Not "Invalid input" or "Required".</li>
+        <li><b>Hints</b> describe what a good answer looks like: "Select one or more learners. Search to narrow the results."</li>
+        <li><b>Success</b> confirms the specific value: "COM-204 is available."</li>
+        <li><b>Warnings</b> explain the consequence, not just the fact: "Learners may not see it until Monday."</li>
+        <li>One sentence each, ending with a full stop. Sentence case. No exclamation marks.</li>
+        <li>Mark required fields in the label ("(required)"), so the error is not the first time a person learns the field is required.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-a">Learners <span class="field__required">(required)</span></label><input class="input" id="dd-a" aria-invalid="true" aria-describedby="dd-a-e dd-a-h"><p class="message message--error" id="dd-a-e"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><span>Select at least one learner.</span></p><p class="message" id="dd-a-h">Select one or more learners.</p></div></div><figcaption>Error directly below the field, before the hint, with an icon (combobox mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-b">Learners</label><input class="input" id="dd-b" aria-invalid="true" aria-describedby="dd-b-h dd-b-e"><p class="message" id="dd-b-h">Select one or more learners.</p><p class="message message--error" id="dd-b-e"><span>Required</span></p></div></div><figcaption>Error below the hint, with no icon and no fix; it is easy to miss and colour is the only cue.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-c">Course code</label><input class="input" id="dd-c" aria-describedby="dd-c-h"><p class="message" id="dd-c-h">Six characters, for example COM-101.</p></div></div><figcaption>Put guidance in a persistent hint under the field.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><input class="input" aria-label="Course code" placeholder="Six characters, e.g. COM-101"></div></div><figcaption>Use the placeholder as the only hint; it vanishes on typing and its contrast is lower.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Hint text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Error text and icon</td><td><code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td></tr>
+          <tr><td>Success text and icon</td><td><code>--color-success-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-success-fg" data-swatch></i><span data-token="--color-success-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-success-fg" data-swatch></i><span data-token="--color-success-fg"></span></span></td></tr>
+          <tr><td>Warning text and icon</td><td><code>--color-warning-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-warning-fg" data-swatch></i><span data-token="--color-warning-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-warning-fg" data-swatch></i><span data-token="--color-warning-fg"></span></span></td></tr>
+          <tr><td>Invalid field border</td><td><code>--color-danger-solid</code>, <code>--border-width-thick</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Font</td><td><code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body-sm"></span></td></tr>
+          <tr><td>Field-to-message and icon gap</td><td><code>--space-2</code></td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+          <tr><td>Icon nudge</td><td><code>--space-0-5</code></td><td colspan="2"><span data-token="--space-0-5"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;input class="input" id="code" aria-describedby="code-hint"&gt;
+&lt;p class="message" id="code-hint"&gt;Six characters, for example COM-101.&lt;/p&gt;
+
+&lt;input class="input" id="learners" aria-invalid="true" aria-describedby="learners-error learners-hint"&gt;
+&lt;p class="message message--error" id="learners-error"&gt;&lt;svg class="icon" aria-hidden="true" …&gt;…&lt;/svg&gt;&lt;span&gt;Select at least one learner.&lt;/span&gt;&lt;/p&gt;
+&lt;p class="message" id="learners-hint"&gt;…&lt;/p&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.message</code></td><td>Base: muted hint, 14px, flex row for an optional icon.</td></tr>
+        <tr><td><code>.message--error</code> <code>.message--success</code> <code>.message--warning</code></td><td>Tone colour for text and icon.</td></tr>
+        <tr><td><code>aria-describedby</code> on the control</td><td>Links the message; list error before hint.</td></tr>
+        <tr><td><code>aria-invalid="true"</code> on the control</td><td>Set while an error message is shown; gives the field a 2px danger border.</td></tr>
+        <tr><td><code>.field__error</code></td><td>Equivalent legacy class in the form-field wrapper; prefer <code>.message--error</code> in new markup.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: required error "Select at least one learner." with a circle-exclamation icon, directly below the field and before the hint; hint "Select one or more learners. Search to narrow the results."; <code>aria-describedby</code> rebuilt as <code>validation hint summary</code> when invalid; "Clear all selections" sharing the hint row.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Icon-to-text gap 0.375rem; snapped to <code>--space-2</code>.</li>
+        <li>Hint colour used the placeholder token (<code>--t-combobox-placeholder</code>); hints now use <code>--color-fg-muted</code>, which passes 4.5:1, so hints and placeholders are no longer coupled.</li>
+      </ul>
+      <p>Success and warning messages are derived: not present in the mocks; they follow the system rules.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

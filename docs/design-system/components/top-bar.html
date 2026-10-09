@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top bar — Tessera design system</title>
+<meta name="description" content="The top bar is the host LMS header: a 64px band with the product title, optional primary navigation, actions and a compact menu button below 48rem.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Top bar</h1>
+      <p class="ds-lead">The top bar is the host LMS header that frames every Tessera surface: the product title on the left, primary navigation in the middle on wide screens, and a few page-wide actions on the right. Below 48rem the navigation folds behind a menu button.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;header&gt;</code> + <code>&lt;nav&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every mock opens with the same band: a 64px <code>&lt;header class="topbar"&gt;</code> with a bold 16px title ("Host LMS" in the SCORM mock, "Tessera · Host LMS" in the combobox and video mocks). The top bar belongs to the host LMS page, not to a Tessera component: the SCORM player, combobox and video player sit in the page below it and never draw their own header.</p>
+      <ul>
+        <li><b>With title</b> is the minimum: the product or LMS name, as in all three mocks.</li>
+        <li><b>With navigation</b> adds three to six top-level destinations (Courses, Learners, Reports). Deeper structure belongs in <a href="sidebar-navigation.html">sidebar navigation</a> or <a href="tabs.html">tabs</a>.</li>
+        <li><b>With actions</b> adds at most three page-wide actions on the end side: help, notifications, the signed-in learner's account <a href="menu.html">menu</a>. Page-specific actions (Exit course, Preview assignment) stay in the page, not in the top bar.</li>
+        <li><b>Compact</b> is not a separate component: it is how the same top bar renders below <code>--layout-breakpoint-md</code> (48rem). The navigation hides and a menu button with <code>aria-expanded</code> and <code>aria-controls</code> reveals it.</li>
+      </ul>
+      <p>Do not use the top bar for a page title (use the page's <code>&lt;h1&gt;</code> under it), for step-by-step progress (use the <a href="stepper.html">stepper</a>), or for a location trail (use the <a href="breadcrumb.html">breadcrumb</a>). See the <a href="../patterns/navigation.html">navigation pattern</a> for how the three fit together.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding: var(--space-10) var(--space-4); display: block;">
+          <header class="topbar">
+            <button class="btn btn--ghost btn--icon topbar__menu" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="anatomy-nav"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <a class="topbar__brand" href="#anatomy">Tessera · Host LMS</a>
+            <nav class="topbar__nav" id="anatomy-nav" aria-label="Primary (anatomy example)"><ul>
+              <li><a href="#anatomy" aria-current="page">Courses</a></li>
+              <li><a href="#anatomy">Learners</a></li>
+            </ul></nav>
+            <div class="topbar__actions"><button class="btn btn--ghost btn--icon" type="button" aria-label="Help"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></svg></button></div>
+          </header>
+          <span class="ds-callout" style="left: 4%; top: 12%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 24%; top: 12%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 50%; top: 12%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 88%; top: 12%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 50%; top: 80%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Menu button (compact only)</b><small><code>.topbar__menu</code>: a ghost icon button, 44px, <code>aria-expanded</code> + <code>aria-controls</code>. Shown below 48rem, hidden above.</small></div></li>
+          <li><div><b>Title or brand</b><small><code>.topbar__title</code> (plain text) or <code>.topbar__brand</code> (a link home): <code>--text-h4</code>, bold 16px.</small></div></li>
+          <li><div><b>Navigation (optional)</b><small><code>.topbar__nav</code>: a labelled <code>&lt;nav&gt;</code> with a list of 44px links; the current one carries <code>aria-current="page"</code> and a 2px accent underline.</small></div></li>
+          <li><div><b>Actions (optional)</b><small><code>.topbar__actions</code>: up to three ghost buttons or a menu trigger, pushed to the end side with <code>margin-inline-start: auto</code>.</small></div></li>
+          <li><div><b>Container</b><small><code>.topbar</code>: <code>&lt;header&gt;</code>, at least 64px (<code>--layout-topbar-height</code>), <code>--layout-margin</code> inline padding, surface background, 1px <code>--color-border-default</code> bottom edge.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Pick the smallest variant that serves the page. A Tessera component embedded in an LMS usually only needs the title; a full LMS shell adds navigation and actions.</p>
+      <h3>With title</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack" style="padding: 0;">
+          <header class="topbar"><p class="topbar__title">Host LMS</p></header>
+        </div>
+        <div class="ds-example__caption"><span>The mocks' top bar: 64px, bold 16px title. In a page with no other heading the title is the <code>&lt;h1&gt;</code> (as in the mocks); here it is a <code>&lt;p&gt;</code> so this page keeps one <code>&lt;h1&gt;</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;header class="topbar"&gt;
+  &lt;h1 class="topbar__title"&gt;Host LMS&lt;/h1&gt;
+&lt;/header&gt;</code></pre></details>
+      </div>
+
+      <h3>With navigation</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack" style="padding: 0;">
+          <header class="topbar">
+            <button class="btn btn--ghost btn--icon topbar__menu" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-variant-drawer" data-demo-toggle><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <a class="topbar__brand" href="#variants">Tessera · Host LMS</a>
+            <nav class="topbar__nav" aria-label="Primary (navigation example)"><ul>
+              <li><a href="#variants" aria-current="page">Courses</a></li>
+              <li><a href="#variants">Learners</a></li>
+              <li><a href="#variants">Assignments</a></li>
+              <li><a href="#variants">Reports</a></li>
+            </ul></nav>
+          </header>
+          <nav class="sidenav" id="nav-variant-drawer" aria-label="Primary (navigation example, menu)" hidden style="max-width: none; border-bottom: var(--border-width-hairline) solid var(--color-border-default);"><ul>
+            <li><a class="sidenav__link" href="#variants" aria-current="page">Courses</a></li>
+            <li><a class="sidenav__link" href="#variants">Learners</a></li>
+            <li><a class="sidenav__link" href="#variants">Assignments</a></li>
+            <li><a class="sidenav__link" href="#variants">Reports</a></li>
+          </ul></nav>
+        </div>
+        <div class="ds-example__caption"><span>The brand is a link home. Narrow the window below 48rem to see the links fold behind the menu button.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;header class="topbar"&gt;
+  &lt;button class="btn btn--ghost btn--icon topbar__menu" type="button"
+          aria-label="Open navigation" aria-expanded="false" aria-controls="primary-menu"&gt;…&lt;/button&gt;
+  &lt;a class="topbar__brand" href="/"&gt;Tessera · Host LMS&lt;/a&gt;
+  &lt;nav class="topbar__nav" aria-label="Primary"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="/courses" aria-current="page"&gt;Courses&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/learners"&gt;Learners&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/assignments"&gt;Assignments&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="/reports"&gt;Reports&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
+&lt;nav class="sidenav" id="primary-menu" aria-label="Primary" hidden&gt;…same links…&lt;/nav&gt;</code></pre></details>
+      </div>
+
+      <h3>With actions</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack" style="padding: 0;">
+          <header class="topbar">
+            <p class="topbar__title">Tessera · Host LMS</p>
+            <div class="topbar__actions">
+              <a class="btn btn--ghost btn--icon" href="#variants" aria-label="Help"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></svg></a>
+              <button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications, 2 unread"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button>
+              <button class="btn btn--ghost" type="button" aria-haspopup="menu" aria-expanded="false"><span class="avatar avatar--sm" aria-hidden="true">GH</span>Grace Hopper</button>
+            </div>
+          </header>
+        </div>
+        <div class="ds-example__caption"><span>Help is a link (it navigates); notifications and the account menu are buttons. The unread count lives in the accessible name.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="topbar__actions"&gt;
+  &lt;a class="btn btn--ghost btn--icon" href="/help" aria-label="Help"&gt;…&lt;/a&gt;
+  &lt;button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications, 2 unread"&gt;…&lt;/button&gt;
+  &lt;button class="btn btn--ghost" type="button" aria-haspopup="menu" aria-expanded="false"&gt;
+    &lt;span class="avatar avatar--sm" aria-hidden="true"&gt;GH&lt;/span&gt;Grace Hopper
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Compact (below 48rem)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack" style="padding: 0; max-width: 22.5rem;">
+          <header class="topbar">
+            <button class="btn btn--ghost btn--icon topbar__menu" type="button" style="display: inline-flex;" aria-label="Open navigation" aria-expanded="true" aria-controls="compact-drawer" data-demo-toggle><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <a class="topbar__brand" href="#variants">Host LMS</a>
+            <div class="topbar__actions"><button class="btn btn--ghost btn--icon" type="button" aria-label="Account: Grace Hopper"><span class="avatar avatar--sm" aria-hidden="true">GH</span></button></div>
+          </header>
+          <nav class="sidenav" id="compact-drawer" aria-label="Primary (compact example)" style="max-width: none; border-bottom: var(--border-width-hairline) solid var(--color-border-default);"><ul>
+            <li><a class="sidenav__link" href="#variants" aria-current="page">Courses</a></li>
+            <li><a class="sidenav__link" href="#variants">Learners</a></li>
+            <li><a class="sidenav__link" href="#variants">Assignments</a></li>
+            <li><a class="sidenav__link" href="#variants">Reports</a></li>
+          </ul></nav>
+        </div>
+        <div class="ds-example__caption"><span>Rendered at 360px with the menu open (<code>aria-expanded="true"</code>). The menu button is forced visible here with an inline style; in product the 48rem media query shows it. Activate it to close.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="The top bar has one height: at least 64px (--layout-topbar-height), growing only when text is enlarged or wraps."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">The top bar has one height: at least 64px (<code>--layout-topbar-height</code>), growing only when text is enlarged or wraps.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The container has no states. Its parts do: navigation links have hover, focus and current; the menu button has every button state plus expanded. Pointer and focus states are forced with <code>data-state</code> for review.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Current / expanded</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Nav link</th>
+            <td><nav class="topbar__nav" style="display: block;" aria-label="State: default"><ul><li><a href="#states">Learners</a></li></ul></nav></td>
+            <td><nav class="topbar__nav" style="display: block;" aria-label="State: hover"><ul><li><a href="#states" style="background: var(--color-bg-subtle); color: var(--color-fg-default);">Learners</a></li></ul></nav></td>
+            <td><nav class="topbar__nav" style="display: block;" aria-label="State: focus"><ul><li><a href="#states" data-state="focus">Learners</a></li></ul></nav></td>
+            <td><nav class="topbar__nav" style="display: block;" aria-label="State: active"><ul><li><a href="#states" style="background: var(--color-bg-subtle); color: var(--color-fg-default);">Learners</a></li></ul></nav></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><nav class="topbar__nav" style="display: block;" aria-label="State: current"><ul><li><a href="#states" aria-current="page">Courses</a></li></ul></nav></td></tr>
+          <tr><th scope="row">Brand link</th>
+            <td><a class="topbar__brand" href="#states">Host LMS</a></td>
+            <td><a class="topbar__brand" href="#states" style="text-decoration: underline;">Host LMS</a></td>
+            <td><a class="topbar__brand" href="#states" data-state="focus">Host LMS</a></td>
+            <td><a class="topbar__brand" href="#states" style="text-decoration: underline;">Host LMS</a></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><span class="ds-pill">Not used</span></td></tr>
+          <tr><th scope="row">Menu button</th>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="false" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="false" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="false" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td></tr>
+          <tr><th scope="row">Action button</th>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></td>
+            <td><button class="btn btn--ghost" type="button" aria-haspopup="menu" aria-expanded="true"><span class="avatar avatar--sm" aria-hidden="true">GH</span>Account</button></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><header class="topbar" style="padding-inline: var(--space-4);"><a class="topbar__brand" href="#states">Host LMS</a><nav class="topbar__nav" style="display: block;" aria-label="Primary (light theme)"><ul><li><a href="#states" aria-current="page">Courses</a></li><li><a href="#states">Learners</a></li></ul></nav><div class="topbar__actions"><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications (light theme)"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></div></header></div>
+        <div data-theme="dark"><header class="topbar" style="padding-inline: var(--space-4);"><a class="topbar__brand" href="#states">Host LMS</a><nav class="topbar__nav" style="display: block;" aria-label="Primary (dark theme)"><ul><li><a href="#states" aria-current="page">Courses</a></li><li><a href="#states">Learners</a></li></ul></nav><div class="topbar__actions"><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications (dark theme)"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></div></header></div>
+      </div>
+      <ul>
+        <li><b>Current</b> uses <code>aria-current="page"</code>: accent text plus a 2px accent underline, so it never relies on colour alone.</li>
+        <li><b>Expanded</b>: the menu button sets <code>aria-expanded="true"</code> and swaps its icon to a close cross; its accessible name stays "Open navigation" or changes to "Close navigation" (pick one approach and keep it on every page).</li>
+        <li><b>Disabled</b> is not used for navigation: a destination the person cannot open is removed, not greyed out. Action buttons follow the <a href="button.html#states">button states</a>.</li>
+        <li><b>Hover on nav links</b> is shown with a token-only inline style because <code>components.css</code> has no <code>data-state="hover"</code> hook for <code>.topbar__nav a</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>At 48rem and wider</b> (<code>--layout-breakpoint-md</code>): navigation links show inline; <code>.topbar__menu</code> is hidden.</li>
+        <li><b>Below 48rem</b>: <code>.topbar__nav</code> is hidden and <code>.topbar__menu</code> appears at the start. Activating it toggles <code>aria-expanded</code> and reveals the same links in a panel directly after the header in DOM order (a <a href="sidebar-navigation.html">sidebar navigation</a> list, full width), so focus moves forward naturally into the links.</li>
+        <li>The bar uses <code>flex-wrap: wrap</code> with a 12px row gap: at 320px, with 200% text or with WCAG text-spacing overrides the actions wrap to a second row instead of overflowing. The minimum height is 64px; the bar grows, it never clips.</li>
+        <li>Inline padding is <code>--layout-margin</code>, so it lines up with page content at every breakpoint (16px, 32px, 48px).</li>
+        <li>The top bar is not sticky by default. If a host makes it sticky, set <code>scroll-padding-top</code> to its height so focused elements are never hidden beneath it (WCAG 2.4.11).</li>
+        <li>Long titles wrap; they never truncate. Shorten the product name before shrinking the font.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The top bar reads semantic tokens directly: <code>--color-bg-surface</code> for the band, <code>--color-border-default</code> for the bottom edge, <code>--color-fg-default</code> for the title, <code>--color-fg-muted</code> for links and <code>--color-fg-accent</code> + <code>--color-accent</code> for the current link. It declares no component tokens of its own; a host re-skins it by scoping semantic tokens on the header.</p>
+      <pre><code>/* An LMS with a branded band: scope the tokens, never edit .topbar */
+.lms-header.topbar { --color-bg-surface: var(--color-accent-subtle); }</code></pre>
+      <p>In the dark theme the surface becomes sage-900 and the current underline lightens with the accent, keeping both above their minimum contrast. In the shipped packages these are <code>--t-colorNeutralBackground1</code>, <code>--t-colorNeutralStroke1</code> and <code>--t-colorBrandForeground1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The container is a <code>&lt;header&gt;</code> directly under <code>&lt;body&gt;</code>, which exposes the <code>banner</code> landmark. Navigation is a <code>&lt;nav aria-label="Primary"&gt;</code> containing a list of links. The compact menu button follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">WAI-ARIA APG Disclosure pattern</a> (<code>aria-expanded</code> + <code>aria-controls</code>), not the menu pattern: it reveals ordinary links. The account trigger opens a real <a href="menu.html">menu</a> and follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">Menu Button pattern</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through skip link, menu button (compact), brand, navigation links and actions in visual order. No arrow-key roving: these are links, not a menubar.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows a link; activates a button.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Activates the menu button or an action button.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>With the compact panel open and focus inside it or on the button: closes the panel and returns focus to the menu button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 3px amber ring with a 2px offset on <code>:focus-visible</code>. When the compact panel closes while focus is inside it, focus returns to the menu button; when the window widens past 48rem while the menu button has focus, focus moves to the current navigation link (the same rule the SCORM mock applies to its outline toggle), never to <code>&lt;body&gt;</code>.</p>
+      <h3>Labelling</h3>
+      <p>Every <code>&lt;nav&gt;</code> in a page has a distinct <code>aria-label</code> ("Primary", "Course outline"). The menu button is named "Open navigation"; its state is announced from <code>aria-expanded</code>, so the name does not need to say "open" or "closed" twice. Icon-only actions name their purpose and carry counts ("Notifications, 2 unread"). The current link is announced as "current page".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Title on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Nav link on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Nav link on hover background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current link on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current underline on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Nothing animates. The compact panel appears and disappears without a transition, so there is nothing to reduce under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>Navigation links, the menu button and actions are all 44px tall (<code>--control-height-md</code>) with at least 4px between them. Hover backgrounds are only applied under <code>(hover: hover)</code> in the related controls; nothing is reachable by hover alone.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The title is the LMS or product name ("Host LMS", "Tessera · Host LMS"), not the page name. The page name is the page's <code>&lt;h1&gt;</code> ("Better conversations at work").</li>
+        <li>Navigation labels are one or two nouns in sentence case: "Courses", "Learners", "My assignments". No verbs, no "Go to".</li>
+        <li>Keep three to six navigation items. More than six belongs in a sidebar.</li>
+        <li>Icon-only actions need an accessible name and a tooltip with the same words.</li>
+        <li>Show the signed-in person's name ("Grace Hopper") next to the avatar on wide screens; on compact screens the avatar alone, with the name in the accessible label.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar"><p class="topbar__title">Host LMS</p></header></div><figcaption>Give the band its full 64px with <code>--layout-topbar-height</code> and a bold 16px title, as the SCORM and video mocks do.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar" style="min-height: 0; padding-block: var(--space-2);"><p class="topbar__title">Host LMS</p></header></div><figcaption>Size the bar from padding alone; the combobox mock drifted to a shorter header than the other two.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar"><button class="btn btn--ghost btn--icon" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="dd-panel"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><p class="topbar__title">Host LMS</p></header><div id="dd-panel" hidden></div></div><figcaption>Use a real button with <code>aria-expanded</code> and <code>aria-controls</code> for the compact menu.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar"><span class="btn btn--ghost btn--icon" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span><p class="topbar__title">Host LMS</p></header></div><figcaption>Use a clickable icon with no role, name or state; keyboard and screen reader users never find the navigation.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar"><p class="topbar__title">Host LMS</p><div class="topbar__actions"><button class="btn btn--ghost btn--icon" type="button" aria-label="Notifications"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></button></div></header></div><figcaption>Keep page-wide actions only; course actions stay with the course.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-3);"><header class="topbar"><p class="topbar__title">Host LMS</p><div class="topbar__actions"><button class="btn" type="button">Exit course</button><button class="btn btn--primary" type="button">Continue</button></div></header></div><figcaption>Move the SCORM player's Exit course and Continue into the top bar; they lose their context and their reason text.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Bottom edge</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Title</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Nav link</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Nav link hover background</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Current link text</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Current link underline</td><td><code>--color-accent</code>, <code>--border-width-thick</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Minimum height</td><td><code>--layout-topbar-height</code></td><td colspan="2"><span data-token="--layout-topbar-height"></span></td></tr>
+          <tr><td>Inline padding</td><td><code>--layout-margin</code></td><td colspan="2"><span data-token="--layout-margin"></span></td></tr>
+          <tr><td>Block padding / gap</td><td><code>--space-3</code>, <code>--space-4</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Link and button height</td><td><code>--control-height-md</code></td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Title font</td><td><code>--text-h4</code></td><td colspan="2"><span data-token="--text-h4"></span></td></tr>
+          <tr><td>Link font</td><td><code>--text-label</code></td><td colspan="2"><span data-token="--text-label"></span></td></tr>
+          <tr><td>Compact breakpoint</td><td><code>--layout-breakpoint-md</code></td><td colspan="2"><span data-token="--layout-breakpoint-md"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;a class="skip-link" href="#main"&gt;Skip to content&lt;/a&gt;
+&lt;header class="topbar"&gt;
+  &lt;button class="btn btn--ghost btn--icon topbar__menu" type="button"
+          aria-label="Open navigation" aria-expanded="false" aria-controls="primary-menu"&gt;
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;/button&gt;
+  &lt;a class="topbar__brand" href="/"&gt;Tessera · Host LMS&lt;/a&gt;
+  &lt;nav class="topbar__nav" aria-label="Primary"&gt;&lt;ul&gt;…&lt;/ul&gt;&lt;/nav&gt;
+  &lt;div class="topbar__actions"&gt;…&lt;/div&gt;
+&lt;/header&gt;
+&lt;nav class="sidenav" id="primary-menu" aria-label="Primary" hidden&gt;…&lt;/nav&gt;
+&lt;main id="main" tabindex="-1"&gt;…&lt;/main&gt;
+
+&lt;script&gt;
+  menuButton.addEventListener('click', () =&gt; {
+    const open = menuButton.getAttribute('aria-expanded') !== 'true';
+    menuButton.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open;
+  });
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.topbar</code></td><td>The band: flex row that wraps, 64px minimum, surface background, bottom border. Put it on a <code>&lt;header&gt;</code>.</td></tr>
+        <tr><td><code>.topbar__title</code></td><td>Plain-text title, <code>--text-h4</code>. Use on an <code>&lt;h1&gt;</code> only when the page has no other <code>&lt;h1&gt;</code>.</td></tr>
+        <tr><td><code>.topbar__brand</code></td><td>Title as a link home; no underline.</td></tr>
+        <tr><td><code>.topbar__nav</code></td><td>Inline navigation list; hidden below 48rem.</td></tr>
+        <tr><td><code>.topbar__actions</code></td><td>End-aligned action cluster.</td></tr>
+        <tr><td><code>.topbar__menu</code></td><td>Compact menu button; visible only below 48rem. Combine with <code>.btn .btn--ghost .btn--icon</code>.</td></tr>
+        <tr><td><code>aria-current="page"</code></td><td>Current navigation link: accent text and 2px underline.</td></tr>
+        <tr><td><code>aria-expanded</code>, <code>aria-controls</code></td><td>Required on <code>.topbar__menu</code>; point at the panel's id.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: <code>&lt;header class="topbar"&gt;&lt;h1 class="topbar-title"&gt;Host LMS&lt;/h1&gt;</code>, 64px, bold 1rem title.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: <code>&lt;header class="topbar"&gt;&lt;h1&gt;Tessera · Host LMS&lt;/h1&gt;</code>, 1rem title.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: same header, 64px, weight 750.</li>
+      </ul>
+      <p>Navigation, actions and the compact menu are derived: not present in the mocks; they follow the system rules (navigation pattern, disclosure pattern, 48rem breakpoint).</p>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Title weight 750 (SCORM, video); normalised to 700 (<code>--font-weight-bold</code>) via <code>--text-h4</code>.</li>
+        <li>The combobox header had no minimum height (padding only); all three now use <code>--layout-topbar-height</code> (64px).</li>
+        <li>Gap 0.7rem and padding 1rem 1.5rem were off-grid or fixed; snapped to <code>--space-3</code> and <code>--layout-margin</code>.</li>
+        <li>Container widths 1440px (SCORM, video) and 72rem (combobox) below the bar; unified on <code>--layout-container-max</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+<script>
+  // Documentation demo only: disclosure toggles for the compact menu examples.
+  document.querySelectorAll('[data-demo-toggle]').forEach(function (button) {
+    var panel = document.getElementById(button.getAttribute('aria-controls'));
+    function set(open) { button.setAttribute('aria-expanded', String(open)); panel.hidden = !open; }
+    button.addEventListener('click', function () { set(button.getAttribute('aria-expanded') !== 'true'); });
+    panel.addEventListener('keydown', function (event) { if (event.key === 'Escape') { set(false); button.focus(); } });
+    button.addEventListener('keydown', function (event) { if (event.key === 'Escape') set(false); });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alert — Tessera design system</title>
+<meta name="description" content="Alerts report a condition that affects the current view: inline in four tones or neutral, or as a full-width page banner, with actions and optional dismissal.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Alert</h1>
+      <p class="ds-lead">An alert tells a learner or administrator about a condition that affects what they are doing right now: progress that was not saved, a stream that cannot play, a course that is still loading. It stays until the condition changes.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>role="alert"</code> only for new, important content</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use an alert when something about the current view needs attention and will stay true until it is resolved: "Progress not saved", "No access to this stream", "Loading course". Alerts sit in the flow of the page, next to the thing they describe, and never cover content.</p>
+      <ul>
+        <li><b>Inline alert</b> (<code>.alert</code>) belongs to a region: above the SCORM player, inside the video player's error overlay, at the top of a form.</li>
+        <li><b>Page banner</b> (<code>.alert--banner</code>) spans the page under the <a href="top-bar.html">top bar</a> for conditions that affect the whole product: scheduled maintenance, a read-only LMS period.</li>
+        <li>Use a <a href="toast.html">toast</a> instead for brief confirmation of something the person just did ("Progress saved"). Use an <a href="inline-message.html">inline message</a> for a single field. Use a <a href="dialog.html">dialog</a> only when the person must decide before they can continue.</li>
+        <li>Use an <a href="empty-state.html">empty state</a> when a region has no content to show, and an <a href="error-page.html">error page</a> when the whole page cannot load.</li>
+      </ul>
+      <p>Announcement is a separate decision from appearance. An alert that appears in response to a failure (save failed, stream lost) is announced with <code>role="alert"</code> or by moving focus to its heading. An alert that is present when the page loads, or that reports routine status, uses <code>role="status"</code> or no role at all.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="alert alert--danger" style="width: 100%;">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div>
+            <button class="btn btn--ghost btn--icon alert__dismiss" type="button" aria-label="Dismiss: Progress not saved"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          </div>
+          <span class="ds-callout" style="left: 4%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 12%; top: 22%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 26%; top: 22%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 26%; top: 48%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 70%; top: 22%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 90%; top: 22%;" aria-hidden="true">6</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Status stripe</b><small><code>--border-width-stripe</code> (4px) on the inline-start edge in the tone's solid colour. Mirrors in RTL.</small></div></li>
+          <li><div><b>Icon</b><small>20px, tone icon colour, <code>aria-hidden="true"</code>. The icon shape differs per tone so colour is never the only cue.</small></div></li>
+          <li><div><b>Title</b><small><code>--text-h4</code> (bold 16px). A real heading at the right level in product (<code>&lt;h2&gt;</code> or <code>&lt;h3&gt;</code>), with <code>tabindex="-1"</code> when focus may move to it.</small></div></li>
+          <li><div><b>Body</b><small><code>--text-body</code>; one or two sentences: what happened and what to do next.</small></div></li>
+          <li><div><b>Actions (optional)</b><small>One primary recovery action ("Retry save") and at most one secondary ("Exit without saving"). They wrap below the text when space runs out.</small></div></li>
+          <li><div><b>Dismiss (optional)</b><small>Ghost icon button, 44px, labelled "Dismiss: &lt;title&gt;". Only for alerts whose condition the person may ignore.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Tones</h3>
+      <p>The tone says how serious the condition is. Neutral is the default for progress and waiting ("Loading course"); it uses the brand stripe on a plain surface, as the SCORM <code>.notice</code> does. Danger is for failures the person must act on.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="alert">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5"/></svg>
+            <div class="alert__content"><p class="alert__title">Loading course</p><p class="alert__body">Checking the course package…</p></div>
+            <div class="alert__actions"><button class="btn" type="button">Cancel</button></div>
+          </div>
+          <div class="alert alert--info">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">This course has a new version</p><p class="alert__body">Your progress carries over. The new version adds one lesson.</p></div>
+          </div>
+          <div class="alert alert--success">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+            <div class="alert__content"><p class="alert__title">Course complete</p><p class="alert__body">Better conversations at work is recorded as complete in your learning record.</p></div>
+          </div>
+          <div class="alert alert--warning">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Assignment due tomorrow</p><p class="alert__body">Ada Lovelace and 2 other learners have not started yet.</p></div>
+          </div>
+          <div class="alert alert--danger">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Neutral, info, success, warning, danger. Demos omit live-region roles so this page does not announce on load.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;section class="alert alert--warning" aria-labelledby="due-title"&gt;
+  &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;h3 class="alert__title" id="due-title"&gt;Assignment due tomorrow&lt;/h3&gt;
+    &lt;p class="alert__body"&gt;Ada Lovelace and 2 other learners have not started yet.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre></details>
+      </div>
+
+      <h3>With actions</h3>
+      <p>Actions sit after the text and wrap below it on narrow containers. The recovery action is primary; the escape hatch is secondary. This is the SCORM save-error notice and the video player's error panel.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="alert alert--danger">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button><button class="btn" type="button">Exit without saving</button></div>
+          </div>
+          <div class="alert alert--danger">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">No access to this stream</p><p class="alert__body">You don’t have access to this stream. Sign in again or ask the organiser.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>Retry</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The unsupported-codec error has no Retry, because retrying cannot help; it only explains.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;section class="alert alert--danger" aria-labelledby="save-error-title"&gt;
+  &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;h3 class="alert__title" id="save-error-title" tabindex="-1"&gt;Progress not saved&lt;/h3&gt;
+    &lt;p class="alert__body"&gt;Your latest progress is kept on this page. Try saving again.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="alert__actions"&gt;
+    &lt;button class="btn btn--primary" type="button"&gt;Retry save&lt;/button&gt;
+    &lt;button class="btn" type="button"&gt;Exit without saving&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p class="visually-hidden" role="alert"&gt;&lt;!-- filled when the save fails --&gt;&lt;/p&gt;
+&lt;/section&gt;</code></pre></details>
+      </div>
+
+      <h3>Dismissible</h3>
+      <p>Only advisory alerts (info, success, some warnings) can be dismissed. Errors that block the task cannot; they go away when the condition is fixed.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="alert alert--info">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Captions are available</p><p class="alert__body">Lecture hall A streams live captions. Turn them on with C or the Captions button.</p></div>
+            <button class="btn btn--ghost btn--icon alert__dismiss" type="button" aria-label="Dismiss: Captions are available"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>After dismissal, focus moves to the next logical element (the region's heading), never to <code>&lt;body&gt;</code>.</span></div>
+      </div>
+
+      <h3>Page banner</h3>
+      <p>A banner is full width, square, and flush with the page edges; its inline padding follows <code>--layout-margin</code> so its text lines up with the page content. It drops the stripe and keeps the tone background and a bottom rule.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="alert alert--warning alert--banner">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Scheduled maintenance on Saturday, 10 October, 22:00–23:00</p><p class="alert__body">Courses stay open, but progress saved during that hour may need to be saved again.</p></div>
+            <div class="alert__actions"><button class="btn btn--link" type="button">Remind me later</button></div>
+          </div>
+          <div class="alert alert--info alert--banner">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <div class="alert__content"><p class="alert__title">You are viewing the course as Grace Hopper</p><p class="alert__body">Progress is not recorded while you preview as a learner.</p></div>
+            <div class="alert__actions"><button class="btn" type="button">Stop preview</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>One banner at a time; stack the most severe first if two are unavoidable.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="alert alert--warning alert--banner" role="region" aria-label="Service notice"&gt;
+  &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;p class="alert__title"&gt;Scheduled maintenance on Saturday, 10 October, 22:00–23:00&lt;/p&gt;
+    &lt;p class="alert__body"&gt;Courses stay open, but progress saved during that hour may need to be saved again.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Alerts have one size; width comes from their container and a banner spans the page.">
+      <h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">Alerts have one size; width comes from their container and a banner spans the page.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The alert container is not interactive; its states are the states of its action and dismiss buttons, plus the busy state while a retry runs. States are forced with <code>data-state</code> for review.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Tone</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Loading (retrying)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Neutral</th>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button">Cancel</button></div></div></td>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="hover">Cancel</button></div></div></td>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="focus">Cancel</button></div></div></td>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="active">Cancel</button></div></div></td>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" disabled>Cancel</button></div></div></td>
+            <td><div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" aria-busy="true"><span>Cancel</span></button></div></div></td></tr>
+          <tr><th scope="row">Info</th>
+            <td><div class="alert alert--info"><div class="alert__content"><p class="alert__title">New version</p></div><button class="btn btn--ghost btn--icon alert__dismiss" type="button" aria-label="Dismiss: New version"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></td>
+            <td><div class="alert alert--info"><div class="alert__content"><p class="alert__title">New version</p></div><button class="btn btn--ghost btn--icon alert__dismiss" type="button" data-state="hover" aria-label="Dismiss: New version, hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></td>
+            <td><div class="alert alert--info"><div class="alert__content"><p class="alert__title">New version</p></div><button class="btn btn--ghost btn--icon alert__dismiss" type="button" data-state="focus" aria-label="Dismiss: New version, focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></td>
+            <td><div class="alert alert--info"><div class="alert__content"><p class="alert__title">New version</p></div><button class="btn btn--ghost btn--icon alert__dismiss" type="button" data-state="active" aria-label="Dismiss: New version, active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></td>
+            <td><div class="alert alert--info"><div class="alert__content"><p class="alert__title">New version</p></div><button class="btn btn--ghost btn--icon alert__dismiss" type="button" disabled aria-label="Dismiss: New version, disabled"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div></td>
+            <td>Not used: dismissing is instant.</td></tr>
+          <tr><th scope="row">Success</th>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button">View record</button></div></div></td>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="hover">View record</button></div></div></td>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="focus">View record</button></div></div></td>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="active">View record</button></div></div></td>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" disabled>View record</button></div></div></td>
+            <td><div class="alert alert--success"><div class="alert__content"><p class="alert__title">Course complete</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" aria-busy="true"><span>View record</span></button></div></div></td></tr>
+          <tr><th scope="row">Warning</th>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button">Send reminder</button></div></div></td>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="hover">Send reminder</button></div></div></td>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="focus">Send reminder</button></div></div></td>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" data-state="active">Send reminder</button></div></div></td>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" disabled>Send reminder</button></div></div></td>
+            <td><div class="alert alert--warning"><div class="alert__content"><p class="alert__title">Due tomorrow</p></div><div class="alert__actions"><button class="btn btn--sm" type="button" aria-busy="true"><span>Send reminder</span></button></div></div></td></tr>
+          <tr><th scope="row">Danger</th>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button">Retry save</button></div></div></td>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button" data-state="hover">Retry save</button></div></div></td>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button" data-state="focus">Retry save</button></div></div></td>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button" data-state="active">Retry save</button></div></div></td>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button" disabled>Retry save</button></div></div></td>
+            <td><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button" aria-busy="true"><span>Retry save</span></button></div></div></td></tr>
+          <tr><th scope="row">Title focused</th>
+            <td colspan="6"><div class="alert alert--danger"><div class="alert__content"><p class="alert__title" tabindex="-1" data-state="focus">Something went wrong</p><p class="alert__body">The connection was lost and couldn’t be restored.</p></div></div></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div></div>
+          <div class="alert alert--info"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="alert__content"><p class="alert__title">New version available</p></div></div>
+          <div class="alert alert--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div class="alert__content"><p class="alert__title">Course complete</p></div></div>
+          <div class="alert alert--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><div class="alert__content"><p class="alert__title">Due tomorrow</p></div></div>
+          <div class="alert alert--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button">Retry save</button></div></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="alert"><div class="alert__content"><p class="alert__title">Loading course</p></div></div>
+          <div class="alert alert--info"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="alert__content"><p class="alert__title">New version available</p></div></div>
+          <div class="alert alert--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div class="alert__content"><p class="alert__title">Course complete</p></div></div>
+          <div class="alert alert--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></svg><div class="alert__content"><p class="alert__title">Due tomorrow</p></div></div>
+          <div class="alert alert--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><div class="alert__content"><p class="alert__title">Progress not saved</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button">Retry save</button></div></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Appearing</b>: the alert is inserted (or un-hidden) in place; it does not slide or fade. If it was caused by the person's own action and focus was inside the affected region, focus moves to its title (<code>tabindex="-1"</code>), as the video player does with "Something went wrong".</li>
+        <li><b>Retrying</b>: the primary action shows its loading state (<code>aria-busy="true"</code>); the alert stays until the retry succeeds, then is removed and a polite status ("Progress saved.") is announced.</li>
+        <li><b>Dismissed</b>: removed from the DOM; dismissal is remembered for the session where it makes sense (banners), never for errors.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The alert is a wrapping flex row: content takes <code>flex: 1 1 16rem</code>, so when the container is narrower than about 16rem plus the actions, the actions drop below the text. Nothing truncates.</li>
+        <li>At 320px and at 400% zoom the icon, text and actions stack naturally; the dismiss button stays at the top inline-end corner with its 44px target.</li>
+        <li>Banners use <code>--layout-margin</code> for inline padding (16px on phones, 24px from 768px, 32px from 1024px), matching the page grid.</li>
+        <li>In the video player the error alert is centred over the picture with <code>max-width: 36rem</code>; below 768px the player keeps the same overlay and the alert reflows inside it.</li>
+        <li>With 200% text and WCAG text-spacing overrides the alert grows taller; it has no fixed height.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The alert reads five component tokens that each tone overrides: <code>--alert-bg</code>, <code>--alert-fg</code>, <code>--alert-border</code>, <code>--alert-stripe</code> and <code>--alert-icon</code>. Tones map to the status token families (<code>--color-info-*</code>, <code>--color-success-*</code>, <code>--color-warning-*</code>, <code>--color-danger-*</code>); neutral uses the surface and the accent.</p>
+      <pre><code>/* An LMS host gives neutral notices its own stripe without touching .alert */
+.course-shell .alert:not([class*="alert--"]) { --alert-stripe: var(--color-fg-accent); }</code></pre>
+      <p>In the dark theme tone backgrounds become deep tints (<code>--palette-red-950</code>, <code>--palette-blue-950</code>…) and text lightens to the 200–300 steps, so body text stays above 7:1. Body text stays <code>--color-fg-default</code> in every tone; only the danger title takes <code>--color-danger-fg</code>. In the shipped packages the danger text corresponds to <code>@tessera/theme</code>'s <code>--t-colorPaletteRedForeground1</code>; the theme has no status backgrounds yet, so tone tints come from the design-system tokens. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/alert/">WAI-ARIA APG Alert pattern</a>, applied sparingly:</p>
+      <ul>
+        <li><b>New, important, caused now</b> (save failed, stream error): <code>role="alert"</code> on the alert or on a visually hidden message inside it that is filled after insertion, so it is announced once. The SCORM mock fills a hidden <code>role="alert"</code> paragraph 50 ms after showing the notice; the video mock puts <code>role="alert"</code> on the error panel.</li>
+        <li><b>Routine status</b> (loading, version notice): <code>role="status"</code>, or no role when the alert is present at page load.</li>
+        <li><b>Banners</b>: a <code>role="region"</code> with an <code>aria-label</code> so they are reachable as a landmark; no live role.</li>
+        <li>Wrap a titled inline alert in <code>&lt;section aria-labelledby&gt;</code> pointing at its title, as the SCORM notices do.</li>
+      </ul>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the alert's actions, then the dismiss button, in DOM order. The alert itself is not a tab stop.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Activates the focused action or dismisses.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>No effect. Alerts are part of the page, not overlays; Esc does not dismiss them.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Showing an alert does not move focus, except for a blocking error in a region the person was working in: then focus goes to the alert's title (<code>tabindex="-1"</code>, ring on <code>:focus-visible</code>). After Retry succeeds, focus moves to the next sensible control (the video player moves it to Play); after dismissal, to the region heading.</p>
+      <h3>Labelling</h3>
+      <p>The title is a heading so screen reader users can find the alert by heading navigation. The icon is <code>aria-hidden</code>; the tone is carried by the words ("not saved", "No access"). The dismiss button's name includes the title: "Dismiss: Captions are available".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Body text on info</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-info-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Body text on success</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-success-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Body text on warning</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-warning-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Danger title on danger background</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Danger stripe on danger background</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-danger-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>Info icon on info background</span><span class="ds-pair__ratio" data-contrast="--color-info-icon|--color-info-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>Warning icon on warning background</span><span class="ds-pair__ratio" data-contrast="--color-warning-icon|--color-warning-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>Neutral stripe on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on danger background</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-danger-bg" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Alerts appear and disappear without animation, so nothing needs a reduced-motion alternative. A Retry button's spinner keeps turning under reduced motion, slowed to 2 s per revolution.</p>
+      <h3>Touch</h3>
+      <p>Action buttons are 44px (32px only in dense tables, with the row as a target); the dismiss button is a 44px icon button pulled into the corner with a negative margin so it does not add padding. Actions are at least 8px apart.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Title</b>: the condition in a few words, sentence case, no full stop: "Progress not saved", "No access to this stream", "Loading course".</li>
+        <li><b>Body</b>: what happened in plain words, then what to do next: "Your latest progress is kept on this page. Try saving again." Reassure when nothing is lost.</li>
+        <li><b>Actions</b>: verbs that name the recovery: "Retry save", "Retry", "Exit without saving". Never "OK".</li>
+        <li>Do not blame the person or expose internals; codec strings belong in a details line for support, as in "This browser can’t play this stream (video/mp4; codecs=…)".</li>
+        <li>Name the organiser, course or learner when it helps: "Ada Lovelace and 2 other learners have not started yet."</li>
+        <li>Banners include the date and time with time zone when they announce something scheduled.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--danger" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary btn--sm" type="button">Retry save</button></div></div></div><figcaption>Keep body text in <code>--color-fg-default</code> on the tint; colour the title and stripe only.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="alert alert--danger" style="width: 100%; --alert-fg: var(--color-danger-fg);"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div></div></div><figcaption>Turn the whole notice red, as the SCORM mock's <code>.notice.error { color: var(--error) }</code> did; long red text is tiring and the icon was missing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--danger" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg><div class="alert__content"><p class="alert__title">This browser can’t play this stream</p><p class="alert__body">Open Lecture hall A in a current version of Chrome, Edge, Firefox or Safari.</p></div></div></div><figcaption>Offer no Retry when retrying cannot help (unsupported codec); say what will.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="alert alert--danger" style="width: 100%;"><div class="alert__content"><p class="alert__title">Error</p><p class="alert__body">MEDIA_ERR_SRC_NOT_SUPPORTED</p></div><div class="alert__actions"><button class="btn btn--sm" type="button">OK</button></div></div></div><figcaption>A generic title, an internal code and an "OK" that changes nothing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--info" style="width: 100%;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="alert__content"><p class="alert__title">This course has a new version</p></div></div></div><figcaption>Present-at-load notices use <code>role="status"</code> or no role.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="alert alert--warning" style="width: 100%;"><div class="alert__content"><p class="alert__title">Welcome back, Katherine</p></div></div></div><figcaption>Put <code>role="alert"</code> on greetings or routine notices; assertive announcements interrupt the screen reader and lose their urgency.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Neutral background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Neutral border</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Neutral stripe and icon</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Text (all tones)</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Info background / border / stripe / icon</td><td><code>--color-info-bg</code>, <code>-border</code>, <code>-solid</code>, <code>-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-info-bg" data-swatch></i><i data-token="--color-info-border" data-swatch></i><i data-token="--color-info-solid" data-swatch></i><span data-token="--color-info-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-info-bg" data-swatch></i><i data-token="--color-info-border" data-swatch></i><i data-token="--color-info-solid" data-swatch></i><span data-token="--color-info-bg"></span></span></td></tr>
+          <tr><td>Success background / border / stripe / icon</td><td><code>--color-success-bg</code>, <code>-border</code>, <code>-solid</code>, <code>-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-success-bg" data-swatch></i><i data-token="--color-success-border" data-swatch></i><i data-token="--color-success-solid" data-swatch></i><span data-token="--color-success-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-success-bg" data-swatch></i><i data-token="--color-success-border" data-swatch></i><i data-token="--color-success-solid" data-swatch></i><span data-token="--color-success-bg"></span></span></td></tr>
+          <tr><td>Warning background / border / stripe / icon</td><td><code>--color-warning-bg</code>, <code>-border</code>, <code>-solid</code>, <code>-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-warning-bg" data-swatch></i><i data-token="--color-warning-border" data-swatch></i><i data-token="--color-warning-solid" data-swatch></i><span data-token="--color-warning-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-warning-bg" data-swatch></i><i data-token="--color-warning-border" data-swatch></i><i data-token="--color-warning-solid" data-swatch></i><span data-token="--color-warning-bg"></span></span></td></tr>
+          <tr><td>Danger background / border / stripe / icon</td><td><code>--color-danger-bg</code>, <code>-border</code>, <code>-solid</code>, <code>-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><i data-token="--color-danger-border" data-swatch></i><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><i data-token="--color-danger-border" data-swatch></i><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-bg"></span></span></td></tr>
+          <tr><td>Danger title</td><td><code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td></tr>
+          <tr><td>Stripe width</td><td><code>--border-width-stripe</code></td><td colspan="2"><span data-token="--border-width-stripe"></span></td></tr>
+          <tr><td>Padding / gap</td><td><code>--space-4</code> / <code>--space-3</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-md</code> (banner: 0)</td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Banner inline padding</td><td><code>--layout-margin</code></td><td colspan="2"><span data-token="--layout-margin"></span></td></tr>
+          <tr><td>Title / body font</td><td><code>--text-h4</code> / <code>--text-body</code></td><td colspan="2"><span data-token="--text-h4"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Error caused now: announce once, move focus to the title if focus was in the region --&gt;
+&lt;section class="alert alert--danger" aria-labelledby="err-title" role="alert"&gt;
+  &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;h3 class="alert__title" id="err-title" tabindex="-1"&gt;Connection lost&lt;/h3&gt;
+    &lt;p class="alert__body"&gt;The connection was lost and couldn’t be restored.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="alert__actions"&gt;&lt;button class="btn btn--primary" type="button"&gt;Retry&lt;/button&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Routine status --&gt;
+&lt;section class="alert" aria-labelledby="loading-title" role="status"&gt;…&lt;/section&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.alert</code></td><td>Base: neutral tone, surface background, accent stripe.</td></tr>
+        <tr><td><code>.alert--info</code> <code>.alert--success</code> <code>.alert--warning</code> <code>.alert--danger</code></td><td>Tone.</td></tr>
+        <tr><td><code>.alert--banner</code></td><td>Full-width page banner: square, no stripe, bottom rule, page-margin padding.</td></tr>
+        <tr><td><code>.alert__content</code> <code>.alert__title</code> <code>.alert__body</code></td><td>Text column; title and body.</td></tr>
+        <tr><td><code>.alert__actions</code></td><td>Action row; wraps below the text when narrow.</td></tr>
+        <tr><td><code>.alert__dismiss</code></td><td>On a <code>.btn--ghost.btn--icon</code>: pulls the dismiss button into the corner.</td></tr>
+        <tr><td><code>role="alert"</code></td><td>Assertive announcement; only for new, important content inserted after load.</td></tr>
+        <tr><td><code>role="status"</code></td><td>Polite announcement for routine status.</td></tr>
+        <tr><td><code>tabindex="-1"</code> on the title</td><td>Lets script move focus to the alert when it blocks the task.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: <code>.notice</code> (Loading course with Cancel; No course loaded) and <code>.notice.error</code> (Progress not saved with Retry save and Exit without saving); 4px inline-start stripe, title + body + action, <code>section aria-labelledby</code>, hidden <code>role="alert"</code> filled after display.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: error panel (<code>role="alert"</code>, heading takes focus, Retry; no Retry for the unsupported codec) for "Connection lost", "No access to this stream" and "This browser can’t play this stream".</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Stripe width was 4px (SCORM notice) and 5px (video error panel); unified on <code>--border-width-stripe</code> (4px).</li>
+        <li>Panel title sizes 1rem (SCORM) and 1.1rem (video); normalised to <code>--text-h4</code> for inline alerts.</li>
+        <li>Padding 0.9rem 1rem (SCORM) and 1rem 1.25rem (video); snapped to <code>--space-4</code>.</li>
+        <li>Body top margin 0.15rem; snapped to <code>--space-0-5</code>.</li>
+        <li>The SCORM error notice coloured all text red; body text now stays <code>--color-fg-default</code> and an icon is added so colour is not the only cue.</li>
+        <li>Video error button radius 7px; <code>--radius-md</code> through <code>.btn</code>.</li>
+      </ul>
+      <p>Info, warning, success tones and the page banner are derived: not present in the mocks; they follow the system rules.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

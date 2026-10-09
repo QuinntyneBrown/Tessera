@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text field — Tessera design system</title>
+<meta name="description" content="Single-line text input: text, email, password with show toggle, number, search, prefix and suffix addons, counter. Three sizes, every state, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Text field</h1>
+      <p class="ds-lead">A single-line input for short free text: a course title, a learner's email, a passing score, a search term. It always sits in a <a href="form-field.html">form field</a> with a visible label.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;input&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a text field when the answer is short, free-form and fits on one line. Pick the input <code>type</code> for the data, because it sets the mobile keyboard, autofill and validation:</p>
+      <ul>
+        <li><b>Text</b> for names, titles and codes. Codes made of digits ("0042") are text with <code>inputmode="numeric"</code>, not numbers.</li>
+        <li><b>Email</b> (<code>type="email"</code>, <code>autocomplete="email"</code>) for learner and instructor addresses.</li>
+        <li><b>Password</b> with a show toggle, so people can check what they typed.</li>
+        <li><b>Number</b> only for real quantities you might add or compare: passing score, seat count, duration.</li>
+        <li><b>Search</b> with a leading magnifier addon, for filtering a course catalogue or learner list.</li>
+      </ul>
+      <p>Use a <a href="textarea.html">textarea</a> when the answer may run to several lines, a <a href="select.html">select</a> when the answer is one of a short known list, and a <a href="combobox.html">combobox</a> when people search a long or remote list (assigning learners).</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: min(100%, 24rem);">
+            <label class="field__label" for="anatomy-duration">Session length</label>
+            <div class="input-group">
+              <input class="input" id="anatomy-duration" type="text" inputmode="numeric" value="35" aria-describedby="anatomy-duration-unit">
+              <span class="input-group__addon" id="anatomy-duration-unit">minutes</span>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 18%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 30%; top: 58%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 76%; top: 58%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 92%; top: 78%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>From the <a href="form-field.html">form field</a>: <code>&lt;label for&gt;</code>, bold 16px, always visible.</small></div></li>
+          <li><div><b>Value (or placeholder)</b><small>16px <code>--text-body</code>, <code>--color-fg-default</code>; placeholder in <code>--color-fg-subtle</code>. 16px also stops iOS zooming on focus.</small></div></li>
+          <li><div><b>Addon (optional)</b><small><code>.input-group__addon</code>: unit, prefix or icon, 14px <code>--color-fg-muted</code>, 12px inline padding. Never interactive; a button goes in the group instead.</small></div></li>
+          <li><div><b>Container</b><small>44px tall (<code>--control-height-md</code>), 1px <code>--color-border-strong</code>, <code>--radius-md</code>, 8px × 12px padding, <code>--color-bg-surface</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>All variants share one container. The input <code>type</code> and the optional group parts change; the look does not.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-title">Course title</label>
+            <input class="input" id="v-title" type="text" value="Workplace safety essentials">
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-email">Instructor email</label>
+            <input class="input" id="v-email" type="email" autocomplete="email" spellcheck="false" placeholder="katherine.johnson@example.edu">
+          </div>
+          <div class="field" style="max-width: 12rem;">
+            <label class="field__label" for="v-score">Passing score</label>
+            <div class="input-group">
+              <input class="input" id="v-score" type="number" min="0" max="100" step="1" value="80" aria-describedby="v-score-unit">
+              <span class="input-group__addon" id="v-score-unit">%</span>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Text, email, number with a suffix. Width hints at the expected length; a score field does not need the full column.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;input class="input" id="title" type="text"&gt;
+&lt;input class="input" id="email" type="email" autocomplete="email" spellcheck="false"&gt;
+&lt;div class="input-group"&gt;
+  &lt;input class="input" id="score" type="number" min="0" max="100" aria-describedby="score-unit"&gt;
+  &lt;span class="input-group__addon" id="score-unit"&gt;%&lt;/span&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Password with show toggle</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-pass">Password</label>
+            <div class="input-group">
+              <input class="input" id="v-pass" type="password" autocomplete="current-password" value="correct-horse">
+              <button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false" aria-controls="v-pass"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-pass-shown">Password</label>
+            <div class="input-group">
+              <input class="input" id="v-pass-shown" type="text" autocomplete="current-password" spellcheck="false" value="correct-horse">
+              <button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="true" aria-controls="v-pass-shown"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Hidden, then shown. The name stays "Show password"; <code>aria-pressed</code> carries the state and the icon swaps.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="input-group"&gt;
+  &lt;input class="input" id="password" type="password" autocomplete="current-password"&gt;
+  &lt;button class="btn btn--ghost btn--icon" type="button"
+          aria-label="Show password" aria-pressed="false" aria-controls="password"&gt;
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+&lt;!-- On press: input.type = pressed ? 'text' : 'password'; keep focus on the button. --&gt;</code></pre></details>
+      </div>
+
+      <h3>Search, prefix and suffix</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;" role="search">
+            <label class="field__label" for="v-search">Search courses</label>
+            <div class="input-group">
+              <span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span>
+              <input class="input" id="v-search" type="search" placeholder="Title or course code" spellcheck="false">
+            </div>
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-code">Course code</label>
+            <div class="input-group">
+              <span class="input-group__addon" id="v-code-prefix">SAFE-</span>
+              <input class="input" id="v-code" type="text" inputmode="numeric" value="101" aria-describedby="v-code-prefix">
+            </div>
+          </div>
+          <div class="field" style="max-width: 16rem;">
+            <label class="field__label" for="v-length">Session length</label>
+            <div class="input-group">
+              <input class="input" id="v-length" type="text" inputmode="numeric" value="35" aria-describedby="v-length-unit">
+              <span class="input-group__addon" id="v-length-unit">minutes</span>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The search icon is decorative; the prefix and the unit are text, linked with <code>aria-describedby</code> so they are announced.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field" role="search"&gt;
+  &lt;label class="field__label" for="q"&gt;Search courses&lt;/label&gt;
+  &lt;div class="input-group"&gt;
+    &lt;span class="input-group__addon"&gt;&lt;svg class="icon" aria-hidden="true" …&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;input class="input" id="q" type="search" placeholder="Title or course code"&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>With character counter</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-count">Course title <span class="field__required">(required)</span></label>
+            <input class="input" id="v-count" type="text" required value="Better conversations at work" aria-describedby="v-count-hint v-count-count">
+            <div class="field__below">
+              <p class="field__hint" id="v-count-hint">Learners see this on their dashboard.</p>
+              <p class="field__counter" id="v-count-count">28 of 80 characters</p>
+            </div>
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="v-count-over">Course title <span class="field__required">(required)</span></label>
+            <input class="input" id="v-count-over" type="text" required aria-invalid="true" value="Better conversations at work: giving and receiving feedback in hybrid teams" aria-describedby="v-count-over-error v-count-over-count">
+            <p class="field__error" id="v-count-over-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Course title must be 60 characters or fewer.</span></p>
+            <div class="field__below"><p class="field__counter" id="v-count-over-count">15 characters too many</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Within and over the limit. Typing past the limit is allowed and reported, so pasted text is never silently cut.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Medium (44px) is the default and the only size for forms. Small fits dense surfaces where a row is already a target, such as a table filter; large is for a single prominent search on a catalogue landing page.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 24rem;"><label class="field__label" for="s-sm">Filter learners · small 32px</label><input class="input input--sm" id="s-sm" type="search" placeholder="Name or email"></div>
+          <div class="field" style="max-width: 24rem;"><label class="field__label" for="s-md">Filter learners · medium 44px</label><input class="input" id="s-md" type="search" placeholder="Name or email"></div>
+          <div class="field" style="max-width: 24rem;"><label class="field__label" for="s-lg">Filter learners · large 48px</label><input class="input input--lg" id="s-lg" type="search" placeholder="Name or email"></div>
+        </div>
+        <div class="ds-example__caption"><span>Heights <code>--control-height-sm/md/lg</code>; text <code>--text-body-sm</code> / <code>--text-body</code> / <code>--text-body-lg</code>. Label, hint and error do not change with size.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;input class="input input--sm" …&gt;
+&lt;input class="input" …&gt;
+&lt;input class="input input--lg" …&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Hover darkens the border to <code>--color-fg-default</code>; focus adds the amber ring (on the group when there is one); invalid thickens the border to 2px <code>--color-danger-solid</code>; disabled drops the fill and dashes the edge; read-only sinks the fill. Pointer and focus states are forced with <code>data-state</code>. Each matrix input is labelled with <code>aria-label</code> here only to keep the table compact.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Invalid</th><th scope="col">Read-only</th><th scope="col">Required</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Text</th>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, default" placeholder="Course title"></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, hover" placeholder="Course title" data-state="hover"></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, focus" value="Workplace" data-state="focus"></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, typing" value="Workplace saf" data-state="focus"></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, disabled" value="Workplace safety" disabled></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, invalid" value="" aria-invalid="true"></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title, read-only" value="Workplace safety" readonly></td>
+            <td><input class="input" style="min-width: 10rem;" type="text" aria-label="Course title (required)" required placeholder="Course title"></td>
+          </tr>
+          <tr><th scope="row">Email</th>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, default" value="grace.hopper@example.edu"></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, hover" value="grace.hopper@example.edu" data-state="hover"></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, focus" value="grace.hopper@example.edu" data-state="focus"></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, typing" value="grace.hopper@exa" data-state="focus"></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, disabled" value="grace.hopper@example.edu" disabled></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, invalid" value="grace.hopper@" aria-invalid="true"></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email, read-only" value="grace.hopper@example.edu" readonly></td>
+            <td><input class="input" style="min-width: 10rem;" type="email" aria-label="Email (required)" required></td>
+          </tr>
+          <tr><th scope="row">Password</th>
+            <td><div class="input-group" style="min-width: 12rem;"><input class="input" type="password" aria-label="Password, default" value="correct-horse"><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+            <td><div class="input-group" style="min-width: 12rem; border-color: var(--color-fg-default);"><input class="input" type="password" aria-label="Password, hover" value="correct-horse"><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+            <td><div class="input-group" style="min-width: 12rem;" data-state="focus"><input class="input" type="password" aria-label="Password, focus" value="correct-horse"><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+            <td><div class="input-group" style="min-width: 12rem;"><input class="input" type="text" aria-label="Password, shown" value="correct-horse"><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="true" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div></td>
+            <td><div class="input-group" style="min-width: 12rem; border-style: dashed; background: transparent;"><input class="input" type="password" aria-label="Password, disabled" value="correct-horse" disabled><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+            <td><div class="input-group" style="min-width: 12rem;"><input class="input" type="password" aria-label="Password, invalid" value="horse" aria-invalid="true"><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+            <td><p class="field__hint">Not offered: a password is never shown read-only.</p></td>
+            <td><div class="input-group" style="min-width: 12rem;"><input class="input" type="password" aria-label="Password (required)" required><button class="btn btn--ghost btn--icon" type="button" aria-label="Show password" aria-pressed="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div></td>
+          </tr>
+          <tr><th scope="row">Number</th>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, default" value="80"></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, hover" value="80" data-state="hover"></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, focus" value="80" data-state="focus"></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, stepping" value="81" data-state="focus"></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, disabled" value="80" disabled></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, invalid" value="180" aria-invalid="true"></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score, read-only" value="80" readonly></td>
+            <td><input class="input" style="min-width: 7rem;" type="number" min="0" max="100" aria-label="Passing score (required)" required></td>
+          </tr>
+          <tr><th scope="row">Search</th>
+            <td><div class="input-group" style="min-width: 12rem;"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, default" placeholder="Title or code"></div></td>
+            <td><div class="input-group" style="min-width: 12rem; border-color: var(--color-fg-default);"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, hover" placeholder="Title or code"></div></td>
+            <td><div class="input-group" style="min-width: 12rem;" data-state="focus"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, focus" value="safety"></div></td>
+            <td><div class="input-group" style="min-width: 12rem;" data-state="focus"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, typing" value="saf"></div></td>
+            <td><div class="input-group" style="min-width: 12rem; border-style: dashed; background: transparent;"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, disabled" placeholder="Title or code" disabled></div></td>
+            <td><div class="input-group" style="min-width: 12rem;"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, invalid" value="a" aria-invalid="true"></div></td>
+            <td><div class="input-group" style="min-width: 12rem; background: var(--color-bg-surface-sunken); border-color: var(--color-border-default);"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" type="search" aria-label="Search courses, read-only" value="safety" readonly></div></td>
+            <td><p class="field__hint">Not offered: search is never required.</p></td>
+          </tr>
+          <tr><th scope="row">Prefix / suffix</th>
+            <td><div class="input-group" style="min-width: 10rem;"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, default" value="35"><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem; border-color: var(--color-fg-default);"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, hover" value="35"><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem;" data-state="focus"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, focus" value="35"><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem;" data-state="focus"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, typing" value="4"><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem; border-style: dashed; background: transparent;"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, disabled" value="35" disabled><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem;"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, invalid" value="0" aria-invalid="true"><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem; background: var(--color-bg-surface-sunken); border-color: var(--color-border-default);"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes, read-only" value="35" readonly><span class="input-group__addon">min</span></div></td>
+            <td><div class="input-group" style="min-width: 10rem;"><input class="input" type="text" inputmode="numeric" aria-label="Session length in minutes (required)" required><span class="input-group__addon">min</span></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>Group hover, disabled and read-only are shown with token-only inline styles because <code>components.css</code> does not yet style <code>.input-group</code> for them; the values match the plain <code>.input</code> rules exactly.</p>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-email-light">Instructor email</label><input class="input" id="th-email-light" type="email" placeholder="alan.turing@example.edu"></div>
+          <div class="field"><label class="field__label" for="th-search-light">Search courses</label><div class="input-group" data-state="focus"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" id="th-search-light" type="search" value="safety"></div></div>
+          <div class="field"><label class="field__label" for="th-score-light">Passing score</label><input class="input" id="th-score-light" type="number" value="180" aria-invalid="true" aria-describedby="th-score-light-error"><p class="field__error" id="th-score-light-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a score from 0 to 100.</span></p></div>
+          <div class="field"><label class="field__label" for="th-code-light">Course code</label><input class="input" id="th-code-light" type="text" value="SAFE-101" disabled></div>
+          <div class="field"><label class="field__label" for="th-ro-light">Enrolled by</label><input class="input" id="th-ro-light" type="text" value="Katherine Johnson" readonly></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-email-dark">Instructor email</label><input class="input" id="th-email-dark" type="email" placeholder="alan.turing@example.edu"></div>
+          <div class="field"><label class="field__label" for="th-search-dark">Search courses</label><div class="input-group" data-state="focus"><span class="input-group__addon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input class="input" id="th-search-dark" type="search" value="safety"></div></div>
+          <div class="field"><label class="field__label" for="th-score-dark">Passing score</label><input class="input" id="th-score-dark" type="number" value="180" aria-invalid="true" aria-describedby="th-score-dark-error"><p class="field__error" id="th-score-dark-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a score from 0 to 100.</span></p></div>
+          <div class="field"><label class="field__label" for="th-code-dark">Course code</label><input class="input" id="th-code-dark" type="text" value="SAFE-101" disabled></div>
+          <div class="field"><label class="field__label" for="th-ro-dark">Enrolled by</label><input class="input" id="th-ro-dark" type="text" value="Katherine Johnson" readonly></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Invalid</b> is never border colour alone: the <a href="form-field.html">form field</a> adds the icon and message, and the border also gets thicker (1px to 2px), which reads without colour.</li>
+        <li><b>Disabled</b> keeps the value readable (<code>--color-fg-disabled</code> passes 4.5:1) and dashes the edge. Disabled inputs are skipped by Tab and not submitted; prefer read-only when the value still matters.</li>
+        <li><b>Read-only</b> stays focusable, selectable and announced as read-only; the sunken fill and quiet border say "not editable" without looking broken.</li>
+        <li><b>Required</b> has no visual of its own on the control; the label says "(required)" and the input carries <code>required</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The input fills its field (<code>width: 100%</code>, <code>min-width: 0</code>), so it never forces horizontal scroll at 320px. A <code>max-width</code> on the field may hint at expected length (a score, a code); it never sets a minimum.</li>
+        <li>Addons keep <code>white-space: nowrap</code>, so keep them short ("min", "%", "SAFE-"). At 200% text the input part shrinks first; the value scrolls inside the input, which is native behaviour.</li>
+        <li>Value text is 16px at every viewport so mobile browsers do not zoom on focus; the small size (14px) is for pointer-first dense surfaces only.</li>
+        <li>On touch keyboards the <code>type</code> and <code>inputmode</code> pick the layout: email shows "@", numeric shows digits, search shows a search key.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The input reads four component tokens declared on <code>.input</code>, <code>.textarea</code> and <code>.select</code>: <code>--field-bg</code> (<code>--color-bg-surface</code>), <code>--field-fg</code> (<code>--color-fg-default</code>), <code>--field-border</code> (<code>--color-border-strong</code>) and <code>--field-height</code> (<code>--control-height-md</code>). States override those tokens, so a re-skin survives every state.</p>
+      <pre><code>/* A host embeds the field on a sunken panel and wants a raised input */
+.grading-panel .input { --field-bg: var(--color-bg-surface-raised); }</code></pre>
+      <p>In dark the surface becomes sage-900, the border lightens to <code>--palette-sage-300</code> and placeholder text to sage-200, keeping the 3:1 border and 4.5:1 placeholder targets. In the shipped packages these map to <code>--t-colorNeutralBackground1</code>, <code>--t-colorNeutralForeground1</code>, <code>--t-colorNeutralStrokeAccessible</code> and <code>--t-colorStrokeFocus2</code> (the combobox field's <code>--t-combobox-surface</code>, <code>--t-combobox-text</code>, <code>--t-combobox-border</code>, <code>--t-combobox-focus-ring</code>). See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input&gt;</code>; its role (textbox, searchbox, spinbutton) comes from <code>type</code>. No ARIA role is added. Labelling and errors follow the <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">labels or instructions</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">error identification</a> criteria; the show-password control is an APG <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">toggle button</a>. Personal-data inputs set <code>autocomplete</code> (<a href="https://www.w3.org/WAI/WCAG22/Understanding/identify-input-purpose.html">identify input purpose</a>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves into and out of the input, then to the show-password button. Disabled inputs are skipped; read-only inputs are not.</td></tr>
+        <tr><td>Typing, <kbd>Home</kbd> / <kbd>End</kbd>, arrows</td><td>Native text editing. Nothing is intercepted.</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Number inputs only: step the value by <code>step</code>, clamped to <code>min</code> and <code>max</code>.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Search inputs: clears the term (native). Other inputs: no effect.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Submits the enclosing form. Search runs the search.</td></tr>
+        <tr><td><kbd>Space</kbd> / <kbd>Enter</kbd> on the eye button</td><td>Toggles the password between hidden and shown; focus stays on the button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>A plain input shows the shared ring (3px <code>--color-focus-ring</code>, 2px offset) on <code>:focus-visible</code>. In an <code>.input-group</code> the ring moves to the group with <code>:focus-within</code>, as the combobox mock draws it on the field, so addons and the eye button sit inside one ring. The eye button then shows its own ring when it has focus.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>Every input has a visible <code>&lt;label for&gt;</code>; the placeholder is never the name.</li>
+        <li>Units and prefixes that change the meaning of the value ("minutes", "SAFE-") are linked with <code>aria-describedby</code>. Decorative icons are <code>aria-hidden="true"</code>.</li>
+        <li>The show-password button is named "Show password" in both states; <code>aria-pressed</code> announces "pressed" when the password is visible. Its name never flips to "Hide".</li>
+        <li>The counter is in <code>aria-describedby</code>; a visually hidden polite live region announces the remaining count only when 10 or fewer characters remain, debounced, not on every keystroke.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Value on input</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder on input</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Addon text on input</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Border on canvas</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Disabled value on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Read-only value on sunken fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface-sunken" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <p>The read-only border (<code>--color-border-default</code>) is deliberately below 3:1: a read-only value is not an operable control, and its label and value identify it.</p>
+      <h3>Motion</h3>
+      <p>Only the border colour transitions, over <code>--duration-fast</code>; under <code>prefers-reduced-motion</code> it changes instantly. The focus ring never animates.</p>
+      <h3>Touch</h3>
+      <p>Medium (44px) and large (48px) meet the comfortable target; the label is also a target. The eye button fills the group's height and is at least 40px square. Small (32px) is only used where the pointer is primary, and still exceeds the 24px minimum. Hover styles apply only under <code>(hover: hover)</code>.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Labels name the value: "Course title", "Instructor email", "Passing score". Put the unit in a suffix ("%", "minutes"), not in the label.</li>
+        <li>Placeholders show an example of the format, or nothing: "Name or email", "Title or course code". Keep them short enough to fit at 320px.</li>
+        <li>Errors say how to fix the value: "Enter an email address like name@example.edu", "Enter a score from 0 to 100", "Course title must be 60 characters or fewer".</li>
+        <li>Never disable paste or autofill in password and email fields; people rely on password managers.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-border-do">Learner email</label><input class="input" id="dd-border-do" type="email" placeholder="Name or email"></div></div><figcaption>One border for every field: 1px <code>--color-border-strong</code> on all four sides (4.34:1 in the combobox mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-border-dont">Learner email</label><input class="input" id="dd-border-dont" type="email" placeholder="Name or email" style="--field-border: var(--color-border-default);"></div></div><figcaption>A faint divider-coloured edge; like Fluent's 1.53:1 side borders, it fails the 3:1 non-text minimum.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-code-do">Employee number</label><input class="input" id="dd-code-do" type="text" inputmode="numeric" value="004217"></div></div><figcaption>Digit codes are text with <code>inputmode="numeric"</code>; leading zeros survive.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-code-dont">Employee number</label><input class="input" id="dd-code-dont" type="number" value="4217"></div></div><figcaption><code>type="number"</code> for an identifier: it drops "00", adds spin buttons and changes on scroll.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-inv-do">Passing score</label><input class="input" id="dd-inv-do" type="number" value="180" aria-invalid="true" aria-describedby="dd-inv-do-error"><p class="field__error" id="dd-inv-do-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a score from 0 to 100.</span></p></div></div><figcaption>Thicker danger border plus an icon and a message that says how to fix it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-inv-dont">Passing score</label><input class="input" id="dd-inv-dont" type="number" value="180" style="border-color: var(--color-danger-solid);"></div></div><figcaption>A 1px red border alone, with no message: colour is the only cue and nothing says how to fix the value.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Background (<code>--field-bg</code>)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Value (<code>--field-fg</code>)</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Placeholder</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr>
+          <tr><td>Border (<code>--field-border</code>)</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Border, hover</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Border, invalid</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Addon text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Disabled value</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Read-only fill</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Height sm / md / lg (<code>--field-height</code>)</td><td><code>--control-height-sm/md/lg</code></td><td colspan="2"><span data-token="--control-height-sm"></span> / <span data-token="--control-height-md"></span> / <span data-token="--control-height-lg"></span></td></tr>
+          <tr><td>Padding (block / inline)</td><td><code>--space-2</code> / <code>--space-3</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Border width / invalid</td><td><code>--border-width-hairline</code> / <code>--border-width-thick</code></td><td colspan="2"><span data-token="--border-width-hairline"></span> / <span data-token="--border-width-thick"></span></td></tr>
+          <tr><td>Value font sm / md / lg</td><td><code>--text-body-sm</code> / <code>--text-body</code> / <code>--text-body-lg</code></td><td colspan="2"><span data-token="--text-body"></span></td></tr>
+          <tr><td>Transition</td><td><code>--duration-fast</code>, <code>--ease-standard</code></td><td colspan="2"><span data-token="--duration-fast"></span> <span data-token="--ease-standard"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="email"&gt;Instructor email &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/label&gt;
+  &lt;input class="input" id="email" type="email" autocomplete="email" spellcheck="false"
+         required aria-describedby="email-hint"&gt;
+  &lt;div class="field__below"&gt;&lt;p class="field__hint" id="email-hint"&gt;Course messages come from this address.&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="input-group"&gt;
+  &lt;input class="input" id="password" type="password" autocomplete="new-password"&gt;
+  &lt;button class="btn btn--ghost btn--icon" type="button" aria-label="Show password"
+          aria-pressed="false" aria-controls="password"&gt;…&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.input</code></td><td>Base text field: 44px, full width, strong border.</td></tr>
+        <tr><td><code>.input--sm</code> <code>.input--lg</code></td><td>Size; omit for medium.</td></tr>
+        <tr><td><code>.input-group</code></td><td>Draws the border and focus ring around an input plus addons or a button; the inner input loses its own border.</td></tr>
+        <tr><td><code>.input-group__addon</code></td><td>Non-interactive prefix, suffix or icon. Link text addons with <code>aria-describedby</code>.</td></tr>
+        <tr><td><code>.btn.btn--ghost.btn--icon</code> in a group</td><td>Trailing action such as the show-password toggle; transparent, inset by 2px.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>2px danger border (on the group when inside one).</td></tr>
+        <tr><td><code>disabled</code></td><td>Dashed edge, transparent fill, readable value; skipped by Tab.</td></tr>
+        <tr><td><code>readonly</code></td><td>Sunken fill, quiet border; focusable and copyable.</td></tr>
+        <tr><td><code>type</code>, <code>inputmode</code>, <code>autocomplete</code></td><td>Pick the keyboard, autofill and native validation for the data.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only: forces a pointer or focus state in static pages.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: the mocks have no standalone text field; this component follows the system rules and is derived from the combobox field it shares a look with.</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the field's 1px <code>#657f73</code> border on all four sides (4.34:1), 0.5rem radius, surface fill, placeholder "Name or email" in <code>#536763</code> (6.02:1), focus ring drawn on the field container while the input has focus, invalid border in the error colour, dashed disabled edge.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: 44px minimum height for form controls in the "Mock states" panel.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Combobox field min-height 2.5rem (40px) beside 44px buttons; unified on <code>--control-height-md</code> (44px).</li>
+        <li>Field padding 0.1875rem / 0.375rem was off-grid; snapped to the 4px scale (<code>--space-2</code> / <code>--space-3</code>).</li>
+        <li>Invalid state changed only the colour of a 1px border; it now also thickens to <code>--border-width-thick</code> so it reads without colour.</li>
+        <li>Two disabled treatments (light background only vs dashed border); unified on the dashed edge with readable <code>--color-fg-disabled</code> text.</li>
+        <li>Focus outline 2px on the field vs 3px on the page; unified on the 3px ring with the 2px <code>--focus-ring-offset</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

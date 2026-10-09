@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion — Tessera design system</title>
+<meta name="description" content="Durations, easings and loop timings for Tessera, with replayable demos, choreography rules and reduced-motion behaviour.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Motion</h1>
+      <p class="ds-lead">Motion in Tessera is quiet and functional: it confirms that a control responded, shows where something came from, and reports that work is still happening. It never decorates, and it steps aside when a learner asks for less of it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Owns <code>--duration-*</code>, <code>--ease-*</code></span><span class="ds-pill">Respects <code>prefers-reduced-motion</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#durations">Durations</a></li><li><a href="#easings">Easings</a></li><li><a href="#loops">Loops</a></li><li><a href="#usage">Choreography and usage</a></li><li><a href="#accessibility">Reduced motion</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every transition and animation in <code>components.css</code> reads a duration token and an easing token; nothing hard-codes milliseconds. That gives the system three properties:</p>
+      <ul>
+        <li><b>Consistency.</b> A hover on a button, a lesson in the SCORM outline and a combobox option all change colour over the same 150 ms.</li>
+        <li><b>One switch for reduced motion.</b> <code>tokens.css</code> shortens every duration under <code>prefers-reduced-motion: reduce</code>, so components need no media queries of their own for transitions.</li>
+        <li><b>Status loops stay honest.</b> The spinner, the LIVE dot and the skeleton shimmer have their own loop tokens so they can be treated differently from transitions: the spinner slows down instead of stopping, because it reports that work is still happening.</li>
+      </ul>
+      <p>The demos on this page replay with their <b>Play</b> button. If your system asks for reduced motion, the dots jump instead of gliding: that is the token doing its job.</p>
+    </section>
+
+    <section class="ds-section" id="durations"><h2><a href="#durations">Durations</a></h2>
+      <p>Pick a duration by how far something travels and how much of the screen it changes. Small, local feedback is fast; anything that changes the layout of the view is slower so the eye can follow it.</p>
+      <div class="ds-motion-demo" style="display: block;">
+        <div class="ds-table-wrap"><table class="ds-table">
+          <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th><th scope="col">Demo</th></tr></thead>
+          <tbody>
+            <tr><td><code>--duration-instant</code></td><td><span data-token="--duration-instant"></span></td><td>State changes that must not lag: selected option, pressed toggle, chip removal.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-instant); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play instant duration demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--duration-fast</code></td><td><span data-token="--duration-fast"></span></td><td>Hover and active colours on buttons, fields, options, lesson links; the big play button pop; switch thumb.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-fast); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play fast duration demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--duration-base</code></td><td><span data-token="--duration-base"></span></td><td>The video control bar fading in and out; toasts leaving; popups appearing.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-base); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play base duration demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--duration-slow</code></td><td><span data-token="--duration-slow"></span></td><td>Dialogs and bottom sheets when they animate; the SCORM outline drawer on phones.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-slow); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play slow duration demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--duration-deliberate</code></td><td><span data-token="--duration-deliberate"></span></td><td>Progress bars filling (course completion, upload progress), so a jump from 40% to 75% reads as progress, not a glitch.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play deliberate duration demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <p>Durations stop at 500 ms. Nothing a learner waits for should be animated longer than that; if a change needs more time, it is a loading state, not a transition.</p>
+    </section>
+
+    <section class="ds-section" id="easings"><h2><a href="#easings">Easings</a></h2>
+      <p>Easing says where motion is going. Each demo below runs over <code>--duration-deliberate</code> so the curve is easy to see.</p>
+      <div class="ds-motion-demo" style="display: block;">
+        <div class="ds-table-wrap"><table class="ds-table">
+          <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th><th scope="col">Demo</th></tr></thead>
+          <tbody>
+            <tr><td><code>--ease-standard</code></td><td><span data-token="--ease-standard"></span></td><td>The default for anything that changes in place: colour, border, opacity, progress width. Same curve as <code>@tessera/theme</code> <code>curveEasyEase</code>.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-standard)"><button type="button" data-motion-run aria-label="Play standard easing demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--ease-enter</code></td><td><span data-token="--ease-enter"></span></td><td>Things arriving: popups, toasts, dialogs, the big play button. Starts fast, settles gently.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-enter)"><button type="button" data-motion-run aria-label="Play enter easing demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--ease-exit</code></td><td><span data-token="--ease-exit"></span></td><td>Things leaving: a toast fading, a popup closing. Starts slowly, then gets out of the way.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-exit)"><button type="button" data-motion-run aria-label="Play exit easing demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--ease-spring</code></td><td><span data-token="--ease-spring"></span></td><td>A small overshoot for one affirmative moment, such as a switch thumb landing. Never for large surfaces or anything that carries text.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-spring)"><button type="button" data-motion-run aria-label="Play spring easing demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+            <tr><td><code>--ease-linear</code></td><td><span data-token="--ease-linear"></span></td><td>Loops only: spinner rotation and skeleton shimmer. Linear transitions look mechanical, so never use it for a one-off change.</td><td><div class="ds-motion-demo" style="--demo-duration: var(--duration-deliberate); --demo-ease: var(--ease-linear)"><button type="button" data-motion-run aria-label="Play linear easing demo">Play</button><span class="dot" aria-hidden="true"></span></div></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="loops"><h2><a href="#loops">Loops</a></h2>
+      <p>Three animations repeat until a state ends. They come from the video player mock (<code>spin 0.9s</code>, <code>pulse 1.6s</code>, <code>shimmer 2.2s</code>) and are shared by every component that shows the same state.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="loading-inline"><span class="spinner" aria-hidden="true"></span>Loading learners…</span>
+          <span class="spinner spinner--lg" aria-hidden="true"></span>
+          <div class="media-player" style="display: inline-block; padding: var(--space-2);"><button type="button" class="media-ctl media-live" aria-disabled="true" aria-label="Live"><span class="media-live__dot" aria-hidden="true"></span><span aria-hidden="true">LIVE</span></button></div>
+          <div style="flex: 1 1 12rem; display: flex; flex-direction: column; gap: var(--space-2);"><span class="visually-hidden">Loading course outline</span><span class="skeleton skeleton--title" aria-hidden="true"></span><span class="skeleton skeleton--text" aria-hidden="true"></span><span class="skeleton skeleton--text" style="--skeleton-width: 70%;" aria-hidden="true"></span></div>
+        </div>
+        <div class="ds-example__caption"><span>Spinner (<code>--duration-loop-spin</code>), LIVE dot (<code>--duration-loop-pulse</code>), skeleton shimmer (<code>--duration-loop-shimmer</code>).</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Easing</th><th scope="col">Where</th><th scope="col">Reduced motion</th></tr></thead>
+        <tbody>
+          <tr><td><code>--duration-loop-spin</code></td><td><span data-token="--duration-loop-spin"></span></td><td><code>--ease-linear</code></td><td><code>.spinner</code>, loading buttons, the combobox status row, the video "Connecting…" overlay.</td><td>Slows to 2 s per turn; keeps turning because it reports status.</td></tr>
+          <tr><td><code>--duration-loop-pulse</code></td><td><span data-token="--duration-loop-pulse"></span></td><td><code>--ease-standard</code></td><td>The LIVE dot while the viewer is at the live edge.</td><td>Stops; the dot stays solid and the "LIVE" text carries the meaning.</td></tr>
+          <tr><td><code>--duration-loop-shimmer</code></td><td><span data-token="--duration-loop-shimmer"></span></td><td><code>--ease-linear</code> (skeleton), <code>--ease-standard</code> (indeterminate progress)</td><td><code>.skeleton</code>, the video skeleton overlay, <code>.progress--indeterminate</code>.</td><td>Stops; skeletons stay as flat placeholders, indeterminate progress becomes a full, half-opacity bar.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Choreography and usage</a></h2>
+      <h3>Rules</h3>
+      <ul>
+        <li><b>Animate opacity, colour and transform only.</b> Never animate <code>width</code>, <code>height</code>, <code>top</code> or margins; they reflow text at 200% and stutter on low-end devices. The progress bar width is the single exception, over <code>--duration-deliberate</code>.</li>
+        <li><b>Enter with <code>--ease-enter</code>, leave with <code>--ease-exit</code></b>, and leave one step faster than you arrived (a popup that opens over <code>--duration-base</code> closes over <code>--duration-fast</code>).</li>
+        <li><b>One thing moves at a time.</b> When a dialog opens, the backdrop and the dialog share one duration; nothing else on the page animates. Lists do not stagger their items in.</li>
+        <li><b>Motion follows cause.</b> A popup grows from its field, a toast rises from the edge it sits on, the video control bar slides 4px (<code>--space-1</code>) from the bottom it is attached to.</li>
+        <li><b>Never block input.</b> A transition must not delay focus or activation: focus moves to a dialog's heading immediately, and the SCORM outline is operable while it opens.</li>
+        <li><b>Loops end with their state.</b> A spinner disappears the moment results arrive, and a skeleton is replaced, not faded. Nothing loops forever on an idle page except the LIVE dot, which is itself the state.</li>
+        <li><b>No flashing.</b> Nothing flashes more than three times a second (WCAG 2.3.1); the pulse is 1.6 s and fades only to 35% opacity.</li>
+      </ul>
+      <h3>Component map</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Component</th><th scope="col">What moves</th><th scope="col">Tokens</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../components/button.html">Button</a></td><td>Background, border and label colour; 1px press translate</td><td><code>--duration-fast</code> <code>--ease-standard</code></td></tr>
+          <tr><td><a href="../components/text-field.html">Text field</a>, <a href="../components/combobox.html">combobox</a></td><td>Border colour on hover; option hover background</td><td><code>--duration-fast</code> <code>--ease-standard</code></td></tr>
+          <tr><td><a href="../components/switch.html">Switch</a></td><td>Thumb position</td><td><code>--duration-fast</code> <code>--ease-standard</code></td></tr>
+          <tr><td><a href="../components/video-player.html">Video player</a></td><td>Control bar fades and slides out after 3 s of rest; the big play button pops in; LIVE dot pulses</td><td><code>--duration-base</code>, <code>--duration-fast</code> <code>--ease-enter</code>, <code>--duration-loop-pulse</code></td></tr>
+          <tr><td><a href="../components/toast.html">Toast</a></td><td>Fades out when it leaves</td><td><code>--duration-base</code> <code>--ease-exit</code></td></tr>
+          <tr><td><a href="../components/progress-bar.html">Progress bar</a></td><td>Fill width; indeterminate sweep</td><td><code>--duration-deliberate</code>, <code>--duration-loop-shimmer</code></td></tr>
+          <tr><td><a href="../components/spinner.html">Spinner</a>, <a href="../components/skeleton.html">skeleton</a></td><td>Rotation; shimmer</td><td><code>--duration-loop-spin</code>, <code>--duration-loop-shimmer</code> <code>--ease-linear</code></td></tr>
+          <tr><td><a href="../components/card.html">Card</a> (interactive)</td><td>Border and shadow on hover</td><td><code>--duration-fast</code> <code>--ease-standard</code></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Writing a transition</h3>
+      <pre><code>.thing {
+  transition: opacity var(--duration-base) var(--ease-enter),
+              transform var(--duration-base) var(--ease-enter);
+}
+.thing[data-leaving="true"] {
+  opacity: 0;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-exit);
+}</code></pre>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><code>transition: opacity var(--duration-base) var(--ease-standard);</code></div><figcaption>Read durations from tokens, so reduced motion and future tuning reach every component at once.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>--t-combobox-motion-duration: 0ms;</code></div><figcaption>Zero a component's duration in the light theme to "turn motion off" (the combobox mock did); it also stopped its spinner entirely. Let the reduced-motion preference decide.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="loading-inline"><span class="spinner" aria-hidden="true"></span>Loading results.</span></div><figcaption>Keep a status spinner turning slowly under reduced motion, with text beside it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>@media (prefers-reduced-motion: no-preference) { .spinner { animation: … } }</code></div><figcaption>Gate the only loading signal behind no-preference (combobox mock); a learner who asked for less motion then sees a frozen ring and cannot tell whether anything is happening.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Reduced motion</a></h2>
+      <p>Tessera follows <a href="https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html">WCAG 2.3.3 Animation from Interactions</a> even though it is AAA: motion is never required to understand or operate anything, and all of it can be switched off.</p>
+      <ul>
+        <li><b>Transitions:</b> under <code>prefers-reduced-motion: reduce</code>, <code>tokens.css</code> sets <code>--duration-fast</code>, <code>--duration-base</code>, <code>--duration-slow</code> and <code>--duration-deliberate</code> to <code>0.01ms</code>. The change still happens, instantly. A near-zero value (rather than <code>0</code>) keeps <code>transitionend</code> events firing for scripts that wait on them.</li>
+        <li><b>Status loop:</b> <code>--duration-loop-spin</code> becomes <code>2000ms</code>. The spinner keeps turning, slowly, because a frozen spinner looks like a hang (WCAG 2.2.2 allows essential status animation).</li>
+        <li><b>Decorative loops:</b> <code>--duration-loop-pulse</code> and <code>--duration-loop-shimmer</code> drop to <code>0.01ms</code>, and <code>components.css</code> also sets <code>animation: none</code> on skeletons, the LIVE dot, the big play button and indeterminate progress, so nothing flickers.</li>
+        <li><b>Transforms:</b> the 1px press translate on buttons is removed.</li>
+        <li><b>Scrolling:</b> smooth scrolling is turned off (<code>scroll-behavior: auto</code>).</li>
+        <li><b>Shipped packages:</b> <code>@tessera/theme</code> sets <code>durationNormal</code> to <code>0ms</code> and the video player's <code>--t-video-player-motion-duration</code> falls back to it; see <a href="theming.html">theming</a> for how the two systems line up.</li>
+      </ul>
+      <p>To check: turn on "Reduce motion" (macOS, iOS), "Show animations: off" (Windows) or "Remove animations" (Android), or emulate <code>prefers-reduced-motion</code> in Chromium DevTools, then replay the demos above. Record emulated runs as emulated.</p>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Reduced motion</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--duration-instant</code></td><td data-token="--duration-instant"></td><td>0ms</td><td>Immediate state changes</td></tr>
+          <tr><td><code>--duration-fast</code></td><td data-token="--duration-fast"></td><td>0.01ms</td><td>Hover, active, colour</td></tr>
+          <tr><td><code>--duration-base</code></td><td data-token="--duration-base"></td><td>0.01ms</td><td>Control bar, popups, toasts</td></tr>
+          <tr><td><code>--duration-slow</code></td><td data-token="--duration-slow"></td><td>0.01ms</td><td>Dialogs, sheets, drawers</td></tr>
+          <tr><td><code>--duration-deliberate</code></td><td data-token="--duration-deliberate"></td><td>0.01ms</td><td>Progress</td></tr>
+          <tr><td><code>--duration-loop-spin</code></td><td data-token="--duration-loop-spin"></td><td>2000ms</td><td>Spinner revolution</td></tr>
+          <tr><td><code>--duration-loop-pulse</code></td><td data-token="--duration-loop-pulse"></td><td>0.01ms (stopped)</td><td>LIVE dot</td></tr>
+          <tr><td><code>--duration-loop-shimmer</code></td><td data-token="--duration-loop-shimmer"></td><td>0.01ms (stopped)</td><td>Skeleton, indeterminate progress</td></tr>
+          <tr><td><code>--ease-standard</code></td><td data-token="--ease-standard"></td><td>unchanged</td><td>Default</td></tr>
+          <tr><td><code>--ease-enter</code></td><td data-token="--ease-enter"></td><td>unchanged</td><td>Arriving</td></tr>
+          <tr><td><code>--ease-exit</code></td><td data-token="--ease-exit"></td><td>unchanged</td><td>Leaving</td></tr>
+          <tr><td><code>--ease-spring</code></td><td data-token="--ease-spring"></td><td>unchanged</td><td>Small affirmative overshoot</td></tr>
+          <tr><td><code>--ease-linear</code></td><td data-token="--ease-linear"></td><td>unchanged</td><td>Loops</td></tr>
+        </tbody>
+      </table></div>
+      <p>The reduced-motion column is static; the Value column shows what your browser resolves now, so it changes if your system asks for reduced motion. In <code>tokens.json</code> these are the <code>duration</code> and <code>ease</code> groups.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: <code>--t-video-player-motion-duration: 200ms</code> for the control bar; <code>spin 0.9s</code>, <code>pulse 1.6s</code>, <code>shimmer 2.2s</code>.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: <code>transition: background-color .15s ease</code> on buttons.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: <code>--t-combobox-motion-duration: 0ms</code> drove the spinner; normalised (motion durations come from <code>--duration-*</code>, reduced motion zeroes them).</li>
+        <li><code>@tessera/theme</code>: <code>curveEasyEase</code> became <code>--ease-standard</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

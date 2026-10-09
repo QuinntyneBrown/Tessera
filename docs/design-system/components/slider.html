@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slider — Tessera design system</title>
+<meta name="description" content="Sliders pick an approximate value from a continuous range with a native range input. Single, with value label and ticks; aria-valuetext; every state in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Slider</h1>
+      <p class="ds-lead">A slider sets a value where the rough position matters more than the exact number: playback volume, a passing score, how many days before a due date to remind learners.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;input type="range"&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a slider for a bounded numeric value that people adjust by feel and see the effect of straight away. Always show the current value next to it, and keep the range small enough that every step can be reached with the arrow keys in a reasonable number of presses.</p>
+      <ul>
+        <li><b>An exact number</b> (a score of 73, a time limit of 45 minutes): use a number <a href="text-field.html">text field</a>, optionally beside the slider.</li>
+        <li><b>A few named levels</b> ("Beginner", "Intermediate", "Advanced"): use a <a href="radio-group.html">radio group</a> or <a href="select.html">select</a>.</li>
+        <li><b>A range with two ends</b> (scores between 60 and 80): not supported; use two number fields. See Variants.</li>
+        <li><b>Playback position and media volume</b> belong to the <a href="video-player.html">video player</a>, which builds its volume control on this component.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="slider" style="width: 100%; max-width: 22rem;">
+            <label class="field__label" for="an-score">Passing score</label>
+            <div class="slider__row"><input type="range" id="an-score" min="0" max="100" step="5" value="80" aria-valuetext="80%" aria-describedby="an-ticks"><output class="slider__value" for="an-score">80%</output></div>
+            <div class="slider__ticks" id="an-ticks" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div>
+          </div>
+          <span class="ds-callout" style="left: 10%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 30%; top: 40%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 64%; top: 40%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 90%; top: 40%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 50%; top: 82%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small><code>.field__label</code> with <code>for</code>; names the value, not the control.</small></div></li>
+          <li><div><b>Track</b><small>Native track; the filled part uses <code>accent-color: --color-accent</code>. The input row is 44px tall.</small></div></li>
+          <li><div><b>Thumb</b><small>Native thumb, also <code>--color-accent</code>. Drag, tap the track, or use the keys.</small></div></li>
+          <li><div><b>Value label</b><small><code>.slider__value</code> (an <code>&lt;output&gt;</code>): bold 14px, tabular figures, at least 3ch wide so the row does not jump. Shows the same text as <code>aria-valuetext</code>.</small></div></li>
+          <li><div><b>Ticks (optional)</b><small><code>.slider__ticks</code>: 12px muted labels for the ends and meaningful midpoints, <code>aria-hidden</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Single</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="slider" style="max-width: 24rem;">
+            <label class="field__label" for="v-vol">Playback volume</label>
+            <div class="slider__row"><input type="range" id="v-vol" min="0" max="100" step="5" value="60" aria-valuetext="60%"></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Only where the effect itself shows the value (you hear the volume). Everywhere else add the value label.</span></div>
+      </div>
+      <h3>With value label</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="slider" style="max-width: 24rem;">
+            <label class="field__label" for="v-lead">Reminder lead time</label>
+            <div class="slider__row"><input type="range" id="v-lead" min="1" max="14" step="1" value="3" aria-valuetext="3 days before the due date" aria-describedby="v-lead-hint"><output class="slider__value" for="v-lead">3 days</output></div>
+            <p class="field__hint" id="v-lead-hint">Learners get one email this many days before the due date.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The value label and <code>aria-valuetext</code> carry units: "3 days", not "3".</span><span><code>.slider__value</code></span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="slider"&gt;
+  &lt;label class="field__label" for="lead"&gt;Reminder lead time&lt;/label&gt;
+  &lt;div class="slider__row"&gt;
+    &lt;input type="range" id="lead" min="1" max="14" step="1" value="3"
+           aria-valuetext="3 days before the due date" aria-describedby="lead-hint"&gt;
+    &lt;output class="slider__value" for="lead"&gt;3 days&lt;/output&gt;
+  &lt;/div&gt;
+  &lt;p class="field__hint" id="lead-hint"&gt;Learners get one email this many days before the due date.&lt;/p&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>With ticks</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="slider" style="max-width: 24rem;">
+            <label class="field__label" for="v-score">Passing score</label>
+            <div class="slider__row"><input type="range" id="v-score" min="0" max="100" step="5" value="80" aria-valuetext="80%"><output class="slider__value" for="v-score">80%</output></div>
+            <div class="slider__ticks" aria-hidden="true"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Ticks label the ends and evenly spaced midpoints; they are a visual aid only, so they are hidden from assistive technology. Keep them to five or fewer.</span><span><code>.slider__ticks</code></span></div>
+      </div>
+      <h3>Range (two thumbs): not supported</h3>
+      <p>Two-thumb sliders are hard to operate by keyboard and screen reader, need custom ARIA, and have no native element. Use two labelled number fields instead; they are exact, validate clearly, and work everywhere.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <fieldset class="fieldset fieldset--bare">
+            <legend>Score band</legend>
+            <div class="form__inline">
+              <div class="field" style="width: 8rem;"><label class="field__label" for="v-min">Minimum</label><input class="input" type="number" id="v-min" min="0" max="100" step="5" value="60" inputmode="numeric"></div>
+              <div class="field" style="width: 8rem;"><label class="field__label" for="v-max">Maximum</label><input class="input" type="number" id="v-max" min="0" max="100" step="5" value="80" inputmode="numeric"></div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="ds-example__caption"><span>Two number fields in <code>.form__inline</code> replace a range slider. Validate that the minimum is not above the maximum.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The input row is 44px tall (--control-height-md) and the native thumb follows the platform; the width follows the container (minimum 6rem)."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. The input row is 44px tall (--control-height-md) and the native thumb follows the platform; the width follows the container (minimum 6rem).</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The native control paints its own hover and pressed thumb; the system adds the amber focus ring (with a small radius) and keeps the label readable when disabled. Focus is forced here with <code>data-state="focus"</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Single</th>
+            <td><div class="slider" style="width: 10rem;"><div class="slider__row"><input type="range" aria-label="Volume, default" min="0" max="100" step="5" value="60" aria-valuetext="60%"></div></div></td>
+            <td><div class="slider" style="width: 10rem;"><div class="slider__row"><input type="range" aria-label="Volume, hover" min="0" max="100" step="5" value="60" aria-valuetext="60%" data-state="hover"></div></div></td>
+            <td><div class="slider" style="width: 10rem;"><div class="slider__row"><input type="range" aria-label="Volume, focus" min="0" max="100" step="5" value="60" aria-valuetext="60%" data-state="focus"></div></div></td>
+            <td><div class="slider" style="width: 10rem;"><div class="slider__row"><input type="range" aria-label="Volume, active" min="0" max="100" step="5" value="65" aria-valuetext="65%" data-state="active"></div></div></td>
+            <td><div class="slider" style="width: 10rem;"><div class="slider__row"><input type="range" aria-label="Volume, disabled" min="0" max="100" step="5" value="60" aria-valuetext="60%" disabled></div></div></td></tr>
+          <tr><th scope="row">Value label</th>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" id="m-v1" aria-label="Passing score, default" min="0" max="100" step="5" value="80" aria-valuetext="80%"><output class="slider__value" for="m-v1">80%</output></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" id="m-v2" aria-label="Passing score, hover" min="0" max="100" step="5" value="80" aria-valuetext="80%" data-state="hover"><output class="slider__value" for="m-v2">80%</output></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" id="m-v3" aria-label="Passing score, focus" min="0" max="100" step="5" value="80" aria-valuetext="80%" data-state="focus"><output class="slider__value" for="m-v3">80%</output></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" id="m-v4" aria-label="Passing score, active" min="0" max="100" step="5" value="85" aria-valuetext="85%" data-state="active"><output class="slider__value" for="m-v4">85%</output></div></div></td>
+            <td><div class="slider" style="width: 12rem; color: var(--color-fg-disabled);"><div class="slider__row"><input type="range" id="m-v5" aria-label="Passing score, disabled" min="0" max="100" step="5" value="80" aria-valuetext="80%" disabled><output class="slider__value" for="m-v5">80%</output></div></div></td></tr>
+          <tr><th scope="row">Ticks</th>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" aria-label="Score with ticks, default" min="0" max="100" step="5" value="50" aria-valuetext="50%"></div><div class="slider__ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" aria-label="Score with ticks, hover" min="0" max="100" step="5" value="50" aria-valuetext="50%" data-state="hover"></div><div class="slider__ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" aria-label="Score with ticks, focus" min="0" max="100" step="5" value="50" aria-valuetext="50%" data-state="focus"></div><div class="slider__ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" aria-label="Score with ticks, active" min="0" max="100" step="5" value="55" aria-valuetext="55%" data-state="active"></div><div class="slider__ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></div></td>
+            <td><div class="slider" style="width: 12rem;"><div class="slider__row"><input type="range" aria-label="Score with ticks, disabled" min="0" max="100" step="5" value="50" aria-valuetext="50%" disabled></div><div class="slider__ticks" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></div></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="slider"><label class="field__label" for="t-light">Passing score</label><div class="slider__row"><input type="range" id="t-light" min="0" max="100" step="5" value="80" aria-valuetext="80%" data-state="focus"><output class="slider__value" for="t-light">80%</output></div><div class="slider__ticks" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div></div></div>
+        <div data-theme="dark"><div class="slider"><label class="field__label" for="t-dark">Passing score</label><div class="slider__row"><input type="range" id="t-dark" min="0" max="100" step="5" value="80" aria-valuetext="80%" data-state="focus"><output class="slider__value" for="t-dark">80%</output></div><div class="slider__ticks" aria-hidden="true"><span>0%</span><span>50%</span><span>100%</span></div></div></div>
+      </div>
+      <ul>
+        <li><b>Disabled</b> uses the native disabled control; keep the label and value readable in <code>--color-fg-disabled</code> and say why next to it.</li>
+        <li><b>Invalid</b> does not apply: the native range clamps to <code>min</code>, <code>max</code> and <code>step</code>, so the value is always valid. Validate combinations (minimum above maximum) on the number fields that replace a range slider.</li>
+        <li><b>Muted</b> (video player): moving the volume to 0 sets Mute to pressed and announces "Muted."; raising it again announces "Unmuted, volume 40%."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The range input fills the row (<code>flex: 1 1 auto</code>) with a 6rem minimum; the value label keeps its 3ch minimum so the track does not jump as digits change.</li>
+        <li>At 320px the slider takes the full column. If the value label and track no longer fit side by side at 200% text, the row wraps and the value moves below; nothing truncates.</li>
+        <li>Ticks space evenly across the width; drop midpoints and keep only the end labels when they would collide.</li>
+        <li>The video player hides its volume slider below <code>--layout-breakpoint-md</code> (48rem / 768px): on phones the hardware buttons set volume, and the Mute button and <kbd>↑</kbd> / <kbd>↓</kbd> shortcuts remain. General-purpose sliders are never hidden.</li>
+        <li>In right-to-left layouts the native range runs from right to left and the arrow keys follow the visual direction.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>No component tokens: the native control is themed with <code>accent-color: var(--color-accent)</code>, so the fill and thumb follow the accent in both themes (teal-600 light, teal-300 dark). The value label and ticks read <code>--color-fg-default</code> and <code>--color-fg-muted</code>. On media, the video player's volume uses <code>--color-media-accent</code> on the dark scrim instead. In forced-colours mode the browser draws the range in system colours.</p>
+      <pre><code>/* Volume on the video player's scrim */
+.media-player__volume { accent-color: var(--media-accent); }</code></pre>
+      <p>See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;input type="range"&gt;</code>, which exposes <code>role="slider"</code> with its value, minimum and maximum, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/slider/">WAI-ARIA APG Slider pattern</a>. Set <code>aria-valuetext</code> whenever the number alone is not meaningful ("60%", "3 days before the due date") and update it on every <code>input</code> event, as the video player does for volume.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves focus to and from the slider.</td></tr>
+        <tr><td><kbd>→</kbd> / <kbd>↑</kbd></td><td>Increases by one <code>step</code> (5 for volume and scores, 1 day for lead time).</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>↓</kbd></td><td>Decreases by one <code>step</code>. In RTL, <kbd>←</kbd> increases.</td></tr>
+        <tr><td><kbd>Page Up</kbd> / <kbd>Page Down</kbd></td><td>Larger jump (browser-defined, typically 10% of the range).</td></tr>
+        <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Minimum / maximum.</td></tr>
+        <tr><td>Video player only: <kbd>↑</kbd> / <kbd>↓</kbd> anywhere in the player</td><td>Change the volume by 5. On the slider itself the native arrows apply and the player does not apply a second change.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 3px amber ring with 2px offset and a <code>--radius-sm</code> corner surrounds the whole input on <code>:focus-visible</code>; on media it uses <code>--color-media-focus-ring</code>. Focus stays on the slider while the value changes.</p>
+      <h3>Labelling</h3>
+      <p>A visible <code>&lt;label for&gt;</code> names the value ("Passing score"); icon-only contexts such as the video control bar use <code>aria-label="Volume"</code>. The <code>&lt;output for&gt;</code> value label is visible text, not the accessible value; <code>aria-valuetext</code> is. Hints are linked with <code>aria-describedby</code>. Ticks are <code>aria-hidden</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Fill and thumb on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Value label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Tick labels on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Disabled label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Media volume on scrim</span><span class="ds-pair__ratio" data-contrast="--color-media-accent|--color-media-scrim" data-min="3"></span></div>
+      </div>
+      <p>The unfilled part of the native track is drawn by the browser and may fall below 3:1; the thumb, the fill and the visible value label carry the state, so the value is never conveyed by the empty track alone.</p>
+      <h3>Motion</h3>
+      <p>None. The thumb follows the pointer or key presses directly; there is no easing.</p>
+      <h3>Touch</h3>
+      <p>The input row is 44px tall, so the thumb and track are easy to hit. Dragging is never the only way (WCAG 2.5.7): tapping a point on the track moves the thumb there, and the keys and, where precision matters, a paired number field offer alternatives.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>The label names the value in sentence case: "Passing score", "Reminder lead time", "Volume".</li>
+        <li>Value labels and <code>aria-valuetext</code> include the unit: "80%", "3 days". Write the unit the same way in both.</li>
+        <li>Ticks label the ends first ("0%", "100%"), then meaningful midpoints; no more than five.</li>
+        <li>Use a hint for consequences: "Learners get one email this many days before the due date."</li>
+        <li>Choose a <code>step</code> people can reason about: 5 for percentages, 1 for days.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="slider"><label class="field__label" for="dd-1">Passing score</label><div class="slider__row"><input type="range" id="dd-1" min="0" max="100" step="5" value="80" aria-valuetext="80%"><output class="slider__value" for="dd-1">80%</output></div></div></div><figcaption>Show the value with its unit and set <code>aria-valuetext</code> to the same text.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="slider"><label class="field__label" for="dd-2">Passing score</label><div class="slider__row"><input type="range" id="dd-2" min="0" max="100" step="1" value="73"></div></div></div><figcaption>Hide the value and use step 1 over 100 values; nobody can tell or hit "73".</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="form__inline"><div class="field" style="width: 7rem;"><label class="field__label" for="dd-3">Minimum</label><input class="input" type="number" id="dd-3" value="60"></div><div class="field" style="width: 7rem;"><label class="field__label" for="dd-4">Maximum</label><input class="input" type="number" id="dd-4" value="80"></div></div></div><figcaption>Use two number fields for a range.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="slider"><span class="field__label">Score band</span><div class="slider__row"><input type="range" aria-label="Score band start" min="0" max="100" value="60"><input type="range" aria-label="Score band end" min="0" max="100" value="80"></div></div></div><figcaption>Fake a two-thumb range with two sliders; they can cross and the pair has no group name.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Fill and thumb (<code>accent-color</code>)</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Value label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Ticks</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Disabled label</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Media volume (video player)</td><td><code>--color-media-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-media-accent" data-swatch></i><span data-token="--color-media-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-media-accent" data-swatch></i><span data-token="--color-media-accent"></span></span></td></tr>
+          <tr><td>Row height</td><td><code>--control-height-md</code></td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Track-to-value gap / label-to-row gap</td><td><code>--space-3</code> / <code>--space-1</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-1"></span></td></tr>
+          <tr><td>Value / tick font</td><td><code>--text-label</code> / <code>--text-caption</code></td><td colspan="2"><span data-token="--text-label"></span> / <span data-token="--text-caption"></span></td></tr>
+          <tr><td>Focus corner</td><td><code>--radius-sm</code></td><td colspan="2"><span data-token="--radius-sm"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="slider"&gt;
+  &lt;label class="field__label" for="score"&gt;Passing score&lt;/label&gt;
+  &lt;div class="slider__row"&gt;
+    &lt;input type="range" id="score" name="score" min="0" max="100" step="5" value="80" aria-valuetext="80%"&gt;
+    &lt;output class="slider__value" for="score"&gt;80%&lt;/output&gt;
+  &lt;/div&gt;
+  &lt;div class="slider__ticks" aria-hidden="true"&gt;&lt;span&gt;0%&lt;/span&gt;&lt;span&gt;50%&lt;/span&gt;&lt;span&gt;100%&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  score.addEventListener('input', () =&gt; {
+    const text = score.value + '%';
+    score.setAttribute('aria-valuetext', text);
+    score.nextElementSibling.textContent = text;
+  });
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.slider</code></td><td>Column: label, row, ticks.</td></tr>
+        <tr><td><code>.slider__row</code></td><td>Range and value label side by side; range grows, 44px tall, accent-coloured.</td></tr>
+        <tr><td><code>.slider__value</code></td><td>Bold, tabular value label, at least 3ch wide.</td></tr>
+        <tr><td><code>.slider__ticks</code></td><td>Evenly spaced muted tick labels; mark <code>aria-hidden="true"</code>.</td></tr>
+        <tr><td><code>min</code>, <code>max</code>, <code>step</code></td><td>Bounds and arrow-key increment.</td></tr>
+        <tr><td><code>aria-valuetext</code></td><td>Human-readable value with unit; update on every change.</td></tr>
+        <tr><td><code>disabled</code></td><td>Native disabled range; not focusable.</td></tr>
+        <tr><td><code>data-state="focus"</code></td><td>Documentation only: forces the focus ring.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the volume control is a native range (0–100, step 5, value 60) with <code>aria-label="Volume"</code> and <code>aria-valuetext="60%"</code> updated on every change; arrows move it by 5, <kbd>↑</kbd> / <kbd>↓</kbd> anywhere in the player do the same without double-applying on the slider; volume 0 mutes; it is hidden below 47.5em because the bar has no room and phones have hardware volume.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The volume's focus outline used a 4px corner and the media focus colour; the system keeps the shared 3px ring and 2px offset with <code>--radius-sm</code> (4px), and <code>--color-media-focus-ring</code> only on media.</li>
+        <li>The hide breakpoint was 47.5em written as <code>max-width</code>; it is now <code>--layout-breakpoint-md</code> (48rem), min-width first.</li>
+        <li>The 44px minimum height was written in px; it is now <code>--control-height-md</code>.</li>
+        <li>Value labels, ticks and the range alternative are derived: the mock shows volume without a visible value because the effect is audible.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Description list — Tessera design system</title>
+<meta name="description" content="Description lists pair terms with values: a horizontal grid, a vertical stack and an inline metadata row, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Description list</h1>
+      <p class="ds-lead">Description lists show the facts about one thing as term and value pairs: a course's completion and save status, a live session's presenter and start time, a learner's enrolment details.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;dl&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a description list for the attributes of a single record, where each value only makes sense next to its term. Use a <a href="table.html">table</a> to compare the same attributes across many records and a <a href="list.html">list</a> for a set of similar items.</p>
+      <ul>
+        <li><b>Horizontal</b> (<code>.dl</code>): terms in a column on the left, values beside them. For detail panels with four or more pairs ("Learner details").</li>
+        <li><b>Vertical</b> (<code>.dl--vertical</code>): each term above its value. For narrow side panels and long values.</li>
+        <li><b>Inline</b> (<code>.dl--inline</code>): pairs flow in a wrapping row under a heading. This is the metadata row both mocks use: SCORM "Completion: Unknown · Save status: Last saved at 10:42" and video "Session · Started · Presenter".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <dl class="dl">
+            <dt>Course</dt><dd>Workplace safety essentials</dd>
+            <dt>Due</dt><dd>31 Oct 2026</dd>
+          </dl>
+          <span class="ds-callout" style="left: 18%; top: 24%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 46%; top: 24%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 34%; top: 76%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Term</b><small><code>&lt;dt&gt;</code>: bold (<code>--font-weight-bold</code>) in <code>--color-fg-default</code>, <code>--text-body-sm</code>. No trailing colon.</small></div></li>
+          <li><div><b>Value</b><small><code>&lt;dd&gt;</code>: <code>--color-fg-muted</code>, no indent. May hold text, a <a href="badge.html">badge</a>, a link or an <a href="avatar.html">avatar</a> with a name.</small></div></li>
+          <li><div><b>Gaps</b><small>Grid: <code>--space-2</code> between rows, <code>--space-6</code> between term and value columns. Inline: <code>--space-1</code> inside a pair, <code>--space-6</code> between pairs.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Horizontal grid</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <dl class="dl">
+            <dt>Learner</dt><dd>Grace Hopper</dd>
+            <dt>E-mail</dt><dd>grace.hopper@example.com</dd>
+            <dt>Course</dt><dd>Workplace safety essentials</dd>
+            <dt>Status</dt><dd><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></dd>
+            <dt>Progress</dt><dd>64%</dd>
+            <dt>Due</dt><dd>31 Oct 2026</dd>
+          </dl>
+        </div>
+        <div class="ds-example__caption"><span>Terms size to the longest term (<code>max-content</code>); values take the rest. Below 40rem it stacks into the vertical form.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;dl class="dl"&gt;
+  &lt;dt&gt;Learner&lt;/dt&gt;&lt;dd&gt;Grace Hopper&lt;/dd&gt;
+  &lt;dt&gt;Status&lt;/dt&gt;&lt;dd&gt;&lt;span class="badge badge--info"&gt;&lt;span class="badge__dot" aria-hidden="true"&gt;&lt;/span&gt;In progress&lt;/span&gt;&lt;/dd&gt;
+  &lt;dt&gt;Due&lt;/dt&gt;&lt;dd&gt;31 Oct 2026&lt;/dd&gt;
+&lt;/dl&gt;</code></pre></details>
+      </div>
+
+      <h3>Vertical</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 20rem;">
+          <dl class="dl dl--vertical">
+            <dt>Session</dt><dd>Thermal transfer, week 7</dd>
+            <dt>Location</dt><dd>Lecture hall A</dd>
+            <dt>Presenter</dt><dd>Dr. A. Okafor</dd>
+            <dt>Description</dt><dd>Conduction, convection and radiation, with worked examples from the week 6 problem set.</dd>
+          </dl>
+        </div>
+        <div class="ds-example__caption"><span><code>.dl--vertical</code>: term above value, <code>--space-3</code> before each new term. Use it in side panels and whenever a value runs to a sentence.</span></div>
+      </div>
+
+      <h3>Inline metadata row</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div>
+            <h3 style="margin: 0; font: var(--text-h3);">Effective conversations</h3>
+            <dl class="dl dl--inline" style="margin-top: var(--space-2);">
+              <div><dt>Completion</dt><dd>Unknown</dd></div>
+              <div><dt>Save status</dt><dd>Last saved at 10:42</dd></div>
+            </dl>
+          </div>
+          <div>
+            <h3 style="margin: 0; font: var(--text-h3);">Thermal transfer — live lecture</h3>
+            <dl class="dl dl--inline" style="margin-top: var(--space-2);">
+              <div><dt>Session</dt><dd>Thermal transfer, week 7</dd></div>
+              <div><dt>Started</dt><dd>10:30</dd></div>
+              <div><dt>Presenter</dt><dd>Dr. A. Okafor</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.dl--inline</code>: each pair is wrapped in a <code>&lt;div&gt;</code> (valid inside <code>&lt;dl&gt;</code>) so a pair never splits across lines. Top: SCORM <code>.course-status</code>. Bottom: video <code>.session-meta</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;dl class="dl dl--inline"&gt;
+  &lt;div&gt;&lt;dt&gt;Completion&lt;/dt&gt;&lt;dd&gt;Unknown&lt;/dd&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;dt&gt;Save status&lt;/dt&gt;&lt;dd role="status"&gt;Last saved at 10:42&lt;/dd&gt;&lt;/div&gt;
+&lt;/dl&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The list inherits --text-body-sm; it scales with the user's text size and never has its own size modifiers."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. The list inherits <code>--text-body-sm</code>; it scales with the user's text size and never has its own size modifiers.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The list itself is not interactive. Its states are the states of its values, and of any link a value holds (forced here with <code>data-state</code>).</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover (link value)</th><th scope="col">Focus (link value)</th><th scope="col">Empty value</th><th scope="col">Loading</th><th scope="col">Updated</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Horizontal</th>
+            <td><dl class="dl"><dt>Learner</dt><dd>Ada Lovelace</dd></dl></td>
+            <td><dl class="dl"><dt>Learner</dt><dd><a class="link" href="#states" data-state="hover">Ada Lovelace</a></dd></dl></td>
+            <td><dl class="dl"><dt>Learner</dt><dd><a class="link" href="#states" data-state="focus">Ada Lovelace</a></dd></dl></td>
+            <td><dl class="dl"><dt>Score</dt><dd>–<span class="visually-hidden"> not recorded</span></dd></dl></td>
+            <td><dl class="dl" aria-busy="true"><dt>Score</dt><dd><span class="skeleton skeleton--text" style="--skeleton-width: 4rem;" aria-hidden="true"></span><span class="visually-hidden">Loading</span></dd></dl></td>
+            <td><dl class="dl"><dt>Score</dt><dd>92</dd></dl></td></tr>
+          <tr><th scope="row">Vertical</th>
+            <td><dl class="dl dl--vertical"><dt>Presenter</dt><dd>Dr. A. Okafor</dd></dl></td>
+            <td><dl class="dl dl--vertical"><dt>Presenter</dt><dd><a class="link" href="#states" data-state="hover">Dr. A. Okafor</a></dd></dl></td>
+            <td><dl class="dl dl--vertical"><dt>Presenter</dt><dd><a class="link" href="#states" data-state="focus">Dr. A. Okafor</a></dd></dl></td>
+            <td><dl class="dl dl--vertical"><dt>Recording</dt><dd>Not available yet</dd></dl></td>
+            <td><dl class="dl dl--vertical" aria-busy="true"><dt>Viewers</dt><dd><span class="skeleton skeleton--text" style="--skeleton-width: 3rem;" aria-hidden="true"></span><span class="visually-hidden">Loading</span></dd></dl></td>
+            <td><dl class="dl dl--vertical"><dt>Started</dt><dd>10:30</dd></dl></td></tr>
+          <tr><th scope="row">Inline</th>
+            <td><dl class="dl dl--inline"><div><dt>Completion</dt><dd>Unknown</dd></div></dl></td>
+            <td><dl class="dl dl--inline"><div><dt>Course</dt><dd><a class="link" href="#states" data-state="hover">Effective conversations</a></dd></div></dl></td>
+            <td><dl class="dl dl--inline"><div><dt>Course</dt><dd><a class="link" href="#states" data-state="focus">Effective conversations</a></dd></div></dl></td>
+            <td><dl class="dl dl--inline"><div><dt>Completion</dt><dd>Unknown</dd></div></dl></td>
+            <td><dl class="dl dl--inline"><div><dt>Save status</dt><dd>Saving…</dd></div></dl></td>
+            <td><dl class="dl dl--inline"><div><dt>Save status</dt><dd>Last saved at 10:42</dd></div></dl></td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Empty value</b>: an en dash "–" with a visually hidden reason, or words when the reason matters ("Unknown", "Not available yet"). Never leave a <code>&lt;dd&gt;</code> blank; the term would be read with nothing after it.</li>
+        <li><b>Loading</b>: a skeleton in the value, the term stays real. <code>aria-busy="true"</code> on the <code>&lt;dl&gt;</code>.</li>
+        <li><b>Updated</b>: a value that changes while the page is open (SCORM "Save status") is announced through a polite live region the first time it appears and whenever it recovers from "Not saved"; an unchanged value is never re-announced. The SCORM mock hides the whole pair until the first save.</li>
+        <li><b>Disabled, active, selected</b> do not apply: there is nothing to operate.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><dl class="dl"><dt>Learner</dt><dd><a class="link" href="#states">Grace Hopper</a></dd><dt>Status</dt><dd><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></dd><dt>Due</dt><dd>31 Oct 2026</dd></dl><dl class="dl dl--inline" style="margin-top: var(--space-4);"><div><dt>Started</dt><dd>10:30</dd></div><div><dt>Presenter</dt><dd>Dr. A. Okafor</dd></div></dl></div>
+        <div data-theme="dark"><dl class="dl"><dt>Learner</dt><dd><a class="link" href="#states">Grace Hopper</a></dd><dt>Status</dt><dd><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></dd><dt>Due</dt><dd>31 Oct 2026</dd></dl><dl class="dl dl--inline" style="margin-top: var(--space-4);"><div><dt>Started</dt><dd>10:30</dd></div><div><dt>Presenter</dt><dd>Dr. A. Okafor</dd></div></dl></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Horizontal</b> stacks into the vertical form below 40rem (<code>--layout-breakpoint-sm</code>), so long terms never squeeze values into a sliver at 320px.</li>
+        <li><b>Vertical</b> is the same at every width.</li>
+        <li><b>Inline</b> wraps whole pairs onto new lines (<code>flex-wrap</code>); a pair itself never splits between term and value unless the value alone is wider than the container, in which case the value wraps.</li>
+        <li>Long values (e-mail addresses, course names) wrap; add <code>overflow-wrap: anywhere</code> on values that can contain unbroken strings. Nothing truncates.</li>
+        <li>With 200% text or WCAG text-spacing overrides the grid's term column grows; the stack breakpoint is in <code>rem</code>, so it also moves earlier as text grows.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The description list reads two semantic tokens: <code>--color-fg-default</code> for terms and <code>--color-fg-muted</code> for values. It has no component tokens. Values that hold components (badges, links, avatars) theme themselves.</p>
+      <pre><code>/* A summary card that wants values as strong as terms */
+.summary-card .dl dd { color: var(--color-fg-default); }</code></pre>
+      <p>In the dark theme terms become sage-25 and values sage-200, matching the video mock's dark <code>--page-ink</code> and <code>--page-muted</code>. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;dl&gt;</code>, <code>&lt;dt&gt;</code>, <code>&lt;dd&gt;</code>; no ARIA role is needed and there is no APG widget pattern because nothing is operable. The structure satisfies <a href="https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html">WCAG 1.3.1 Info and relationships</a>: the term–value relationship is in the markup, not only in the layout. A <code>&lt;div&gt;</code> may wrap each <code>dt</code>/<code>dd</code> group (required for <code>.dl--inline</code>); no other wrapper is allowed. Screen readers vary: NVDA and JAWS announce "description list" or "definition list" with item counts; VoiceOver and TalkBack read terms and values in order. All are acceptable because the order is term, then value.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Reaches links and buttons inside values only. The list, terms and plain values are never focusable.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Follows a link value.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Only interactive values receive focus, with the shared amber ring. Updating a value never moves focus.</p>
+      <h3>Labelling</h3>
+      <p>The term labels the value; do not repeat it inside the value. When the list follows a heading, that heading names it; no <code>aria-label</code> is needed. Drop the colon the SCORM mock put in its terms ("Completion:"): screen readers read it as part of the term, and the bold term already separates it visually. Values that change live (save status, viewer count) get one polite live region for the whole metadata row, not one per value.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Term on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Value on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Value on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Link value on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-link|--color-bg-surface" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>None. Loading skeletons shimmer and stop under <code>prefers-reduced-motion</code>; updated values change without animation.</p>
+      <h3>Touch</h3>
+      <p>Not interactive. Link values follow the <a href="link.html">link</a> target rules (at least 24px tall, or inline in text).</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Terms are short nouns in sentence case: "Completion", "Save status", "Started", "Presenter". No colon, no question form.</li>
+        <li>Values are facts, not sentences: "10:30", "Lecture hall A", "Last saved at 10:42".</li>
+        <li>Times use the 24-hour "10:30" form the mocks use; dates use "31 Oct 2026".</li>
+        <li>Unknown values say so in words: "Unknown", "Not available yet". Use an en dash only where the reason is obvious from context.</li>
+        <li>Keep the same term order on every screen that shows the same record.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="dl dl--inline"><div><dt>Session</dt><dd>Thermal transfer, week 7</dd></div><div><dt>Started</dt><dd>10:30</dd></div></dl></div><figcaption>Real <code>dt</code>/<code>dd</code> pairs, as the video mock's session metadata.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p><b>Session</b> Thermal transfer, week 7 <b>Started</b> 10:30</p></div><figcaption>Bold text in a paragraph looks the same but loses the term–value relationship for assistive technology (WCAG 1.3.1).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="dl dl--inline"><div><dt>Completion</dt><dd>Unknown</dd></div></dl></div><figcaption>Term without a colon; bold already separates it.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><dl class="dl dl--inline"><div><dt>Completion:</dt><dd>Unknown</dd></div></dl></div><figcaption>A colon inside the term (the SCORM mock's "Completion:") is read aloud as part of the term and drifts from the video mock's colon-free terms.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><dl class="dl"><dt>Score</dt><dd>Not recorded</dd></dl></div><figcaption>Say why a value is missing.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><dl class="dl"><dt>Score</dt><dd></dd></dl></div><figcaption>An empty <code>&lt;dd&gt;</code>: the term is read with nothing after it.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Term</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Value</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Font</td><td><code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body-sm"></span></td></tr>
+          <tr><td>Term weight</td><td><code>--font-weight-bold</code></td><td colspan="2"><span data-token="--font-weight-bold"></span></td></tr>
+          <tr><td>Grid row gap / column gap</td><td><code>--space-2</code> / <code>--space-6</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-6"></span></td></tr>
+          <tr><td>Vertical gap before a term</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+          <tr><td>Inline gap inside / between pairs</td><td><code>--space-1</code> / <code>--space-6</code></td><td colspan="2"><span data-token="--space-1"></span> / <span data-token="--space-6"></span></td></tr>
+          <tr><td>Stack breakpoint</td><td><code>--layout-breakpoint-sm</code></td><td colspan="2"><span data-token="--layout-breakpoint-sm"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;dl class="dl"&gt;
+  &lt;dt&gt;Learner&lt;/dt&gt;&lt;dd&gt;Grace Hopper&lt;/dd&gt;
+  &lt;dt&gt;Due&lt;/dt&gt;&lt;dd&gt;31 Oct 2026&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl class="dl dl--vertical"&gt;
+  &lt;dt&gt;Location&lt;/dt&gt;&lt;dd&gt;Lecture hall A&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl class="dl dl--inline"&gt;
+  &lt;div&gt;&lt;dt&gt;Started&lt;/dt&gt;&lt;dd&gt;10:30&lt;/dd&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;dt&gt;Presenter&lt;/dt&gt;&lt;dd&gt;Dr. A. Okafor&lt;/dd&gt;&lt;/div&gt;
+&lt;/dl&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.dl</code></td><td>Two-column grid of direct <code>dt</code>/<code>dd</code> children; stacks below 40rem.</td></tr>
+        <tr><td><code>.dl--vertical</code></td><td>One column; term above value.</td></tr>
+        <tr><td><code>.dl--inline</code></td><td>Wrapping row of <code>&lt;div&gt;</code>-wrapped pairs.</td></tr>
+        <tr><td><code>aria-busy="true"</code></td><td>While values load; pair with skeletons in the values.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: <code>.course-status</code> under the course title: "Completion: Unknown" and "Save status: Last saved at …", the latter hidden until the first save and announced politely.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: <code>.session-meta</code> under the player: Session / Started / Presenter.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Two implementations of the same row: SCORM made <code>dt</code>/<code>dd</code> <code>display: inline</code> with a <code>.3rem</code> margin; video used flex <code>&lt;div&gt;</code> pairs with a <code>0.3rem</code> gap. Unified on <code>.dl--inline</code> with <code>&lt;div&gt;</code> pairs and <code>--space-1</code>.</li>
+        <li>SCORM terms ended with a colon ("Completion:"); video terms did not. Colons removed.</li>
+        <li>Font size 0.9rem in both; normalised to <code>--font-size-sm</code> via <code>--text-body-sm</code>.</li>
+        <li>Row gap .25rem and column gap 1.5rem kept, as <code>--space-1</code> and <code>--space-6</code>; top margins .5rem / 1rem snapped to <code>--space-2</code> / <code>--space-4</code>.</li>
+        <li>The horizontal grid and vertical forms are derived: not present in the mocks; they follow the system rules.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

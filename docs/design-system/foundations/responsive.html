@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Responsive — Tessera design system</title>
+<meta name="description" content="Mobile-first rules, breakpoints, per-component responsive behaviour, touch rules and the 320px, 400% zoom, 200% text and text-spacing requirements, with a testing matrix.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Responsive</h1>
+      <p class="ds-lead">Learners open courses on phones between shifts, on shared lab laptops and on wall screens in a lecture hall. Every Tessera component works at every width from 320 CSS px up, at 400% zoom, with text doubled and with spacing overrides applied, without horizontal scrolling or lost content.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 1.4.4, 1.4.10, 1.4.12</span><span class="ds-pill">Mobile first</span><span class="ds-pill">No tokens owned</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#breakpoints">Breakpoints</a></li><li><a href="#behaviours">Component behaviours</a></li><li><a href="#touch">Touch and pointer</a></li><li><a href="#zoom">Zoom, text and spacing</a></li><li><a href="#usage">Usage</a></li><li><a href="#testing">Testing matrix</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <ul>
+        <li><b>Mobile first.</b> Base styles are the phone layout. Wider screens add columns, side navigation and space; they never fix a broken narrow layout.</li>
+        <li><b>Content decides, not devices.</b> Prefer layouts that wrap on their own (flex-wrap, <code>auto-fill</code> grids, the wrapping sidebar layout) over media queries. Use a breakpoint only when the arrangement has to change.</li>
+        <li><b>Everything in <code>rem</code>.</b> Sizes and breakpoints are in <code>rem</code>, so a learner who sets a larger default font gets the narrow layout sooner, exactly as if the screen were smaller.</li>
+        <li><b>Nothing is removed.</b> A control can move into a menu or below the picture, but every action available on a desktop is available on a phone.</li>
+      </ul>
+      <p>The SCORM player layout below wraps without a media query: the outline sits beside the lesson while the lesson can keep 30rem, and stacks above it otherwise. Drag the corner of the frame to try it.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="display: block; resize: horizontal; overflow: auto; min-width: 16rem; max-width: 100%;">
+          <div class="sidebar-layout">
+            <nav class="outline-panel" aria-label="Course outline (example)">
+              <div class="outline-panel__head"><h3>Course outline</h3></div>
+              <p style="margin: 0; padding: 0 var(--space-5) var(--space-5); color: var(--color-fg-muted);">4 activities · 1 complete</p>
+            </nav>
+            <section class="content-player" aria-label="Lesson (example)">
+              <div class="content-player__bar"><p>Activity 2 of 4</p><h3>Ask better questions</h3></div>
+              <div class="content-player__actions"><button class="btn" type="button">Previous</button><button class="btn btn--primary" type="button">Next</button></div>
+            </section>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.sidebar-layout</code>: outline <code>flex: 1 1 15.5rem</code>, lesson <code>flex: 999 1 30rem</code>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="breakpoints"><h2><a href="#breakpoints">Breakpoints</a></h2>
+      <p>Breakpoint values are tokens on <a href="layout.html">layout</a>. Custom properties cannot be used inside <code>@media</code>, so the values are written out in queries by convention, always as <code>min-width</code> in <code>rem</code>.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Name</th><th scope="col">From</th><th scope="col">Typical device</th><th scope="col">Columns</th><th scope="col">Gutter</th><th scope="col">Margin</th></tr></thead>
+        <tbody>
+          <tr><td>base</td><td>0 (designed at 320px)</td><td>Phones</td><td>4</td><td><code>--space-4</code> 16px</td><td><code>--space-4</code> 16px</td></tr>
+          <tr><td><code>--layout-breakpoint-sm</code></td><td>40rem (640px)</td><td>Large phones, landscape</td><td>4</td><td>16px</td><td>16px</td></tr>
+          <tr><td><code>--layout-breakpoint-md</code></td><td>48rem (768px)</td><td>Tablets, split-screen laptops</td><td>8</td><td><code>--space-6</code> 24px</td><td><code>--space-6</code> 24px</td></tr>
+          <tr><td><code>--layout-breakpoint-lg</code></td><td>64rem (1024px)</td><td>Laptops</td><td>12</td><td>24px</td><td><code>--space-8</code> 32px</td></tr>
+          <tr><td><code>--layout-breakpoint-xl</code></td><td>80rem (1280px)</td><td>Desktops</td><td>12</td><td>24px</td><td>32px</td></tr>
+          <tr><td><code>--layout-breakpoint-2xl</code></td><td>90rem (1440px)</td><td>Wide screens, lecture-hall displays</td><td>12</td><td>24px</td><td>auto: content stops at <code>--layout-container-max</code></td></tr>
+        </tbody>
+      </table></div>
+      <pre><code>/* Base: phones. */
+.form__row--2 { grid-template-columns: minmax(0, 1fr); }
+/* md and up: two short fields side by side. */
+@media (min-width: 48rem) {
+  .form__row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}</code></pre>
+      <p>The mocks wrote breakpoints as <code>max-width: 40em</code> and <code>max-width: 47.5em</code>. The system normalises them to 40rem and 48rem written mobile first. Where a "below" rule is clearer, use <code>max-width: 47.99rem</code> so it never overlaps the <code>min-width: 48rem</code> rule.</p>
+    </section>
+
+    <section class="ds-section" id="behaviours"><h2><a href="#behaviours">Component behaviours</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Component</th><th scope="col">Narrow</th><th scope="col">Wide</th><th scope="col">Switch</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../components/scorm-player.html">SCORM player</a></td><td>Outline stacks above the lesson, collapsed behind "Show outline"; bar and actions use 12 × 16px padding; the reason text aligns to the start.</td><td>Outline beside the lesson; 20 × 24px padding.</td><td>Wraps by content; toggle below md</td></tr>
+          <tr><td><a href="../components/video-player.html">Video player</a></td><td>Control bar sits below the picture and never hides; the volume slider is hidden (Mute and <kbd>↑</kbd>/<kbd>↓</kbd> still work); the toast moves to the bottom.</td><td>Control bar overlays the picture and fades after 3 s of rest.</td><td>md</td></tr>
+          <tr><td><a href="../components/combobox.html">Combobox</a></td><td>Chips wrap and scroll after 8rem; the popup is capped at <code>min(24rem, 60dvh)</code> and anchors to the input row on short screens so the input is never covered.</td><td>Same component, more chips per row.</td><td>Content</td></tr>
+          <tr><td><a href="../components/top-bar.html">Top bar</a></td><td>Links collapse into a menu button.</td><td>Links inline.</td><td>md</td></tr>
+          <tr><td><a href="../components/sidebar-navigation.html">Sidebar navigation</a></td><td>A drawer behind a menu button.</td><td>Persistent side column, <code>--layout-sidebar-width</code>.</td><td>lg</td></tr>
+          <tr><td><a href="../components/breadcrumb.html">Breadcrumb</a></td><td><code>.breadcrumb--collapse</code> shows the parent only, with a back chevron.</td><td>Full trail.</td><td>md</td></tr>
+          <tr><td><a href="../components/dialog.html">Dialog</a></td><td>Full-width bottom sheet, 90dvh max, sticky footer, buttons share the row.</td><td>Centred, 24rem / 32rem / 48rem wide.</td><td>sm</td></tr>
+          <tr><td><a href="../components/form-layout.html">Form layout</a></td><td>One column; actions stack full width, primary on top.</td><td>Short related fields in two columns; actions right-aligned.</td><td>md</td></tr>
+          <tr><td><a href="../components/toast.html">Toast</a></td><td>Full width at the bottom, above the safe area.</td><td>Bottom right, 24rem.</td><td>sm</td></tr>
+          <tr><td><a href="../components/table.html">Table</a></td><td>Scrolls inside <code>.table-wrap</code> with a sticky header; the page itself never scrolls sideways.</td><td>Full table.</td><td>Content</td></tr>
+          <tr><td><a href="../components/tabs.html">Tabs</a></td><td>Tab list scrolls horizontally; never wraps to two rows.</td><td>All tabs visible.</td><td>Content</td></tr>
+          <tr><td><a href="../components/description-list.html">Description list</a></td><td>Terms stack above values.</td><td>Two columns.</td><td>sm</td></tr>
+          <tr><td>Page header</td><td>Title 28px (<code>--font-size-3xl</code>); actions wrap below the title.</td><td>Title 32px (<code>--font-size-4xl</code>).</td><td>md</td></tr>
+          <tr><td><a href="../components/button.html">Button</a> rows</td><td>Wrap; labels never truncate.</td><td>One row.</td><td>Content</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="touch"><h2><a href="#touch">Touch and pointer</a></h2>
+      <ul>
+        <li><b>Hover is an enhancement.</b> Every hover style in <code>components.css</code> sits inside <code>@media (hover: hover)</code>, so a tap never leaves a "stuck" hover colour on a phone. Nothing is reachable only by hover: the combobox's full-label tooltip also opens on focus of the chip's remove button, and the video control bar reappears on tap and on focus.</li>
+        <li><b>44px by default.</b> Buttons, fields, media controls and toggles are 44px (<code>--target-comfortable</code>, <code>--control-height-md</code>), so on a coarse pointer every primary target already meets 44 × 44px and no <code>(pointer: coarse)</code> enlargement is needed.</li>
+        <li><b>Smaller targets are the exception</b>: 32px (<code>--control-height-sm</code>) chips and the 28px chip remove button keep at least 24px (<code>--target-min</code>, WCAG 2.5.8) and sit in rows where they are not crowded by other targets. If a product adds a <code>(pointer: coarse)</code> rule, it may only grow targets toward 44px, never shrink them.</li>
+        <li><b>No gesture-only actions.</b> Swipe, pinch and long-press are never the only way; the volume slider has Mute and arrow keys; anything dragged has a button alternative (WCAG 2.5.7).</li>
+        <li><b>Safe areas.</b> Fixed bottom elements (toasts, sheet footers) add <code>env(safe-area-inset-bottom)</code>; full-height layouts use <code>100dvh</code> so mobile browser chrome does not clip them.</li>
+        <li><b>On-screen keyboards</b> must not cover the focused field: the combobox keeps the input in view when its popup opens.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="zoom"><h2><a href="#zoom">Zoom, text and spacing</a></h2>
+      <p>These are project requirements in <code>AGENTS.md</code>, not aspirations. Each one is checked on every component change.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Condition</th><th scope="col">Requirement</th><th scope="col">How the system meets it</th></tr></thead>
+        <tbody>
+          <tr><td>320 CSS px wide</td><td>Every component fully works with no horizontal page scroll (WCAG 1.4.10 Reflow).</td><td><code>minmax(0, 1fr)</code> grids, <code>min-width: 0</code> on flex children, wrapping rows, <code>min(…, 100%)</code> in every <code>auto-fill</code> grid.</td></tr>
+          <tr><td>400% browser zoom</td><td>At 1280px wide, 400% zoom gives a 320 × 256 CSS px viewport. Everything stays operable; short heights matter as much as narrow widths.</td><td>Popups cap their height with <code>dvh</code>; the combobox anchors to its input row; sticky elements stay small; the video control bar moves out of the picture.</td></tr>
+          <tr><td>Text enlarged to 200%</td><td>Text-only enlargement (root font size 200%) loses no content or function (WCAG 1.4.4).</td><td>Sizes in <code>rem</code>/<code>em</code>; heights are <code>min-height</code>, never fixed; labels wrap rather than truncate (long chip labels ellipsise but keep their full name and a tooltip).</td></tr>
+          <tr><td>Text-spacing overrides</td><td>Line height 1.5×, paragraph spacing 2×, letter spacing 0.12em, word spacing 0.16em lose nothing (WCAG 1.4.12).</td><td>No fixed-height text containers; no <code>overflow: hidden</code> on text except deliberate, tooltipped ellipses.</td></tr>
+          <tr><td>Orientation</td><td>Portrait and landscape both work (WCAG 1.3.4).</td><td>No orientation lock; fullscreen video does not force landscape.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Data tables and the video picture are the only things allowed to scroll in two dimensions, and they do it inside their own frame.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><code>@media (min-width: 48rem) { … }</code></div><figcaption>Write breakpoints mobile first, in <code>rem</code>, from the token values.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><code>@media (max-width: 47.5em) { … }</code></div><figcaption>Invent a near-miss breakpoint written desktop first (SCORM and video mocks); 47.5em and 48rem disagree by 8px.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas" style="max-width: 16rem;"><button class="btn btn--primary btn--block" type="button">Retry save</button><button class="btn btn--block" type="button">Exit without saving</button></div><figcaption>Stack actions full width on phones, primary first.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas" style="max-width: 16rem; overflow: hidden; flex-wrap: nowrap;"><button class="btn btn--primary" type="button" style="flex: none;">Retry save</button><button class="btn" type="button" style="flex: none;">Exit without saving</button></div><figcaption>Force a row that cannot wrap; at 320px the second action is clipped and unreachable.</figcaption></figure>
+      </div>
+      <ul>
+        <li>Never set a fixed <code>height</code> on anything containing text; use <code>min-height</code>.</li>
+        <li>Never hide content at a breakpoint unless the same content or action is reachable another way.</li>
+        <li>Keep the DOM order the same at every width; only the visual arrangement changes, so reading and focus order stay logical (WCAG 1.3.2, 2.4.3).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="testing"><h2><a href="#testing">Testing matrix</a></h2>
+      <p>Automated checks run in Chromium only (Playwright, page objects own the selectors). Manual checks use real browsers and devices.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Check</th><th scope="col">Setting</th><th scope="col">How</th><th scope="col">Pass when</th></tr></thead>
+        <tbody>
+          <tr><td>Widths</td><td>320, 576, 768, 992, 1200, 1920 CSS px</td><td>Automated (Chromium viewport) and manual</td><td>No horizontal page scroll; nothing clipped or overlapping; every action reachable.</td></tr>
+          <tr><td>Short viewport</td><td>320 × 256 CSS px</td><td>Automated (emulates the 400% case)</td><td>Popups and dialogs fit; focused element visible.</td></tr>
+          <tr><td>Actual 400% zoom</td><td>Chrome window 1280 × 1024, zoom 400%</td><td>Manual; record window and viewport sizes</td><td>As above, with real zoom. Emulation is not evidence of this row.</td></tr>
+          <tr><td>200% text</td><td><code>html { font-size: 200% !important }</code></td><td>Automated and manual</td><td>No lost text; controls grow, never clip.</td></tr>
+          <tr><td>Text spacing</td><td>WCAG 1.4.12 values</td><td>Automated and manual</td><td>No lost text or overlapping labels.</td></tr>
+          <tr><td>Touch</td><td>iOS Safari, Android Chrome</td><td>Manual, real devices</td><td>Targets usable; no stuck hover; on-screen keyboard does not cover the field.</td></tr>
+          <tr><td>Combined</td><td>320px + 200% text; dark theme + 400%</td><td>Manual</td><td>Same as each condition alone.</td></tr>
+        </tbody>
+      </table></div>
+      <p>The full manual procedure, including the scripts that apply the text-size and text-spacing overrides, is in the <a href="../../verification/manual-screen-reader-verification.md">manual screen reader verification guide</a>. If a condition cannot be run, record it as "Not run" with the reason.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Reflow (1.4.10):</b> 320 CSS px with no two-dimensional scrolling except tables and the video picture.</li>
+        <li><b>Resize text (1.4.4):</b> 200% with no loss.</li>
+        <li><b>Text spacing (1.4.12):</b> overrides lose nothing.</li>
+        <li><b>Target size (2.5.8):</b> at least 24px everywhere, 44px by default.</li>
+        <li><b>Focus not obscured (2.4.11):</b> sticky headers, toasts and the video control bar never cover the focused element; documentation pages use <code>scroll-padding-top</code>.</li>
+        <li><b>Consistent order (1.3.2):</b> breakpoints rearrange, never reorder, content.</li>
+      </ul>
+      <p>See <a href="accessibility.html">accessibility</a> for the full commitment list.</p>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Responsive owns no tokens. Breakpoints, columns, gutters, margins and container widths (<code>--layout-*</code>) are on <a href="layout.html">layout</a>; target sizes and control heights (<code>--target-*</code>, <code>--control-height-*</code>) are on <a href="accessibility.html">accessibility</a>.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: wrapping outline layout; outline toggle below 47.5em.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: control bar below the picture and volume hidden below 47.5em.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: 40em layout change; popup height bounded by the viewport; 320 × 256 reflow check.</li>
+        <li><code>AGENTS.md</code>: 320px, 400% zoom, 200% text and text-spacing requirements; Chromium-only automated tests.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

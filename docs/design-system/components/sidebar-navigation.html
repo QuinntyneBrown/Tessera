@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidebar navigation — Tessera design system</title>
+<meta name="description" content="Sidebar navigation lists an LMS area's destinations in groups: collapsible groups, count badges, a collapsed icon rail and a 4px accent stripe on the current page.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Sidebar navigation</h1>
+      <p class="ds-lead">Sidebar navigation lists every destination in an area of the LMS, grouped under short headings, with the current page marked by the same inset accent stripe as the SCORM outline's current lesson.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;nav&gt;</code> + <code>&lt;details&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use sidebar navigation when an area has more destinations than fit in the <a href="top-bar.html">top bar</a> (more than six), or when they fall into groups: a course administrator's "Learning" and "Administration" sections, for example. Every item is a link that loads a page.</p>
+      <ul>
+        <li><b>Grouped</b>: links under non-interactive group headings. The default.</li>
+        <li><b>Collapsible groups</b>: each group is a native <code>&lt;details&gt;</code>, so learners can fold away what they do not use. Use when there are more than about twelve links.</li>
+        <li><b>With badges</b>: a count <a href="badge.html">badge</a> at the end of a link for things waiting ("3" assignments due).</li>
+        <li><b>Collapsed to icons</b>: a 60px rail that keeps icons and hides labels visually. Opt-in, for wide layouts where the content needs the room.</li>
+      </ul>
+      <p>Do not use it for steps in a sequence; the SCORM lesson list is a <a href="stepper.html">stepper</a> because lessons have order, completion and locks. Do not use it to switch views of one object; use <a href="tabs.html">tabs</a>. Do not put actions ("Create course") in it; actions are <a href="button.html">buttons</a> in the page.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <nav class="sidenav" aria-label="Anatomy example" style="width: 16rem;">
+            <p class="sidenav__heading">Learning</p>
+            <ul>
+              <li><a class="sidenav__link" href="#anatomy" aria-current="page"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg><span class="sidenav__label">My courses</span></a></li>
+              <li><a class="sidenav__link" href="#anatomy"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 4h6v3H9zM6 6h12v14H6zM9 12h6M9 16h4"/></svg><span class="sidenav__label">Assignments</span><span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></li>
+            </ul>
+          </nav>
+          <span class="ds-callout" style="left: 18%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 4%; top: 38%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 18%; top: 50%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 45%; top: 50%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 78%; top: 72%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Group heading</b><small><code>.sidenav__heading</code> (static) or a <code>&lt;summary&gt;</code> in <code>.sidenav__group</code> (collapsible): <code>--text-overline</code>, uppercase, muted.</small></div></li>
+          <li><div><b>Current stripe</b><small>Inset 4px <code>--color-accent</code> (<code>--border-width-stripe</code>) on the start edge plus <code>--color-accent-subtle</code> fill, from the SCORM outline's current lesson.</small></div></li>
+          <li><div><b>Icon (optional)</b><small>1.25em, <code>aria-hidden="true"</code>. Required in a sidebar that can collapse to icons.</small></div></li>
+          <li><div><b>Label</b><small><code>.sidenav__label</code>: <code>--text-label</code>, bold 14px. Hidden visually (not from assistive technology) when collapsed.</small></div></li>
+          <li><div><b>Badge (optional)</b><small><code>.badge.badge--count.sidenav__badge</code>, pushed to the end. Carries a visually hidden noun ("3 due").</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Grouped</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <nav class="sidenav" aria-label="Course administration (grouped example)">
+            <p class="sidenav__heading" id="grp-learning">Learning</p>
+            <ul aria-labelledby="grp-learning">
+              <li><a class="sidenav__link" href="#variants">My courses</a></li>
+              <li><a class="sidenav__link" href="#variants" aria-current="page">Assignments</a></li>
+              <li><a class="sidenav__link" href="#variants">Live sessions</a></li>
+            </ul>
+            <p class="sidenav__heading" id="grp-admin">Administration</p>
+            <ul aria-labelledby="grp-admin">
+              <li><a class="sidenav__link" href="#variants">Learners</a></li>
+              <li><a class="sidenav__link" href="#variants">Course packages</a></li>
+              <li><a class="sidenav__link" href="#variants">Reports</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="ds-example__caption"><span>Each list is labelled by its heading, so a screen reader announces "Learning, list, 3 items".</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="sidenav" aria-label="Course administration"&gt;
+  &lt;p class="sidenav__heading" id="nav-learning"&gt;Learning&lt;/p&gt;
+  &lt;ul aria-labelledby="nav-learning"&gt;
+    &lt;li&gt;&lt;a class="sidenav__link" href="/courses"&gt;My courses&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a class="sidenav__link" href="/assignments" aria-current="page"&gt;Assignments&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+
+      <h3>Collapsible groups</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <nav class="sidenav" aria-label="Course administration (collapsible example)">
+            <details class="sidenav__group" open>
+              <summary>Learning</summary>
+              <ul>
+                <li><a class="sidenav__link" href="#variants" aria-current="page">My courses</a></li>
+                <li><a class="sidenav__link" href="#variants">Assignments</a></li>
+                <li><a class="sidenav__link" href="#variants">Live sessions</a></li>
+              </ul>
+            </details>
+            <details class="sidenav__group">
+              <summary>Administration</summary>
+              <ul>
+                <li><a class="sidenav__link" href="#variants">Learners</a></li>
+                <li><a class="sidenav__link" href="#variants">Course packages</a></li>
+                <li><a class="sidenav__link" href="#variants">Reports</a></li>
+              </ul>
+            </details>
+          </nav>
+        </div>
+        <div class="ds-example__caption"><span>Native <code>&lt;details&gt;</code>: the summary is a button with expanded state, no script needed. The group holding the current page is always open.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;details class="sidenav__group" open&gt;
+  &lt;summary&gt;Learning&lt;/summary&gt;
+  &lt;ul&gt;…&lt;/ul&gt;
+&lt;/details&gt;</code></pre></details>
+      </div>
+
+      <h3>With badges</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <nav class="sidenav" aria-label="Learner menu (badges example)">
+            <ul>
+              <li><a class="sidenav__link" href="#variants" aria-current="page"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg><span class="sidenav__label">My courses</span></a></li>
+              <li><a class="sidenav__link" href="#variants"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 4h6v3H9zM6 6h12v14H6zM9 12h6M9 16h4"/></svg><span class="sidenav__label">Assignments</span><span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></li>
+              <li><a class="sidenav__link" href="#variants"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h11v10H4zM15 10l5-3v10l-5-3"/></svg><span class="sidenav__label">Live sessions</span><span class="badge badge--count badge--danger sidenav__badge">1<span class="visually-hidden"> live now</span></span></a></li>
+              <li><a class="sidenav__link" href="#variants"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span class="sidenav__label">Grades</span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="ds-example__caption"><span>Badges are neutral counts; danger only for something urgent and live. The hidden noun makes the link read "Assignments 3 due".</span></div>
+      </div>
+
+      <h3>Collapsed to icons</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <nav class="sidenav sidenav--collapsed" aria-label="Learner menu (collapsed example)">
+            <ul>
+              <li><a class="sidenav__link" href="#variants" aria-current="page" title="My courses"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg><span class="sidenav__label">My courses</span></a></li>
+              <li><a class="sidenav__link" href="#variants" title="Assignments, 3 due"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M9 4h6v3H9zM6 6h12v14H6zM9 12h6M9 16h4"/></svg><span class="sidenav__label">Assignments, 3 due</span></a></li>
+              <li><a class="sidenav__link" href="#variants" title="Live sessions"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h11v10H4zM15 10l5-3v10l-5-3"/></svg><span class="sidenav__label">Live sessions</span></a></li>
+              <li><a class="sidenav__link" href="#variants" title="Grades"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span class="sidenav__label">Grades</span></a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="ds-example__caption"><span><code>.sidenav--collapsed</code>: 60px wide. Labels stay in the accessibility tree; a <a href="tooltip.html">tooltip</a> shows each label on hover and focus. Badge counts move into the label.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="sidenav sidenav--collapsed" aria-label="Learner menu"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a class="sidenav__link" href="/assignments"&gt;
+      &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+      &lt;span class="sidenav__label"&gt;Assignments, 3 due&lt;/span&gt;
+    &lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Sidebar navigation has one density: 44px links (--control-height-md) in a 16rem column (--layout-sidebar-width), or a 60px rail when collapsed."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">Sidebar navigation has one density: 44px links (<code>--control-height-md</code>) in a 16rem column (<code>--layout-sidebar-width</code>), or a 60px rail when collapsed.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Links have hover, focus and current; group summaries have focus and expanded. Pointer and focus states are forced with <code>data-state</code> for review.</p>
+      <div class="ds-matrix" style="position: relative;"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Current</th><th scope="col">Expanded</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Link</th>
+            <td><a class="sidenav__link" href="#states">Learners</a></td>
+            <td><a class="sidenav__link" href="#states" data-state="hover">Learners</a></td>
+            <td><a class="sidenav__link" href="#states" data-state="focus">Learners</a></td>
+            <td><a class="sidenav__link" href="#states" data-state="hover">Learners</a></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><a class="sidenav__link" href="#states" aria-current="page">Learners</a></td>
+            <td><span class="ds-pill">–</span></td></tr>
+          <tr><th scope="row">Link with badge</th>
+            <td><a class="sidenav__link" href="#states">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></td>
+            <td><a class="sidenav__link" href="#states" data-state="hover">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></td>
+            <td><a class="sidenav__link" href="#states" data-state="focus">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></td>
+            <td><a class="sidenav__link" href="#states" data-state="hover">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><a class="sidenav__link" href="#states" aria-current="page">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></td>
+            <td><span class="ds-pill">–</span></td></tr>
+          <tr><th scope="row">Group summary</th>
+            <td><details class="sidenav__group"><summary>Reports</summary><ul><li><a class="sidenav__link" href="#states">Completion</a></li></ul></details></td>
+            <td><details class="sidenav__group"><summary style="color: var(--color-fg-default);">Reports</summary><ul><li><a class="sidenav__link" href="#states">Completion</a></li></ul></details></td>
+            <td><details class="sidenav__group"><summary data-state="focus">Reports</summary><ul><li><a class="sidenav__link" href="#states">Completion</a></li></ul></details></td>
+            <td><details class="sidenav__group"><summary style="color: var(--color-fg-default);">Reports</summary><ul><li><a class="sidenav__link" href="#states">Completion</a></li></ul></details></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><span class="ds-pill">–</span></td>
+            <td><details class="sidenav__group" open><summary>Reports</summary><ul><li><a class="sidenav__link" href="#states">Completion</a></li></ul></details></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><nav class="sidenav" aria-label="Light theme example"><p class="sidenav__heading">Learning</p><ul><li><a class="sidenav__link" href="#states" aria-current="page">My courses</a></li><li><a class="sidenav__link" href="#states" data-state="hover">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></li><li><a class="sidenav__link" href="#states">Grades</a></li></ul></nav></div>
+        <div data-theme="dark"><nav class="sidenav" aria-label="Dark theme example"><p class="sidenav__heading">Learning</p><ul><li><a class="sidenav__link" href="#states" aria-current="page">My courses</a></li><li><a class="sidenav__link" href="#states" data-state="hover">Assignments<span class="badge badge--count sidenav__badge">3<span class="visually-hidden"> due</span></span></a></li><li><a class="sidenav__link" href="#states">Grades</a></li></ul></nav></div>
+      </div>
+      <ul>
+        <li><b>Current</b> (<code>aria-current="page"</code>): accent-subtle fill, accent text and the inset 4px accent stripe on the start edge, exactly the SCORM outline's current lesson. Three cues, never colour alone; in forced-colours mode a 2px <code>Highlight</code> outline replaces them.</li>
+        <li><b>Active</b> has no separate look; a link navigates on click and the next page shows it as current.</li>
+        <li><b>Disabled</b> is not used. Remove destinations the person has no permission for; if a destination exists but is empty, link to its <a href="empty-state.html">empty state</a>.</li>
+        <li><b>Expanded</b> comes from the native <code>open</code> attribute on <code>&lt;details&gt;</code>; the browser announces it.</li>
+        <li><b>Summary hover</b> is shown with a token-only inline style; <code>components.css</code> has no hover rule for <code>.sidenav__group &gt; summary</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>At 64rem and wider</b> (<code>--layout-breakpoint-lg</code>): the sidebar sits in its own 16rem column (<code>--layout-sidebar-width</code>) beside the content. Optionally collapsible to the 60px icon rail with a toggle button (<code>aria-expanded</code>) at the top of the rail.</li>
+        <li><b>Below 64rem</b>: the sidebar leaves the layout and opens from the <a href="top-bar.html">top bar</a>'s menu button as a full-width panel in DOM order after the header. The collapsed rail is never used on small screens, because icons alone are harder to learn on touch.</li>
+        <li>The SCORM mock's wrapping layout (<code>.sidebar-layout</code>) is the alternative for in-page side columns: the side column stacks above the main one whenever the main cannot keep 30rem, so enlarged text never squeezes it.</li>
+        <li>Labels wrap to a second line rather than truncating; with 200% text a link grows taller. Badges stay at the end and never overlap the label.</li>
+        <li>A long sidebar scrolls with the page; if it is sticky, it scrolls inside itself with <code>overflow: auto</code> and is never taller than the viewport.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The sidebar reads semantic tokens directly: <code>--color-bg-surface</code> (panel), <code>--color-fg-default</code> (labels), <code>--color-fg-muted</code> (headings), <code>--color-bg-subtle</code> (hover), and <code>--color-accent-subtle</code> + <code>--color-fg-accent</code> + <code>--color-accent</code> (current). It declares no component tokens; re-skin a host's sidebar by scoping semantic tokens.</p>
+      <pre><code>/* A sidebar on a tinted canvas: lift the panel */
+.lms-sidebar.sidenav { --color-bg-surface: var(--color-bg-surface-raised); }</code></pre>
+      <p>In the dark theme the current fill becomes a deep teal and the stripe lightens with the accent; the label stays above 4.5:1. The shipped packages call the accent <code>--t-colorBrandBackground</code> and the current text <code>--t-colorBrandForeground1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A <code>&lt;nav&gt;</code> landmark with a unique <code>aria-label</code>, containing lists of links. Collapsible groups use native <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code>, which matches the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">WAI-ARIA APG Disclosure pattern</a> without ARIA. This is site navigation, not a tree: do not add <code>role="tree"</code> or <code>role="menu"</code>; see the APG <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/">disclosure navigation example</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through group summaries and links in order. Links inside a closed group are skipped.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>On a link: navigates. On a summary: opens or closes the group.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>On a summary: opens or closes the group. On a link: scrolls the page (browser default), as with any link.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>When the sidebar is open as a panel on small screens: closes it and returns focus to the top bar's menu button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared amber ring (3px, 2px offset) on links and summaries. After navigation focus starts at the top of the new page, where the <a href="skip-link.html">skip link</a> lets keyboard users jump past the sidebar. When the collapsed rail expands or collapses, focus stays on the toggle.</p>
+      <h3>Labelling</h3>
+      <p>The <code>&lt;nav&gt;</code> has a label that differs from the top bar's ("Course administration" vs "Primary"). Static group headings label their list with <code>aria-labelledby</code>. Icons are <code>aria-hidden</code>; in the collapsed rail the visually hidden <code>.sidenav__label</code> remains the link's name, so a screen reader still hears "Assignments, 3 due". Badges include their noun in hidden text. The current link is announced as "current page".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Link on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Link on hover background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Group heading on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current label on current fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current stripe on current fill</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Badge count on badge background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Groups open and close instantly (native <code>&lt;details&gt;</code>). If a host animates the rail width, it uses <code>--duration-base</code>, which <code>prefers-reduced-motion</code> zeroes.</p>
+      <h3>Touch</h3>
+      <p>Links are 44px tall. Group summaries are at least 24px tall (<code>--target-min</code>) with 8px padding and the full width of the panel, which meets WCAG 2.5.8; hosts with touch-first audiences can raise them to 44px. Nothing depends on hover: tooltips on the collapsed rail also show on focus, and the label is always in the accessible name.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Link labels are nouns in sentence case that match the destination page's <code>&lt;h1&gt;</code>: "Assignments" leads to a page titled "Assignments".</li>
+        <li>Group headings are one or two words ("Learning", "Administration"); they are labels, not instructions.</li>
+        <li>Keep each group to seven links or fewer; split or rethink if it grows.</li>
+        <li>Badges show counts of things waiting for the person, up to "99+". Never use a badge for "New".</li>
+        <li>Order links by frequency of use, not alphabetically, and keep the same order on every page.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><nav class="sidenav" aria-label="Do example: current page"><ul><li><a class="sidenav__link" href="#do-dont" aria-current="page">Assignments</a></li><li><a class="sidenav__link" href="#do-dont">Grades</a></li></ul></nav></div><figcaption>Mark the current page with <code>aria-current="page"</code>, the fill and the 4px stripe, as the SCORM outline marks its current lesson.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><nav class="sidenav" aria-label="Don't example: colour only"><ul><li><a class="sidenav__link" href="#do-dont" style="color: var(--color-fg-accent);">Assignments</a></li><li><a class="sidenav__link" href="#do-dont">Grades</a></li></ul></nav></div><figcaption>Show the current page with text colour alone and no <code>aria-current</code>; it fails 1.4.1 and screen readers hear nothing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><nav class="sidenav sidenav--collapsed" aria-label="Do example: collapsed"><ul><li><a class="sidenav__link" href="#do-dont" title="Grades"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span class="sidenav__label">Grades</span></a></li></ul></nav></div><figcaption>Keep the label in the DOM with <code>.sidenav__label</code> when collapsing to icons.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><nav class="sidenav sidenav--collapsed" aria-label="Don't example: collapsed"><ul><li><a class="sidenav__link" href="#do-dont" aria-label="Grades"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></a></li></ul></nav></div><figcaption>Delete the label and rely on a lone icon with no tooltip; sighted keyboard and voice-control users cannot tell what "Grades" is called.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><nav class="sidenav" aria-label="Do example: hover"><ul><li><a class="sidenav__link" href="#do-dont" data-state="hover">Learners</a></li></ul></nav></div><figcaption>Use <code>--color-bg-subtle</code> for hover.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><nav class="sidenav" aria-label="Don't example: hover"><ul><li><a class="sidenav__link" href="#do-dont" style="background: var(--color-bg-surface-sunken);">Learners</a></li></ul></nav></div><figcaption>Invent a near-identical one-off hover tint (the SCORM mock's outline used <code>#f2f6f3</code> while its buttons used <code>#f1f6f3</code>).</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Panel background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Link label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Group heading</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Hover background</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Current fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Current label</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Current stripe</td><td><code>--color-accent</code>, <code>--border-width-stripe</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Stripe width</td><td><code>--border-width-stripe</code></td><td colspan="2"><span data-token="--border-width-stripe"></span></td></tr>
+          <tr><td>Column width</td><td><code>--layout-sidebar-width</code></td><td colspan="2"><span data-token="--layout-sidebar-width"></span></td></tr>
+          <tr><td>Link height</td><td><code>--control-height-md</code></td><td colspan="2"><span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Heading height</td><td><code>--target-min</code></td><td colspan="2"><span data-token="--target-min"></span></td></tr>
+          <tr><td>Link padding / gap</td><td><code>--space-2</code>, <code>--space-3</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Link font / heading font</td><td><code>--text-label</code>, <code>--text-overline</code></td><td colspan="2"><span data-token="--text-label"></span> / <span data-token="--text-overline"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;nav class="sidenav" aria-label="Course administration"&gt;
+  &lt;details class="sidenav__group" open&gt;
+    &lt;summary&gt;Learning&lt;/summary&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a class="sidenav__link" href="/assignments" aria-current="page"&gt;
+        &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+        &lt;span class="sidenav__label"&gt;Assignments&lt;/span&gt;
+        &lt;span class="badge badge--count sidenav__badge"&gt;3&lt;span class="visually-hidden"&gt; due&lt;/span&gt;&lt;/span&gt;
+      &lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/details&gt;
+&lt;/nav&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.sidenav</code></td><td>Panel: column of groups, 16rem max width, surface background.</td></tr>
+        <tr><td><code>.sidenav__group</code></td><td>On <code>&lt;details&gt;</code>: a collapsible group; its <code>&lt;summary&gt;</code> is styled as a heading.</td></tr>
+        <tr><td><code>.sidenav__heading</code></td><td>Static group heading; pair with <code>aria-labelledby</code> on the list.</td></tr>
+        <tr><td><code>.sidenav__link</code></td><td>44px link row with icon, label and badge.</td></tr>
+        <tr><td><code>.sidenav__label</code></td><td>The link text; visually hidden when collapsed.</td></tr>
+        <tr><td><code>.sidenav__badge</code></td><td>On a <code>.badge</code>: pushes it to the end of the row.</td></tr>
+        <tr><td><code>.sidenav--collapsed</code></td><td>60px icon rail.</td></tr>
+        <tr><td><code>aria-current="page"</code></td><td>Current page: fill, accent text, inset 4px stripe.</td></tr>
+        <tr><td><code>open</code></td><td>On <code>.sidenav__group</code>: expanded group.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. One decision is taken from a mock:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: the current-item treatment (<code>aria-current</code>, accent-subtle fill, <code>box-shadow: inset 4px 0 0 var(--accent)</code>) of the course outline's current lesson, and the wrapping sidebar layout.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The outline's hover <code>#f2f6f3</code> and the buttons' <code>#f1f6f3</code> were near-duplicates; both are <code>--color-bg-subtle</code>.</li>
+        <li>The outline's 4px stripe and the video error panel's 5px stripe are both <code>--border-width-stripe</code> (4px).</li>
+        <li>Link padding 0.8rem 0.75rem was off-grid; snapped to <code>--space-2</code> / <code>--space-3</code> with a 44px minimum height.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

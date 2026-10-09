@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Table — Tessera design system</title>
+<meta name="description" content="Tables show learner and course records in rows and columns: default and dense, sortable, selectable with a bulk bar, row actions, sticky header, loading, empty and error states, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Table</h1>
+      <p class="ds-lead">Tables let administrators compare learners across the same columns: who has finished a course, who is behind, who has not started. They are for scanning and acting on records, not for laying out a page.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;table&gt;</code></span><span class="ds-pill ds-pill--warn">Derived</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a table when every record has the same attributes and people need to compare them down a column: learner progress in a course, scores across an assignment, attendance across sessions. Use a <a href="list.html">list</a> when records have one or two lines of text and no shared columns, and a <a href="description-list.html">description list</a> for the attributes of a single record.</p>
+      <ul>
+        <li><b>Default</b> is the comfortable density for review screens ("Learner progress").</li>
+        <li><b>Dense</b> fits more rows on reporting screens where people scan numbers.</li>
+        <li><b>Sortable</b> columns use a <code>.table__sort</code> button in the header and <code>aria-sort</code> on the sorted column.</li>
+        <li><b>Selectable</b> rows add a checkbox column; selecting one or more reveals the bulk bar (<code>.table__bulk</code>) with actions for the whole selection.</li>
+        <li><b>Row actions</b> (<code>.table__actions</code>) sit in the last column: ghost icon buttons with a named target.</li>
+      </ul>
+      <p>The table is a static document table, not a spreadsheet: there is no cell-by-cell arrow navigation. If a product needs editable cells, that is a separate grid component with the APG Grid pattern.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="table-wrap" style="width: 100%;">
+            <table class="table">
+              <caption>Learner progress</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col" aria-sort="descending"><button class="table__sort" type="button">Progress<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></button></th><th scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+              <tbody>
+                <tr><td>Ada Lovelace</td><td class="num">100%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+                <tr aria-selected="true"><td>Grace Hopper</td><td class="num">64%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <span class="ds-callout" style="left: 6%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 6%; top: 40%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 52%; top: 40%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 6%; top: 62%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 52%; top: 62%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 90%; top: 62%;" aria-hidden="true">6</span>
+          <span class="ds-callout" style="left: 6%; top: 82%;" aria-hidden="true">7</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Caption</b><small><code>&lt;caption&gt;</code> in <code>--text-h4</code>. Names the table for screen readers; it can be visually hidden when a heading above says the same.</small></div></li>
+          <li><div><b>Header row</b><small><code>&lt;th scope="col"&gt;</code> on <code>--color-bg-surface-sunken</code>, <code>--text-label</code> in <code>--color-fg-muted</code>, no wrapping, sticky to the top of <code>.table-wrap</code>.</small></div></li>
+          <li><div><b>Sort button</b><small><code>.table__sort</code>: the header text plus a 16px arrow; the arrow is at 50% opacity until the column is sorted. At least 24px tall.</small></div></li>
+          <li><div><b>Body cell</b><small><code>--space-3</code> × <code>--space-4</code> padding, <code>--text-body-sm</code>, hairline <code>--color-border-default</code> divider.</small></div></li>
+          <li><div><b>Numeric cell</b><small><code>.num</code>: end-aligned, tabular figures, so percentages line up.</small></div></li>
+          <li><div><b>Row actions</b><small><code>.table__actions</code>: end-aligned ghost icon buttons, each named for its row.</small></div></li>
+          <li><div><b>Selected row</b><small><code>aria-selected="true"</code> fills the row with <code>--color-accent-subtle</code>; the row checkbox carries the state for assistive technology.</small></div></li>
+        </ol>
+      </div>
+      <p>The container <code>.table-wrap</code> draws the border and <code>--radius-lg</code> corners and owns horizontal scrolling. The bulk bar <code>.table__bulk</code> is its first child when rows are selected.</p>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Default</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Learner progress: Workplace safety essentials</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Status</th><th scope="col" class="num">Progress</th><th scope="col" class="num">Score</th><th scope="col">Last active</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Ada Lovelace</th><td><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></td><td class="num">100%</td><td class="num">92</td><td>8 Oct 2026</td></tr>
+                <tr><th scope="row">Grace Hopper</th><td><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></td><td class="num">64%</td><td class="num">–</td><td>9 Oct 2026</td></tr>
+                <tr><th scope="row">Alan Turing</th><td><span class="badge"><span class="badge__dot" aria-hidden="true"></span>Not started</span></td><td class="num">0%</td><td class="num">–</td><td>Never</td></tr>
+                <tr><th scope="row">Katherine Johnson</th><td><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Overdue</span></td><td class="num">30%</td><td class="num">–</td><td>21 Sep 2026</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The learner name is the row header (<code>&lt;th scope="row"&gt;</code>), so each cell is announced with the learner it belongs to. Missing scores are an en dash, never blank.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="table-wrap"&gt;
+  &lt;table class="table"&gt;
+    &lt;caption&gt;Learner progress: Workplace safety essentials&lt;/caption&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th scope="col"&gt;Learner&lt;/th&gt;&lt;th scope="col"&gt;Status&lt;/th&gt;
+      &lt;th scope="col" class="num"&gt;Progress&lt;/th&gt;&lt;th scope="col" class="num"&gt;Score&lt;/th&gt;
+      &lt;th scope="col"&gt;Last active&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;th scope="row"&gt;Ada Lovelace&lt;/th&gt;
+        &lt;td&gt;&lt;span class="badge badge--success"&gt;&lt;span class="badge__dot" aria-hidden="true"&gt;&lt;/span&gt;Completed&lt;/span&gt;&lt;/td&gt;
+        &lt;td class="num"&gt;100%&lt;/td&gt;&lt;td class="num"&gt;92&lt;/td&gt;&lt;td&gt;8 Oct 2026&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Sortable</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Learner progress, sorted by progress, highest first. Column headers with buttons are sortable.</caption>
+              <thead><tr>
+                <th scope="col"><button class="table__sort" type="button">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th>
+                <th scope="col">Status</th>
+                <th scope="col" class="num" aria-sort="descending"><button class="table__sort" type="button">Progress<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg></button></th>
+                <th scope="col"><button class="table__sort" type="button">Last active<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th>
+              </tr></thead>
+              <tbody>
+                <tr><th scope="row">Ada Lovelace</th><td><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></td><td class="num">100%</td><td>8 Oct 2026</td></tr>
+                <tr><th scope="row">Grace Hopper</th><td><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></td><td class="num">64%</td><td>9 Oct 2026</td></tr>
+                <tr><th scope="row">Katherine Johnson</th><td><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Overdue</span></td><td class="num">30%</td><td>21 Sep 2026</td></tr>
+                <tr><th scope="row">Alan Turing</th><td><span class="badge"><span class="badge__dot" aria-hidden="true"></span>Not started</span></td><td class="num">0%</td><td>Never</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Only the sorted column has <code>aria-sort</code> (<code>ascending</code> or <code>descending</code>); its arrow is full opacity and points the sort direction. Unsorted sortable columns show a faint up-down arrow.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;th scope="col" class="num" aria-sort="descending"&gt;
+  &lt;button class="table__sort" type="button"&gt;Progress
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M12 5v14M19 12l-7 7-7-7"/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/th&gt;
+&lt;th scope="col"&gt;
+  &lt;button class="table__sort" type="button"&gt;Last active
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;&lt;path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/&gt;&lt;/svg&gt;
+  &lt;/button&gt;
+&lt;/th&gt;</code></pre></details>
+      </div>
+
+      <h3>Selectable with bulk bar and row actions</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <div class="table__bulk"><p role="status">2 learners selected</p><button class="btn btn--sm" type="button">Send reminder</button><button class="btn btn--sm" type="button">Extend due date</button><button class="btn btn--link btn--sm" type="button">Clear selection</button></div>
+            <table class="table">
+              <caption>Learner progress: Workplace safety essentials</caption>
+              <thead><tr>
+                <th scope="col"><label class="check"><input type="checkbox" id="sel-all" data-indeterminate><span class="visually-hidden">Select all learners</span></label></th>
+                <th scope="col">Learner</th><th scope="col">Status</th><th scope="col" class="num">Progress</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr></thead>
+              <tbody>
+                <tr><td><label class="check"><input type="checkbox" id="sel-ada"><span class="visually-hidden">Select Ada Lovelace</span></label></td><th scope="row">Ada Lovelace</th><td><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></td><td class="num">100%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></button><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Ada Lovelace" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+                <tr aria-selected="true"><td><label class="check"><input type="checkbox" id="sel-grace" checked><span class="visually-hidden">Select Grace Hopper</span></label></td><th scope="row">Grace Hopper</th><td><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></td><td class="num">64%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></button><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Grace Hopper" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+                <tr aria-selected="true"><td><label class="check"><input type="checkbox" id="sel-katherine" checked><span class="visually-hidden">Select Katherine Johnson</span></label></td><th scope="row">Katherine Johnson</th><td><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Overdue</span></td><td class="num">30%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Katherine Johnson"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></button><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Katherine Johnson" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+                <tr><td><label class="check"><input type="checkbox" id="sel-alan"><span class="visually-hidden">Select Alan Turing</span></label></td><th scope="row">Alan Turing</th><td><span class="badge"><span class="badge__dot" aria-hidden="true"></span>Not started</span></td><td class="num">0%</td><td><div class="table__actions"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Alan Turing"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></button><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Alan Turing" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The header checkbox is indeterminate while some rows are selected. The bulk bar appears above the header only while one or more rows are selected and its count is a polite status.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="table-wrap"&gt;
+  &lt;div class="table__bulk"&gt;
+    &lt;p role="status"&gt;2 learners selected&lt;/p&gt;
+    &lt;button class="btn btn--sm" type="button"&gt;Send reminder&lt;/button&gt;
+    &lt;button class="btn btn--link btn--sm" type="button"&gt;Clear selection&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;table class="table"&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th scope="col"&gt;&lt;label class="check"&gt;&lt;input type="checkbox"&gt;&lt;span class="visually-hidden"&gt;Select all learners&lt;/span&gt;&lt;/label&gt;&lt;/th&gt;
+      …
+      &lt;th scope="col"&gt;&lt;span class="visually-hidden"&gt;Actions&lt;/span&gt;&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr aria-selected="true"&gt;
+        &lt;td&gt;&lt;label class="check"&gt;&lt;input type="checkbox" checked&gt;&lt;span class="visually-hidden"&gt;Select Grace Hopper&lt;/span&gt;&lt;/label&gt;&lt;/td&gt;
+        &lt;th scope="row"&gt;Grace Hopper&lt;/th&gt; …
+        &lt;td&gt;&lt;div class="table__actions"&gt;
+          &lt;button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Grace Hopper"&gt;…&lt;/button&gt;
+          &lt;button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Grace Hopper"
+                  aria-haspopup="menu" aria-expanded="false"&gt;…&lt;/button&gt;
+        &lt;/div&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Sticky header</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap" style="max-height: 14rem;" tabindex="0" role="region" aria-labelledby="sticky-caption">
+            <table class="table">
+              <caption id="sticky-caption">Session attendance: Lecture hall A</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Session</th><th scope="col" class="num">Minutes watched</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Ada Lovelace</th><td>Thermal transfer, week 7</td><td class="num">48</td></tr>
+                <tr><th scope="row">Grace Hopper</th><td>Thermal transfer, week 7</td><td class="num">45</td></tr>
+                <tr><th scope="row">Alan Turing</th><td>Thermal transfer, week 7</td><td class="num">12</td></tr>
+                <tr><th scope="row">Katherine Johnson</th><td>Thermal transfer, week 7</td><td class="num">48</td></tr>
+                <tr><th scope="row">Jordan Lee</th><td>Thermal transfer, week 7</td><td class="num">31</td></tr>
+                <tr><th scope="row">Taylor Brooks</th><td>Thermal transfer, week 7</td><td class="num">40</td></tr>
+                <tr><th scope="row">Robin Singh</th><td>Thermal transfer, week 7</td><td class="num">0</td></tr>
+                <tr><th scope="row">Casey Martin</th><td>Thermal transfer, week 7</td><td class="num">22</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Every <code>thead th</code> is <code>position: sticky</code>. It sticks when <code>.table-wrap</code> has a height limit (here 14rem) and so becomes the scroll container. Scroll inside the frame to see it.</span></div>
+      </div>
+
+      <h3>Not offered in v1</h3>
+      <ul>
+        <li><b>Expandable rows</b>: link the learner name to a detail page instead; nested rows are hard to announce and rarely needed in the mocks' flows.</li>
+        <li><b>Sticky first column</b> and <b>card layout below md</b>: no class ships for either yet. Tables scroll inside <code>.table-wrap</code> at every width (see <a href="#responsive">Responsive</a>).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Two densities. Default cells are padded <code>--space-3</code> × <code>--space-4</code> (12 × 16px); dense cells <code>--space-2</code> × <code>--space-3</code> (8 × 12px). Type stays <code>--text-body-sm</code> in both, so dense never shrinks text below 14px.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <table class="table table--dense">
+              <caption>Assignment scores (dense)</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col" class="num">Quiz 1</th><th scope="col" class="num">Quiz 2</th><th scope="col" class="num">Final</th><th scope="col" class="num">Average</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Ada Lovelace</th><td class="num">95</td><td class="num">88</td><td class="num">92</td><td class="num">91.7</td></tr>
+                <tr><th scope="row">Grace Hopper</th><td class="num">90</td><td class="num">84</td><td class="num">–</td><td class="num">87.0</td></tr>
+                <tr><th scope="row">Alan Turing</th><td class="num">–</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+                <tr><th scope="row">Katherine Johnson</th><td class="num">100</td><td class="num">97</td><td class="num">–</td><td class="num">98.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.table--dense</code>. Use it for numeric reports; keep the default density whenever rows carry checkboxes or actions, so targets stay comfortable.</span></div>
+      </div>
+      <p>Interactive parts keep their own size in both densities: sort buttons are at least <code>--target-min</code> (24px) tall, row action buttons are <code>btn--sm</code> (32px), row checkboxes sit in a 44px <code>.check</code> label.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Interactive parts of the table, forced with <code>data-state</code> so they can be reviewed without a mouse. Products get them from <code>:hover</code>, <code>:focus-visible</code>, <code>:active</code>, <code>:disabled</code>, <code>aria-sort</code> and <code>aria-selected</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Selected / sorted</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sort header</th>
+            <td><table class="table"><thead><tr><th scope="col"><button class="table__sort" type="button">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th></tr></thead></table></td>
+            <td><table class="table"><thead><tr><th scope="col"><button class="table__sort" type="button" data-state="hover" style="color: var(--color-fg-default); text-decoration: underline;">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th></tr></thead></table></td>
+            <td><table class="table"><thead><tr><th scope="col"><button class="table__sort" type="button" data-state="focus">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th></tr></thead></table></td>
+            <td><table class="table"><thead><tr><th scope="col"><button class="table__sort" type="button" data-state="active">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg></button></th></tr></thead></table></td>
+            <td>–</td>
+            <td><table class="table"><thead><tr><th scope="col" aria-sort="ascending"><button class="table__sort" type="button">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></th></tr></thead></table></td></tr>
+          <tr><th scope="row">Row</th>
+            <td><table class="table"><tbody><tr><td>Ada Lovelace</td><td class="num">100%</td></tr></tbody></table></td>
+            <td><table class="table"><tbody><tr data-state="hover"><td>Ada Lovelace</td><td class="num">100%</td></tr></tbody></table></td>
+            <td><table class="table"><tbody><tr><td><a class="link" href="#states" data-state="focus">Ada Lovelace</a></td><td class="num">100%</td></tr></tbody></table></td>
+            <td>–</td>
+            <td>–</td>
+            <td><table class="table"><tbody><tr aria-selected="true"><td>Ada Lovelace</td><td class="num">100%</td></tr></tbody></table></td></tr>
+          <tr><th scope="row">Row checkbox</th>
+            <td><label class="check"><input type="checkbox" id="m-check-default"><span class="visually-hidden">Select Ada Lovelace</span></label></td>
+            <td><label class="check"><input type="checkbox" id="m-check-hover"><span class="visually-hidden">Select Grace Hopper</span></label></td>
+            <td><label class="check"><input type="checkbox" id="m-check-focus" data-state="focus"><span class="visually-hidden">Select Alan Turing</span></label></td>
+            <td><label class="check"><input type="checkbox" id="m-check-active" checked><span class="visually-hidden">Select Katherine Johnson</span></label></td>
+            <td><label class="check"><input type="checkbox" id="m-check-disabled" disabled><span class="visually-hidden">Select Robin Singh (account inactive)</span></label></td>
+            <td><label class="check"><input type="checkbox" id="m-check-selected" checked><span class="visually-hidden">Select Jordan Lee</span></label></td></tr>
+          <tr><th scope="row">Row action</th>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" data-state="hover" aria-label="More actions for Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" data-state="focus" aria-label="More actions for Alan Turing"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" data-state="active" aria-label="More actions for Katherine Johnson"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" disabled aria-label="More actions for Robin Singh"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td>
+            <td><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="More actions for Jordan Lee" aria-haspopup="menu" aria-expanded="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></td></tr>
+        </tbody>
+      </table></div>
+      <p>The sort header's hover cell shows the proposed hover cue (text to <code>--color-fg-default</code> and underlined); <code>components.css</code> has no <code>.table__sort:hover</code> rule yet. Active has no separate look: activating the button flips <code>aria-sort</code>. The row's focus state is the focus ring of the first interactive element in it; rows themselves are never focusable.</p>
+
+      <h3>Loading</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap" aria-busy="true">
+            <table class="table">
+              <caption>Learner progress: Workplace safety essentials</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Status</th><th scope="col" class="num">Progress</th><th scope="col">Last active</th></tr></thead>
+              <tbody>
+                <tr aria-hidden="true"><td><span class="skeleton skeleton--text" style="--skeleton-width: 8rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 5rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 3rem; margin-inline-start: auto;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 6rem;"></span></td></tr>
+                <tr aria-hidden="true"><td><span class="skeleton skeleton--text" style="--skeleton-width: 6rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 5rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 3rem; margin-inline-start: auto;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 6rem;"></span></td></tr>
+                <tr aria-hidden="true"><td><span class="skeleton skeleton--text" style="--skeleton-width: 9rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 5rem;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 3rem; margin-inline-start: auto;"></span></td><td><span class="skeleton skeleton--text" style="--skeleton-width: 6rem;"></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="loading-inline" role="status"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</p>
+        </div>
+        <div class="ds-example__caption"><span><code>aria-busy="true"</code> on <code>.table-wrap</code>; skeleton rows are <code>aria-hidden</code>; the header stays real so the shape is known. One polite status says what is loading. Show skeletons only when a response takes longer than about 300 ms, so fast loads do not flash (the video player waits 1 s before announcing buffering for the same reason).</span></div>
+      </div>
+
+      <h3>Empty</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Learner progress: Workplace safety essentials</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Status</th><th scope="col" class="num">Progress</th><th scope="col">Last active</th></tr></thead>
+              <tbody>
+                <tr><td colspan="4">
+                  <div class="empty-state empty-state--compact">
+                    <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M16 19v-1a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v1M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6M20 19v-1a4 4 0 0 0-3-3.9M15 4.1a3 3 0 0 1 0 5.8"/></svg></span>
+                    <div><p class="empty-state__title">No learners assigned yet</p><p class="empty-state__body">Assign learners to this course to track their progress here.</p><div class="empty-state__actions" style="justify-content: flex-start;"><button class="btn btn--primary btn--sm" type="button">Assign learners</button></div></div>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>One full-width cell (<code>colspan</code> equal to the column count) holding <code>.empty-state--compact</code>. The header stays so people know what would appear. For a filter with no matches, say so and offer "Clear filters".</span></div>
+      </div>
+
+      <h3>Error</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="table-wrap">
+            <table class="table">
+              <caption>Learner progress: Workplace safety essentials</caption>
+              <thead><tr><th scope="col">Learner</th><th scope="col">Status</th><th scope="col" class="num">Progress</th><th scope="col">Last active</th></tr></thead>
+              <tbody>
+                <tr><td colspan="4">
+                  <div class="empty-state empty-state--compact empty-state--danger" role="alert">
+                    <span class="empty-state__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v5M12 16h.01M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>
+                    <div><p class="empty-state__title">Learner progress could not be loaded</p><p class="empty-state__body">Check your connection and try again. Nothing has changed.</p><div class="empty-state__actions" style="justify-content: flex-start;"><button class="btn btn--sm" type="button"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>Retry</button></div></div>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>A first-load error replaces the rows. A next-page error keeps the loaded rows and puts the message and Retry below them, as the combobox does ("Retry preserves the first page and appends that page").</span></div>
+      </div>
+
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="table-wrap"><table class="table"><caption>Learner progress</caption><thead><tr><th scope="col" aria-sort="ascending"><button class="table__sort" type="button">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Ada Lovelace</th><td><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></td></tr><tr data-state="hover"><th scope="row">Alan Turing</th><td><span class="badge"><span class="badge__dot" aria-hidden="true"></span>Not started</span></td></tr><tr aria-selected="true"><th scope="row">Grace Hopper</th><td><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></td></tr></tbody></table></div></div>
+        <div data-theme="dark"><div class="table-wrap"><table class="table"><caption>Learner progress</caption><thead><tr><th scope="col" aria-sort="ascending"><button class="table__sort" type="button">Learner<svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Ada Lovelace</th><td><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></td></tr><tr data-state="hover"><th scope="row">Alan Turing</th><td><span class="badge"><span class="badge__dot" aria-hidden="true"></span>Not started</span></td></tr><tr aria-selected="true"><th scope="row">Grace Hopper</th><td><span class="badge badge--info"><span class="badge__dot" aria-hidden="true"></span>In progress</span></td></tr></tbody></table></div></div>
+      </div>
+      <ul>
+        <li><b>Row hover</b> fills with <code>--color-bg-subtle</code>, only under <code>(hover: hover)</code>. It is a reading aid, not a state; nothing is announced.</li>
+        <li><b>Row selected</b> fills with <code>--color-accent-subtle</code> and the row checkbox is checked. In the dark theme <code>--color-accent-subtle</code> and <code>--color-bg-subtle</code> resolve to the same sage-800, so a hovered and a selected row look alike there: the checked checkbox is the cue that must always be present.</li>
+        <li><b>Disabled row</b>: a row that cannot be selected (an inactive account, as in the combobox's "Account inactive" option) keeps readable text and a disabled checkbox, and says why in a cell.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The page never scrolls sideways. A table wider than its column scrolls inside <code>.table-wrap</code> (<code>overflow-x: auto</code>), which is the one two-dimensional scroll WCAG 1.4.10 allows for data tables.</li>
+        <li>A scrolling wrapper is a keyboard stop: give it <code>tabindex="0"</code>, <code>role="region"</code> and <code>aria-labelledby</code> pointing at the caption, so keyboard users can scroll it with the arrow keys and screen reader users hear its name.</li>
+        <li>Header cells never wrap (<code>white-space: nowrap</code>); body cells wrap. At 320px and with 200% text, keep the learner name column first so the row header is always visible at the start of the scroll.</li>
+        <li>The bulk bar wraps its actions onto a second line below 40rem rather than overflowing.</li>
+        <li>Below <code>--layout-breakpoint-md</code>, drop low-value columns (Score, Last active) from the markup only if the same data is reachable from the learner's detail page; never hide data with CSS alone.</li>
+        <li>Sticky headers stick inside <code>.table-wrap</code> when it has a height limit; never use a page-level sticky header that could cover a focused row (WCAG 2.4.11).</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The table reads semantic tokens directly: <code>--color-bg-surface</code> (body), <code>--color-bg-surface-sunken</code> (header), <code>--color-border-default</code> (row dividers and frame), <code>--color-bg-subtle</code> (hover), <code>--color-accent-subtle</code> (selected row and bulk bar). It has no component tokens yet; re-skin it by overriding those semantic tokens on a wrapper.</p>
+      <pre><code>/* A reporting page that wants a quieter header */
+.report .table-wrap { --color-bg-surface-sunken: var(--color-bg-surface); }</code></pre>
+      <p>In the dark theme the frame and dividers become sage-700, the header sage-975, and the selected fill sage-800. In the shipped packages the same decisions map to <code>--t-colorNeutralBackground1</code>, <code>--t-colorNeutralBackground2</code> and <code>--t-colorNeutralStroke1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;table&gt;</code> with <code>&lt;caption&gt;</code>, <code>&lt;th scope="col"&gt;</code> and a row header <code>&lt;th scope="row"&gt;</code>, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/">WAI-ARIA APG Table pattern</a> and its <a href="https://www.w3.org/WAI/ARIA/apg/patterns/table/examples/sortable-table/">sortable table example</a>. Do not add <code>role="grid"</code>: that promises arrow-key cell navigation the table does not have. <code>aria-selected</code> on a <code>&lt;tr&gt;</code> is the styling hook; screen readers do not announce it in a plain table, so the row checkbox is what communicates selection.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the interactive parts in reading order: bulk bar actions, header checkbox, sort buttons, then each row's checkbox, links and row actions. Cells without controls are not stops.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd> on a sort button</td><td>Sorts by that column; a second press reverses the order. Focus stays on the button.</td></tr>
+        <tr><td><kbd>Space</kbd> on a checkbox</td><td>Selects or clears the row. On the header checkbox, selects all rows on this page, or clears them when all are selected.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd> on a row action</td><td>Runs the action, or opens its <a href="menu.html">menu</a> (then arrows move, <kbd>Esc</kbd> closes and returns focus to the button).</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></td><td>When the scrolling <code>.table-wrap</code> region has focus, scrolls it. Screen readers use their own table commands to move between cells.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared amber ring (3px <code>--color-focus-ring</code>, 2px offset) on sort buttons, checkboxes, links, row actions and the scroll region. After sorting, focus stays on the sort button. After a bulk action removes rows, focus moves to the bulk bar's status or, when nothing is left selected, to the header checkbox. Never let a sticky header cover the focused row.</p>
+      <h3>Labelling</h3>
+      <p>The caption names the table and says it is sortable ("Column headers with buttons are sortable"). Each row checkbox is named "Select &lt;learner&gt;"; the header checkbox "Select all learners". Row action buttons name the action and the learner ("Message Ada Lovelace"). The actions column has a visually hidden header ("Actions"). Status cells use a <a href="badge.html">badge</a> with text, never colour alone. Sorting and loading are announced through one polite status: "Sorted by progress, highest first", "Loading learners…", "20 learners".</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Header text on header fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface-sunken" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Cell text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Cell text on hovered row</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Cell text on selected row</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Checkbox fill on selected row</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <p>Row dividers (<code>--color-border-default</code>) are decorative and exempt from 1.4.11: rows are also separated by their content and the row header.</p>
+      <h3>Motion</h3>
+      <p>Skeleton rows shimmer over <code>--duration-loop-shimmer</code>; under <code>prefers-reduced-motion</code> the shimmer stops and the skeleton stays as a flat <code>--color-skeleton</code> block. Sorting re-renders rows instantly; never animate row reordering.</p>
+      <h3>Touch</h3>
+      <p>Row checkboxes sit in a 44px <code>.check</code> label, row actions are 32px with 4px between them inside a row, sort buttons are at least 24px tall. Hover fills apply only under <code>(hover: hover)</code>. Horizontal scrolling inside <code>.table-wrap</code> works with a single-finger swipe; nothing depends on a drag.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Captions say what the rows are and for what: "Learner progress: Workplace safety essentials".</li>
+        <li>Column headers are short nouns in sentence case: "Learner", "Status", "Progress", "Last active". Put units in the header ("Minutes watched"), not in every cell.</li>
+        <li>Numbers end-align with <code>.num</code>; percentages have no space ("64%"). Dates use "8 Oct 2026". A missing value is an en dash "–", never blank and never "N/A".</li>
+        <li>Status cells use the same four words everywhere: "Completed", "In progress", "Not started", "Overdue".</li>
+        <li>Bulk bar counts name the thing: "2 learners selected". Bulk actions are verbs: "Send reminder", "Extend due date". Destructive bulk actions ("Remove 2 learners") go through a <a href="dialog.html">dialog</a>.</li>
+        <li>Empty states say why there is nothing and what to do: "No learners assigned yet" + "Assign learners". Errors say what failed, that nothing was lost, and offer Retry.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="badge badge--danger"><span class="badge__dot" aria-hidden="true"></span>Overdue</span><span class="badge badge--success"><span class="badge__dot" aria-hidden="true"></span>Completed</span></div><figcaption>Show status as colour plus text plus dot, the way the SCORM outline writes "Complete" and "Locked until…" in words.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="badge__dot" style="background: var(--color-danger-icon);" role="img" aria-label="Overdue"></span><span class="badge__dot" style="background: var(--color-success-icon);" role="img" aria-label="Completed"></span></div><figcaption>A coloured dot alone in a status column fails WCAG 1.4.1 and cannot be sorted or scanned by people who do not see the colour.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--ghost btn--icon btn--sm" type="button" aria-label="Message Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></button><span>aria-label="Message Ada Lovelace"</span></div><figcaption>Name row actions with the action and the row, as the combobox names chip buttons "Remove &lt;name&gt;".</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--ghost btn--sm" type="button">Edit</button><button class="btn btn--ghost btn--sm" type="button">Edit</button><button class="btn btn--ghost btn--sm" type="button">Edit</button></div><figcaption>A column of identical "Edit" buttons: a screen reader's list of buttons reads "Edit, Edit, Edit" with no way to tell rows apart.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="table-wrap" style="width: 100%;"><table class="table"><caption>Learner progress</caption><thead><tr><th scope="col">Learner</th><th scope="col" class="num">Progress</th></tr></thead><tbody><tr><td colspan="2"><div class="empty-state empty-state--compact"><div><p class="empty-state__title">No learners assigned yet</p></div></div></td></tr></tbody></table></div></div><figcaption>Keep the header and say why the table is empty.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="table-wrap" style="width: 100%;"><table class="table"><caption>Learner progress</caption><thead><tr><th scope="col">Learner</th><th scope="col" class="num">Progress</th></tr></thead><tbody><tr><td colspan="2">No results</td></tr></tbody></table></div></div><figcaption>"No results" with no reason or next step; the combobox mock moved from this to a guiding message for the same reason.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Body background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Header background</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+          <tr><td>Header text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Cell text</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Frame and row dividers</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Row hover</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Selected row, bulk bar</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Skeleton</td><td><code>--color-skeleton</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-skeleton" data-swatch></i><span data-token="--color-skeleton"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-skeleton" data-swatch></i><span data-token="--color-skeleton"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Cell padding default / dense</td><td><code>--space-3</code> × <code>--space-4</code> / <code>--space-2</code> × <code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span> × <span data-token="--space-4"></span> / <span data-token="--space-2"></span> × <span data-token="--space-3"></span></td></tr>
+          <tr><td>Sort button min height</td><td><code>--target-min</code></td><td colspan="2"><span data-token="--target-min"></span></td></tr>
+          <tr><td>Frame radius</td><td><code>--radius-lg</code></td><td colspan="2"><span data-token="--radius-lg"></span></td></tr>
+          <tr><td>Divider width</td><td><code>--border-width-hairline</code></td><td colspan="2"><span data-token="--border-width-hairline"></span></td></tr>
+          <tr><td>Cell / header font</td><td><code>--text-body-sm</code>, <code>--text-label</code></td><td colspan="2"><span data-token="--text-body-sm"></span> · <span data-token="--text-label"></span></td></tr>
+          <tr><td>Header stacking</td><td><code>--z-raised</code></td><td colspan="2"><span data-token="--z-raised"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="table-wrap" tabindex="0" role="region" aria-labelledby="progress-caption" aria-busy="false"&gt;
+  &lt;div class="table__bulk" hidden&gt;&lt;p role="status"&gt;&lt;/p&gt;…&lt;/div&gt;
+  &lt;table class="table"&gt;
+    &lt;caption id="progress-caption"&gt;Learner progress. Column headers with buttons are sortable.&lt;/caption&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th scope="col" aria-sort="ascending"&gt;&lt;button class="table__sort" type="button"&gt;Learner&lt;svg …/&gt;&lt;/button&gt;&lt;/th&gt;
+      &lt;th scope="col" class="num"&gt;Progress&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;th scope="row"&gt;Ada Lovelace&lt;/th&gt;&lt;td class="num"&gt;100%&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.table-wrap</code></td><td>Frame, radius and horizontal scroll container. Add <code>tabindex="0"</code>, <code>role="region"</code> and <code>aria-labelledby</code> when it can scroll.</td></tr>
+        <tr><td><code>.table</code></td><td>Base table: default density, sticky header cells, row dividers, hover and selected fills.</td></tr>
+        <tr><td><code>.table--dense</code></td><td>Dense cell padding.</td></tr>
+        <tr><td><code>.num</code></td><td>End-aligned tabular figures, on both the <code>th</code> and its cells.</td></tr>
+        <tr><td><code>.table__sort</code> in <code>th</code></td><td>Sort button; full-opacity arrow when the <code>th</code> has <code>aria-sort</code>.</td></tr>
+        <tr><td><code>aria-sort="ascending|descending"</code></td><td>On the one sorted <code>th</code>; remove it from the others.</td></tr>
+        <tr><td><code>.table__actions</code></td><td>End-aligned row action buttons.</td></tr>
+        <tr><td><code>.table__bulk</code></td><td>Bulk action bar; first child of <code>.table-wrap</code>; render only while rows are selected.</td></tr>
+        <tr><td><code>tr[aria-selected="true"]</code></td><td>Selected row fill; pair with a checked row checkbox.</td></tr>
+        <tr><td><code>aria-busy="true"</code> on <code>.table-wrap</code></td><td>Loading; with <code>aria-hidden</code> skeleton rows and a polite status.</td></tr>
+        <tr><td><code>data-state="hover"</code> on <code>tr</code></td><td>Documentation only: forces row hover.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. No mock contains a data table. The nearest evidence for asynchronous record lists is the combobox:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: paged results ("6 of 20 learners", "Load more results"), "Loading learners…" with <code>aria-busy</code> on the list, the first-page error "Learners could not be loaded. Your selections are safe." with Retry, the next-page error that keeps loaded results, the guiding empty message, the disabled "Account inactive" record, and remove buttons named "Remove &lt;name&gt;". The table's loading, error, empty and row-action naming rules follow these.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: status written as words ("Complete", "Locked until…", "Not reported"), which the status column follows.</li>
+      </ul>
+      <p>Drift fixed during extraction (applies to the borrowed status and list styles):</p>
+      <ul>
+        <li>Detail text at 0.76rem and 0.8125rem; normalised to <code>--font-size-sm</code> via <code>--text-body-sm</code>.</li>
+        <li>SCORM hover <code>#f2f6f3</code> was a one-off; row hover uses <code>--color-bg-subtle</code>.</li>
+        <li>Off-grid padding .8rem and .2rem snapped to <code>--space-3</code> / <code>--space-1</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+<script>document.querySelectorAll('[data-indeterminate]').forEach(function (box) { box.indeterminate = true; });</script>
+</body>
+</html>
