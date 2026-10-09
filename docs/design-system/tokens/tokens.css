@@ -1,0 +1,533 @@
+/* ==========================================================================
+   Tessera design tokens — single source of truth for colour, type, space,
+   shape, elevation, motion, layout, interaction and z-order.
+
+   Extracted from docs/mocks (scorm-player, combobox, video-player) on
+   2026-10-09 and aligned with the shipped @tessera/theme values. Every value
+   traces to a mock or to a correction logged in ../README.md (Drift).
+
+   Three tiers:
+     1. Primitives  (--palette-*, --font-*)  raw values; only semantic tokens
+                    read them.
+     2. Semantic    (--color-*, --text-*, --space-*, --radius-*, --shadow-*,
+                    --duration-*, --ease-*, --z-*, --layout-*, --target-*,
+                    --control-height-*) meaning-based; components consume
+                    these and themes override them.
+     3. Component   (--btn-*, --field-*, --combobox-*, --media-*, ...) declared
+                    in ../assets/components.css; always alias a semantic token.
+
+   Themes: light is :root. Dark applies with [data-theme="dark"], or
+   automatically when the OS prefers dark and the page has not forced
+   [data-theme="light"]. The two dark blocks are identical by design.
+   ========================================================================== */
+
+:root {
+  /* ---------- Primitives: colour --------------------------------------- */
+  --palette-white: #ffffff;
+  --palette-black: #000000;
+
+  /* Sage: the green-tinted neutral ramp every mock uses for ink, lines and canvas. */
+  --palette-sage-25: #f4f7f5;   /* mocks: --canvas, hover background; dark ink */
+  --palette-sage-50: #eaf0ed;   /* derived: sunken wells between canvas and divider */
+  --palette-sage-100: #d8e2df;  /* mocks: --line / --page-divider, skeleton */
+  --palette-sage-200: #b6cbc3;  /* mocks: dark muted text */
+  --palette-sage-300: #8fa9a0;  /* mocks: dark line, lesson-number ring */
+  --palette-sage-500: #657f73;  /* mocks: --page-line, control borders */
+  --palette-sage-600: #536763;  /* mocks: --muted */
+  --palette-sage-700: #2f5249;  /* mocks: dark divider, dark skeleton */
+  --palette-sage-800: #244b42;  /* mocks: dark accent-soft, dark hover */
+  --palette-sage-850: #1f3d38;  /* derived: dark raised surface */
+  --palette-sage-900: #18312e;  /* mocks: --ink, dark card */
+  --palette-sage-950: #10221f;  /* mocks: dark canvas */
+  --palette-sage-975: #0b1816;  /* derived: dark sunken well */
+
+  /* Teal: the brand / accent ramp. */
+  --palette-teal-50: #e4f2ec;   /* mocks: --accent-soft */
+  --palette-teal-100: #cfeee0;  /* derived: accent-subtle hover, dark accent active */
+  --palette-teal-200: #b0e3cf;  /* derived: dark accent hover */
+  --palette-teal-300: #8fd5ba;  /* mocks: dark accent, media accent */
+  --palette-teal-500: #2f8a75;  /* derived: dark success border */
+  --palette-teal-600: #126454;  /* mocks: --accent */
+  --palette-teal-700: #084b3e;  /* mocks: --accent-dark (hover) */
+  --palette-teal-800: #063a30;  /* derived: accent active */
+  --palette-teal-850: #0f4a3d;  /* derived: dark accent-subtle (selected), distinct from dark hover */
+  --palette-teal-875: #136052;  /* derived: dark accent-subtle hover */
+  --palette-teal-900: #183f37;  /* derived: dark success background */
+
+  /* Orange: focus ring and warning. */
+  --palette-orange-50: #fff4e5;   /* derived: warning background */
+  --palette-orange-200: #f0c48a;  /* derived: warning border */
+  --palette-orange-300: #ffbf69;  /* mocks: dark focus ring, media focus ring */
+  --palette-orange-600: #b35c14;  /* mocks: --focus */
+  --palette-orange-700: #8a4510;  /* derived: warning text */
+  --palette-orange-800: #7a4a16;  /* derived: dark warning border */
+  --palette-orange-950: #3a2510;  /* derived: dark warning background */
+
+  /* Red: errors and the live indicator. */
+  --palette-red-50: #fdecea;   /* mocks: --error-soft */
+  --palette-red-100: #ffd2ca;  /* derived: dark danger hover */
+  --palette-red-200: #ffb4a8;  /* mocks: dark error */
+  --palette-red-300: #ff8a78;  /* mocks: dark live dot */
+  --palette-red-500: #e8a59c;  /* derived: danger border */
+  --palette-red-700: #8a3a30;  /* derived: dark danger border */
+  --palette-red-800: #8a1c12;  /* mocks: --error */
+  --palette-red-900: #6e150d;  /* derived: danger hover */
+  --palette-red-950: #3d1611;  /* derived: dark danger background */
+
+  /* Blue: information only (no mock uses blue; derived to keep info distinct from brand). */
+  --palette-blue-50: #e8f1fb;
+  --palette-blue-200: #a9cdf5;
+  --palette-blue-300: #9bbde6;
+  --palette-blue-600: #2a64a8;
+  --palette-blue-700: #2f5a87;
+  --palette-blue-800: #1f4f86;
+  --palette-blue-950: #132a42;
+
+  /* ---------- Primitives: typography ----------------------------------- */
+  --font-family-sans: "Inter", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-family-mono: ui-monospace, Consolas, "Liberation Mono", monospace;
+
+  --font-size-xs: 0.75rem;    /* 12px  captions, badges, lesson numbers */
+  --font-size-sm: 0.875rem;   /* 14px  buttons, chips, hints, metadata */
+  --font-size-md: 1rem;       /* 16px  body, card headings */
+  --font-size-lg: 1.125rem;   /* 18px  panel titles */
+  --font-size-xl: 1.25rem;    /* 20px  h4, ended card title */
+  --font-size-2xl: 1.5rem;    /* 24px  h3 */
+  --font-size-3xl: 1.75rem;   /* 28px  page title on phones */
+  --font-size-4xl: 2rem;      /* 32px  page title */
+  --font-size-5xl: 2.5rem;    /* 40px  display (docs only) */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.15;   /* page titles */
+  --line-height-snug: 1.25;    /* list titles, h3-h4 */
+  --line-height-normal: 1.5;   /* body */
+  --line-height-relaxed: 1.6;  /* long-form reading, kbd */
+
+  --letter-spacing-tight: -0.04em; /* page titles */
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.06em;   /* uppercase eyebrows, LIVE badge */
+
+  /* ---------- Semantic: colour (light) --------------------------------- */
+  --color-bg-canvas: var(--palette-sage-25);
+  --color-bg-surface: var(--palette-white);
+  --color-bg-surface-raised: var(--palette-white);
+  --color-bg-surface-sunken: var(--palette-sage-50);
+  --color-bg-subtle: var(--palette-sage-25);
+  --color-bg-subtle-hover: var(--palette-sage-50);
+  --color-bg-inverse: var(--palette-sage-900);
+  --color-bg-backdrop: rgb(16 34 31 / 0.6);
+
+  --color-fg-default: var(--palette-sage-900);
+  --color-fg-muted: var(--palette-sage-600);
+  --color-fg-subtle: var(--palette-sage-600);
+  --color-fg-disabled: var(--palette-sage-600);   /* readable; disabled is shown by dashed edges, not faded text */
+  --color-fg-inverse: var(--palette-white);
+  --color-fg-link: var(--palette-teal-600);
+  --color-fg-link-hover: var(--palette-teal-700);
+  --color-fg-accent: var(--palette-teal-600);
+  --color-fg-on-accent: var(--palette-white);
+  --color-fg-on-danger: var(--palette-white);
+
+  --color-border-default: var(--palette-sage-100);  /* dividers, card edges (decorative) */
+  --color-border-strong: var(--palette-sage-500);   /* control edges (>= 3:1) */
+  --color-border-inverse: var(--palette-sage-700);
+
+  --color-accent: var(--palette-teal-600);
+  --color-accent-hover: var(--palette-teal-700);
+  --color-accent-active: var(--palette-teal-800);
+  --color-accent-subtle: var(--palette-teal-50);
+  --color-accent-subtle-hover: var(--palette-teal-100);
+
+  --color-focus-ring: var(--palette-orange-600);
+  --color-focus-ring-offset: var(--color-bg-surface);
+
+  --color-info-bg: var(--palette-blue-50);
+  --color-info-fg: var(--palette-blue-800);
+  --color-info-border: var(--palette-blue-300);
+  --color-info-icon: var(--palette-blue-600);
+  --color-info-solid: var(--palette-blue-600);
+
+  --color-success-bg: var(--palette-teal-50);
+  --color-success-fg: var(--palette-teal-600);
+  --color-success-border: var(--palette-teal-300);
+  --color-success-icon: var(--palette-teal-600);
+  --color-success-solid: var(--palette-teal-600);
+
+  --color-warning-bg: var(--palette-orange-50);
+  --color-warning-fg: var(--palette-orange-700);
+  --color-warning-border: var(--palette-orange-200);
+  --color-warning-icon: var(--palette-orange-600);
+  --color-warning-solid: var(--palette-orange-700);
+
+  --color-danger-bg: var(--palette-red-50);
+  --color-danger-fg: var(--palette-red-800);
+  --color-danger-border: var(--palette-red-500);
+  --color-danger-icon: var(--palette-red-800);
+  --color-danger-solid: var(--palette-red-800);
+  --color-danger-solid-hover: var(--palette-red-900);
+
+  /* Media surfaces (video picture, SCORM frame chrome on dark): the same in both themes
+     except where the mocks lighten them for dark pages. Controls always sit on a dark scrim. */
+  --color-media-bg: var(--palette-black);
+  --color-media-scrim: rgb(24 49 46 / 0.82);
+  --color-media-fg: var(--palette-white);
+  --color-media-hover: rgb(255 255 255 / 0.14);
+  --color-media-track: rgb(255 255 255 / 0.35);
+  --color-media-accent: var(--palette-teal-300);
+  --color-media-fg-on-accent: var(--palette-sage-900);
+  --color-media-focus-ring: var(--palette-orange-300);
+  --color-media-live: var(--palette-red-300);  /* mocks used red-400 in light; it fails 3:1 on the scrim over a white frame */
+  --color-media-caption-bg: rgb(0 0 0 / 0.75);
+  --color-media-caption-fg: var(--palette-white);
+  --color-skeleton: var(--palette-sage-100);
+
+  /* ---------- Semantic: typography roles ------------------------------- */
+  --text-display: var(--font-weight-bold) var(--font-size-5xl) / var(--line-height-tight) var(--font-family-sans);
+  --text-h1: var(--font-weight-bold) var(--font-size-4xl) / var(--line-height-tight) var(--font-family-sans);
+  --text-h2: var(--font-weight-bold) var(--font-size-2xl) / var(--line-height-snug) var(--font-family-sans);
+  --text-h3: var(--font-weight-bold) var(--font-size-lg) / var(--line-height-snug) var(--font-family-sans);
+  --text-h4: var(--font-weight-bold) var(--font-size-md) / var(--line-height-snug) var(--font-family-sans);
+  --text-body-lg: var(--font-weight-regular) var(--font-size-lg) / var(--line-height-normal) var(--font-family-sans);
+  --text-body: var(--font-weight-regular) var(--font-size-md) / var(--line-height-normal) var(--font-family-sans);
+  --text-body-sm: var(--font-weight-regular) var(--font-size-sm) / var(--line-height-normal) var(--font-family-sans);
+  --text-caption: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-normal) var(--font-family-sans);
+  --text-label: var(--font-weight-bold) var(--font-size-sm) / var(--line-height-normal) var(--font-family-sans);
+  --text-overline: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-normal) var(--font-family-sans);
+  --text-code: var(--font-weight-regular) var(--font-size-sm) / var(--line-height-relaxed) var(--font-family-mono);
+
+  /* ---------- Semantic: spacing (4px base) ----------------------------- */
+  --space-0: 0;
+  --space-0-5: 0.125rem; /* 2px  hairline gaps, option margin */
+  --space-1: 0.25rem;    /* 4px  chip gap, icon-to-label */
+  --space-2: 0.5rem;     /* 8px  label to field, inline gaps */
+  --space-3: 0.75rem;    /* 12px compact padding, list item gap */
+  --space-4: 1rem;       /* 16px default padding, button inline padding */
+  --space-5: 1.25rem;    /* 20px panel padding */
+  --space-6: 1.5rem;     /* 24px card padding, layout gap */
+  --space-8: 2rem;       /* 32px section gap */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px page bottom padding */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* ---------- Semantic: layout ----------------------------------------- */
+  --layout-breakpoint-sm: 40rem;   /* 640px  large phones (combobox mock) */
+  --layout-breakpoint-md: 48rem;   /* 768px  tablets (mocks: 47.5em) */
+  --layout-breakpoint-lg: 64rem;   /* 1024px laptops */
+  --layout-breakpoint-xl: 80rem;   /* 1280px desktops */
+  --layout-breakpoint-2xl: 90rem;  /* 1440px wide; content stops growing */
+
+  --layout-columns: 4;
+  --layout-gutter: var(--space-4);
+  --layout-margin: var(--space-4);
+  --layout-container-max: 90rem;    /* 1440px (scorm-player, video-player shells) */
+  --layout-measure: 60ch;           /* video-player intro */
+  --layout-sidebar-width: 16rem;    /* 256px (scorm outline basis 15.5rem) */
+  --layout-topbar-height: 4rem;     /* 64px */
+
+  /* ---------- Semantic: shape ------------------------------------------ */
+  --radius-xs: 0.125rem;  /* 2px  focus inside tight controls */
+  --radius-sm: 0.25rem;   /* 4px  chips, options, checks, tooltips, kbd */
+  --radius-md: 0.5rem;    /* 8px  buttons, fields, notices, popups */
+  --radius-lg: 0.75rem;   /* 12px cards, panels, the player */
+  --radius-xl: 1rem;      /* 16px sheets */
+  --radius-full: 999px;   /* pills, avatars, LIVE badge */
+
+  --border-width-hairline: 1px;
+  --border-width-thick: 2px;
+  --border-width-stripe: 4px;  /* status stripe on notices and error panels */
+
+  /* ---------- Semantic: elevation -------------------------------------- */
+  --shadow-color: 0 0 0;
+  --shadow-1: 0 1px 2px rgb(var(--shadow-color) / 0.1);
+  --shadow-2: 0 2px 4px rgb(var(--shadow-color) / 0.14);   /* @tessera/theme shadow4 */
+  --shadow-3: 0 0.5rem 1rem rgb(var(--shadow-color) / 0.14); /* combobox popup */
+  --shadow-4: 0 1rem 2rem rgb(var(--shadow-color) / 0.2), 0 0.25rem 0.5rem rgb(var(--shadow-color) / 0.1);
+  --shadow-focus: 0 0 0 var(--focus-ring-offset) var(--color-focus-ring-offset), 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-focus-ring);
+
+  /* ---------- Semantic: motion ----------------------------------------- */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;        /* hover colour, play-button pop */
+  --duration-base: 200ms;        /* control-bar fade */
+  --duration-slow: 320ms;        /* dialogs, sheets */
+  --duration-deliberate: 500ms;  /* progress */
+  --duration-loop-spin: 900ms;   /* spinner revolution */
+  --duration-loop-pulse: 1600ms; /* LIVE dot */
+  --duration-loop-shimmer: 2200ms; /* skeleton sweep */
+  --ease-standard: cubic-bezier(0.33, 0, 0.67, 1); /* @tessera/theme curveEasyEase */
+  --ease-enter: cubic-bezier(0, 0, 0.58, 1);       /* ease-out */
+  --ease-exit: cubic-bezier(0.42, 0, 1, 1);        /* ease-in */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear: linear;                           /* loops */
+
+  /* ---------- Semantic: z-order ---------------------------------------- */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 100;
+  --z-dropdown: 1000;
+  --z-overlay: 1200;
+  --z-modal: 1300;
+  --z-popover: 1400;
+  --z-toast: 1500;
+  --z-tooltip: 1600;
+
+  /* ---------- Semantic: interaction ------------------------------------ */
+  --target-min: 1.5rem;          /* 24px  WCAG 2.5.8 minimum */
+  --target-comfortable: 2.75rem; /* 44px  every mock's button and toggle */
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  --control-height-sm: 2rem;     /* 32px  chips, inline icon buttons */
+  --control-height-md: 2.75rem;  /* 44px  buttons, fields, selects */
+  --control-height-lg: 3rem;     /* 48px  hero actions */
+
+  color-scheme: light;
+}
+
+/* Responsive layout tokens: gutters and margins grow with the viewport. */
+@media (min-width: 48rem) {
+  :root {
+    --layout-columns: 8;
+    --layout-gutter: var(--space-6);
+    --layout-margin: var(--space-6);
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --layout-columns: 12;
+    --layout-gutter: var(--space-6);
+    --layout-margin: var(--space-8);
+  }
+}
+
+/* ---------- Light theme (explicit) ---------------------------------------
+   Repeats the :root values the dark theme overrides, so data-theme="light"
+   on any element (a light panel inside a dark page) renders light. */
+[data-theme="light"] {
+  --color-bg-canvas: var(--palette-sage-25);
+  --color-bg-surface: var(--palette-white);
+  --color-bg-surface-raised: var(--palette-white);
+  --color-bg-surface-sunken: var(--palette-sage-50);
+  --color-bg-subtle: var(--palette-sage-25);
+  --color-bg-subtle-hover: var(--palette-sage-50);
+  --color-bg-inverse: var(--palette-sage-900);
+  --color-bg-backdrop: rgb(16 34 31 / 0.6);
+  --color-fg-default: var(--palette-sage-900);
+  --color-fg-muted: var(--palette-sage-600);
+  --color-fg-subtle: var(--palette-sage-600);
+  --color-fg-disabled: var(--palette-sage-600);
+  --color-fg-inverse: var(--palette-white);
+  --color-fg-link: var(--palette-teal-600);
+  --color-fg-link-hover: var(--palette-teal-700);
+  --color-fg-accent: var(--palette-teal-600);
+  --color-fg-on-accent: var(--palette-white);
+  --color-fg-on-danger: var(--palette-white);
+  --color-border-default: var(--palette-sage-100);
+  --color-border-strong: var(--palette-sage-500);
+  --color-border-inverse: var(--palette-sage-700);
+  --color-accent: var(--palette-teal-600);
+  --color-accent-hover: var(--palette-teal-700);
+  --color-accent-active: var(--palette-teal-800);
+  --color-accent-subtle: var(--palette-teal-50);
+  --color-accent-subtle-hover: var(--palette-teal-100);
+  --color-focus-ring: var(--palette-orange-600);
+  --color-focus-ring-offset: var(--color-bg-surface);
+  --shadow-focus: 0 0 0 var(--focus-ring-offset) var(--color-focus-ring-offset), 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-focus-ring);
+  --color-info-bg: var(--palette-blue-50);
+  --color-info-fg: var(--palette-blue-800);
+  --color-info-border: var(--palette-blue-300);
+  --color-info-icon: var(--palette-blue-600);
+  --color-info-solid: var(--palette-blue-600);
+  --color-success-bg: var(--palette-teal-50);
+  --color-success-fg: var(--palette-teal-600);
+  --color-success-border: var(--palette-teal-300);
+  --color-success-icon: var(--palette-teal-600);
+  --color-success-solid: var(--palette-teal-600);
+  --color-warning-bg: var(--palette-orange-50);
+  --color-warning-fg: var(--palette-orange-700);
+  --color-warning-border: var(--palette-orange-200);
+  --color-warning-icon: var(--palette-orange-600);
+  --color-warning-solid: var(--palette-orange-700);
+  --color-danger-bg: var(--palette-red-50);
+  --color-danger-fg: var(--palette-red-800);
+  --color-danger-border: var(--palette-red-500);
+  --color-danger-icon: var(--palette-red-800);
+  --color-danger-solid: var(--palette-red-800);
+  --color-danger-solid-hover: var(--palette-red-900);
+  --color-media-scrim: rgb(24 49 46 / 0.82);
+  --color-media-fg: var(--palette-white);
+  --color-skeleton: var(--palette-sage-100);
+  --shadow-1: 0 1px 2px rgb(var(--shadow-color) / 0.1);
+  --shadow-2: 0 2px 4px rgb(var(--shadow-color) / 0.14);
+  --shadow-3: 0 0.5rem 1rem rgb(var(--shadow-color) / 0.14);
+  --shadow-4: 0 1rem 2rem rgb(var(--shadow-color) / 0.2), 0 0.25rem 0.5rem rgb(var(--shadow-color) / 0.1);
+  color-scheme: light;
+}
+
+/* ---------- Dark theme ----------------------------------------------------- */
+[data-theme="dark"] {
+  --color-bg-canvas: var(--palette-sage-950);
+  --color-bg-surface: var(--palette-sage-900);
+  --color-bg-surface-raised: var(--palette-sage-850);
+  --color-bg-surface-sunken: var(--palette-sage-975);
+  --color-bg-subtle: var(--palette-sage-800);
+  --color-bg-subtle-hover: var(--palette-sage-700);
+  --color-bg-inverse: var(--palette-sage-25);
+  --color-bg-backdrop: rgb(0 0 0 / 0.7);
+  --color-fg-default: var(--palette-sage-25);
+  --color-fg-muted: var(--palette-sage-200);
+  --color-fg-subtle: var(--palette-sage-200);
+  --color-fg-disabled: var(--palette-sage-200);
+  --color-fg-inverse: var(--palette-sage-900);
+  --color-fg-link: var(--palette-teal-300);
+  --color-fg-link-hover: var(--palette-teal-200);
+  --color-fg-accent: var(--palette-teal-300);
+  --color-fg-on-accent: var(--palette-sage-900);
+  --color-fg-on-danger: var(--palette-sage-900);
+  --color-border-default: var(--palette-sage-700);
+  --color-border-strong: var(--palette-sage-300);
+  --color-border-inverse: var(--palette-sage-100);
+  --color-accent: var(--palette-teal-300);
+  --color-accent-hover: var(--palette-teal-200);
+  --color-accent-active: var(--palette-teal-100);
+  --color-accent-subtle: var(--palette-teal-850);
+  --color-accent-subtle-hover: var(--palette-teal-875);
+  --color-focus-ring: var(--palette-orange-300);
+  --color-focus-ring-offset: var(--color-bg-surface);
+  --shadow-focus: 0 0 0 var(--focus-ring-offset) var(--color-focus-ring-offset), 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-focus-ring);
+  --color-info-bg: var(--palette-blue-950);
+  --color-info-fg: var(--palette-blue-200);
+  --color-info-border: var(--palette-blue-700);
+  --color-info-icon: var(--palette-blue-200);
+  --color-info-solid: var(--palette-blue-200);
+  --color-success-bg: var(--palette-teal-900);
+  --color-success-fg: var(--palette-teal-300);
+  --color-success-border: var(--palette-teal-500);
+  --color-success-icon: var(--palette-teal-300);
+  --color-success-solid: var(--palette-teal-300);
+  --color-warning-bg: var(--palette-orange-950);
+  --color-warning-fg: var(--palette-orange-300);
+  --color-warning-border: var(--palette-orange-800);
+  --color-warning-icon: var(--palette-orange-300);
+  --color-warning-solid: var(--palette-orange-300);
+  --color-danger-bg: var(--palette-red-950);
+  --color-danger-fg: var(--palette-red-200);
+  --color-danger-border: var(--palette-red-700);
+  --color-danger-icon: var(--palette-red-200);
+  --color-danger-solid: var(--palette-red-200);
+  --color-danger-solid-hover: var(--palette-red-100);
+  --color-media-scrim: rgb(16 34 31 / 0.88);
+  --color-media-fg: var(--palette-sage-25);
+  --color-skeleton: var(--palette-sage-700);
+  --shadow-1: 0 1px 2px rgb(var(--shadow-color) / 0.4);
+  --shadow-2: 0 2px 4px rgb(var(--shadow-color) / 0.45);
+  --shadow-3: 0 0.5rem 1rem rgb(var(--shadow-color) / 0.5);
+  --shadow-4: 0 1rem 2rem rgb(var(--shadow-color) / 0.6), 0 0.25rem 0.5rem rgb(var(--shadow-color) / 0.4);
+  color-scheme: dark;
+}
+
+/* Follow the OS preference unless the page has explicitly chosen light. Keep identical to the block above. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg-canvas: var(--palette-sage-950);
+    --color-bg-surface: var(--palette-sage-900);
+    --color-bg-surface-raised: var(--palette-sage-850);
+    --color-bg-surface-sunken: var(--palette-sage-975);
+    --color-bg-subtle: var(--palette-sage-800);
+    --color-bg-subtle-hover: var(--palette-sage-700);
+    --color-bg-inverse: var(--palette-sage-25);
+    --color-bg-backdrop: rgb(0 0 0 / 0.7);
+    --color-fg-default: var(--palette-sage-25);
+    --color-fg-muted: var(--palette-sage-200);
+    --color-fg-subtle: var(--palette-sage-200);
+    --color-fg-disabled: var(--palette-sage-200);
+    --color-fg-inverse: var(--palette-sage-900);
+    --color-fg-link: var(--palette-teal-300);
+    --color-fg-link-hover: var(--palette-teal-200);
+    --color-fg-accent: var(--palette-teal-300);
+    --color-fg-on-accent: var(--palette-sage-900);
+    --color-fg-on-danger: var(--palette-sage-900);
+    --color-border-default: var(--palette-sage-700);
+    --color-border-strong: var(--palette-sage-300);
+    --color-border-inverse: var(--palette-sage-100);
+    --color-accent: var(--palette-teal-300);
+    --color-accent-hover: var(--palette-teal-200);
+    --color-accent-active: var(--palette-teal-100);
+    --color-accent-subtle: var(--palette-teal-850);
+    --color-accent-subtle-hover: var(--palette-teal-875);
+    --color-focus-ring: var(--palette-orange-300);
+    --color-focus-ring-offset: var(--color-bg-surface);
+    --shadow-focus: 0 0 0 var(--focus-ring-offset) var(--color-focus-ring-offset), 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-focus-ring);
+    --color-info-bg: var(--palette-blue-950);
+    --color-info-fg: var(--palette-blue-200);
+    --color-info-border: var(--palette-blue-700);
+    --color-info-icon: var(--palette-blue-200);
+    --color-info-solid: var(--palette-blue-200);
+    --color-success-bg: var(--palette-teal-900);
+    --color-success-fg: var(--palette-teal-300);
+    --color-success-border: var(--palette-teal-500);
+    --color-success-icon: var(--palette-teal-300);
+    --color-success-solid: var(--palette-teal-300);
+    --color-warning-bg: var(--palette-orange-950);
+    --color-warning-fg: var(--palette-orange-300);
+    --color-warning-border: var(--palette-orange-800);
+    --color-warning-icon: var(--palette-orange-300);
+    --color-warning-solid: var(--palette-orange-300);
+    --color-danger-bg: var(--palette-red-950);
+    --color-danger-fg: var(--palette-red-200);
+    --color-danger-border: var(--palette-red-700);
+    --color-danger-icon: var(--palette-red-200);
+    --color-danger-solid: var(--palette-red-200);
+    --color-danger-solid-hover: var(--palette-red-100);
+    --color-media-scrim: rgb(16 34 31 / 0.88);
+    --color-media-fg: var(--palette-sage-25);
+    --color-skeleton: var(--palette-sage-700);
+    --shadow-1: 0 1px 2px rgb(var(--shadow-color) / 0.4);
+    --shadow-2: 0 2px 4px rgb(var(--shadow-color) / 0.45);
+    --shadow-3: 0 0.5rem 1rem rgb(var(--shadow-color) / 0.5);
+    --shadow-4: 0 1rem 2rem rgb(var(--shadow-color) / 0.6), 0 0.25rem 0.5rem rgb(var(--shadow-color) / 0.4);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Preference overrides ------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+    --duration-deliberate: 0.01ms;
+    --duration-loop-spin: 2000ms; /* status indicator: slowed, not stopped */
+    --duration-loop-pulse: 0.01ms;
+    --duration-loop-shimmer: 0.01ms;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-border-default: var(--color-border-strong);
+    --color-fg-muted: var(--color-fg-default);
+    --color-fg-subtle: var(--color-fg-default);
+  }
+}
+
+/* Windows High Contrast / forced colours: hand control to system colours. */
+@media (forced-colors: active) {
+  :root {
+    --color-focus-ring: Highlight;
+    --color-media-focus-ring: Highlight;
+    --color-border-default: CanvasText;
+    --color-border-strong: ButtonText;
+    --color-media-scrim: Canvas;
+    --color-media-fg: ButtonText;
+    --color-media-accent: Highlight;
+    --color-media-fg-on-accent: HighlightText;
+    --color-media-live: Highlight;
+    --color-skeleton: Canvas;
+  }
+}

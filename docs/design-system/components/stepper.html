@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stepper — Tessera design system</title>
+<meta name="description" content="The stepper is the SCORM course outline: an ordered list of lessons with number markers, titles and details; current, complete, locked and error states; vertical and horizontal.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Navigation</p>
+      <h1>Stepper</h1>
+      <p class="ds-lead">The stepper is the SCORM player's course outline: an ordered list of lessons, each with a number marker, a title and a one-line detail, that shows where the learner is, what is complete and what is locked, and lets them jump to any lesson they are allowed to open.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>&lt;ol&gt;</code> of buttons + <code>aria-current="step"</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a stepper when content has a fixed order and each step has a status: the activities (SCOs) of a SCORM course, or the steps of a short wizard such as assigning a course. The order matters, progress is reported per step, and some steps can be locked by sequencing rules until earlier ones are complete.</p>
+      <ul>
+        <li><b>Vertical</b> (default): the SCORM outline. Each item is a <code>&lt;button&gt;</code> that loads that lesson into the player; title and detail stack beside the marker.</li>
+        <li><b>Horizontal</b> (<code>.stepper--horizontal</code>): a compact progress indicator above a multi-step form ("Choose course · Choose learners · Schedule · Review"). Items are usually status only, not buttons.</li>
+      </ul>
+      <p>Use <a href="tabs.html">tabs</a> for parallel views with no order, <a href="sidebar-navigation.html">sidebar navigation</a> for pages, and a <a href="progress-bar.html">progress bar</a> when only the overall percentage matters. Completion comes from the course content, never from the outline: selecting a lesson only opens it.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <ol class="stepper" role="list" style="width: 18rem;">
+            <li><button type="button" class="stepper__item" data-complete="false" aria-current="step" aria-labelledby="an-title-1" aria-describedby="an-detail-1"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title" id="an-title-1">Ask better questions</span><span class="stepper__detail" id="an-detail-1">Current activity · Not reported</span></span></button></li>
+          </ol>
+          <span class="ds-callout" style="left: 4%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 20%; top: 74%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 46%; top: 14%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 74%; top: 74%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 92%; top: 40%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Current stripe</b><small>Inset 4px <code>--color-accent</code> (<code>--border-width-stripe</code>) on the start edge plus <code>--color-accent-subtle</code> fill; only on <code>aria-current="step"</code>.</small></div></li>
+          <li><div><b>Marker</b><small><code>.stepper__marker</code>: a 1.75em circle with the lesson number, or "✓" when complete, "!" on error; <code>aria-hidden="true"</code>. 1px <code>--color-border-strong</code> edge; dashed when locked.</small></div></li>
+          <li><div><b>Title</b><small><code>.stepper__title</code>: bold 14px (<code>--text-label</code>), snug line height; the button's name via <code>aria-labelledby</code>.</small></div></li>
+          <li><div><b>Detail</b><small><code>.stepper__detail</code>: 12px muted (<code>--text-caption</code>): status, or the reason a lesson is locked; the button's description via <code>aria-describedby</code>.</small></div></li>
+          <li><div><b>Item</b><small><code>.stepper__item</code>: a full-width <code>&lt;button&gt;</code>, 12px padding, <code>--radius-md</code>, start-aligned text, at least 44px tall.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Vertical: the SCORM course outline</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-start;">
+          <nav class="outline-panel" aria-labelledby="demo-outline-heading" style="flex: 1 1 18rem; max-width: 22rem;">
+            <div class="outline-panel__head">
+              <h3 id="demo-outline-heading" style="margin: 0;">Course outline</h3>
+              <button class="btn outline-panel__toggle" type="button" id="demo-outline-toggle" aria-controls="demo-outline" aria-expanded="false">Show outline</button>
+            </div>
+            <ol class="stepper" id="demo-outline" role="list">
+              <li><button type="button" class="stepper__item" data-complete="true" data-status="Complete" aria-labelledby="v-title-1" aria-describedby="v-detail-1"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title" id="v-title-1">Start with listening</span><span class="stepper__detail" id="v-detail-1">Complete</span></span></button></li>
+              <li><button type="button" class="stepper__item" data-complete="false" data-status="Not reported" aria-current="step" aria-labelledby="v-title-2" aria-describedby="v-detail-2"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title" id="v-title-2">Ask better questions</span><span class="stepper__detail" id="v-detail-2">Current activity · Not reported</span></span></button></li>
+              <li><button type="button" class="stepper__item" data-complete="false" data-status="Not reported" aria-labelledby="v-title-3" aria-describedby="v-detail-3"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title" id="v-title-3">Give useful feedback</span><span class="stepper__detail" id="v-detail-3">Not reported</span></span></button></li>
+              <li><button type="button" class="stepper__item" data-complete="false" aria-disabled="true" aria-labelledby="v-title-4" aria-describedby="v-detail-4"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title" id="v-title-4">Put it into practice</span><span class="stepper__detail" id="v-detail-4">Locked until “Give useful feedback” is complete.</span></span></button></li>
+            </ol>
+          </nav>
+          <div class="content-player" style="flex: 999 1 18rem;">
+            <div class="content-player__bar"><p id="demo-position">Activity 2 of 4</p><p id="demo-activity" tabindex="-1" style="font: var(--text-h3); color: var(--color-fg-default);">Ask better questions</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Live: select a lesson to open it (focus moves to the activity title). Below 48rem the outline hides behind "Show outline". Lesson 4 stays focusable so its reason can be read.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;nav class="outline-panel" aria-labelledby="outline-heading"&gt;
+  &lt;div class="outline-panel__head"&gt;
+    &lt;h3 id="outline-heading"&gt;Course outline&lt;/h3&gt;
+    &lt;button class="btn outline-panel__toggle" type="button"
+            aria-controls="outline" aria-expanded="false"&gt;Show outline&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;ol class="stepper" id="outline" role="list"&gt;
+    &lt;li&gt;&lt;button type="button" class="stepper__item" data-complete="true"
+                aria-labelledby="title-0" aria-describedby="detail-0"&gt;
+      &lt;span class="stepper__marker" aria-hidden="true"&gt;✓&lt;/span&gt;
+      &lt;span&gt;&lt;span class="stepper__title" id="title-0"&gt;Start with listening&lt;/span&gt;
+            &lt;span class="stepper__detail" id="detail-0"&gt;Complete&lt;/span&gt;&lt;/span&gt;
+    &lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button type="button" class="stepper__item" aria-current="step" …&gt;…&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button type="button" class="stepper__item" aria-disabled="true"
+                aria-labelledby="title-3" aria-describedby="detail-3"&gt;
+      …&lt;span class="stepper__detail" id="detail-3"&gt;Locked until “Give useful feedback” is complete.&lt;/span&gt;…
+    &lt;/button&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre></details>
+      </div>
+
+      <h3>Vertical with an error</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <ol class="stepper" role="list" style="max-width: 20rem; background: var(--color-bg-surface); border-radius: var(--radius-lg);">
+            <li><button type="button" class="stepper__item" data-complete="true" aria-labelledby="e-title-1" aria-describedby="e-detail-1"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title" id="e-title-1">Fire exits</span><span class="stepper__detail" id="e-detail-1">Complete</span></span></button></li>
+            <li><button type="button" class="stepper__item" data-error="true" aria-current="step" aria-labelledby="e-title-2" aria-describedby="e-detail-2"><span class="stepper__marker" aria-hidden="true">!</span><span><span class="stepper__title" id="e-title-2">Using an extinguisher</span><span class="stepper__detail" id="e-detail-2">Current activity · Could not load. Select to try again.</span></span></button></li>
+            <li><button type="button" class="stepper__item" data-complete="false" aria-labelledby="e-title-3" aria-describedby="e-detail-3"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title" id="e-title-3">Evacuation drill</span><span class="stepper__detail" id="e-detail-3">Not reported</span></span></button></li>
+          </ol>
+        </div>
+        <div class="ds-example__caption"><span>Safety basics: the second activity failed to load. The detail says what happened and what to do; the marker shape changes too.</span></div>
+      </div>
+
+      <h3>Horizontal</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <ol class="stepper stepper--horizontal" role="list" aria-label="Assign course progress">
+            <li><span class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title"><span class="visually-hidden">Completed: </span>Choose course</span><span class="stepper__detail">Safety basics</span></span></span></li>
+            <li><span class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Choose learners</span><span class="stepper__detail">Current step</span></span></span></li>
+            <li><span class="stepper__item"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title">Schedule</span></span></span></li>
+            <li><span class="stepper__item"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Review</span></span></span></li>
+          </ol>
+        </div>
+        <div class="ds-example__caption"><span>Status only: the steps are not links, so moving between them is done with the form's Back and Continue buttons. Completed steps carry hidden "Completed:" text.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;ol class="stepper stepper--horizontal" role="list" aria-label="Assign course progress"&gt;
+  &lt;li&gt;&lt;span class="stepper__item" data-complete="true"&gt;
+    &lt;span class="stepper__marker" aria-hidden="true"&gt;✓&lt;/span&gt;
+    &lt;span&gt;&lt;span class="stepper__title"&gt;&lt;span class="visually-hidden"&gt;Completed: &lt;/span&gt;Choose course&lt;/span&gt;&lt;/span&gt;
+  &lt;/span&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;span class="stepper__item" aria-current="step"&gt;…Choose learners…&lt;/span&gt;&lt;/li&gt;
+&lt;/ol&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="The stepper has one size: 12px item padding, a 1.75em marker and 14px titles. It scales with the root font size."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">The stepper has one size: 12px item padding, a 1.75em marker and 14px titles. It scales with the root font size.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Pointer and focus states are forced with <code>data-state</code> for review; products get them from <code>:hover</code>, <code>:focus-visible</code>, <code>aria-current="step"</code>, <code>data-complete</code>, <code>data-error</code> and <code>aria-disabled</code>.</p>
+      <div class="ds-matrix" style="position: relative;"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Locked (disabled)</th><th scope="col">Current</th><th scope="col">Complete</th><th scope="col">Error</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Vertical</th>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-state="hover"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-state="focus"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-state="hover"><span class="stepper__marker" aria-hidden="true">3</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-disabled="true"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Put it into practice</span><span class="stepper__detail">Locked until “Give useful feedback” is complete.</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title">Start with listening</span><span class="stepper__detail">Complete</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-error="true"><span class="stepper__marker" aria-hidden="true">!</span><span><span class="stepper__title">Using an extinguisher</span><span class="stepper__detail">Could not load. Select to try again.</span></span></button></li></ol></td></tr>
+          <tr><th scope="row">Vertical, current</th>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step" data-state="hover"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Hover: no change on current</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step" data-state="focus"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li></ol></td>
+            <td><span class="ds-pill">Not used</span></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title">Start with listening</span><span class="stepper__detail">Current activity · Complete</span></span></button></li></ol></td>
+            <td><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step" data-error="true"><span class="stepper__marker" aria-hidden="true">!</span><span><span class="stepper__title">Using an extinguisher</span><span class="stepper__detail">Current activity · Could not load.</span></span></button></li></ol></td></tr>
+          <tr><th scope="row">Horizontal</th>
+            <td><ol class="stepper stepper--horizontal" role="list"><li><span class="stepper__item"><span class="stepper__marker" aria-hidden="true">3</span><span class="stepper__title">Schedule</span></span></li></ol></td>
+            <td><span class="ds-pill">Not interactive</span></td>
+            <td><span class="ds-pill">Not interactive</span></td>
+            <td><span class="ds-pill">Not interactive</span></td>
+            <td><ol class="stepper stepper--horizontal" role="list"><li><span class="stepper__item" aria-disabled="true"><span class="stepper__marker" aria-hidden="true">4</span><span class="stepper__title">Review</span></span></li></ol></td>
+            <td><ol class="stepper stepper--horizontal" role="list"><li><span class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span class="stepper__title">Choose learners</span></span></li></ol></td>
+            <td><ol class="stepper stepper--horizontal" role="list"><li><span class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span class="stepper__title"><span class="visually-hidden">Completed: </span>Choose course</span></span></li></ol></td>
+            <td><ol class="stepper stepper--horizontal" role="list"><li><span class="stepper__item" data-error="true"><span class="stepper__marker" aria-hidden="true">!</span><span class="stepper__title"><span class="visually-hidden">Error: </span>Schedule</span></span></li></ol></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><ol class="stepper" role="list" style="background: var(--color-bg-surface); border-radius: var(--radius-lg);"><li><button type="button" class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title">Start with listening</span><span class="stepper__detail">Complete</span></span></button></li><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li><li><button type="button" class="stepper__item" data-error="true"><span class="stepper__marker" aria-hidden="true">!</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Could not load. Select to try again.</span></span></button></li><li><button type="button" class="stepper__item" aria-disabled="true"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Put it into practice</span><span class="stepper__detail">Locked until “Give useful feedback” is complete.</span></span></button></li></ol></div>
+        <div data-theme="dark"><ol class="stepper" role="list" style="background: var(--color-bg-surface); border-radius: var(--radius-lg);"><li><button type="button" class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title">Start with listening</span><span class="stepper__detail">Complete</span></span></button></li><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span><span class="stepper__detail">Current activity · Not reported</span></span></button></li><li><button type="button" class="stepper__item" data-error="true"><span class="stepper__marker" aria-hidden="true">!</span><span><span class="stepper__title">Give useful feedback</span><span class="stepper__detail">Could not load. Select to try again.</span></span></button></li><li><button type="button" class="stepper__item" aria-disabled="true"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Put it into practice</span><span class="stepper__detail">Locked until “Give useful feedback” is complete.</span></span></button></li></ol></div>
+      </div>
+      <ul>
+        <li><b>Current</b> (<code>aria-current="step"</code>): accent-subtle fill, accent title, inset 4px accent stripe; the detail starts with "Current activity". In forced-colours mode a 2px <code>Highlight</code> outline replaces the fill.</li>
+        <li><b>Complete</b> (<code>data-complete="true"</code>): accent-filled marker with "✓" and the detail "Complete". Set only when the content reports completion.</li>
+        <li><b>Locked</b> (<code>aria-disabled="true"</code>): readable <code>--color-fg-disabled</code> text, dashed marker edge, the reason as the detail. It stays focusable (not <code>disabled</code>) so the reason can be reached; activation is ignored.</li>
+        <li><b>Error</b> (<code>data-error="true"</code>): danger-tinted marker with "!", and the detail says what failed and what to do. Colour is never the only cue.</li>
+        <li><b>Active</b> has no separate look; activation opens the lesson immediately.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Layout</b>: the outline and the player share a wrapping <code>.sidebar-layout</code>. The outline column has a 15.5rem basis; the player keeps at least 30rem, so whenever the player cannot keep 30rem (narrow screens, 200% text, 400% zoom) the outline stacks above it instead of squeezing it.</li>
+        <li><b>Below 48rem</b> (the mock's <code>47.5em</code>): the outline list is hidden behind a "Show outline" button (<code>.outline-panel__toggle</code>, <code>aria-controls="outline"</code>, <code>aria-expanded</code>). Opening it changes the label to "Hide outline".</li>
+        <li>Choosing a lesson from the open compact outline closes the outline and moves focus to the activity heading, so the learner lands on the content.</li>
+        <li>If the outline closes while focus is inside it, focus moves to the toggle. If the window widens past 48rem while the toggle has focus, the toggle disappears and focus moves to the current lesson, never to <code>&lt;body&gt;</code>.</li>
+        <li><b>Horizontal</b> steppers wrap onto more rows; below 48rem use the vertical layout (drop <code>.stepper--horizontal</code>) so titles are not crushed.</li>
+        <li>Titles and details wrap; they are never truncated.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The stepper reads semantic tokens directly: <code>--color-accent-subtle</code>, <code>--color-accent</code> and <code>--color-fg-accent</code> (current), <code>--color-accent</code> + <code>--color-fg-on-accent</code> (complete marker), <code>--color-danger-bg</code>, <code>--color-danger-solid</code> and <code>--color-danger-fg</code> (error marker), <code>--color-border-strong</code> (marker edge), <code>--color-fg-muted</code> (detail) and <code>--color-fg-disabled</code> (locked). There are no component tokens.</p>
+      <pre><code>/* An LMS that shows completion in its success colour */
+.lms-outline .stepper__item[data-complete="true"] .stepper__marker {
+  border-color: var(--color-success-solid); background: var(--color-success-solid);
+}</code></pre>
+      <p>In the dark theme the fill becomes a deep teal and the stripe and complete marker lighten with the accent. In the shipped SCORM player these map to <code>--t-colorBrandBackground</code> and <code>--t-colorBrandForeground1</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>An ordered list (<code>&lt;ol role="list"&gt;</code>; the explicit role keeps list semantics in Safari once <code>list-style</code> is removed) inside a <code>&lt;nav&gt;</code> labelled by the "Course outline" heading. Each lesson is a native <code>&lt;button&gt;</code>; the current one has <code>aria-current="step"</code>. The compact toggle follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/">WAI-ARIA APG Disclosure pattern</a>. Locked lessons use <code>aria-disabled</code> as in the APG <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">Button pattern</a>. This is not a tablist or a listbox: there is no arrow-key navigation.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the outline toggle (below 48rem) and every lesson button, including locked ones.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>On a lesson: opens it, then moves focus to the activity heading. On a locked lesson: nothing happens; the reason was already announced as its description. On the toggle: shows or hides the outline.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 3px amber ring with a 2px offset. After a lesson opens, focus moves to the activity heading (<code>tabindex="-1"</code>), which announces the new lesson. Focus is never stranded on <code>&lt;body&gt;</code>: a closing outline returns focus to the toggle, and widening past 48rem moves focus from the vanished toggle to the current lesson.</p>
+      <h3>Labelling</h3>
+      <p>Each button is named by its title (<code>aria-labelledby</code>) and described by its detail (<code>aria-describedby</code>), so a screen reader says "Put it into practice, button, current step / dimmed, Locked until Give useful feedback is complete." The marker is <code>aria-hidden</code>; the number is conveyed by the list position, and "Complete" by the detail. Status changes ("Ask better questions complete.") are announced through the player's polite live region, not by re-rendering the outline into a live region.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Title on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Detail on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current title on current fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Detail on current fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Current stripe on current fill</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Complete marker check on accent</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Marker edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error marker symbol on danger background</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Locked text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The item background transitions over <code>--duration-fast</code> only under <code>prefers-reduced-motion: no-preference</code> (as in the mock); otherwise state changes are instant. The outline opens and closes without animation.</p>
+      <h3>Touch</h3>
+      <p>Each lesson button is the full width of the panel and at least 44px tall (12px padding around a two-line title and detail). The compact toggle is a 44px button. Nothing depends on hover.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Titles are the lesson's own title from the manifest, in sentence case: "Ask better questions".</li>
+        <li>Details are short status phrases joined with " · ": "Current activity · Not reported", "Complete".</li>
+        <li>Locked details say what unlocks the lesson, naming it: "Locked until “Give useful feedback” is complete." Never just "Locked".</li>
+        <li>Error details say what failed and the next step: "Could not load. Select to try again."</li>
+        <li>Use "Not reported" rather than "Incomplete" when the content has not sent a status; the player does not guess.</li>
+        <li>The toggle says "Show outline" / "Hide outline"; the position text above the player says "Activity 2 of 4".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-disabled="true"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Put it into practice</span><span class="stepper__detail">Locked until “Give useful feedback” is complete.</span></span></button></li></ol></div><figcaption>Keep a locked lesson focusable with <code>aria-disabled</code> and give the reason as its detail (SCORM mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" disabled style="opacity: 0.5;"><span class="stepper__marker" aria-hidden="true">4</span><span><span class="stepper__title">Put it into practice</span></span></button></li></ol></div><figcaption>Use <code>disabled</code> and fade it; keyboard users skip it and nobody learns how to unlock it.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-complete="true"><span class="stepper__marker" aria-hidden="true">✓</span><span><span class="stepper__title">Start with listening</span><span class="stepper__detail">Complete</span></span></button></li></ol></div><figcaption>Say "Complete" in the detail; the tick is decorative.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" data-complete="true"><span class="stepper__marker">✓</span><span><span class="stepper__title">Start with listening</span></span></button></li></ol></div><figcaption>Rely on a marker the screen reader reads as "check mark" or not at all, with no status text.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span></span></button></li></ol></div><figcaption>Draw the current stripe at <code>--border-width-stripe</code> (4px), the same width as notice stripes.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><ol class="stepper" role="list"><li><button type="button" class="stepper__item" aria-current="step" style="box-shadow: inset calc(var(--border-width-stripe) + var(--border-width-thick)) 0 0 var(--color-accent);"><span class="stepper__marker" aria-hidden="true">2</span><span><span class="stepper__title">Ask better questions</span></span></button></li></ol></div><figcaption>Pick a one-off stripe width; the video error panel's 5px stripe drifted from the SCORM 4px.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Title</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Detail</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Hover background</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Current fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Current title</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Current stripe, complete marker</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Complete marker symbol</td><td><code>--color-fg-on-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td></tr>
+          <tr><td>Marker edge</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Error marker</td><td><code>--color-danger-bg</code>, <code>--color-danger-solid</code>, <code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Locked text</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Stripe width</td><td><code>--border-width-stripe</code></td><td colspan="2"><span data-token="--border-width-stripe"></span></td></tr>
+          <tr><td>Item padding / gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+          <tr><td>List padding / item gap</td><td><code>--space-2</code>, <code>--space-1</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-1"></span></td></tr>
+          <tr><td>Radius (item / marker)</td><td><code>--radius-md</code>, <code>--radius-full</code></td><td colspan="2"><span data-token="--radius-md"></span> / <span data-token="--radius-full"></span></td></tr>
+          <tr><td>Title / detail / marker font</td><td><code>--text-label</code>, <code>--text-caption</code>, <code>--text-overline</code></td><td colspan="2"><span data-token="--text-label"></span> / <span data-token="--text-caption"></span> / <span data-token="--text-overline"></span></td></tr>
+          <tr><td>Compact breakpoint</td><td><code>--layout-breakpoint-md</code></td><td colspan="2"><span data-token="--layout-breakpoint-md"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;li&gt;
+  &lt;button type="button" class="stepper__item" data-complete="false"
+          aria-current="step" aria-labelledby="title-1" aria-describedby="detail-1"&gt;
+    &lt;span class="stepper__marker" aria-hidden="true"&gt;2&lt;/span&gt;
+    &lt;span&gt;
+      &lt;span class="stepper__title" id="title-1"&gt;Ask better questions&lt;/span&gt;
+      &lt;span class="stepper__detail" id="detail-1"&gt;Current activity · Not reported&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/button&gt;
+&lt;/li&gt;
+
+&lt;script&gt;
+  // From the SCORM mock: below 47.5em (48rem here) the outline hides behind its toggle.
+  const compact = () =&gt; matchMedia('(max-width: 47.99rem)').matches;
+  function setOutline(open) {
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Hide outline' : 'Show outline';
+    outline.hidden = compact() &amp;&amp; !open;
+    if (outline.hidden &amp;&amp; outline.contains(document.activeElement)) toggle.focus();
+  }
+  function goTo(i, fromOutline) {
+    if (blockedReason(i)) return;              // aria-disabled lessons ignore activation
+    if (fromOutline &amp;&amp; compact()) setOutline(false);
+    render();
+    activityHeading.focus();
+  }
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.stepper</code></td><td>On the <code>&lt;ol role="list"&gt;</code>: vertical column, 8px padding, 4px between items.</td></tr>
+        <tr><td><code>.stepper--horizontal</code></td><td>Row that wraps.</td></tr>
+        <tr><td><code>.stepper__item</code></td><td>The row: a <code>&lt;button&gt;</code> in an interactive outline, a <code>&lt;span&gt;</code> in a status-only stepper.</td></tr>
+        <tr><td><code>.stepper__marker</code></td><td>Number, "✓" or "!" circle; <code>aria-hidden="true"</code>.</td></tr>
+        <tr><td><code>.stepper__title</code>, <code>.stepper__detail</code></td><td>Title (name) and detail (description) lines.</td></tr>
+        <tr><td><code>aria-current="step"</code></td><td>Current lesson: fill, accent title, 4px stripe.</td></tr>
+        <tr><td><code>data-complete="true"</code></td><td>Accent-filled marker.</td></tr>
+        <tr><td><code>data-error="true"</code></td><td>Danger-tinted marker.</td></tr>
+        <tr><td><code>aria-disabled="true"</code></td><td>Locked: readable disabled text, dashed marker, still focusable; pair with a reason in the detail.</td></tr>
+        <tr><td><code>.outline-panel</code>, <code>.outline-panel__toggle</code></td><td>The SCORM outline's panel and its compact "Show outline" button (visible below 48rem).</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: the course outline (<code>.outline</code>, <code>.lesson-link</code>, <code>.lesson-number</code>, <code>.lesson-title</code>, <code>.lesson-detail</code>), its <code>aria-current="step"</code>, <code>data-complete</code> and <code>aria-disabled</code> states, the locked reason text, and the "Show outline" toggle below <code>47.5em</code> with its focus rules.</li>
+      </ul>
+      <p>The error state and the horizontal variant are derived: not present in the mocks; they follow the system rules.</p>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Title 0.91rem and detail 0.76rem; snapped to <code>--font-size-sm</code> (14px) and <code>--font-size-xs</code> (12px).</li>
+        <li>Marker weight 750; normalised to 700. Marker size 1.7em; rounded to 1.75em.</li>
+        <li>Marker edge <code>#8fa9a0</code> and hover <code>#f2f6f3</code>; replaced with <code>--color-border-strong</code> and <code>--color-bg-subtle</code>.</li>
+        <li>Item padding 0.8rem 0.75rem and gap 0.2rem were off the 4px scale; snapped to <code>--space-3</code> and <code>--space-1</code>.</li>
+        <li>Locked text used <code>--muted</code>; it now uses <code>--color-fg-disabled</code> with a dashed marker edge, the system's disabled treatment.</li>
+        <li>Breakpoint <code>max-width: 47.5em</code>; aligned to <code>--layout-breakpoint-md</code> (48rem).</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+<script>
+  // Documentation demo only: the SCORM mock's outline behaviour.
+  (function () {
+    var outline = document.getElementById('demo-outline');
+    var toggle = document.getElementById('demo-outline-toggle');
+    var heading = document.getElementById('demo-activity');
+    var position = document.getElementById('demo-position');
+    var items = Array.prototype.slice.call(outline.querySelectorAll('.stepper__item'));
+    var compact = function () { return window.matchMedia('(max-width: 47.99rem)').matches; };
+    function setOutline(open) {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Hide outline' : 'Show outline';
+      outline.hidden = compact() && !open;
+      if (outline.hidden && outline.contains(document.activeElement)) toggle.focus();
+    }
+    items.forEach(function (item, i) {
+      item.addEventListener('click', function () {
+        if (item.getAttribute('aria-disabled') === 'true') return;
+        items.forEach(function (other) {
+          var detail = other.querySelector('.stepper__detail');
+          if (other.getAttribute('aria-disabled') === 'true') return;
+          var current = other === item;
+          if (current) other.setAttribute('aria-current', 'step'); else other.removeAttribute('aria-current');
+          detail.textContent = [current ? 'Current activity' : '', other.getAttribute('data-status')].filter(Boolean).join(' · ');
+        });
+        position.textContent = 'Activity ' + (i + 1) + ' of ' + items.length;
+        heading.textContent = item.querySelector('.stepper__title').textContent;
+        if (compact()) setOutline(false);
+        heading.focus();
+      });
+    });
+    var lastFocused = null;
+    document.addEventListener('focusin', function (event) { lastFocused = event.target; });
+    toggle.addEventListener('click', function () { setOutline(toggle.getAttribute('aria-expanded') !== 'true'); });
+    window.addEventListener('resize', function () {
+      setOutline(toggle.getAttribute('aria-expanded') === 'true');
+      if (lastFocused === toggle && [toggle, document.body].indexOf(document.activeElement) > -1 && !compact()) outline.querySelector('[aria-current]').focus();
+    });
+    setOutline(false);
+  })();
+</script>
+</body>
+</html>

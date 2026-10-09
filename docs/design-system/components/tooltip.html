@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tooltip — Tessera design system</title>
+<meta name="description" content="Tooltips show a short text label or full value on hover and focus: plain text or with a keyboard shortcut. Hoverable, dismissible with Escape, never interactive.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers</p>
+      <h1>Tooltip</h1>
+      <p class="ds-lead">A tooltip is a small dark label that appears beside a control on hover and keyboard focus. It names an icon-only button, shows a shortcut, or reveals a learner's full name when a chip has truncated it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>role="tooltip"</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a tooltip to repeat or complete text that is already available another way: the name of an icon-only button ("Show outline"), its keyboard shortcut ("Captions <kbd class="kbd">C</kbd>"), or the full text of a truncated label (the combobox chip "Katherine Johnson-Goble…"). Tooltips are supplementary; nothing essential lives only in a tooltip.</p>
+      <ul>
+        <li><b>Text</b>: one short line, up to about 80 characters.</li>
+        <li><b>With shortcut</b>: the label followed by a <code>.kbd</code> key cap.</li>
+      </ul>
+      <p>Do not use a tooltip for instructions needed to complete a task (use a field hint), for interactive content such as links or buttons (use a <a href="dialog.html">dialog</a> or popover), for errors (use an <a href="inline-message.html">inline message</a>), or on disabled controls that cannot receive focus. Touch users rarely see tooltips, so the information must also be reachable without one.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <span class="stack" style="--stack-gap: var(--space-1); align-items: center;">
+            <button class="btn btn--icon" type="button" aria-labelledby="tt-anat" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button>
+            <span class="tooltip tooltip--static" role="tooltip" id="tt-anat">Captions<kbd class="kbd">C</kbd></span>
+          </span>
+          <span class="ds-callout" style="left: 40%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 28%; top: 62%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 46%; top: 62%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 64%; top: 62%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Anchor</b><small>The focusable control the tooltip belongs to. It references the tooltip with <code>aria-labelledby</code> (icon-only) or <code>aria-describedby</code> (extra detail).</small></div></li>
+          <li><div><b>Container</b><small><code>.tooltip</code>: <code>--color-bg-inverse</code>, <code>--radius-sm</code>, 8 × 12px padding, <code>--shadow-2</code>, max <code>min(24rem, 100vw − 32px)</code>.</small></div></li>
+          <li><div><b>Text</b><small><code>--text-body-sm</code> in <code>--color-fg-inverse</code>; wraps, never truncates.</small></div></li>
+          <li><div><b>Shortcut (optional)</b><small><code>.kbd</code> with a transparent fill and <code>--color-border-inverse</code> edge, 8px after the text.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>Tooltips are drawn in place here with <code>.tooltip--static</code>; in products they float (<code>position: absolute</code> in a <code>.tooltip-anchor</code>, or fixed in the top layer) 4px from the anchor and are hidden until shown.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start; gap: var(--space-8);">
+          <span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;">
+            <button class="btn btn--icon" type="button" aria-labelledby="tt-v1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <span class="tooltip tooltip--static" role="tooltip" id="tt-v1">Show outline</span>
+          </span>
+          <span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;">
+            <button class="btn btn--icon" type="button" aria-labelledby="tt-v2" aria-keyshortcuts="M"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg></button>
+            <span class="tooltip tooltip--static" role="tooltip" id="tt-v2">Unmute<kbd class="kbd">M</kbd></span>
+          </span>
+          <span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start; max-width: 12rem;">
+            <span class="chip chip--removable" style="max-width: 10rem;"><span class="chip__label">Katherine Johnson-Goble</span><button class="chip__remove" type="button" aria-label="Remove Katherine Johnson-Goble" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>
+            <span class="tooltip tooltip--static" role="tooltip" id="tt-v3">Katherine Johnson-Goble</span>
+          </span>
+        </div>
+        <div class="ds-example__caption"><span>Text, with shortcut, and the combobox full-label tooltip on a truncated chip.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="tooltip-anchor"&gt;
+  &lt;button class="btn btn--icon" type="button" aria-labelledby="tip-mute" aria-keyshortcuts="M"&gt;…&lt;/button&gt;
+  &lt;span class="tooltip" role="tooltip" id="tip-mute" hidden&gt;Unmute&lt;kbd class="kbd"&gt;M&lt;/kbd&gt;&lt;/span&gt;
+&lt;/span&gt;</code></pre></details>
+      </div>
+      <h3>Choosing the reference</h3>
+      <ul>
+        <li><b>Icon-only control</b>: the tooltip text <em>is</em> the name, so the button uses <code>aria-labelledby</code> pointing to the tooltip. Do not also set an <code>aria-label</code> that says something different.</li>
+        <li><b>Extra detail</b> on a labelled control: <code>aria-describedby</code>.</li>
+        <li><b>Full value of truncated text</b>: the control's own name already contains the full text ("Remove Katherine Johnson-Goble"), so the tooltip is visual only and is not referenced. It appears only when the label is actually truncated.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="Tooltips have one size: --text-body-sm on 8 × 12px padding, up to 24rem wide."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">Tooltips have one size: <code>--text-body-sm</code> on 8 × 12px padding, up to 24rem wide.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The tooltip itself has two states, hidden and visible; what changes is what makes it visible. The matrix shows the anchor's state and whether the tooltip is showing.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Dismissed (Esc)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Text</th>
+            <td><button class="btn btn--icon" type="button" aria-label="Show outline"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s2" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s2">Show outline</span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s3" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s3">Show outline</span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s4" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s4">Show outline</span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s5" aria-disabled="true" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s5">Show outline (no outline for this course)</span></span></td>
+            <td><button class="btn btn--icon" type="button" aria-label="Show outline" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></td>
+          </tr>
+          <tr><th scope="row">With shortcut</th>
+            <td><button class="btn btn--icon" type="button" aria-label="Captions" aria-keyshortcuts="C"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s8" aria-keyshortcuts="C" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s8">Captions<kbd class="kbd">C</kbd></span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s9" aria-keyshortcuts="C" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s9">Captions<kbd class="kbd">C</kbd></span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s10" aria-keyshortcuts="C" aria-pressed="true" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s10">Captions<kbd class="kbd">C</kbd></span></span></td>
+            <td><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-s11" aria-disabled="true" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-s11">Captions (none for this session)</span></span></td>
+            <td><button class="btn btn--icon" type="button" aria-label="Captions" aria-keyshortcuts="C" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg></button></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><b>Hover</b>: appears after a 300 ms rest so a passing pointer does not flash it. The combobox full-label tooltip appears at once, because the person is reaching for that chip.</li>
+        <li><b>Focus</b>: appears immediately on <code>:focus-visible</code> (keyboard), including a chip's remove button.</li>
+        <li><b>Hovered tooltip</b>: stays visible while the pointer is over the anchor <em>or</em> the tooltip; it hides 250 ms after the pointer leaves both (WCAG 1.4.13 hoverable).</li>
+        <li><b>Active</b>: stays while the press completes; a toggle's tooltip text updates with its state ("Captions" → "Turn off captions" only if the name changes).</li>
+        <li><b>Disabled</b>: native <code>disabled</code> controls get no focus and so no tooltip. Use <code>aria-disabled="true"</code> and put the reason in the tooltip and in visible text nearby.</li>
+        <li><b>Dismissed</b>: <kbd class="kbd">Esc</kbd> hides it without moving focus and without closing anything else; the next Esc goes to the surrounding component (the combobox then closes its popup).</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="cluster" style="align-items: flex-start;"><span class="tooltip tooltip--static" role="tooltip" id="tt-tl1">Show outline</span><span class="tooltip tooltip--static" role="tooltip" id="tt-tl2">Captions<kbd class="kbd">C</kbd></span><span class="tooltip tooltip--static" role="tooltip" id="tt-tl3">Katherine Johnson-Goble</span></div></div>
+        <div data-theme="dark"><div class="cluster" style="align-items: flex-start;"><span class="tooltip tooltip--static" role="tooltip" id="tt-td1">Show outline</span><span class="tooltip tooltip--static" role="tooltip" id="tt-td2">Captions<kbd class="kbd">C</kbd></span><span class="tooltip tooltip--static" role="tooltip" id="tt-td3">Katherine Johnson-Goble</span></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Placement: below the anchor, start-aligned, 4px away; it flips above when there is no room and is clamped 8px inside the viewport on both axes, as the combobox mock does. It never covers the anchor or the focused element.</li>
+        <li>Width is capped at <code>min(24rem, 100vw − 32px)</code>; long text wraps. At 320px and 400% zoom the tooltip stays within the viewport.</li>
+        <li>On touch screens (<code>hover: none</code>) tooltips appear only on keyboard focus. Icon-only controls that matter on phones need a visible label there, or a name that is obvious from the icon.</li>
+        <li>With WCAG text spacing the tooltip grows; nothing inside it truncates.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The tooltip is an inverse surface: <code>--color-bg-inverse</code> with <code>--color-fg-inverse</code> text, so it contrasts with the page in both themes. In the light theme it is sage-900 with white text; in the dark theme it flips to sage-25 with sage-900 text. The shortcut key cap inside uses <code>--color-border-inverse</code>. Over media (the video stage), keep the inverse surface; it reads against both the dark scrim and a bright picture.</p>
+      <pre><code>/* A host with a branded tooltip surface */
+.host-shell .tooltip { background: var(--color-accent-active); color: var(--color-fg-on-accent); }</code></pre>
+      <p>In forced-colours mode the tooltip gains a <code>ButtonText</code> border so it stays distinct from the page. In the shipped packages the combobox tooltip uses its text and surface colours swapped (<code>--t-combobox-text</code> on <code>--t-combobox-surface</code>), the same inverse rule; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/">WAI-ARIA APG Tooltip pattern</a>: <code>role="tooltip"</code> on the container, referenced from the anchor by <code>aria-labelledby</code> or <code>aria-describedby</code>. It must meet <a href="https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html">WCAG 1.4.13 Content on Hover or Focus</a>: dismissible, hoverable and persistent.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> to the anchor</td><td>Shows the tooltip immediately.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Hides the tooltip; focus stays on the anchor. The tooltip handles Esc first and stops it, so a containing popup or dialog does not also close.</td></tr>
+        <tr><td><kbd>Tab</kbd> away / blur</td><td>Hides the tooltip unless the pointer is over it.</td></tr>
+        <tr><td>Shortcut key</td><td>Runs the action shown; the tooltip is a reminder, the shortcut is announced through <code>aria-keyshortcuts</code>.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The tooltip never receives focus and never contains focusable elements. The anchor shows the normal amber ring. Clicking the tooltip does not move focus (the combobox mock cancels <code>mousedown</code> on it).</p>
+      <h3>Labelling</h3>
+      <p>When the tooltip names an icon-only control, it is the accessible name via <code>aria-labelledby</code>, so the visible and announced names match (2.5.3 Label in Name). The key cap is part of the name only if it reads well ("Captions C" is acceptable; prefer <code>aria-keyshortcuts</code> and hide the cap with <code>aria-hidden</code> when it would be read awkwardly). Tooltips are not announced when they appear; they are read as part of the name or description.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Tooltip text on tooltip</span><span class="ds-pair__ratio" data-contrast="--color-fg-inverse|--color-bg-inverse" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Tooltip surface against page</span><span class="ds-pair__ratio" data-contrast="--color-bg-inverse|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Tooltip surface against card</span><span class="ds-pair__ratio" data-contrast="--color-bg-inverse|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The tooltip may fade in over <code>--duration-fast</code>; it hides instantly. Reduced motion removes the fade. The show delay is a timing, not an animation, and stays.</p>
+      <h3>Touch</h3>
+      <p>Touch does not show tooltips on press, because the press activates the control. Do not rely on long-press. The anchor itself meets the 44px target; the tooltip is not a target.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Name the action, in sentence case, without ending punctuation: "Show outline", "Unmute", "Go to live".</li>
+        <li>Match the control's accessible name exactly when it names an icon button.</li>
+        <li>Shortcuts are single key caps after the text: "Captions <kbd class="kbd">C</kbd>", "Fullscreen <kbd class="kbd">F</kbd>".</li>
+        <li>For truncated values, show the whole value and nothing else: "Katherine Johnson-Goble".</li>
+        <li>One line where possible; never more than two sentences.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-labelledby="tt-dd1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-dd1">Show outline</span></span></div><figcaption>Use the tooltip as the icon button's name; show it on hover and focus.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="stack" style="--stack-gap: var(--space-1); align-items: flex-start;"><button class="btn btn--icon" type="button" aria-label="Menu"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="tooltip tooltip--static" role="tooltip" id="tt-dd2">Show outline</span></span></div><figcaption>Give the button a different <code>aria-label</code> than the tooltip; voice users say "Show outline" and nothing happens.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack" style="align-items: flex-start;"><div class="field"><label class="field__label" for="tt-dd-code">Course code</label><input class="input" id="tt-dd-code" aria-describedby="tt-dd-hint" style="max-width: 14rem;"><p class="field__hint" id="tt-dd-hint">Six letters and numbers, from the course catalogue.</p></div></div><figcaption>Put instructions in a visible hint that touch and keyboard users always see.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack" style="align-items: flex-start;"><div class="field"><label class="field__label" for="tt-dd-code2">Course code</label><input class="input" id="tt-dd-code2" aria-describedby="tt-dd3" style="max-width: 14rem;"><span class="tooltip tooltip--static" role="tooltip" id="tt-dd3">Six letters and numbers. <a href="#do-dont" style="color: inherit;">Find codes</a></span></div></div><figcaption>Hide required instructions, or a link, in a tooltip; it cannot be reached or kept open.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Surface</td><td><code>--color-bg-inverse</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-inverse" data-swatch></i><span data-token="--color-bg-inverse"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-inverse" data-swatch></i><span data-token="--color-bg-inverse"></span></span></td></tr>
+          <tr><td>Text</td><td><code>--color-fg-inverse</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-inverse" data-swatch></i><span data-token="--color-fg-inverse"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-inverse" data-swatch></i><span data-token="--color-fg-inverse"></span></span></td></tr>
+          <tr><td>Key cap edge</td><td><code>--color-border-inverse</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-inverse" data-swatch></i><span data-token="--color-border-inverse"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-inverse" data-swatch></i><span data-token="--color-border-inverse"></span></span></td></tr>
+          <tr><td>Padding</td><td><code>--space-2</code> <code>--space-3</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Offset from anchor / viewport inset</td><td><code>--space-1</code> / <code>--space-2</code></td><td colspan="2"><span data-token="--space-1"></span> / <span data-token="--space-2"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-sm</code></td><td colspan="2"><span data-token="--radius-sm"></span></td></tr>
+          <tr><td>Shadow</td><td><code>--shadow-2</code></td><td colspan="2"><span data-token="--shadow-2"></span></td></tr>
+          <tr><td>Layer</td><td><code>--z-tooltip</code></td><td colspan="2"><span data-token="--z-tooltip"></span></td></tr>
+          <tr><td>Font</td><td><code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body-sm"></span></td></tr>
+          <tr><td>Fade in</td><td><code>--duration-fast</code></td><td colspan="2"><span data-token="--duration-fast"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;span class="tooltip-anchor"&gt;
+  &lt;button class="btn btn--icon" type="button" aria-labelledby="tip-outline"&gt;…&lt;/button&gt;
+  &lt;span class="tooltip" role="tooltip" id="tip-outline" hidden&gt;Show outline&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;script&gt;
+  // Show on hover (after 300 ms) and on focus; keep while the tooltip is hovered;
+  // hide 250 ms after the pointer leaves both; Esc hides first and stops propagation.
+  document.addEventListener('keydown', (e) =&gt; {
+    if (e.key === 'Escape' &amp;&amp; !tip.hidden) { tip.hidden = true; e.preventDefault(); e.stopPropagation(); }
+  }, true);
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.tooltip</code> + <code>role="tooltip"</code></td><td>Inverse floating label at <code>--z-tooltip</code>.</td></tr>
+        <tr><td><code>.tooltip-anchor</code></td><td>Positioning context around the anchor.</td></tr>
+        <tr><td><code>.tooltip .kbd</code></td><td>Key cap styled for the inverse surface.</td></tr>
+        <tr><td><code>aria-labelledby</code> / <code>aria-describedby</code></td><td>Tooltip as the name (icon-only) or as a description.</td></tr>
+        <tr><td><code>hidden</code></td><td>Hidden state; toggled by script.</td></tr>
+        <tr><td><code>.tooltip--static</code></td><td>Documentation only: draws the tooltip in flow.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the full-label tooltip on truncated chips. It shows on hover or remove-button focus, only when the label is truncated; stays while the tooltip itself is hovered; hides 250 ms after the pointer leaves; Escape dismisses it before closing the popup; it is clamped 8px inside the viewport and placed 4px below the chip.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: single-key shortcuts (Space/K, M, C, F) and the <code>kbd</code> key caps in the notes, the model for the shortcut variant.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The combobox tooltip used <code>z-index: 20</code> and <code>position: fixed</code> with its own colour pair; it is <code>--z-tooltip</code> with <code>--color-bg-inverse</code> / <code>--color-fg-inverse</code>.</li>
+        <li>Key caps used <code>0.25rem</code> top margin and <code>--page-line</code> edges; the system <code>.kbd</code> uses <code>--color-border-strong</code> (and <code>--color-border-inverse</code> inside a tooltip).</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

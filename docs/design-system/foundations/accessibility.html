@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility — Tessera design system</title>
+<meta name="description" content="Tessera's WCAG 2.2 AA commitments, supported screen readers, target sizes, the focus ring, control heights, the component contract and the testing procedure.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Accessibility</h1>
+      <p class="ds-lead">Every learner has to be able to finish the course. Tessera components work with JAWS, NVDA, VoiceOver, TalkBack and Narrator, are fully operable by keyboard alone, and conform to WCAG 2.2 AA at minimum. This page lists what that means in practice and how each change is checked.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">WAI-ARIA APG</span><span class="ds-pill">Owns <code>--target-*</code>, <code>--focus-ring-*</code>, <code>--control-height-*</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#commitments">Commitments</a></li><li><a href="#screen-readers">Screen readers</a></li><li><a href="#targets">Target sizes</a></li><li><a href="#focus">Focus ring</a></li><li><a href="#control-heights">Control heights</a></li><li><a href="#usage">Component contract</a></li><li><a href="#accessibility">Testing procedure</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Accessibility is built into the tokens and classes rather than added per page:</p>
+      <ul>
+        <li>Every text and control colour pair is checked at 4.5:1 or 3:1 in both themes (<a href="color.html">colour</a>).</li>
+        <li>One amber focus ring, 3px with a 2px gap, on every focusable element.</li>
+        <li>44px controls by default; nothing smaller than 24px.</li>
+        <li>Disabled controls keep readable text and show a dashed edge; they are never shown by fading alone.</li>
+        <li>Motion tokens collapse under reduced motion (<a href="motion.html">motion</a>); forced colours hand control to system colours (<a href="theming.html#preferences">theming</a>).</li>
+        <li>Native elements first; ARIA only where the WAI-ARIA Authoring Practices pattern needs it.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="commitments"><h2><a href="#commitments">Commitments</a></h2>
+      <p>The WCAG 2.2 AA success criteria that shape component design, and the rule Tessera follows for each.</p>
+      <h3>Perceivable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">Rule in Tessera</th></tr></thead>
+        <tbody>
+          <tr><td>Text contrast</td><td>1.4.3</td><td>Body, label and secondary text at least 4.5:1 on every surface it sits on; large text (24px, or 18.7px bold) at least 3:1. Pairs live in <code>tokens/contrast-pairs.json</code>.</td></tr>
+          <tr><td>Non-text contrast</td><td>1.4.11</td><td>Input borders, focus rings, meaningful icons, the LIVE dot, switch tracks at least 3:1 against what is next to them. Decorative dividers (<code>--color-border-default</code>) are exempt and documented as such.</td></tr>
+          <tr><td>Use of colour</td><td>1.4.1</td><td>Status is colour + icon + text; links are underlined; required fields say "required"; the current lesson has a marker and text, not only a tint.</td></tr>
+          <tr><td>Resize and reflow</td><td>1.4.4, 1.4.10</td><td>All sizes in <code>rem</code>; layouts reflow to 320 CSS px with no two-dimensional scroll except tables and the video picture. See <a href="responsive.html#zoom">responsive</a>.</td></tr>
+          <tr><td>Text spacing</td><td>1.4.12</td><td>Nothing breaks at line height 1.5×, paragraph spacing 2×, letter spacing 0.12em, word spacing 0.16em.</td></tr>
+          <tr><td>Images and media</td><td>1.1.1, 1.2.4</td><td>Informative images have <code>alt</code>; decorative SVGs have <code>aria-hidden="true"</code>; the live video player renders host-supplied captions as a real <code>&lt;track kind="captions"&gt;</code>.</td></tr>
+          <tr><td>Orientation and motion</td><td>1.3.4, 2.3.3</td><td>No orientation lock; every animation respects <code>prefers-reduced-motion</code> (durations collapse in the tokens).</td></tr>
+          <tr><td>Identify input purpose</td><td>1.3.5</td><td><code>autocomplete</code> on name, e-mail and other personal fields; the combobox input sets <code>autocomplete="off"</code> because it searches, it does not collect.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Operable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">Rule in Tessera</th></tr></thead>
+        <tbody>
+          <tr><td>Keyboard</td><td>2.1.1, 2.1.2</td><td>Everything works with <kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>, and arrows where a widget pattern says so. No traps except modal dialogs, which release on <kbd>Esc</kbd>. The SCORM content frame is reachable and escapable by <kbd>Tab</kbd>.</td></tr>
+          <tr><td>Character key shortcuts</td><td>2.1.4</td><td>The video player's single-letter keys (<kbd>K</kbd>, <kbd>M</kbd>, <kbd>F</kbd>, <kbd>C</kbd>) work only while focus is inside the player.</td></tr>
+          <tr><td>Focus visible</td><td>2.4.7</td><td>One shared ring on <code>:focus-visible</code>: 3px <code>--color-focus-ring</code>, 2px offset, at least 3:1 against what surrounds it. See <a href="#focus">focus ring</a>.</td></tr>
+          <tr><td>Focus not obscured</td><td>2.4.11</td><td>Sticky headers, toasts and the video control bar never cover the focused element; the combobox popup never covers its input.</td></tr>
+          <tr><td>Focus order</td><td>2.4.3</td><td>DOM order is visual order; no positive <code>tabindex</code>; dialogs move focus in and restore it on close; closing a region never strands focus on <code>&lt;body&gt;</code>.</td></tr>
+          <tr><td>Target size</td><td>2.5.8</td><td>At least 24 × 24px (<code>--target-min</code>) for every target, 44 × 44px (<code>--target-comfortable</code>) by default.</td></tr>
+          <tr><td>Dragging</td><td>2.5.7</td><td>Every drag (volume slider) has a single-pointer or keyboard alternative (Mute, arrow keys).</td></tr>
+          <tr><td>Timing</td><td>2.2.1, 2.2.2</td><td>Auto-dismissing toasts last at least 8 s and pause on hover and focus; errors never auto-dismiss; the hiding video control bar reappears on any input and stays while focused.</td></tr>
+          <tr><td>Bypass blocks</td><td>2.4.1</td><td>A skip link to the main content (or to the player) on every page; landmarks <code>header</code>, <code>nav</code>, <code>main</code>, <code>footer</code>.</td></tr>
+          <tr><td>Titles and headings</td><td>2.4.2, 2.4.6</td><td>Unique <code>&lt;title&gt;</code>; one <code>&lt;h1&gt;</code>; headings in order; the SCORM frame has a <code>title</code> naming the activity.</td></tr>
+          <tr><td>Link purpose</td><td>2.4.4</td><td>Link text makes sense alone ("Course outline", not "click here").</td></tr>
+          <tr><td>Pointer cancellation</td><td>2.5.2</td><td>Actions fire on click or key up, never on pointer down.</td></tr>
+          <tr><td>Label in name</td><td>2.5.3</td><td>An icon button's <code>aria-label</code> starts with any visible text ("Live", "Go to live, 12 seconds behind").</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Understandable</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">Rule in Tessera</th></tr></thead>
+        <tbody>
+          <tr><td>Labels</td><td>3.3.2</td><td>A visible label for every control; placeholders are hints, never labels; "required" is in the label text.</td></tr>
+          <tr><td>Error identification and suggestion</td><td>3.3.1, 3.3.3</td><td>Error text names the problem and the fix ("Select at least one learner."); <code>aria-invalid="true"</code> plus <code>aria-describedby</code>; a summary links each error to its field and takes focus on submit.</td></tr>
+          <tr><td>Error prevention</td><td>3.3.4</td><td>Destructive actions are confirmed or undoable; leaving a course with unsaved progress asks first ("Exit without saving").</td></tr>
+          <tr><td>Redundant entry</td><td>3.3.7</td><td>Information entered earlier in a flow is pre-filled or selectable; the combobox keeps selections across searches and errors.</td></tr>
+          <tr><td>Accessible authentication</td><td>3.3.8</td><td>No cognitive tests; paste and password managers allowed. Authentication itself belongs to the host LMS.</td></tr>
+          <tr><td>Consistent navigation and identification</td><td>3.2.3, 3.2.4</td><td>Same components, same order, same names everywhere; an icon means one thing.</td></tr>
+          <tr><td>On input</td><td>3.2.2</td><td>Changing a select, checkbox or combobox selection never navigates or submits by itself.</td></tr>
+          <tr><td>Language</td><td>3.1.1, 3.1.2</td><td><code>&lt;html lang&gt;</code> on every page; <code>lang</code> on inline foreign phrases; all built-in strings are replaceable for localisation.</td></tr>
+          <tr><td>Consistent help</td><td>3.2.6</td><td>Help links sit in the same place on every page of the host.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Robust</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Requirement</th><th scope="col">SC</th><th scope="col">Rule in Tessera</th></tr></thead>
+        <tbody>
+          <tr><td>Name, role, value</td><td>4.1.2</td><td>Native elements first (<code>button</code>, <code>a</code>, <code>input</code>, <code>select</code>, <code>details</code>, <code>dialog</code>); ARIA only to fill gaps, following the APG pattern named on each component page. Unavailable controls that must stay discoverable use <code>aria-disabled</code> with a reason.</td></tr>
+          <tr><td>Status messages</td><td>4.1.3</td><td>One polite live region per component for status ("3 results available.", "Back live."); <code>role="alert"</code> only for errors ("Progress not saved. Try saving again."). See <a href="content.html#announcements">content</a> for wording.</td></tr>
+          <tr><td>Valid markup</td><td>4.1.1 (obsolete in 2.2, kept as practice)</td><td>No duplicate ids; no interactive element inside another; no block content inside a <code>button</code>.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="screen-readers"><h2><a href="#screen-readers">Screen readers</a></h2>
+      <p>Every component must be fully functional with all five major screen readers. These are the combinations each release is verified on:</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Screen reader</th><th scope="col">Browser</th><th scope="col">Platform</th><th scope="col">Verify</th></tr></thead>
+        <tbody>
+          <tr><td>NVDA</td><td>Chrome</td><td>Windows</td><td>Speech, keyboard, focus, display settings</td></tr>
+          <tr><td>JAWS</td><td>Chrome</td><td>Windows</td><td>Speech, keyboard, focus, display settings</td></tr>
+          <tr><td>Narrator</td><td>Edge</td><td>Windows</td><td>Speech, keyboard, focus, display settings</td></tr>
+          <tr><td>VoiceOver</td><td>Safari</td><td>macOS</td><td>Speech, keyboard, focus, display settings</td></tr>
+          <tr><td>VoiceOver</td><td>Safari</td><td>iOS</td><td>Reading order, touch, on-screen and hardware keyboards</td></tr>
+          <tr><td>TalkBack</td><td>Chrome</td><td>Android</td><td>Reading order, touch, on-screen and hardware keyboards</td></tr>
+        </tbody>
+      </table></div>
+      <p>Speech wording and verbosity differ between products. The requirement is that the information is correct, understandable and arrives at a useful time, not that every screen reader says the same words.</p>
+    </section>
+
+    <section class="ds-section" id="targets"><h2><a href="#targets">Target sizes</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-end;">
+          <span style="display: inline-flex; flex-direction: column; align-items: center; gap: var(--space-2);"><span style="display: block; width: var(--target-min); height: var(--target-min); background: var(--color-accent-subtle); border: 1px dashed var(--color-accent); border-radius: var(--radius-sm);"></span><code>--target-min</code></span>
+          <span style="display: inline-flex; flex-direction: column; align-items: center; gap: var(--space-2);"><span style="display: block; width: var(--target-comfortable); height: var(--target-comfortable); background: var(--color-accent-subtle); border: 1px dashed var(--color-accent); border-radius: var(--radius-sm);"></span><code>--target-comfortable</code></span>
+          <span class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>
+          <button class="btn btn--icon" type="button" aria-label="Show outline"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        </div>
+        <div class="ds-example__caption"><span>24px minimum (WCAG 2.5.8) and 44px comfortable; the chip remove button (28px) and icon button (44px) in context.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--target-min</code></td><td data-token="--target-min"></td><td>The floor for every target: chip remove buttons, inline links in dense rows, navigation summaries.</td></tr>
+          <tr><td><code>--target-comfortable</code></td><td data-token="--target-comfortable"></td><td>The default for buttons, fields, toggles and media controls; every primary action on touch.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Targets smaller than 44px sit where nothing else crowds them: a 24px circle centred on each small target must not overlap another target.</p>
+    </section>
+
+    <section class="ds-section" id="focus"><h2><a href="#focus">Focus ring</a></h2>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><button class="btn btn--primary" type="button" data-state="focus">Continue</button><button class="btn" type="button" data-state="focus">Exit course</button><a href="#focus" data-state="focus">Course outline</a></div>
+          <div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-4) 0 0; gap: var(--space-2);">
+            <div class="ds-pair"><span>Ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+            <div class="ds-pair"><span>Ring on canvas</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-canvas" data-min="3"></span></div>
+          </div>
+        </div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><button class="btn btn--primary" type="button" data-state="focus">Continue</button><button class="btn" type="button" data-state="focus">Exit course</button><a href="#focus" data-state="focus">Course outline</a></div>
+          <div class="ds-example__canvas ds-example__canvas--stack" style="padding: var(--space-4) 0 0; gap: var(--space-2);">
+            <div class="ds-pair"><span>Ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+            <div class="ds-pair"><span>Ring on canvas</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-canvas" data-min="3"></span></div>
+          </div>
+        </div>
+      </div>
+      <ul>
+        <li><b>Shape:</b> a solid <code>outline</code> of <code>--focus-ring-width</code> (3px) in <code>--color-focus-ring</code>, drawn <code>--focus-ring-offset</code> (2px) outside the element, following its radius.</li>
+        <li><b>When:</b> on <code>:focus-visible</code> only, so a mouse click does not leave a ring but keyboard focus always shows one.</li>
+        <li><b>Colour:</b> amber, never the brand teal, so it stays distinct from primary fills, selected options and the current lesson. Light uses <code>--palette-orange-600</code>, dark <code>--palette-orange-300</code>.</li>
+        <li><b>On media:</b> video controls on the dark scrim use <code>--color-media-focus-ring</code> (light amber in both themes).</li>
+        <li><b>Composite widgets:</b> the combobox draws the ring on the whole field while its input has focus; the active option gets a 2px accent outline inside the list, which is a different thing from focus.</li>
+        <li><b>Forced colours:</b> the ring becomes <code>Highlight</code>.</li>
+        <li><b>Where an outline cannot show</b> (clipped containers), use <code>--shadow-focus</code>, which draws the same 2px gap and 3px ring as a box shadow.</li>
+      </ul>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--focus-ring-width</code></td><td data-token="--focus-ring-width"></td><td>Outline thickness on every focusable element.</td></tr>
+          <tr><td><code>--focus-ring-offset</code></td><td data-token="--focus-ring-offset"></td><td>Gap between the element and the ring.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="control-heights"><h2><a href="#control-heights">Control heights</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <button class="btn btn--sm" type="button">Retry</button>
+          <button class="btn" type="button">Load more</button>
+          <button class="btn btn--primary btn--lg" type="button">Continue lesson</button>
+        </div>
+        <div class="ds-example__caption"><span>Small, medium (default) and large buttons. Fields and selects use medium.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--control-height-sm</code></td><td data-token="--control-height-sm"></td><td>Chips, inline icon buttons inside a field, small buttons in a status row.</td></tr>
+          <tr><td><code>--control-height-md</code></td><td data-token="--control-height-md"></td><td>Default for buttons, text fields, selects and the combobox field (the combobox mock's 40px field was raised to match).</td></tr>
+          <tr><td><code>--control-height-lg</code></td><td data-token="--control-height-lg"></td><td>A single hero action.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Heights are minimums (<code>min-height</code>). With 200% text a control grows taller rather than clipping its label.</p>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Component contract</a></h2>
+      <p>Every component page's Accessibility section answers these seven points, and every component change ships with an accessibility test: automated checks plus manual screen reader verification.</p>
+      <ol>
+        <li><b>Role and pattern:</b> the native element or WAI-ARIA pattern used, linked to the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/">APG pattern</a>.</li>
+        <li><b>Keyboard:</b> a table of every key and its effect (<kbd>Tab</kbd>, <kbd>Shift</kbd>+<kbd>Tab</kbd>, <kbd>Enter</kbd>, <kbd>Space</kbd>, <kbd>Esc</kbd>, arrows, <kbd>Home</kbd>/<kbd>End</kbd>, type-ahead).</li>
+        <li><b>Focus:</b> where focus starts, where it goes when something closes or disappears, and how the ring looks.</li>
+        <li><b>Labelling:</b> what must be labelled, how, and what is announced (including live-region messages).</li>
+        <li><b>Contrast:</b> the token pairs involved, with live ratios in both themes.</li>
+        <li><b>Motion:</b> what animates and what happens under reduced motion.</li>
+        <li><b>Touch:</b> target sizes and the alternative to anything hover-only.</li>
+      </ol>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" aria-disabled="true" aria-describedby="why-next">Next</button><p class="content-player__reason" id="why-next">Next is unavailable: locked until “Give useful feedback” is complete.</p></div><figcaption>Keep an unavailable control focusable with <code>aria-disabled</code> and a reason it describes (SCORM mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" disabled>Next</button></div><figcaption>Remove the only way forward from the Tab order with no explanation.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn" type="button" data-state="focus">Previous</button></div><figcaption>One ring everywhere: 3px amber, 2px offset.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn" type="button" style="outline: 2px solid var(--color-accent); outline-offset: 0;">Previous</button></div><figcaption>A thinner, brand-coloured ring with no gap (the field and media rings in the mocks were 2px); it disappears against primary buttons.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Testing procedure</a></h2>
+      <h3>Automated, on every change</h3>
+      <ul>
+        <li>Playwright acceptance tests in Chromium only, using page objects that own every selector. They cover keyboard operation, focus movement, names and states, announcements, 320px reflow, 200% text, text spacing, forced colours and reduced motion (emulated).</li>
+        <li>axe checks scoped to the component, in both themes and every state. Zero violations is necessary, not sufficient.</li>
+        <li>Contrast: every pair in <code>tokens/contrast-pairs.json</code>, both themes.</li>
+      </ul>
+      <h3>Manual, before release</h3>
+      <ol>
+        <li>Tab through every state of the component with no mouse. Every action must be reachable, the ring always visible, and focus never lost.</li>
+        <li>Run each screen reader row above, one screen reader at a time, and listen: names, roles, states, descriptions and live announcements must be correct and timely. Capture transcripts where possible (NVDA Speech Viewer).</li>
+        <li>Check widths, actual 200% and 400% browser zoom, 200% text and text-spacing overrides (see <a href="responsive.html#testing">responsive</a>).</li>
+        <li>Turn on a Windows contrast theme and the platform's reduced-motion setting; confirm focus, selected, active and disabled states stay distinguishable.</li>
+        <li>On iOS and Android, check reading order, touch targets and the real on-screen keyboard.</li>
+        <li>Record each row as passed, failed (with a defect) or "Not run" with the reason. Emulation is labelled as emulation.</li>
+      </ol>
+      <p>Step-by-step instructions, scenario URLs and the override scripts are in the <a href="../../verification/manual-screen-reader-verification.md">manual screen reader verification guide</a>.</p>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use</th></tr></thead>
+        <tbody>
+          <tr><td><code>--target-min</code></td><td data-token="--target-min"></td><td>Smallest allowed target (WCAG 2.5.8)</td></tr>
+          <tr><td><code>--target-comfortable</code></td><td data-token="--target-comfortable"></td><td>Default target</td></tr>
+          <tr><td><code>--focus-ring-width</code></td><td data-token="--focus-ring-width"></td><td>Focus outline thickness</td></tr>
+          <tr><td><code>--focus-ring-offset</code></td><td data-token="--focus-ring-offset"></td><td>Focus outline gap</td></tr>
+          <tr><td><code>--control-height-sm</code></td><td data-token="--control-height-sm"></td><td>Small controls</td></tr>
+          <tr><td><code>--control-height-md</code></td><td data-token="--control-height-md"></td><td>Default controls</td></tr>
+          <tr><td><code>--control-height-lg</code></td><td data-token="--control-height-lg"></td><td>Hero actions</td></tr>
+        </tbody>
+      </table></div>
+      <p>The focus ring colours (<code>--color-focus-ring</code>, <code>--color-focus-ring-offset</code>, <code>--color-media-focus-ring</code>) are on <a href="color.html">colour</a>; <code>--shadow-focus</code> is on <a href="elevation.html">elevation</a>.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><code>AGENTS.md</code>: screen reader list, keyboard-only operation, WCAG 2.2 AA, an accessibility test with every change, responsive requirements.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: <code>aria-disabled</code> with reasons, focus management when regions close, joined announcements.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: field-level focus ring, one live region, 40px field raised to 44px.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: scoped shortcuts, <code>aria-pressed</code> toggles, polite live region and <code>role="alert"</code> errors.</li>
+        <li>Drift fixed: focus outlines were 3px with a 3px offset on pages and 2px on fields and media controls; unified on 3px with a 2px offset.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

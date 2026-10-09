@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Switch — Tessera design system</title>
+<meta name="description" content="Switches turn a single setting on or off immediately. Label before or after, with description; on, off, focus and disabled in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Switch</h1>
+      <p class="ds-lead">A switch turns one setting on or off and the change takes effect at once: email reminders, the transcript panel, quiz retakes.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>&lt;input type="checkbox" role="switch"&gt;</code></span><span class="ds-pill ds-pill--warn">Derived</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a switch for a setting that is either on or off and applies immediately, without a Save button: a preferences page, a course settings panel. Confirm the change with the switch's own state, and with a status message if it affects other people.</p>
+      <ul>
+        <li><b>Part of a form that is submitted later</b>: use a <a href="checkbox.html">checkbox</a>. A switch that waits for Save misleads.</li>
+        <li><b>A choice between two named options</b> ("In person" / "Online"): use a <a href="radio-group.html">radio group</a>.</li>
+        <li><b>A toggle inside a toolbar or control bar</b>: use a pressed <a href="button.html">button</a> (<code>aria-pressed</code>). The <a href="video-player.html">video player</a>'s Captions control is a pressed button, not a switch, because it sits in a toolbar-like group of buttons (Play, Mute, Captions, Fullscreen) where every control is a button and has a one-key shortcut; a switch there would break the group's consistent model.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <label class="switch"><input type="checkbox" role="switch" checked><span class="check__text">Email reminders<span class="check__description">Remind learners 3 days before the due date.</span></span><span class="switch__state" aria-hidden="true">On</span></label>
+          <span class="ds-callout" style="left: 8%; top: 22%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 14%; top: 66%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 40%; top: 22%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 50%; top: 66%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 90%; top: 22%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Track</b><small>44 × 24px, <code>--radius-full</code>, 2px <code>--color-border-strong</code> edge; fills with <code>--color-accent</code> when on.</small></div></li>
+          <li><div><b>Thumb</b><small>16px circle; <code>--color-border-strong</code> at the start when off, <code>--color-fg-on-accent</code> at the end when on. Position is the non-colour cue.</small></div></li>
+          <li><div><b>Label</b><small>Body 16px; names the setting. The wrapping <code>&lt;label class="switch"&gt;</code> makes the whole 44px row the target.</small></div></li>
+          <li><div><b>Description (optional)</b><small><code>.check__description</code> under the label, 14px muted.</small></div></li>
+          <li><div><b>State text (optional)</b><small><code>.switch__state</code> "On" / "Off", 14px muted, <code>aria-hidden</code> because the switch already reports its state.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Label after the switch (default)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <label class="switch"><input type="checkbox" role="switch" checked><span>Email reminders</span></label>
+          <label class="switch"><input type="checkbox" role="switch"><span>Allow quiz retakes</span></label>
+        </div>
+        <div class="ds-example__caption"><span>For short lists of settings in a form column. The control lines up at the start edge.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;label class="switch"&gt;
+  &lt;input type="checkbox" role="switch" checked&gt;
+  &lt;span&gt;Email reminders&lt;/span&gt;
+&lt;/label&gt;</code></pre></details>
+      </div>
+      <h3>Label before the switch</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <label class="switch switch--end"><input type="checkbox" role="switch" checked><span>Show transcript beside the video</span></label>
+          <label class="switch switch--end"><input type="checkbox" role="switch"><span>Autoplay the next lesson</span></label>
+        </div>
+        <div class="ds-example__caption"><span>For settings lists and panels: labels at the start, switches aligned at the end edge so their states read as a column.</span><span><code>.switch--end</code></span></div>
+      </div>
+      <h3>With description and state text</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <label class="switch switch--end"><input type="checkbox" role="switch" checked aria-describedby="v-desc-1"><span class="check__text">Email reminders<span class="check__description" id="v-desc-1">Remind learners 3 days before the due date.</span></span></label>
+          <label class="switch"><input type="checkbox" role="switch"><span>Allow quiz retakes</span><span class="switch__state" aria-hidden="true">Off</span></label>
+        </div>
+        <div class="ds-example__caption"><span>The description explains the effect. Visible "On" / "Off" helps people who do not read the track position; it is hidden from assistive technology to avoid double announcements.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The 44 × 24px track sits in a 44px row (--control-height-md); a smaller track would make the thumb position hard to read and a larger one adds nothing."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. The 44 × 24px track sits in a 44px row (--control-height-md); a smaller track would make the thumb position hard to read and a larger one adds nothing.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Focus is forced with <code>data-state="focus"</code>. The switch has no separate hover or pressed paint: the whole row shows a pointer cursor and the thumb moves on release, so the hover and active columns match the default.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Off</th>
+            <td><label class="switch"><input type="checkbox" role="switch"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" data-state="hover"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" data-state="focus"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" data-state="active"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" disabled><span>Reminders</span></label></td></tr>
+          <tr><th scope="row">On</th>
+            <td><label class="switch"><input type="checkbox" role="switch" checked><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" checked data-state="hover"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" checked data-state="focus"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" checked data-state="active"><span>Reminders</span></label></td>
+            <td><label class="switch"><input type="checkbox" role="switch" checked disabled><span>Reminders</span></label></td></tr>
+          <tr><th scope="row">Label before</th>
+            <td><label class="switch switch--end" style="width: 10rem;"><input type="checkbox" role="switch" checked><span>Transcript</span></label></td>
+            <td><label class="switch switch--end" style="width: 10rem;"><input type="checkbox" role="switch" checked data-state="hover"><span>Transcript</span></label></td>
+            <td><label class="switch switch--end" style="width: 10rem;"><input type="checkbox" role="switch" checked data-state="focus"><span>Transcript</span></label></td>
+            <td><label class="switch switch--end" style="width: 10rem;"><input type="checkbox" role="switch" checked data-state="active"><span>Transcript</span></label></td>
+            <td><label class="switch switch--end" style="width: 10rem;"><input type="checkbox" role="switch" checked disabled><span>Transcript</span></label></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Disabled with a reason</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack" style="max-width: 32rem;">
+          <label class="switch switch--end"><input type="checkbox" role="switch" disabled aria-describedby="s-why"><span class="check__text">Allow quiz retakes<span class="check__description" id="s-why">This course has no quiz.</span></span></label>
+        </div>
+        <div class="ds-example__caption"><span>Disabled: dashed track edge, readable <code>--color-fg-disabled</code> label. Always say why.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack" style="--stack-gap: 0;"><label class="switch switch--end"><input type="checkbox" role="switch" checked><span>Email reminders</span></label><label class="switch switch--end"><input type="checkbox" role="switch"><span>Allow quiz retakes</span></label><label class="switch switch--end"><input type="checkbox" role="switch" checked data-state="focus"><span>Show transcript</span></label><label class="switch switch--end"><input type="checkbox" role="switch" disabled><span>Autoplay next lesson</span></label></div></div>
+        <div data-theme="dark"><div class="stack" style="--stack-gap: 0;"><label class="switch switch--end"><input type="checkbox" role="switch" checked><span>Email reminders</span></label><label class="switch switch--end"><input type="checkbox" role="switch"><span>Allow quiz retakes</span></label><label class="switch switch--end"><input type="checkbox" role="switch" checked data-state="focus"><span>Show transcript</span></label><label class="switch switch--end"><input type="checkbox" role="switch" disabled><span>Autoplay next lesson</span></label></div></div>
+      </div>
+      <ul>
+        <li><b>On</b>: accent track, light thumb at the end. <b>Off</b>: surface track, strong-border thumb at the start. Position, not colour, carries the state.</li>
+        <li><b>Busy</b>: when a change must reach a server, apply it optimistically and announce "Reminders turned on." in a status region; if it fails, flip it back and show an <a href="inline-message.html">inline message</a>. Never leave a switch in a half state.</li>
+        <li><b>Invalid</b> does not apply: a switch always holds a valid value. If one position is required, it is not a setting; use a checkbox in a form.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The row is at least 44px tall at every width. Labels wrap beside the track; the track never shrinks (<code>flex: none</code>).</li>
+        <li><code>.switch--end</code> rows stretch to their container, so in a narrow panel the switch stays at the end edge and a long label wraps over several lines. Give such rows the full column width so the switches align.</li>
+        <li>At 200% text or with text-spacing overrides the label grows and wraps; the track keeps its size and stays vertically centred on the row.</li>
+        <li>Right-to-left: <code>.switch--end</code> mirrors with the row. The thumb is positioned from the physical left, so in RTL "on" still sits on the right; mirror the thumb before shipping an RTL settings page.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The switch declares two component tokens on its input: <code>--switch-track</code> (<code>--color-bg-surface</code> off, <code>--color-accent</code> on) and <code>--switch-thumb</code> (<code>--color-border-strong</code> off, <code>--color-fg-on-accent</code> on). The edge reads <code>--color-border-strong</code>, then <code>--color-accent</code> when on. In the dark theme the on track is teal-300 with a sage-900 thumb.</p>
+      <pre><code>/* Re-skin the on state inside a host area */
+.learner-portal .switch input:checked { --switch-track: var(--color-success-solid); border-color: var(--color-success-solid); }</code></pre>
+      <p>In forced-colours mode the custom track is replaced by system colours; the thumb position still shows the state. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>A native checkbox with <code>role="switch"</code>, styled with <code>appearance: none</code>, following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/switch/">WAI-ARIA APG Switch pattern</a>. Screen readers announce "Email reminders, switch, on". The checked state comes from the native <code>checked</code> property, so no <code>aria-checked</code> is needed.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves focus to and from the switch. Each switch is its own Tab stop.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Toggles on and off.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Does not toggle (native checkbox behaviour; the APG makes Enter optional). Do not add Enter handling, so the switch behaves like every other native checkbox.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared 3px amber ring with 2px offset surrounds the track on <code>:focus-visible</code>. Focus stays on the switch after toggling.</p>
+      <h3>Labelling</h3>
+      <p>The wrapping label names the setting, not the action: "Email reminders", not "Turn on email reminders", because the state is announced separately. Descriptions are linked with <code>aria-describedby</code>. Visible "On" / "Off" text is <code>aria-hidden</code>. When a change affects other people (all learners in a course), confirm it in a polite status region.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>State text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Off track edge and thumb on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>On track on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>On thumb on track</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="3"></span></div>
+        <div class="ds-pair"><span>Disabled label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The thumb slides and the track colour changes over <code>--duration-fast</code> (150 ms). Under <code>prefers-reduced-motion</code> the duration is zeroed and the thumb jumps.</p>
+      <h3>Touch</h3>
+      <p>The whole 44px label row is the target. Stacked switches have no gap but each row is 44px; tapping anywhere on a row toggles only that switch. There is no drag gesture to learn: a tap toggles.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Name the setting as a noun phrase in sentence case: "Email reminders", "Quiz retakes", "Transcript beside the video".</li>
+        <li>Make "on" mean the feature is active. Avoid negatives such as "Disable reminders"; an on switch that turns something off confuses everyone.</li>
+        <li>Use the description for the effect and its scope: "Remind learners 3 days before the due date."</li>
+        <li>State text is "On" / "Off" only; never "Yes" / "No" or "Enabled" / "Disabled".</li>
+        <li>Disabled switches say why: "This course has no quiz."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><label class="switch"><input type="checkbox" role="switch" checked><span>Email reminders</span></label></div><figcaption>Name the setting; let the switch say on or off.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><label class="switch"><input type="checkbox" role="switch"><span>Disable email reminders</span></label></div><figcaption>Name an action or a negative: "on" now means reminders are off.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><label class="check"><input type="checkbox" checked><span class="check__text">Send reminders before the due date</span></label><div class="form__actions" style="width: 100%;"><button class="btn btn--primary" type="button">Save assignment</button></div></div><figcaption>Use a checkbox for a choice that is saved with a form.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><label class="switch"><input type="checkbox" role="switch" checked><span>Send reminders</span></label><div class="form__actions" style="width: 100%;"><button class="btn btn--primary" type="button">Save assignment</button></div></div><figcaption>Put a switch in a form that waits for Save; people assume it already applied.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--inverse"><div class="btn-group"><button class="btn" type="button" aria-pressed="true">Captions</button><button class="btn" type="button" aria-pressed="false">Fullscreen</button></div></div><figcaption>Use pressed buttons for toggles inside a control bar, as the video player does for Captions.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--inverse"><div class="btn-group"><label class="switch"><input type="checkbox" role="switch" checked><span>Captions</span></label><button class="btn" type="button" aria-pressed="false">Fullscreen</button></div></div><figcaption>Mix a switch into a group of buttons; the group loses its single interaction model.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Off track (<code>--switch-track</code>)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Off thumb and edge (<code>--switch-thumb</code>)</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>On track and edge</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>On thumb</td><td><code>--color-fg-on-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td></tr>
+          <tr><td>State text, description</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Disabled label</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Track edge</td><td><code>--border-width-thick</code></td><td colspan="2"><span data-token="--border-width-thick"></span></td></tr>
+          <tr><td>Track and thumb radius</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+          <tr><td>Row height / track-to-label gap</td><td><code>--control-height-md</code> / <code>--space-3</code></td><td colspan="2"><span data-token="--control-height-md"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Thumb transition</td><td><code>--duration-fast</code>, <code>--ease-standard</code></td><td colspan="2"><span data-token="--duration-fast"></span> <span data-token="--ease-standard"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;label class="switch switch--end"&gt;
+  &lt;input type="checkbox" role="switch" name="reminders" checked aria-describedby="reminders-desc"&gt;
+  &lt;span class="check__text"&gt;Email reminders
+    &lt;span class="check__description" id="reminders-desc"&gt;Remind learners 3 days before the due date.&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/label&gt;
+
+&lt;label class="switch"&gt;
+  &lt;input type="checkbox" role="switch"&gt;&lt;span&gt;Allow quiz retakes&lt;/span&gt;
+  &lt;span class="switch__state" aria-hidden="true"&gt;Off&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.switch</code></td><td>44px label row; styles the inner checkbox as a track and thumb.</td></tr>
+        <tr><td><code>.switch--end</code></td><td>Label first, switch at the end edge; the row fills its container.</td></tr>
+        <tr><td><code>role="switch"</code></td><td>Required on the checkbox so it is announced as a switch with on/off.</td></tr>
+        <tr><td><code>checked</code></td><td>On.</td></tr>
+        <tr><td><code>disabled</code></td><td>Dashed track edge, readable disabled label, not focusable.</td></tr>
+        <tr><td><code>.switch__state</code></td><td>Optional visible "On" / "Off"; keep it <code>aria-hidden</code> and update it with the state.</td></tr>
+        <tr><td><code>.check__text</code>, <code>.check__description</code></td><td>Label with a description line (reused from checkbox).</td></tr>
+        <tr><td><code>data-state="focus"</code></td><td>Documentation only: forces the focus ring.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. The closest mock control is the <a href="../../mocks/video-player/index.html">video-player</a> Captions toggle, which is deliberately a pressed button (<code>aria-pressed</code>, the <kbd>C</kbd> shortcut, "Captions on." / "Captions off." announcements) inside the "Player controls" group; see <a href="button.html">button</a>. The 44px row, accent fill and dashed disabled edge follow the <a href="../../mocks/combobox/index.html">combobox</a> and <a href="../../mocks/scorm-player/index.html">scorm-player</a> control rules.</p>
+      <p>Drift fixed during extraction: none specific to switches. The system-wide rules apply: one 3px focus ring with a 2px offset, disabled shown by readable text and a dashed edge rather than fading, motion from <code>--duration-fast</code>.</p>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

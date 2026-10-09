@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button group — Tessera design system</title>
+<meta name="description" content="Button groups gather related buttons: a segmented control for one choice among a few, and a toolbar of actions on one object. Two sizes, every state, both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Actions</p>
+      <h1>Button group</h1>
+      <p class="ds-lead">A button group keeps related buttons together and names them as a set. The segmented form picks one view or option among two to five ("List" or "Grid"); the toolbar form holds the actions an administrator takes on one thing, such as the learners selected in a course.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>role="group"</code> / <code>role="toolbar"</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a button group when several buttons act on the same thing and read better as one unit than as loose buttons. The group gets one accessible name ("Outline filter", "Learner actions"), so a screen reader user hears what the set is for before they hear each button.</p>
+      <ul>
+        <li><b>Segmented</b> (<code>.btn-group--segmented</code>): two to five mutually exclusive options that apply immediately, such as the outline filter "All lessons / Incomplete" or the results view "List / Grid". Exactly one segment is pressed at all times (<code>aria-pressed="true"</code>).</li>
+        <li><b>Toolbar</b> (<code>.btn-group</code> with <code>role="toolbar"</code>): a row of actions on one object, such as "Assign", "Message" and "Export" above a learner table. Arrow keys move between the buttons and the whole toolbar is one Tab stop.</li>
+        <li><b>Action group</b> (<code>.btn-group</code> with <code>role="group"</code>): loose related buttons that keep their own Tab stops, such as the media controls. Use this, not a toolbar, when arrow keys already mean something else, as in the <a href="video-player.html">video player</a>, where arrows change the volume.</li>
+      </ul>
+      <p>Do not use a segmented group to switch between panels of content; that is <a href="tabs.html">tabs</a>. Do not use it for a value submitted with a form; that is a <a href="radio-group.html">radio group</a>. More than five options, or options with long labels, belong in a <a href="select.html">select</a>. A single on/off setting is one toggle <a href="button.html">button</a> or a <a href="switch.html">switch</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter (anatomy)">
+            <button class="btn" type="button" aria-pressed="true">All lessons</button>
+            <button class="btn" type="button" aria-pressed="false">Incomplete</button>
+            <button class="btn" type="button" aria-pressed="false">Complete</button>
+          </div>
+          <span class="ds-callout" style="left: 25%; top: 40%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 26%; top: 70%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 50%; top: 18%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 64%; top: 70%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Group</b><small><code>.btn-group</code> with <code>role="group"</code> (or <code>toolbar</code>) and an <code>aria-label</code> that names the set. No visual frame of its own.</small></div></li>
+          <li><div><b>Pressed segment</b><small><code>aria-pressed="true"</code>: <code>--color-accent-subtle</code> fill, <code>--color-accent</code> edge, <code>--color-fg-accent</code> label. Raised above its neighbours so its whole edge shows.</small></div></li>
+          <li><div><b>Shared edge</b><small>Neighbouring segments overlap by one hairline (<code>-1px</code> margin) so the group reads as one control with a single 1px divider.</small></div></li>
+          <li><div><b>Segment</b><small>A normal <code>.btn</code>: 44px tall, <code>--text-label</code>, square inner corners; only the outer corners take <code>--radius-md</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Segmented (single select)</h3>
+      <p>The pressed segment is the current choice. Choosing another segment presses it and releases the previous one; pressing the current segment again does nothing, so there is never zero or two choices.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter">
+            <button class="btn" type="button" aria-pressed="true">All lessons</button>
+            <button class="btn" type="button" aria-pressed="false">Incomplete</button>
+            <button class="btn" type="button" aria-pressed="false">Complete</button>
+          </div>
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Results view">
+            <button class="btn btn--icon" type="button" aria-pressed="true" aria-label="List view"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+            <button class="btn btn--icon" type="button" aria-pressed="false" aria-label="Grid view"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Text segments, and icon-only segments that carry <code>aria-label</code> and a <a href="tooltip.html">tooltip</a>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter"&gt;
+  &lt;button class="btn" type="button" aria-pressed="true"&gt;All lessons&lt;/button&gt;
+  &lt;button class="btn" type="button" aria-pressed="false"&gt;Incomplete&lt;/button&gt;
+  &lt;button class="btn" type="button" aria-pressed="false"&gt;Complete&lt;/button&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Toolbar</h3>
+      <p>Actions on one object, spaced 8px apart. The toolbar is a single Tab stop; Left and Right arrows move between its buttons (roving <code>tabindex</code>). A <a href="divider.html">vertical divider</a> may separate clusters; the last item can be a "More actions" <a href="menu.html">menu</a> button.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="btn-group" role="toolbar" aria-label="Actions for 3 selected learners">
+            <button class="btn" type="button" tabindex="0"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M15 19a6 6 0 0 0-12 0M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M19 8v6M16 11h6"/></svg>Assign</button>
+            <button class="btn" type="button" tabindex="-1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg>Message</button>
+            <button class="btn" type="button" tabindex="-1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Export</button>
+            <hr class="divider divider--vertical" aria-orientation="vertical">
+            <button class="btn btn--icon" type="button" tabindex="-1" aria-label="More actions" aria-haspopup="menu" aria-expanded="false"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 6h.01M12 12h.01M12 18h.01"/></svg></button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>One Tab stop; only the current button has <code>tabindex="0"</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="btn-group" role="toolbar" aria-label="Actions for 3 selected learners"&gt;
+  &lt;button class="btn" type="button" tabindex="0"&gt;…Assign&lt;/button&gt;
+  &lt;button class="btn" type="button" tabindex="-1"&gt;…Message&lt;/button&gt;
+  &lt;button class="btn" type="button" tabindex="-1"&gt;…Export&lt;/button&gt;
+  &lt;hr class="divider divider--vertical" aria-orientation="vertical"&gt;
+  &lt;button class="btn btn--icon" type="button" tabindex="-1" aria-label="More actions"
+          aria-haspopup="menu" aria-expanded="false"&gt;…&lt;/button&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Action group</h3>
+      <p>Related buttons that each keep their own Tab stop. Toggle buttons inside it use <code>aria-pressed</code> independently (any number can be on), as the video player's Mute, Captions and Fullscreen do.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="btn-group" role="group" aria-label="Session options">
+            <button class="btn" type="button" aria-pressed="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18v12H3zM7 10h4M7 14h4M13 10h4M13 14h4"/></svg>Captions</button>
+            <button class="btn" type="button" aria-pressed="false">Mute</button>
+            <button class="btn" type="button">Reset</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Independent toggles: each button's pressed state is its own.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>The group has no size of its own; it takes the size of its buttons. Use medium (44px) by default. Small (32px) is for dense surfaces where the row around it is also a target, such as a card header or a table toolbar on a wide screen. Never mix sizes in one group.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Results view, small">
+            <button class="btn btn--sm" type="button" aria-pressed="true">List</button>
+            <button class="btn btn--sm" type="button" aria-pressed="false">Grid</button>
+          </div>
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Results view, medium">
+            <button class="btn" type="button" aria-pressed="true">List</button>
+            <button class="btn" type="button" aria-pressed="false">Grid</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>sm: <code>.btn--sm</code> on every segment (32px, <code>--space-3</code> padding). md: default (44px, <code>--space-4</code>).</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Each button in a group has the button states. Pointer and focus states are forced here with <code>data-state</code>; products get them from <code>:hover</code>, <code>:focus-visible</code>, <code>:active</code> and <code>disabled</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Loading</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Segment, not pressed</th><td><button class="btn" type="button" aria-pressed="false">Incomplete</button></td><td><button class="btn" type="button" aria-pressed="false" data-state="hover">Incomplete</button></td><td><button class="btn" type="button" aria-pressed="false" data-state="focus">Incomplete</button></td><td><button class="btn" type="button" aria-pressed="false" data-state="active">Incomplete</button></td><td><button class="btn" type="button" aria-pressed="false" disabled>Incomplete</button></td><td><button class="btn" type="button" aria-pressed="false" aria-busy="true"><span>Incomplete</span></button></td></tr>
+          <tr><th scope="row">Segment, pressed</th><td><button class="btn" type="button" aria-pressed="true">All lessons</button></td><td><button class="btn" type="button" aria-pressed="true" data-state="hover">All lessons</button></td><td><button class="btn" type="button" aria-pressed="true" data-state="focus">All lessons</button></td><td><button class="btn" type="button" aria-pressed="true" data-state="active">All lessons</button></td><td><button class="btn" type="button" aria-pressed="true" disabled>All lessons</button></td><td><button class="btn" type="button" aria-pressed="true" aria-busy="true"><span>All lessons</span></button></td></tr>
+          <tr><th scope="row">Toolbar action</th><td><button class="btn" type="button">Export</button></td><td><button class="btn" type="button" data-state="hover">Export</button></td><td><button class="btn" type="button" data-state="focus">Export</button></td><td><button class="btn" type="button" data-state="active">Export</button></td><td><button class="btn" type="button" disabled>Export</button></td><td><button class="btn" type="button" aria-busy="true"><span>Export</span></button></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Whole group</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, focus on a segment">
+            <button class="btn" type="button" aria-pressed="true">All lessons</button>
+            <button class="btn" type="button" aria-pressed="false" data-state="focus" style="position: relative; z-index: var(--z-raised);">Incomplete</button>
+            <button class="btn" type="button" aria-pressed="false">Complete</button>
+          </div>
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, one segment unavailable">
+            <button class="btn" type="button" aria-pressed="true">All lessons</button>
+            <button class="btn" type="button" aria-pressed="false">Incomplete</button>
+            <button class="btn" type="button" aria-pressed="false" aria-disabled="true" aria-describedby="bg-why">Complete</button>
+          </div>
+          <p class="field__hint" id="bg-why">No lessons are complete yet.</p>
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, group disabled">
+            <button class="btn" type="button" aria-pressed="true" disabled>All lessons</button>
+            <button class="btn" type="button" aria-pressed="false" disabled>Incomplete</button>
+            <button class="btn" type="button" aria-pressed="false" disabled>Complete</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Focus ring sits above the neighbours; an unavailable segment stays focusable with a reason; a disabled group keeps the pressed segment visible.</span></div>
+      </div>
+      <ul>
+        <li><b>Pressed</b>: fill, edge and label colour all change, and <code>aria-pressed</code> is announced ("List view, toggle button, pressed"). Pressed is never shown by colour alone: the fill change is backed by the accent edge.</li>
+        <li><b>Loading</b>: when choosing a segment fetches data (switching to "Incomplete" reloads the outline), the chosen segment is pressed at once and shows <code>aria-busy="true"</code> until the content arrives; the result is announced by the content's live region.</li>
+        <li><b>Disabled</b>: dashed edge, readable label. Prefer <code>aria-disabled="true"</code> with a reason for a single unavailable option so it can still be found.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, light theme"><button class="btn" type="button" aria-pressed="true">All lessons</button><button class="btn" type="button" aria-pressed="false">Incomplete</button><button class="btn" type="button" aria-pressed="false" disabled>Complete</button></div>
+          <div class="btn-group" role="toolbar" aria-label="Learner actions, light theme"><button class="btn" type="button" tabindex="0">Assign</button><button class="btn" type="button" tabindex="-1">Message</button><button class="btn" type="button" tabindex="-1">Export</button></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, dark theme"><button class="btn" type="button" aria-pressed="true">All lessons</button><button class="btn" type="button" aria-pressed="false">Incomplete</button><button class="btn" type="button" aria-pressed="false" disabled>Complete</button></div>
+          <div class="btn-group" role="toolbar" aria-label="Learner actions, dark theme"><button class="btn" type="button" tabindex="0">Assign</button><button class="btn" type="button" tabindex="-1">Message</button><button class="btn" type="button" tabindex="-1">Export</button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Toolbar and action groups</b> wrap (<code>flex-wrap: wrap</code>, 8px row and column gap). Below <code>--layout-breakpoint-md</code> (768px), move everything after the first two actions into the "More actions" menu so the row stays one line.</li>
+        <li><b>Segmented groups</b> do not wrap gracefully: a wrapped segment loses its joined edge. Keep labels to one or two words so the group fits at 320px with 200% text. On phones the group may span the full width with equal segments; if it still does not fit, use a <a href="select.html">select</a>.</li>
+        <li>Labels never truncate. With WCAG text spacing applied the segments grow taller; they never clip.</li>
+        <li>Medium segments meet the 44px touch target; small segments (32px) exceed the 24px minimum and sit only in rows that are also targets.</li>
+      </ul>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="max-width: 20rem;">
+          <div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, full width" style="display: flex; width: 100%;">
+            <button class="btn" type="button" aria-pressed="true" style="flex: 1 1 0;">All</button>
+            <button class="btn" type="button" aria-pressed="false" style="flex: 1 1 0;">Incomplete</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Full-width segmented group at 320px: equal segments, shortened labels.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The group adds no colour of its own. Its buttons read the <code>--btn-*</code> component tokens, and the pressed state overrides them with <code>--color-accent-subtle</code> (fill), <code>--color-accent-subtle-hover</code> (hover fill), <code>--color-accent</code> (edge) and <code>--color-fg-accent</code> (label). The joined corners use <code>--radius-md</code>; the overlap uses <code>--border-width-hairline</code>.</p>
+      <pre><code>/* A host re-skins pressed segments without touching .btn-group */
+.course-tools .btn-group--segmented .btn[aria-pressed="true"] {
+  --btn-bg: var(--color-accent);
+  --btn-fg: var(--color-fg-on-accent);
+}</code></pre>
+      <p>In the dark theme the pressed fill becomes <code>--palette-sage-800</code> and the edge and label lighten to <code>--palette-teal-300</code>, keeping the label above 4.5:1. In the shipped packages these map to <code>--t-colorBrandStroke1</code> (edge) and <code>--t-colorBrandForeground1</code> (label); see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Segmented and action groups are <code>role="group"</code> with <code>aria-label</code>, containing native buttons that follow the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/button/">WAI-ARIA APG Button pattern</a> (toggle buttons via <code>aria-pressed</code>). The toolbar follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/">APG Toolbar pattern</a>. The video player's control bar is deliberately a <code>group</code>, not a <code>toolbar</code>, because its arrow keys change the volume.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Segmented and action groups: moves through each button in order. Toolbar: enters at the last-focused button and leaves the toolbar in one step.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Activates the focused button. In a segmented group it presses that segment and releases the previous one.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Toolbar only: moves focus to the previous or next button, wrapping at the ends. Mirrored in right-to-left layouts.</td></tr>
+        <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Toolbar only: moves focus to the first or last button.</td></tr>
+        <tr><td><kbd>↓</kbd> on a menu button</td><td>Opens the "More actions" menu and focuses its first item.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared amber ring (3px, 2px offset) appears on <code>:focus-visible</code>. The focused segment is lifted to <code>--z-raised</code> so its ring is not hidden under a neighbour. Choosing a segment keeps focus on it; content that changes elsewhere is announced, focus is not moved.</p>
+      <h3>Labelling</h3>
+      <p>Every group has an <code>aria-label</code> naming the set ("Outline filter", "Actions for 3 selected learners"); a visible heading can be referenced with <code>aria-labelledby</code> instead. Icon-only segments need <code>aria-label</code> ("List view"). Do not repeat the group name in each button. A segmented button's label stays the same whether it is pressed or not; the state comes from <code>aria-pressed</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Pressed label on pressed fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Pressed edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Segment label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Segment edge on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on pressed fill</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Disabled label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Background, border and colour transition over <code>--duration-fast</code>; the active segment shifts 1px. Reduced motion zeroes the duration and removes the shift. The loading spinner keeps turning, slowed to 2 s per revolution.</p>
+      <h3>Touch</h3>
+      <p>Medium segments are 44px tall and at least 44px wide (icon segments are square). Neighbouring segments share an edge, so there is no dead gap between them; each still meets the 24px minimum on its own. Hover styles apply only under <code>(hover: hover)</code>.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Segment labels are short nouns or adjectives in sentence case: "List", "Grid", "All lessons", "Incomplete". One or two words.</li>
+        <li>Keep segment labels parallel: all nouns or all states, never "List" next to "Show as grid".</li>
+        <li>Toolbar labels are verbs: "Assign", "Message", "Export". Name the object in the group label, not in every button.</li>
+        <li>The group label says what is controlled: "Outline filter", "Results view", "Actions for Grace Hopper".</li>
+        <li>Order segments by logic (All, Incomplete, Complete) or frequency, and keep that order on every page.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="btn-group btn-group--segmented" role="group" aria-label="Results view, do example"><button class="btn" type="button" aria-pressed="true">List</button><button class="btn" type="button" aria-pressed="false">Grid</button></div></div><figcaption>Keep exactly one segment pressed; the group always shows the current view.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="btn-group btn-group--segmented" role="group" aria-label="Results view, don't example"><button class="btn" type="button" aria-pressed="false">List</button><button class="btn" type="button" aria-pressed="false">Grid</button></div></div><figcaption>Leave a segmented group with nothing pressed (or two pressed); use independent toggles in an action group for multi-select.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><label class="field__label" for="bg-dd-select">Theme</label><select class="select" id="bg-dd-select" style="max-width: 12rem;"><option>Light</option><option>Dark</option><option>System</option></select></div><figcaption>Use a select when options are many or settings-like, as the mocks' Preview and Theme selectors do.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="btn-group btn-group--segmented" role="group" aria-label="Preview scenario, don't example"><button class="btn btn--sm" type="button" aria-pressed="true">Results</button><button class="btn btn--sm" type="button" aria-pressed="false">Slow loading</button><button class="btn btn--sm" type="button" aria-pressed="false">No results</button><button class="btn btn--sm" type="button" aria-pressed="false">Search error</button><button class="btn btn--sm" type="button" aria-pressed="false">Disabled</button><button class="btn btn--sm" type="button" aria-pressed="false">Invalid</button></div></div><figcaption>Squeeze six or more options into segments; the group wraps at 320px and loses its joined edge.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, pressed do example"><button class="btn" type="button" aria-pressed="true">All lessons</button><button class="btn" type="button" aria-pressed="false">Incomplete</button></div></div><figcaption>Show pressed with fill, edge and label colour, backed by <code>aria-pressed</code>.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="btn-group btn-group--segmented" role="group" aria-label="Outline filter, colour-only don't example"><button class="btn" type="button" style="--btn-fg: var(--color-fg-accent);">All lessons</button><button class="btn" type="button">Incomplete</button></div></div><figcaption>Signal the choice by label colour alone, with no <code>aria-pressed</code>; it fails 1.4.1 and is silent to screen readers.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Pressed fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Pressed fill, hover</td><td><code>--color-accent-subtle-hover</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle-hover" data-swatch></i><span data-token="--color-accent-subtle-hover"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle-hover" data-swatch></i><span data-token="--color-accent-subtle-hover"></span></span></td></tr>
+          <tr><td>Pressed edge</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Pressed label</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+          <tr><td>Segment fill</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Segment hover fill</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Segment edge</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Segment label</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Disabled label</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Height sm / md</td><td><code>--control-height-sm/md</code></td><td colspan="2"><span data-token="--control-height-sm"></span> / <span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Toolbar gap</td><td><code>--space-2</code></td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+          <tr><td>Outer radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Shared edge overlap</td><td><code>--border-width-hairline</code></td><td colspan="2"><span data-token="--border-width-hairline"></span></td></tr>
+          <tr><td>Focused / pressed lift</td><td><code>--z-raised</code></td><td colspan="2"><span data-token="--z-raised"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Segmented: one choice, applies at once --&gt;
+&lt;div class="btn-group btn-group--segmented" role="group" aria-label="Results view"&gt;
+  &lt;button class="btn" type="button" aria-pressed="true"&gt;List&lt;/button&gt;
+  &lt;button class="btn" type="button" aria-pressed="false"&gt;Grid&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  group.addEventListener('click', (event) =&gt; {
+    const choice = event.target.closest('button[aria-pressed]');
+    if (!choice || choice.getAttribute('aria-pressed') === 'true') return;
+    group.querySelectorAll('[aria-pressed]').forEach((b) =&gt; b.setAttribute('aria-pressed', String(b === choice)));
+  });
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.btn-group</code></td><td>Inline flex row of buttons, 8px gap, wraps.</td></tr>
+        <tr><td><code>.btn-group--segmented</code></td><td>No gap; square inner corners; neighbours share one hairline edge; pressed and focused segments are lifted.</td></tr>
+        <tr><td><code>role="group"</code> + <code>aria-label</code></td><td>Names the set; each button keeps its Tab stop.</td></tr>
+        <tr><td><code>role="toolbar"</code> + roving <code>tabindex</code></td><td>One Tab stop; arrow keys move focus. Script required.</td></tr>
+        <tr><td><code>aria-pressed="true|false"</code></td><td>Pressed segment or toggle; accent fill, edge and label.</td></tr>
+        <tr><td><code>.btn--sm</code> on every button</td><td>Small group (32px).</td></tr>
+        <tr><td><code>aria-disabled="true"</code> / <code>disabled</code></td><td>One option unavailable (focusable, with a reason) / whole group off.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>No mock has a segmented control or toolbar; this component is derived from the nearest evidence and follows the system rules.</p>
+      <ul>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the control bar is <code>role="group"</code> named "Player controls" with Mute, Captions and Fullscreen as <code>aria-pressed</code> toggles; it is not a <code>toolbar</code> because arrow keys change the volume. That decision is the rule for choosing group versus toolbar.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the "Mock states" Preview chrome groups Preview and Theme selects, a Right-to-left checkbox and Reset in one labelled row; its Light / Dark / System choice is the model segmented use, and its twelve-option Preview list is the model for "too many, use a select".</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: Previous / Next action row and the button visuals segments inherit.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Mock chrome buttons used radius 7px (video) and 6px (combobox); segments use <code>--radius-md</code> (8px) on outer corners.</li>
+        <li>Button weight 750; normalised to 700 (<code>--font-weight-bold</code>).</li>
+        <li>Video mock-state controls used padding 0.45rem 0.7rem and gap 0.6rem; snapped to <code>--space-2</code> / <code>--space-4</code> and an 8px group gap.</li>
+        <li>Pressed states in the video mock were shown only by icon swap; the group adds a visible pressed fill and edge so state does not rely on the icon alone.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

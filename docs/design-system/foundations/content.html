@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content — Tessera design system</title>
+<meta name="description" content="Voice and tone, capitalisation, button verbs, numbers and times, error and empty-state formulas, live-region wording and a microcopy library for Tessera.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Foundation</p>
+      <h1>Content</h1>
+      <p class="ds-lead">Tessera's words appear in the middle of someone's learning: a lesson that will not load, a lecture that has dropped, a list of learners to assign. They should be plain, calm and about the learner, and they should sound the same in every component.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 3.3.1, 3.3.3, 4.1.3</span><span class="ds-pill">English (en) source strings</span><span class="ds-pill">No tokens owned</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#voice">Voice and tone</a></li><li><a href="#mechanics">Capitalisation and punctuation</a></li><li><a href="#actions">Button verbs</a></li><li><a href="#numbers">Numbers, dates and times</a></li><li><a href="#errors">Error messages</a></li><li><a href="#empty">Empty states</a></li><li><a href="#announcements">Announcements</a></li><li><a href="#library">Microcopy library</a></li><li><a href="#usage">Usage</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#tokens">Tokens</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Every built-in string in the shipped packages can be replaced for localisation (<code>VIDEO_PLAYER_I18N</code>, the combobox strings). These rules apply to the English defaults and to any host that writes its own.</p>
+      <ul>
+        <li><b>Say what happened, then what to do.</b></li>
+        <li><b>Use the learner's words:</b> course, lesson, activity, learner, session. Not SCO, manifest, HLS or payload.</li>
+        <li><b>Short, but complete.</b> A message a screen reader user hears once must make sense on its own.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="voice"><h2><a href="#voice">Voice and tone</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Trait</th><th scope="col">Means</th><th scope="col">Write</th><th scope="col">Not</th></tr></thead>
+        <tbody>
+          <tr><td>Plain</td><td>Everyday words, short sentences, active voice. Readable at around a 9th-grade level.</td><td>"The video source stopped unexpectedly."</td><td>"Media pipeline encountered a fatal decode exception."</td></tr>
+          <tr><td>Calm</td><td>No alarm, blame or exclamation marks. Reassure when work is safe.</td><td>"Your latest progress is kept on this page. Try saving again."</td><td>"Error! Save failed!!"</td></tr>
+          <tr><td>Learner-first</td><td>Talk to the person ("you", "your"), about their task, not about the system.</td><td>"You don't have access to this stream. Sign in again or ask the organiser."</td><td>"401 Unauthorized."</td></tr>
+          <tr><td>Honest</td><td>Say what is known. Do not promise what the component cannot guarantee.</td><td>"Completion: Unknown"</td><td>"Completed" before the course reports it</td></tr>
+        </tbody>
+      </table></div>
+      <p>Tone shifts with the moment, the voice does not. Routine status is brief ("Paused."); a problem is direct and gives a way out; success is quiet ("Progress saved.") and never celebratory inside a lesson.</p>
+    </section>
+
+    <section class="ds-section" id="mechanics"><h2><a href="#mechanics">Capitalisation and punctuation</a></h2>
+      <ul>
+        <li><b>Sentence case everywhere:</b> headings, buttons, labels, menu items, tabs. "Course outline", "Clear all selections", "Exit course". Capitalise only the first word and proper nouns ("Lecture hall A", "Ada Lovelace").</li>
+        <li><b>Uppercase is styling, not text.</b> The LIVE badge and eyebrows are written "Live" in markup and uppercased with <code>text-transform</code>, so screen readers do not spell them out. The video player's <code>liveBadge</code> string is the visible exception and is hidden from assistive technology.</li>
+        <li><b>Full stops</b> end sentences in messages, hints and announcements ("Buffering."). Labels, buttons, headings and list items have none.</li>
+        <li><b>Contractions are fine</b> and sound calmer: "couldn't", "don't", "can't". Use them consistently in one string set.</li>
+        <li><b>Ellipsis</b> (the single character "…") marks work in progress: "Connecting…", "Loading learners…", "Reconnecting… attempt 2 of 5". It never marks a button that opens a dialog.</li>
+        <li><b>Quotation marks</b> are curly and wrap names the learner typed or chose: No learners match “ad”.</li>
+        <li><b>No "please", no "sorry"</b> in routine messages; once, if the failure is ours and blocks the learner, "sorry" is acceptable.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="actions"><h2><a href="#actions">Button verbs</a></h2>
+      <p>A button label is a verb, or a verb and its object, in sentence case. It says what happens, not what the control is.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas"><button class="btn" type="button">Previous</button><button class="btn btn--primary" type="button">Continue</button><button class="btn" type="button">Exit course</button><button class="btn btn--ghost" type="button">Load more results</button><button class="btn btn--link" type="button">Clear all selections</button></div>
+        <div class="ds-example__caption"><span>One primary per view; labels stay under three words where possible.</span></div>
+      </div>
+      <ul>
+        <li><b>Name the object when context does not:</b> "Retry save", "Remove Ada Lovelace", "Clear all selections" rather than "Retry", "Remove", "Clear" when there could be doubt.</li>
+        <li><b>Keep the verb across a flow:</b> if the button says "Exit course", the confirmation title is "Exit course?" and the announcement is "Course exited."</li>
+        <li><b>Destructive labels name the loss:</b> "Exit without saving", "Remove 3 learners". Never "OK" or "Confirm".</li>
+        <li><b>Toggles keep one name</b> and expose state with <code>aria-pressed</code> ("Captions", "Mute"); the video Play/Pause button names the action it will take.</li>
+        <li><b>Banned:</b> "Click here", "Submit", "OK", "Yes"/"No" without context, "Learn more" with no object.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="numbers"><h2><a href="#numbers">Numbers, dates and times</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Kind</th><th scope="col">Visible</th><th scope="col">Spoken / announced</th><th scope="col">Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Counts</td><td>12 of 40 learners</td><td>"3 results available."</td><td>Numerals always, even below ten. Singular and plural are separate strings ("1 result available." / "{n} results available.").</td></tr>
+          <tr><td>Position</td><td>Activity 2 of 4</td><td>Same</td><td>"{n} of {total}", never "2/4".</td></tr>
+          <tr><td>Elapsed time (live)</td><td>00:12:00 (tabular figures)</td><td>Not announced; <code>aria-hidden</code> because it changes every second</td><td><code>hh:mm:ss</code> on the LIVE badge with <code>font-variant-numeric: tabular-nums</code> so it does not jitter.</td></tr>
+          <tr><td>Durations</td><td>Live for 48 minutes</td><td>"Stream ended. It was live for 2 minutes."</td><td>In words for anything announced: "less than a minute", "1 minute", "2 hours 1 minute". Clock format only for a running timer.</td></tr>
+          <tr><td>Latency</td><td>· 12 s behind</td><td>"Go to live, 12 seconds behind" (button name); "10 seconds behind live. Press Live to catch up." (once)</td><td>Abbreviate units only where space is tight and the full form is in the accessible name.</td></tr>
+          <tr><td>Percentages</td><td>60%</td><td>"Unmuted, volume 60%."</td><td>No space before %.</td></tr>
+          <tr><td>Times of day</td><td>10:30</td><td>Same</td><td>The learner's locale and time zone; 24-hour or 12-hour per locale. Never a server time zone.</td></tr>
+          <tr><td>Dates</td><td>9 October 2026</td><td>Same</td><td>Day, month name, year per locale; never "10/09/26", which reads differently across regions. Relative ("Today", "Yesterday") only within a week.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="errors"><h2><a href="#errors">Error messages</a></h2>
+      <p><b>Formula: what happened + how to fix it.</b> Add what is safe when the learner might worry about losing work. Give the fix as a button when the component can do it.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="alert alert--danger">
+            <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+            <div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button><button class="btn" type="button">Exit without saving</button></div>
+          </div>
+          <p class="message"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg><span>Couldn't load learners. Your selections are safe. <button class="btn btn--link" type="button">Retry</button></span></p>
+        </div>
+        <div class="ds-example__caption"><span>SCORM save failure (alert) and combobox load failure (status row). Shown statically; in product the alert text is announced by <code>role="alert"</code>.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">What happened</th><th scope="col">How to fix</th></tr></thead>
+        <tbody>
+          <tr><td>Combobox search failed</td><td>Couldn't load learners. Your selections are safe.</td><td>Retry</td></tr>
+          <tr><td>Required selection</td><td>Select at least one learner.</td><td>(the message is the fix)</td></tr>
+          <tr><td>Selection limit</td><td>Maximum of 5 selections reached.</td><td>Remove a selection to choose someone else.</td></tr>
+          <tr><td>SCORM save failed</td><td>Progress not saved.</td><td>Try saving again. · Retry save</td></tr>
+          <tr><td>Video: no access</td><td>You don't have access to this stream.</td><td>Sign in again or ask the organiser.</td></tr>
+          <tr><td>Video: connection</td><td>The connection was lost and couldn't be restored.</td><td>Retry</td></tr>
+          <tr><td>Video: unsupported</td><td>This browser can't play this stream (video/mp4).</td><td>None the player can offer, so no Retry; the host may suggest another browser.</td></tr>
+          <tr><td>Video: not found</td><td>This stream doesn't exist or is no longer available.</td><td>None; the host links back to the session.</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Never blame ("You entered an invalid…"), never show a raw code alone ("Error 403"). A reference code may follow the message for support.</li>
+        <li>Error titles are short noun phrases ("Progress not saved", "Connection lost"); the body is sentences.</li>
+        <li>Field errors sit next to the field, start with the fix, and do not repeat the label.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="empty"><h2><a href="#empty">Empty states</a></h2>
+      <p><b>Formula: what is empty + why (if useful) + the next step.</b> An empty state is a starting point, not an error.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"><svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span>
+            <h3 class="empty-state__title">No course loaded</h3>
+            <p class="empty-state__body">Loading was cancelled. Waiting for the LMS to supply a course.</p>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The SCORM player's idle state. No action, because the host decides what loads next.</span></div>
+      </div>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Title / status</th><th scope="col">Body or next step</th></tr></thead>
+        <tbody>
+          <tr><td>Combobox, no matches</td><td>No learners match “ad”.</td><td>Check the spelling or search by email.</td></tr>
+          <tr><td>Combobox, query too short</td><td>Type at least 2 characters to search.</td><td>(the message is the next step)</td></tr>
+          <tr><td>SCORM, nothing loaded</td><td>No course loaded</td><td>Waiting for the LMS to supply a course.</td></tr>
+          <tr><td>Video, stream ended</td><td>Stream ended</td><td>Live for 48 minutes.</td></tr>
+          <tr><td>Video, waiting</td><td>Waiting for the source…</td><td>(none; it recovers by itself)</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="announcements"><h2><a href="#announcements">Announcements</a></h2>
+      <p>Live-region messages are heard once, without the screen around them, often while the learner is doing something else. The combobox and video player each own one polite live region; errors use <code>role="alert"</code>.</p>
+      <h3>Rules</h3>
+      <ul>
+        <li><b>Complete sentences, ending in a full stop:</b> "Captions on.", "Back live.", "All selections cleared." The full stop gives screen readers a natural pause.</li>
+        <li><b>Result first, then detail:</b> "Ada Lovelace selected. 3 selected in total."</li>
+        <li><b>Announce changes, not states the learner caused and can see</b> unless the change is otherwise silent: toggles are announced ("Muted.") because the icon change is not.</li>
+        <li><b>Coalesce:</b> search messages within 150 ms collapse to the latest; selection and toggle messages queue in order and are never dropped. The SCORM player joins messages from one task into one announcement so a later one never overwrites an earlier one unread.</li>
+        <li><b>Wait before announcing slow work:</b> "Loading results." only after one second; "Buffering." only after one second of stall.</li>
+        <li><b>Never announce</b> every-second changes (the elapsed timer), decorative changes, or text that also receives focus (a dialog heading that takes focus is read anyway).</li>
+        <li><b>Errors go to <code>role="alert"</code></b> once, and a closed alert is cleared so it does not replay when the region reopens.</li>
+        <li><b>Polite by default.</b> Assertive only for errors that block the task.</li>
+      </ul>
+      <h3>Reference strings</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Component</th><th scope="col">Event</th><th scope="col">Announcement</th></tr></thead>
+        <tbody>
+          <tr><td>Combobox</td><td>Results arrived</td><td>"1 result available." / "{n} results available." / "No results found."</td></tr>
+          <tr><td>Combobox</td><td>Slow search (after 1 s)</td><td>"Loading results."</td></tr>
+          <tr><td>Combobox</td><td>Page appended</td><td>"{n} more results loaded."</td></tr>
+          <tr><td>Combobox</td><td>Selected</td><td>"{label} selected. {n} selected in total."</td></tr>
+          <tr><td>Combobox</td><td>Removed / cleared</td><td>"{label} removed." / "All selections cleared."</td></tr>
+          <tr><td>Combobox</td><td>Limit</td><td>"Maximum of {max} selections reached."</td></tr>
+          <tr><td>Video player</td><td>Connected</td><td>"Connecting to Lecture hall A." then "Live."</td></tr>
+          <tr><td>Video player</td><td>Toggles</td><td>"Paused." / "Muted." / "Unmuted, volume 60%." / "Captions on." / "Fullscreen." / "Exited fullscreen."</td></tr>
+          <tr><td>Video player</td><td>Resume or Go to live</td><td>"Back live."</td></tr>
+          <tr><td>Video player</td><td>Fell behind (once, at 10 s)</td><td>"10 seconds behind live. Press Live to catch up."</td></tr>
+          <tr><td>Video player</td><td>Connection</td><td>"Connection lost. Reconnecting." then "Reconnected. Live."</td></tr>
+          <tr><td>Video player</td><td>Ended</td><td>"Stream ended. It was live for 2 minutes."</td></tr>
+          <tr><td>SCORM player</td><td>Activity reported complete</td><td>"Ask better questions complete." (+ " Course complete." when it is)</td></tr>
+          <tr><td>SCORM player</td><td>Saved after a failure</td><td>"Progress saved."</td></tr>
+          <tr><td>SCORM player</td><td>Exit</td><td>"Course exited." / "Course exited without saving."</td></tr>
+          <tr><td>SCORM player</td><td>Save failed (alert)</td><td>"Progress not saved. Try saving again."</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="library"><h2><a href="#library">Microcopy library</a></h2>
+      <p>Use these exact strings for these jobs, so the same action has the same name in every Tessera component.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">String</th><th scope="col">Kind</th><th scope="col">Use</th><th scope="col">Not</th></tr></thead>
+        <tbody>
+          <tr><td>Retry</td><td>Button</td><td>Repeat the request that just failed (search, stream connection).</td><td>Try again, Reload</td></tr>
+          <tr><td>Retry save</td><td>Button</td><td>Repeat a failed save of learner progress.</td><td>Save again</td></tr>
+          <tr><td>Load more results</td><td>Button</td><td>Append the next page to a list (combobox; "Load more" where the list name is visible).</td><td>Show more, Next page</td></tr>
+          <tr><td>Clear all selections</td><td>Text button</td><td>Remove every chosen value in a multi-select.</td><td>Clear, Reset</td></tr>
+          <tr><td>Remove {name}</td><td>Icon button name</td><td>Remove one chip ("Remove Ada Lovelace").</td><td>Delete, ×</td></tr>
+          <tr><td>Show options / Hide options</td><td>Icon button name</td><td>Open or close a combobox list.</td><td>Toggle, Expand</td></tr>
+          <tr><td>Continue</td><td>Button</td><td>Move forward in a course or flow.</td><td>Next step, Proceed</td></tr>
+          <tr><td>Previous / Next</td><td>Buttons</td><td>Move between activities in the SCORM player.</td><td>Back, Forward</td></tr>
+          <tr><td>Exit course</td><td>Button</td><td>Leave the SCORM player, saving progress.</td><td>Close, Quit</td></tr>
+          <tr><td>Exit without saving</td><td>Button</td><td>Leave after a failed save, accepting the loss.</td><td>Discard, Force quit</td></tr>
+          <tr><td>Show outline / Hide outline</td><td>Button</td><td>Reveal the course outline on narrow screens.</td><td>Menu, Contents</td></tr>
+          <tr><td>Cancel</td><td>Button</td><td>Stop something in progress (loading a course) or close a dialog without acting.</td><td>Abort, Never mind</td></tr>
+          <tr><td>Live</td><td>Badge / button name</td><td>At the live edge (disabled state of the badge).</td><td>On air</td></tr>
+          <tr><td>Go to live, {n} seconds behind</td><td>Button name</td><td>Jump to the live edge when playback has fallen behind.</td><td>Skip ahead, Catch up</td></tr>
+          <tr><td>Back live.</td><td>Toast and announcement</td><td>Confirm a return to the live edge.</td><td>You are live again!</td></tr>
+          <tr><td>Unmute</td><td>Chip</td><td>Autoplay started muted; one tap restores sound.</td><td>Tap for sound</td></tr>
+          <tr><td>Play / Pause / Mute / Captions / Fullscreen</td><td>Media control names</td><td>The video transport controls.</td><td>Start, Stop, CC, Maximise</td></tr>
+          <tr><td>Connecting…</td><td>Status</td><td>Waiting for a first connection.</td><td>Please wait</td></tr>
+          <tr><td>Loading course</td><td>Heading</td><td>SCORM package being checked and opened.</td><td>Initialising SCO</td></tr>
+          <tr><td>Completion: Unknown / Complete</td><td>Status</td><td>Course completion as reported by the content.</td><td>Incomplete (when not reported)</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="usage"><h2><a href="#usage">Usage</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><p class="message"><span>Couldn't load learners. Your selections are safe. <button class="btn btn--link" type="button">Retry</button></span></p></div><figcaption>Say what happened, reassure, and offer the fix.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="message"><span>Results could not be loaded.</span></p></div><figcaption>Stop at what happened (the shipped combobox default); the learner has to work out that Retry exists and whether their selections survived.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn" type="button">Previous</button><button class="btn btn--primary" type="button">Next</button></div><figcaption>Plain labels; direction comes from icons hidden from assistive technology.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn" type="button">← Previous</button><button class="btn btn--primary" type="button">Next →</button></div><figcaption>Arrows typed into labels (SCORM mock) are read aloud as "left arrow".</figcaption></figure>
+      </div>
+      <p>Drift between the mocks and packages to resolve when strings are next edited: the combobox writes "could not" where the video player writes "couldn't"; the system uses contractions.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <ul>
+        <li><b>Accessible names match visible labels</b> and start with the visible text (WCAG 2.5.3): the LIVE badge is named "Live", or "Go to live, 12 seconds behind".</li>
+        <li><b>Errors identify and suggest</b> (3.3.1, 3.3.3) and are linked to their field with <code>aria-describedby</code>.</li>
+        <li><b>Status messages</b> use live regions (4.1.3) with the wording rules above.</li>
+        <li><b>Unavailable controls explain why</b> in visible text referenced by <code>aria-describedby</code>: "Next is unavailable: locked until “Give useful feedback” is complete."</li>
+        <li><b>Link and button text stands alone</b> (2.4.4): "Course outline", "Retry save".</li>
+        <li><b>Language:</b> set <code>lang</code> on the page and on any phrase in another language; localised string sets keep the same sentence structure rules.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <p>Content owns no tokens. Text styles come from <a href="typography.html">typography</a> (<code>--text-*</code>); uppercase eyebrows use <code>--letter-spacing-wide</code>.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: save failure, idle state, unavailable-navigation reasons, joined announcements.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: status row messages, hint, required error, selection limit; <code>src/combobox/i18n.ts</code> announcement strings.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: status, error and toggle wording; <code>src/video-player/i18n.ts</code> (<code>DEFAULT_VIDEO_PLAYER_STRINGS</code>).</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

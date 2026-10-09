@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialog — Tessera design system</title>
+<meta name="description" content="Modal dialogs interrupt to confirm, collect or explain: default, destructive, form, scrollable and mobile sheet, three sizes, busy, invalid and failed states.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers</p>
+      <h1>Dialog</h1>
+      <p class="ds-lead">A modal dialog stops the page to ask one question: remove these learners, change this due date, leave without saving. Everything behind it is inert until the person answers or dismisses it.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;dialog&gt;</code> + <code>showModal()</code></span><span class="ds-pill ds-pill--warn">Derived</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a dialog when the person must decide or supply something before carrying on, and the decision belongs to the current page: confirming a destructive action, a short form ("Change due date"), or a warning that blocks progress. Examples on this page are drawn statically inside canvases; in a product the dialog opens with <code>showModal()</code> over a backdrop.</p>
+      <ul>
+        <li><b>Default</b>: a heading, one or two sentences, and the actions.</li>
+        <li><b>Destructive</b>: a danger icon, a heading that names the loss, and a <code>.btn--danger</code> confirm.</li>
+        <li><b>Form</b>: up to about four fields; longer forms deserve their own page.</li>
+        <li><b>Scrollable</b>: long content (terms, an activity's details) scrolls inside the body while header and footer stay put.</li>
+        <li><b>Mobile sheet</b>: below 640px every dialog becomes a bottom sheet with a sticky footer.</li>
+      </ul>
+      <p>Do not use a dialog for status that needs no answer (use a <a href="toast.html">toast</a> or <a href="alert.html">alert</a>), for errors inside a component such as the video player (its error panel stays inside the player), for a list of actions (use a <a href="menu.html">menu</a>), or for content people want to read alongside the page. See <a href="../patterns/dialogs-and-overlays.html">dialogs and overlays</a>.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="background: var(--color-bg-canvas); grid-template-columns: minmax(0, 1fr); padding-inline: var(--space-4);">
+          <section class="dialog dialog--static dialog--sm" aria-labelledby="dlg-anat-title" style="max-width: 100%;">
+            <div class="dialog__header"><h3 id="dlg-anat-title" style="flex: 1 1 auto; font: var(--text-h3);">Leave without saving?</h3><button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="dialog__body"><p>Your latest progress in "Better conversations at work" has not reached the LMS.</p></div>
+            <div class="dialog__footer"><button class="btn" type="button">Exit without saving</button><button class="btn btn--primary" type="button">Retry save</button></div>
+          </section>
+          <span class="ds-callout" style="left: 10%; top: 12%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 84%; top: 12%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 10%; top: 44%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 10%; top: 78%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 3%; top: 4%;" aria-hidden="true">5</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Title</b><small><code>.dialog__header h2</code>: <code>--text-h3</code>. It names the dialog (<code>aria-labelledby</code>) and asks the question.</small></div></li>
+          <li><div><b>Close button</b><small>Ghost icon button, <code>aria-label="Close"</code>; same as Cancel. Omitted only when the dialog must be answered.</small></div></li>
+          <li><div><b>Body</b><small><code>.dialog__body</code>: 24px inline padding, scrolls when content is long; <code>aria-describedby</code> target for short dialogs.</small></div></li>
+          <li><div><b>Footer</b><small><code>.dialog__footer</code>: actions end-aligned, safe action first, primary or danger last; 12px apart; wraps.</small></div></li>
+          <li><div><b>Surface and backdrop</b><small><code>--color-bg-surface-raised</code>, <code>--radius-lg</code>, <code>--shadow-4</code>, <code>--z-modal</code>; the backdrop is <code>--color-bg-backdrop</code> at <code>--z-overlay</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Default</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <section class="dialog dialog--static" aria-labelledby="dlg-v1-title" aria-describedby="dlg-v1-desc" style="max-width: 100%;">
+            <div class="dialog__header"><h4 id="dlg-v1-title" style="flex: 1 1 auto; font: var(--text-h3);">Send a reminder to 3 learners?</h4><button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="dialog__body"><p id="dlg-v1-desc">Ada Lovelace, Grace Hopper and Alan Turing will get an email about "Workplace safety essentials", due 14 November.</p></div>
+            <div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Send reminder</button></div>
+          </section>
+        </div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;dialog class="dialog" aria-labelledby="remind-title" aria-describedby="remind-desc"&gt;
+  &lt;div class="dialog__header"&gt;
+    &lt;h2 id="remind-title"&gt;Send a reminder to 3 learners?&lt;/h2&gt;
+    &lt;button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"&gt;…&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="dialog__body"&gt;&lt;p id="remind-desc"&gt;…&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="dialog__footer"&gt;
+    &lt;button class="btn" type="button"&gt;Cancel&lt;/button&gt;
+    &lt;button class="btn btn--primary" type="button"&gt;Send reminder&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;
+&lt;script&gt;document.querySelector('#remind').showModal();&lt;/script&gt;</code></pre></details>
+      </div>
+      <h3>Destructive</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <section class="dialog dialog--static dialog--sm" aria-labelledby="dlg-v2-title" aria-describedby="dlg-v2-desc" style="max-width: 100%;">
+            <div class="dialog__header"><span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8v5M12 16h.01"/></svg></span><h4 id="dlg-v2-title" style="flex: 1 1 auto; font: var(--text-h3);">Remove 3 learners from this course?</h4></div>
+            <div class="dialog__body"><p id="dlg-v2-desc">Their progress in "Workplace safety essentials" will be deleted. You cannot undo this.</p></div>
+            <div class="dialog__footer"><button class="btn" type="button">Keep learners</button><button class="btn btn--danger" type="button">Remove 3 learners</button></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>No close icon: the person must choose. Focus starts on the safe action ("Keep learners").</span></div>
+      </div>
+      <h3>Form</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <form class="dialog dialog--static" aria-labelledby="dlg-v3-title" novalidate style="max-width: 100%;">
+            <div class="dialog__header"><h4 id="dlg-v3-title" style="flex: 1 1 auto; font: var(--text-h3);">Change due date</h4><button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="dialog__body stack">
+              <div class="field"><label class="field__label" for="dlg-v3-date">Due date</label><input class="input" id="dlg-v3-date" type="date" value="2026-11-14" aria-describedby="dlg-v3-hint"><p class="field__hint" id="dlg-v3-hint">Applies to all 3 selected learners.</p></div>
+              <div class="field"><label class="field__label" for="dlg-v3-note">Message to learners <span class="field__required">(optional)</span></label><textarea class="textarea" id="dlg-v3-note" rows="2"></textarea></div>
+            </div>
+            <div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="submit">Save due date</button></div>
+          </form>
+        </div>
+        <div class="ds-example__caption"><span>Focus starts on the first field; Enter in a field submits.</span></div>
+      </div>
+      <h3>Scrollable</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <section class="dialog dialog--static" style="max-width: 100%; max-height: 22rem;" aria-labelledby="dlg-v4-title">
+            <div class="dialog__header"><h4 id="dlg-v4-title" style="flex: 1 1 auto; font: var(--text-h3);" tabindex="-1">About this course</h4><button class="btn btn--ghost btn--icon dialog__close" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+            <div class="dialog__body stack" tabindex="0" role="region" aria-labelledby="dlg-v4-title">
+              <p>"Better conversations at work" has four activities. Each one reports its own completion to the LMS; the course is complete when every activity is.</p>
+              <p><b>Start with listening.</b> Before offering a solution, give the other person time to finish their thought.</p>
+              <p><b>Ask better questions.</b> Questions that begin with "what" or "how" invite more detail than a yes or no.</p>
+              <p><b>Give useful feedback.</b> Start with a concrete example, explain its effect, then agree on a next step.</p>
+              <p><b>Put it into practice.</b> Plan your next conversation: listen, ask, and agree on a next step. Locked until "Give useful feedback" is complete.</p>
+            </div>
+            <div class="dialog__footer"><button class="btn btn--primary" type="button">Close</button></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>The body scrolls and is focusable (<code>tabindex="0"</code>) so keyboard users can scroll it; focus starts on the heading.</span></div>
+      </div>
+      <h3>Mobile sheet</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="justify-content: center;">
+          <div style="width: 20rem; max-width: 100%; height: 26rem; display: flex; flex-direction: column; justify-content: flex-end; background: var(--color-bg-backdrop); border-radius: var(--radius-lg); overflow: hidden;">
+            <section class="dialog dialog--static" style="max-width: 100%; width: 100%; border-radius: var(--radius-xl) var(--radius-xl) 0 0;" aria-labelledby="dlg-v5-title">
+              <div class="dialog__header"><h4 id="dlg-v5-title" style="flex: 1 1 auto; font: var(--text-h3);">Send a reminder to 3 learners?</h4></div>
+              <div class="dialog__body"><p>They will get an email about "Workplace safety essentials".</p></div>
+              <div class="dialog__footer"><button class="btn" type="button" style="flex: 1 1 auto;">Cancel</button><button class="btn btn--primary" type="button" style="flex: 1 1 auto;">Send</button></div>
+            </section>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Below 640px: full width, docked to the bottom, <code>--radius-xl</code> top corners, max 90dvh, sticky footer with equal buttons and safe-area padding.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Width is set by <code>--dialog-width</code> and never exceeds the viewport minus 16px on each side. Pick the smallest size the content fits.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack" style="align-items: flex-start;">
+          <section class="dialog dialog--static dialog--sm" aria-labelledby="dlg-s1" style="max-width: 100%;"><div class="dialog__header"><h3 id="dlg-s1" style="flex: 1 1 auto; font: var(--text-h3);">Small · 24rem</h3></div><div class="dialog__body"><p>Confirmations and destructive questions.</p></div><div class="dialog__footer"><button class="btn btn--primary" type="button">OK, got it</button></div></section>
+          <section class="dialog dialog--static" aria-labelledby="dlg-s2" style="max-width: 100%;"><div class="dialog__header"><h3 id="dlg-s2" style="flex: 1 1 auto; font: var(--text-h3);">Medium · 32rem (default)</h3></div><div class="dialog__body"><p>Short forms and explanations.</p></div><div class="dialog__footer"><button class="btn btn--primary" type="button">Continue</button></div></section>
+          <section class="dialog dialog--static dialog--lg" aria-labelledby="dlg-s3" style="max-width: 100%;"><div class="dialog__header"><h3 id="dlg-s3" style="flex: 1 1 auto; font: var(--text-h3);">Large · 48rem</h3></div><div class="dialog__body"><p>Two-column forms or a preview, such as an assignment preview listing the selected learners.</p></div><div class="dialog__footer"><button class="btn btn--primary" type="button">Assign</button></div></section>
+        </div>
+        <div class="ds-example__caption"><span><code>.dialog--sm</code> 24rem, default 32rem, <code>.dialog--lg</code> 48rem; all capped at <code>100vw − 2 × --space-4</code>.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The dialog's controls have the <a href="button.html">button</a> states; forced here with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Busy</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Close</th><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td><td><button class="btn btn--ghost btn--icon" type="button" aria-label="Close" aria-disabled="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></td></tr>
+          <tr><th scope="row">Confirm</th><td><button class="btn btn--primary" type="button">Save due date</button></td><td><button class="btn btn--primary" type="button" data-state="hover">Save due date</button></td><td><button class="btn btn--primary" type="button" data-state="focus">Save due date</button></td><td><button class="btn btn--primary" type="button" data-state="active">Save due date</button></td><td><button class="btn btn--primary" type="button" disabled>Save due date</button></td><td><button class="btn btn--primary" type="button" aria-busy="true"><span>Save due date</span></button></td></tr>
+          <tr><th scope="row">Destructive confirm</th><td><button class="btn btn--danger" type="button">Remove 3 learners</button></td><td><button class="btn btn--danger" type="button" data-state="hover">Remove 3 learners</button></td><td><button class="btn btn--danger" type="button" data-state="focus">Remove 3 learners</button></td><td><button class="btn btn--danger" type="button" data-state="active">Remove 3 learners</button></td><td><button class="btn btn--danger" type="button" disabled>Remove 3 learners</button></td><td><button class="btn btn--danger" type="button" aria-busy="true"><span>Remove 3 learners</span></button></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Busy, invalid and failed</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas" style="align-items: flex-start;">
+          <form class="dialog dialog--static dialog--sm" aria-labelledby="dlg-st1" aria-busy="true" novalidate style="max-width: 100%;">
+            <div class="dialog__header"><h4 id="dlg-st1" style="flex: 1 1 auto; font: var(--text-h3);">Change due date</h4></div>
+            <div class="dialog__body"><div class="field"><label class="field__label" for="dlg-st1-date">Due date</label><input class="input" id="dlg-st1-date" type="date" value="2026-11-21" readonly></div></div>
+            <div class="dialog__footer"><button class="btn" type="button" aria-disabled="true">Cancel</button><button class="btn btn--primary" type="submit" aria-busy="true"><span>Save due date</span></button></div>
+          </form>
+          <form class="dialog dialog--static dialog--sm" aria-labelledby="dlg-st2" novalidate style="max-width: 100%;">
+            <div class="dialog__header"><h4 id="dlg-st2" style="flex: 1 1 auto; font: var(--text-h3);">Change due date</h4></div>
+            <div class="dialog__body"><div class="field"><label class="field__label" for="dlg-st2-date">Due date</label><input class="input" id="dlg-st2-date" type="date" value="2026-09-01" aria-invalid="true" aria-describedby="dlg-st2-err"><p class="field__error" id="dlg-st2-err"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8v5M12 16h.01"/></svg><span>Choose a date after today, 9 October 2026.</span></p></div></div>
+            <div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="submit">Save due date</button></div>
+          </form>
+          <section class="dialog dialog--static dialog--sm" aria-labelledby="dlg-st3" style="max-width: 100%;">
+            <div class="dialog__header"><span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8v5M12 16h.01"/></svg></span><h4 id="dlg-st3" style="flex: 1 1 auto; font: var(--text-h3);">Remove 3 learners from this course?</h4></div>
+            <div class="dialog__body stack" style="--stack-gap: var(--space-3);"><p>Their progress will be deleted. You cannot undo this.</p><div class="alert alert--danger" role="alert"><div class="alert__content"><p class="alert__title">Learners not removed</p><p class="alert__body">The LMS did not respond. Nothing was changed. Try again.</p></div></div></div>
+            <div class="dialog__footer"><button class="btn" type="button">Keep learners</button><button class="btn btn--danger" type="button">Try again</button></div>
+          </section>
+        </div>
+        <div class="ds-example__caption"><span>Busy · invalid · failed.</span></div>
+      </div>
+      <ul>
+        <li><b>Busy</b>: <code>aria-busy="true"</code> on the dialog dims the body; the submit button shows its spinner; fields go read-only and Cancel becomes <code>aria-disabled</code>. Esc and the backdrop do nothing until the request ends. Focus stays on the submit button.</li>
+        <li><b>Invalid</b>: the dialog stays open, the field gets <code>aria-invalid="true"</code> and an error linked with <code>aria-describedby</code>, and focus moves to the first invalid field. The error names the fix.</li>
+        <li><b>Failed</b>: the request failed; the dialog stays open with a <code>role="alert"</code> <a href="alert.html">alert</a> at the top of the body saying what happened and that nothing changed, and the confirm becomes "Try again". This is the video player's error panel rule: say what went wrong, offer one recovery.</li>
+        <li><b>Open and closed</b>: closed dialogs are not in the DOM's accessibility tree (<code>&lt;dialog&gt;</code> without <code>open</code>); opening sets the page behind <code>inert</code>.</li>
+      </ul>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-tl"><div class="dialog__header"><span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8v5M12 16h.01"/></svg></span><h4 id="dlg-tl" style="flex: 1 1 auto; font: var(--text-h3);">Remove Grace Hopper?</h4></div><div class="dialog__body"><p>Her progress will be deleted.</p></div><div class="dialog__footer"><button class="btn" type="button">Keep learner</button><button class="btn btn--danger" type="button">Remove</button></div></section></div>
+        <div data-theme="dark"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-td"><div class="dialog__header"><span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8v5M12 16h.01"/></svg></span><h4 id="dlg-td" style="flex: 1 1 auto; font: var(--text-h3);">Remove Grace Hopper?</h4></div><div class="dialog__body"><p>Her progress will be deleted.</p></div><div class="dialog__footer"><button class="btn" type="button">Keep learner</button><button class="btn btn--danger" type="button">Remove</button></div></section></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>≥ 640px</b> (<code>--layout-breakpoint-sm</code>): centred, width from the size token, max height <code>100dvh − 2 × --space-8</code>; the body scrolls when content is taller.</li>
+        <li><b>&lt; 640px</b>: bottom sheet. Full width, <code>--radius-xl</code> top corners, max 90dvh, sticky footer whose buttons share the row equally and clear <code>env(safe-area-inset-bottom)</code>.</li>
+        <li>At 400% zoom (320px CSS) the sheet rule applies, so the header, scrolling body and footer all stay reachable; the footer wraps buttons onto two rows rather than shrinking them.</li>
+        <li>Never put two-column layouts in small or medium dialogs; large dialogs drop to one column below <code>--layout-breakpoint-md</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The dialog reads <code>--color-bg-surface-raised</code>, <code>--color-border-default</code>, <code>--shadow-4</code> and <code>--radius-lg</code>; the backdrop reads <code>--color-bg-backdrop</code>; width comes from the component token <code>--dialog-width</code>. The destructive icon uses <code>--color-danger-bg</code> and <code>--color-danger-icon</code>.</p>
+      <pre><code>/* A host needs a wider default dialog */
+.host-admin .dialog { --dialog-width: 40rem; }</code></pre>
+      <p>In the dark theme the surface lifts to <code>--palette-sage-850</code> above a sage-950 page, the backdrop deepens to 70% black, and the shadow darkens; the lighter surface carries the elevation. In the shipped packages these are <code>--t-colorNeutralBackground1</code> and <code>--t-shadow4</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The <a href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/">WAI-ARIA APG Dialog (Modal) pattern</a>, built on the native <code>&lt;dialog&gt;</code> element opened with <code>showModal()</code>, which supplies <code>role="dialog"</code>, modality, the top layer and inertness of the page behind. Labelled by its title (<code>aria-labelledby</code>); short dialogs add <code>aria-describedby</code> for the body text. Destructive confirmations may use <code>role="alertdialog"</code>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through the dialog's controls and wraps; focus cannot leave while it is open.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the dialog as Cancel would, and returns focus. Ignored while busy. A tooltip or open select inside the dialog takes Esc first, as the combobox tooltip does.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>In a form dialog, submits from a single-line field. Never auto-confirms a destructive dialog.</td></tr>
+        <tr><td><kbd>Space</kbd>, <kbd>Enter</kbd> on buttons</td><td>Activates the focused button.</td></tr>
+        <tr><td>Arrow keys</td><td>Scroll a focused scrollable body.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <ul>
+        <li><b>On open</b>: the first field in a form dialog; the safe action ("Keep learners") in a destructive one; the title (<code>tabindex="-1"</code>) when the body is long or scrollable, so reading starts at the top. This mirrors the video player's error panel, whose heading takes focus.</li>
+        <li><b>On close</b>: back to the control that opened it. If that control no longer exists (its learner was removed), focus moves to the next logical element, such as the next row's actions or the list heading, never to <code>&lt;body&gt;</code>, as the SCORM mock's region-closing rule requires.</li>
+        <li>The ring is the shared amber ring; on the raised surface it still passes 3:1.</li>
+      </ul>
+      <h3>Labelling</h3>
+      <p>The title is the accessible name and asks the question in words ("Remove 3 learners from this course?"). The close button is "Close". Busy dialogs keep their name; the result is announced by the page's live region ("3 learners removed") after the dialog closes. Failed requests are announced by the <code>role="alert"</code> inside the body.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Body text on dialog</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface-raised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint text on dialog</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface-raised" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Field edge on dialog</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface-raised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Focus ring on dialog</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface-raised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Danger confirm label</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-danger|--color-danger-solid" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Danger icon on its disc</span><span class="ds-pair__ratio" data-contrast="--color-danger-icon|--color-danger-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>Failed message text</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The dialog may fade and rise 8px over <code>--duration-slow</code> (320 ms) with <code>--ease-enter</code>, and the sheet slides up from the bottom; both exit faster with <code>--ease-exit</code>. Reduced motion zeroes the durations, so it appears in place.</p>
+      <h3>Touch</h3>
+      <p>Buttons are 44px; on the sheet they share the footer row equally, so each target is wide. Tapping the backdrop closes non-destructive dialogs only; a destructive dialog ignores backdrop taps so a stray tap never confirms or loses the question.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Title: a question or a direct statement in sentence case, naming the object and count: "Remove 3 learners from this course?", "Change due date".</li>
+        <li>Body: one or two sentences on the consequence ("Their progress will be deleted. You cannot undo this.").</li>
+        <li>Buttons repeat the verb: "Remove 3 learners" / "Keep learners". Never "Yes" / "No" or "OK" / "Cancel" for destructive choices.</li>
+        <li>Failure messages say what happened, that nothing changed, and what to do: "The LMS did not respond. Nothing was changed. Try again."</li>
+        <li>Validation errors name the field and the fix: "Choose a date after today, 9 October 2026."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-dd1"><div class="dialog__header"><h3 id="dlg-dd1" style="flex: 1 1 auto; font: var(--text-h3);">Remove Alan Turing?</h3></div><div class="dialog__footer"><button class="btn" type="button">Keep learner</button><button class="btn btn--danger" type="button">Remove learner</button></div></section></div><figcaption>Name the action on both buttons; put the safe one first and give it initial focus.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-dd2"><div class="dialog__header"><h3 id="dlg-dd2" style="flex: 1 1 auto; font: var(--text-h3);">Are you sure?</h3></div><div class="dialog__footer"><button class="btn" type="button">No</button><button class="btn btn--primary" type="button">Yes</button></div></section></div><figcaption>Ask "Are you sure?" with Yes / No; out of context neither button says what happens.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-dd3"><div class="dialog__header"><h3 id="dlg-dd3" style="flex: 1 1 auto; font: var(--text-h3);">Learners not removed</h3></div><div class="dialog__body"><p>The LMS did not respond. Nothing was changed.</p></div><div class="dialog__footer"><button class="btn" type="button">Close</button><button class="btn btn--primary" type="button">Try again</button></div></section></div><figcaption>Keep the dialog open on failure, say nothing changed and offer one retry.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><section class="dialog dialog--static" style="max-width: 100%; width: 100%;" aria-labelledby="dlg-dd4"><div class="dialog__header"><h3 id="dlg-dd4" style="flex: 1 1 auto; font: var(--text-h3);">Error</h3></div><div class="dialog__body"><p>Something went wrong (code 503).</p></div><div class="dialog__footer"><button class="btn btn--primary" type="button">OK</button></div></section></div><figcaption>Stack an error dialog on top of the first; the person loses their choice and gets no way forward.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Surface</td><td><code>--color-bg-surface-raised</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-raised" data-swatch></i><span data-token="--color-bg-surface-raised"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-raised" data-swatch></i><span data-token="--color-bg-surface-raised"></span></span></td></tr>
+          <tr><td>Edge</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Backdrop</td><td><code>--color-bg-backdrop</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-backdrop" data-swatch></i><span data-token="--color-bg-backdrop"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-backdrop" data-swatch></i><span data-token="--color-bg-backdrop"></span></span></td></tr>
+          <tr><td>Title and body</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Destructive icon disc</td><td><code>--color-danger-bg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-bg" data-swatch></i><span data-token="--color-danger-bg"></span></span></td></tr>
+          <tr><td>Destructive icon</td><td><code>--color-danger-icon</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-icon" data-swatch></i><span data-token="--color-danger-icon"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-icon" data-swatch></i><span data-token="--color-danger-icon"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Width sm / md / lg</td><td><code>--dialog-width</code> (component token)</td><td colspan="2">24rem / 32rem / 48rem</td></tr>
+          <tr><td>Radius / sheet radius</td><td><code>--radius-lg</code> / <code>--radius-xl</code></td><td colspan="2"><span data-token="--radius-lg"></span> / <span data-token="--radius-xl"></span></td></tr>
+          <tr><td>Padding</td><td><code>--space-6</code>, sections <code>--space-4</code></td><td colspan="2"><span data-token="--space-6"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Footer gap</td><td><code>--space-3</code></td><td colspan="2"><span data-token="--space-3"></span></td></tr>
+          <tr><td>Shadow</td><td><code>--shadow-4</code></td><td colspan="2"><span data-token="--shadow-4"></span></td></tr>
+          <tr><td>Layers</td><td><code>--z-overlay</code> / <code>--z-modal</code></td><td colspan="2"><span data-token="--z-overlay"></span> / <span data-token="--z-modal"></span></td></tr>
+          <tr><td>Title font</td><td><code>--text-h3</code></td><td colspan="2"><span data-token="--text-h3"></span></td></tr>
+          <tr><td>Enter motion</td><td><code>--duration-slow</code>, <code>--ease-enter</code></td><td colspan="2"><span data-token="--duration-slow"></span> / <span data-token="--ease-enter"></span></td></tr>
+          <tr><td>Sheet breakpoint</td><td><code>--layout-breakpoint-sm</code></td><td colspan="2"><span data-token="--layout-breakpoint-sm"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;button class="btn btn--danger" type="button" id="remove-btn"&gt;Remove 3 learners…&lt;/button&gt;
+
+&lt;dialog class="dialog dialog--sm" id="remove" aria-labelledby="remove-title" aria-describedby="remove-desc"&gt;
+  &lt;div class="dialog__header"&gt;
+    &lt;span class="dialog__icon" aria-hidden="true"&gt;…&lt;/span&gt;
+    &lt;h2 id="remove-title"&gt;Remove 3 learners from this course?&lt;/h2&gt;
+  &lt;/div&gt;
+  &lt;div class="dialog__body"&gt;&lt;p id="remove-desc"&gt;Their progress will be deleted. You cannot undo this.&lt;/p&gt;&lt;/div&gt;
+  &lt;div class="dialog__footer"&gt;
+    &lt;button class="btn" type="button" autofocus&gt;Keep learners&lt;/button&gt;
+    &lt;button class="btn btn--danger" type="button"&gt;Remove 3 learners&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  const dialog = document.getElementById('remove');
+  document.getElementById('remove-btn').addEventListener('click', () =&gt; dialog.showModal());
+  dialog.addEventListener('cancel', (e) =&gt; { if (dialog.getAttribute('aria-busy') === 'true') e.preventDefault(); });
+  // On close, restore focus to the opener (or the next logical element if it was removed).
+&lt;/script&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.dialog</code></td><td>Raised surface, column layout, width from <code>--dialog-width</code>, sheet below 640px.</td></tr>
+        <tr><td><code>.dialog--sm</code> <code>.dialog--lg</code></td><td>24rem / 48rem; omit for 32rem.</td></tr>
+        <tr><td><code>.dialog__header</code> <code>.dialog__body</code> <code>.dialog__footer</code></td><td>Regions; the body scrolls; the footer wraps and becomes sticky on phones.</td></tr>
+        <tr><td><code>.dialog__icon</code></td><td>Danger disc for destructive dialogs.</td></tr>
+        <tr><td><code>.dialog__close</code></td><td>Pulls the ghost icon button into the corner.</td></tr>
+        <tr><td><code>aria-busy="true"</code></td><td>Dims the body while a request runs.</td></tr>
+        <tr><td><code>.dialog--static</code></td><td>Documentation only: draws the dialog in the page flow.</td></tr>
+        <tr><td><code>.backdrop</code> / <code>::backdrop</code></td><td>Backdrop for custom and native dialogs.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. The nearest evidence:</p>
+      <ul>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the error panel (<code>role="alert"</code>, heading that takes focus with <code>tabindex="-1"</code>, one sentence, one Retry, no Retry when retrying cannot help) sets the failed-state and focus-on-title rules.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Progress not saved" with Retry save and "Exit without saving" is the model destructive choice; closing a region never strands focus on <code>&lt;body&gt;</code>.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: Escape is consumed by the innermost layer first (tooltip, then popup, then query), the rule for Esc inside a dialog.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The video error stripe was 5px; any stripe inside a dialog uses <code>--border-width-stripe</code> (4px).</li>
+        <li>The error panel heading was 1.1rem and its button radius 7px; dialogs use <code>--text-h3</code> (18px) and <code>--radius-md</code>.</li>
+        <li>The video error panel's dark-theme button label used <code>--page-canvas</code>; dialogs use <code>--color-fg-on-accent</code> and <code>--color-fg-on-danger</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

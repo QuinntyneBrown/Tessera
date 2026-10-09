@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avatar — Tessera design system</title>
+<meta name="description" content="Avatars represent a person or a course: initials, image, icon, square, groups with overflow, a status dot and three sizes, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Data display</p>
+      <h1>Avatar</h1>
+      <p class="ds-lead">Avatars give a learner, presenter or course a recognisable mark next to its name: initials, a photo or an icon. They help people scan; the name beside them does the identifying.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Decorative by default</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use an avatar beside a person's or course's name in <a href="list.html">lists</a>, combobox options, <a href="table.html">table</a> rows and headers. Do not use one on its own as the only way to identify someone; a name or accessible label always accompanies it.</p>
+      <ul>
+        <li><b>Initials</b> (default): one or two letters from the name, as in the combobox's custom option template ("AL" for Ada Lovelace).</li>
+        <li><b>Image</b>: the person's uploaded photo, cropped to the shape. Falls back to initials when it fails to load.</li>
+        <li><b>Icon</b>: a generic person or object icon when there is no name to take initials from (an anonymous viewer, a deleted account).</li>
+        <li><b>Square</b> (<code>.avatar--square</code>): for things, not people: courses, sessions, groups. Taken from the combobox's course icon ("01" beside "Workplace safety essentials").</li>
+        <li><b>Group</b> (<code>.avatar-group</code>): overlapping avatars with a "+n" overflow, for "who is assigned" summaries.</li>
+        <li><b>With status</b> (<code>.avatar__status</code>): a dot for presence, such as "in the live session now".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <span class="avatar avatar--lg" style="overflow: visible; --avatar-size: 4rem;" aria-hidden="true">AL<span class="avatar__status"></span></span>
+          <span class="ds-callout" style="left: 40%; top: 28%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 49%; top: 46%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 58%; top: 70%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Container</b><small><code>--avatar-size</code> square, <code>--radius-full</code> (or <code>--radius-md</code> when square), <code>--color-accent-subtle</code> fill. Clips an image to its shape.</small></div></li>
+          <li><div><b>Content</b><small>Initials in <code>--text-overline</code> (<code>--text-label</code> at lg), <code>--color-fg-default</code>; or an <code>&lt;img&gt;</code> with <code>object-fit: cover</code>; or a <code>.icon</code>.</small></div></li>
+          <li><div><b>Status dot (optional)</b><small><code>.avatar__status</code>: 30% of the size, bottom-right, <code>--color-success-solid</code> with a 2px <code>--color-bg-surface</code> ring so it reads over any picture.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Initials, icon and square</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="avatar" aria-hidden="true">AL</span>
+          <span class="avatar" aria-hidden="true">GH</span>
+          <span class="avatar" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 20a8 8 0 0 1 16 0"/></svg></span>
+          <span class="avatar avatar--square avatar--lg" aria-hidden="true">01</span>
+          <span class="avatar avatar--square avatar--lg" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5"/></svg></span>
+        </div>
+        <div class="ds-example__caption"><span>Initials, two people; icon fallback; square course marks (number and icon). All <code>aria-hidden</code> here because they would sit next to a name.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="avatar" aria-hidden="true"&gt;AL&lt;/span&gt;
+&lt;span class="avatar" aria-hidden="true"&gt;&lt;svg class="icon icon--sm" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;&lt;/span&gt;
+&lt;span class="avatar avatar--square avatar--lg" aria-hidden="true"&gt;01&lt;/span&gt;</code></pre></details>
+      </div>
+
+      <h3>Image</h3>
+      <p>An image avatar is an <code>&lt;img&gt;</code> inside <code>.avatar</code>; the container crops it. When the avatar sits next to the name, the image is decorative: <code>alt=""</code>. When it stands alone, <code>alt</code> is the person's name. If the image fails to load, swap in initials; never show a broken-image icon.</p>
+      <pre><code>&lt;span class="avatar"&gt;&lt;img src="/learners/ada-lovelace.jpg" alt=""&gt;&lt;/span&gt; Ada Lovelace
+&lt;span class="avatar avatar--lg"&gt;&lt;img src="/learners/ada-lovelace.jpg" alt="Ada Lovelace"&gt;&lt;/span&gt;</code></pre>
+
+      <h3>In context</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="cluster"><span class="avatar" aria-hidden="true">AL</span><span class="list__body"><span class="list__title">Ada Lovelace</span><span class="list__meta">ada.lovelace@example.com</span></span></div>
+          <div class="cluster"><span class="avatar avatar--square avatar--lg" aria-hidden="true">01</span><span class="list__body"><span class="list__title">Workplace safety essentials</span><span class="list__meta">Required learning · 35 minutes</span></span></div>
+        </div>
+        <div class="ds-example__caption"><span>Combobox option (initials, name, e-mail) and course header (square mark, title, detail).</span></div>
+      </div>
+
+      <h3>Group with overflow</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="cluster">
+            <span class="avatar-group" role="img" aria-label="Assigned: Ada Lovelace, Grace Hopper, Alan Turing and 3 more">
+              <span class="avatar" aria-hidden="true">AL</span><span class="avatar" aria-hidden="true">GH</span><span class="avatar" aria-hidden="true">AT</span><span class="avatar" aria-hidden="true" style="background: var(--color-bg-subtle);">+3</span>
+            </span>
+            <span class="list__meta">6 learners assigned</span>
+          </div>
+          <div class="cluster">
+            <ul class="avatar-group" style="margin: 0; padding: 0; list-style: none;" aria-label="In this session">
+              <li class="avatar" style="overflow: visible;"><span aria-hidden="true">KJ</span><span class="visually-hidden">Katherine Johnson</span></li>
+              <li class="avatar" style="overflow: visible;"><span aria-hidden="true">JL</span><span class="visually-hidden">Jordan Lee</span></li>
+              <li style="display: contents;"><button class="avatar" type="button" style="border: 0; background: var(--color-bg-subtle); margin-inline-start: calc(-1 * var(--space-2));" aria-label="Show 3 more viewers">+3</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Top: a static summary is one image with a full label. Bottom: when the overflow opens the full list, the group is a list of named items and "+3" is a button naming what it shows.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="avatar-group" role="img" aria-label="Assigned: Ada Lovelace, Grace Hopper, Alan Turing and 3 more"&gt;
+  &lt;span class="avatar" aria-hidden="true"&gt;AL&lt;/span&gt;
+  &lt;span class="avatar" aria-hidden="true"&gt;GH&lt;/span&gt;
+  &lt;span class="avatar" aria-hidden="true"&gt;AT&lt;/span&gt;
+  &lt;span class="avatar" aria-hidden="true"&gt;+3&lt;/span&gt;
+&lt;/span&gt;</code></pre></details>
+      </div>
+
+      <h3>With status dot</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="cluster"><span class="avatar avatar--lg" style="overflow: visible;" aria-hidden="true">AL<span class="avatar__status"></span></span><span>Ada Lovelace <span class="list__meta">· In session</span></span></span>
+          <span class="cluster"><span class="avatar avatar--lg" style="overflow: visible;" aria-hidden="true">GH<span class="avatar__status" style="background: var(--color-warning-solid);"></span></span><span>Grace Hopper <span class="list__meta">· Away</span></span></span>
+          <span class="cluster"><span class="avatar avatar--lg" style="overflow: visible;" aria-hidden="true">AT</span><span>Alan Turing <span class="list__meta">· Not in session</span></span></span>
+        </div>
+        <div class="ds-example__caption"><span>The dot is never the only cue: the status is also in words. Only the success colour ships as <code>.avatar__status</code>; the amber "Away" dot is overridden inline here.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="avatar avatar--sm" aria-hidden="true">AL</span>
+          <span class="avatar" aria-hidden="true">AL</span>
+          <span class="avatar avatar--lg" aria-hidden="true">AL</span>
+          <span class="avatar avatar--sm avatar--square" aria-hidden="true">01</span>
+          <span class="avatar avatar--square" aria-hidden="true">01</span>
+          <span class="avatar avatar--lg avatar--square" aria-hidden="true">01</span>
+        </div>
+        <div class="ds-example__caption"><span>Small 24px (<code>.avatar--sm</code>) · medium 32px (default) · large 44px (<code>.avatar--lg</code>), round and square.</span></div>
+      </div>
+      <ul>
+        <li><b>Small (24px)</b>: dense table rows and inline mentions. Initials drop to 10px; use small only where the avatar is decorative and the name is beside it.</li>
+        <li><b>Medium (32px)</b>: list items and combobox options (the mock's 2rem avatar).</li>
+        <li><b>Large (44px)</b>: headers, course marks (the mock's 2.75rem course icon) and avatars that are also a 44px button.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>An avatar is not interactive on its own. When it is the face of a control (an account menu, the "+3" overflow), the control supplies the states, forced here with <code>data-state</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Expanded</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Initials</th><td><span class="avatar" aria-hidden="true">AL</span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+          <tr><th scope="row">Icon</th><td><span class="avatar" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 20a8 8 0 0 1 16 0"/></svg></span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+          <tr><th scope="row">Square</th><td><span class="avatar avatar--square" aria-hidden="true">01</span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+          <tr><th scope="row">With status</th><td><span class="avatar" style="overflow: visible;" aria-hidden="true">AL<span class="avatar__status"></span></span></td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+          <tr><th scope="row">As a button</th>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Account menu, Ada Lovelace" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">AL</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="hover" aria-label="Account menu, Ada Lovelace" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">AL</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="focus" aria-label="Account menu, Ada Lovelace" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">AL</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="active" aria-label="Account menu, Ada Lovelace" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">AL</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" disabled aria-label="Account menu, Ada Lovelace"><span class="avatar" aria-hidden="true">AL</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Account menu, Ada Lovelace" aria-haspopup="menu" aria-expanded="true"><span class="avatar" aria-hidden="true">AL</span></button></td></tr>
+          <tr><th scope="row">Overflow "+n"</th>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Show 3 more viewers"><span class="avatar" aria-hidden="true">+3</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="hover" aria-label="Show 3 more viewers"><span class="avatar" aria-hidden="true">+3</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="focus" aria-label="Show 3 more viewers"><span class="avatar" aria-hidden="true">+3</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" data-state="active" aria-label="Show 3 more viewers"><span class="avatar" aria-hidden="true">+3</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" disabled aria-label="Show 3 more viewers"><span class="avatar" aria-hidden="true">+3</span></button></td>
+            <td><button class="btn btn--ghost btn--icon" type="button" aria-label="Show 3 more viewers" aria-expanded="true"><span class="avatar" aria-hidden="true">+3</span></button></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Image loading and failure</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="cluster"><span class="skeleton skeleton--circle" style="--skeleton-size: 2rem;" aria-hidden="true"></span><span class="list__meta">Loading</span></span>
+          <span class="cluster"><span class="avatar" aria-hidden="true">AL</span><span class="list__meta">Image failed: initials</span></span>
+          <span class="cluster"><span class="avatar" aria-hidden="true"><svg class="icon icon--sm" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 20a8 8 0 0 1 16 0"/></svg></span><span class="list__meta">No name: icon</span></span>
+        </div>
+        <div class="ds-example__caption"><span>Fallback order: image, then initials, then icon. A loading image shows a circular skeleton the same size, so the layout does not shift.</span></div>
+      </div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="cluster"><span class="avatar avatar--sm" aria-hidden="true">AL</span><span class="avatar" aria-hidden="true">GH</span><span class="avatar avatar--lg" style="overflow: visible;" aria-hidden="true">AT<span class="avatar__status"></span></span><span class="avatar avatar--lg avatar--square" aria-hidden="true">01</span><span class="avatar-group" role="img" aria-label="Ada Lovelace, Grace Hopper and 3 more"><span class="avatar" aria-hidden="true">AL</span><span class="avatar" aria-hidden="true">GH</span><span class="avatar" aria-hidden="true" style="background: var(--color-bg-subtle);">+3</span></span></div></div>
+        <div data-theme="dark"><div class="cluster"><span class="avatar avatar--sm" aria-hidden="true">AL</span><span class="avatar" aria-hidden="true">GH</span><span class="avatar avatar--lg" style="overflow: visible;" aria-hidden="true">AT<span class="avatar__status"></span></span><span class="avatar avatar--lg avatar--square" aria-hidden="true">01</span><span class="avatar-group" role="img" aria-label="Ada Lovelace, Grace Hopper and 3 more"><span class="avatar" aria-hidden="true">AL</span><span class="avatar" aria-hidden="true">GH</span><span class="avatar" aria-hidden="true" style="background: var(--color-bg-subtle);">+3</span></span></div></div>
+      </div>
+      <p><code>.avatar</code> clips its content with <code>overflow: hidden</code>, which also clips half of <code>.avatar__status</code>; the examples here set <code>overflow: visible</code> on avatars that carry a dot. Image avatars keep the clip and put the dot on a wrapper.</p>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Avatars never scale with the viewport; they use fixed rem sizes, so they grow with the user's text size and zoom like the names beside them.</li>
+        <li>Avatars never shrink in a flex row (<code>flex: none</code>); the name next to them wraps instead.</li>
+        <li>Groups show at most three or four avatars and a "+n"; at 320px reduce to two plus "+n" rather than wrapping the group onto two lines.</li>
+        <li>With 200% text the initials grow but the circle does not; keep two letters at most so they still fit.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The avatar has one component token, <code>--avatar-size</code>, and reads <code>--color-accent-subtle</code> (fill), <code>--color-fg-default</code> (initials and icon), <code>--color-success-solid</code> (status dot) and <code>--color-bg-surface</code> (the ring around dots and grouped avatars). Override the ring where avatars sit on another surface.</p>
+      <pre><code>/* Avatars in a sunken panel: match the ring to the panel */
+.side-panel .avatar-group .avatar,
+.side-panel .avatar__status { box-shadow: 0 0 0 2px var(--color-bg-surface-sunken); }
+
+/* A one-off 56px profile header */
+.profile-header .avatar { --avatar-size: 3.5rem; }</code></pre>
+      <p>In the dark theme the fill becomes sage-800 and initials sage-25. Do not colour avatars per person: hashed rainbow colours fail contrast in one theme or the other and suggest meaning that is not there. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No widget pattern: an avatar is an image. Next to a visible name it is decorative (<code>aria-hidden="true"</code>, or <code>alt=""</code> on an <code>&lt;img&gt;</code>). Alone, it is an image with the person's name (<code>alt</code> on <code>&lt;img&gt;</code>, or <code>role="img"</code> with <code>aria-label</code> on initials). A static group is one <code>role="img"</code> with a summary label; an interactive group is a list. When an avatar triggers a menu it is the content of a <a href="button.html">button</a> following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/">APG Menu Button pattern</a>; see <a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-content.html">WCAG 1.1.1 Non-text content</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd></td><td>Plain avatars are never focusable. An avatar button or "+n" button is one stop.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>On an avatar button: opens its menu or the full list of people.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the menu or list and returns focus to the avatar button.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Only avatar buttons take focus; the shared amber ring goes around the button, not the circle, so it is never clipped by the round shape.</p>
+      <h3>Labelling</h3>
+      <p>Initials are never read on their own ("A L" means nothing). Groups say who and how many: "Assigned: Ada Lovelace, Grace Hopper, Alan Turing and 3 more". The "+n" button names what it reveals: "Show 3 more viewers". Status dots are <code>aria-hidden</code>; the status is in text beside the name or in the label ("Ada Lovelace, in session").</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Initials on avatar fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Overflow "+n" on subtle fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Status dot on surface</span><span class="ds-pair__ratio" data-contrast="--color-success-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Status dot on avatar fill</span><span class="ds-pair__ratio" data-contrast="--color-success-solid|--color-accent-subtle" data-min="3"></span></div>
+      </div>
+      <p>The avatar fill itself has no contrast requirement against the page: it is decorative and the initials carry the content.</p>
+      <h3>Motion</h3>
+      <p>None. Image skeletons shimmer and stop under <code>prefers-reduced-motion</code>.</p>
+      <h3>Touch</h3>
+      <p>An avatar used as a control is wrapped in a 44px <code>btn--icon</code>, whatever the avatar's size. Plain avatars are not targets.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Initials: first letter of the first two name parts, upper case ("Ada Lovelace" → "AL", "Katherine Johnson" → "KJ"); one letter for a single name. This is the combobox mock's <code>initials()</code> rule.</li>
+        <li>Square course marks use a short code or sequence ("01"), never a full word.</li>
+        <li>Overflow is "+" and a number ("+3"); its label is a sentence ("Show 3 more viewers").</li>
+        <li>Photos are of the person, cropped to the face; never use a placeholder stock photo.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="cluster"><span class="avatar" aria-hidden="true">GH</span><span>Grace Hopper</span></span></div><figcaption>Avatar beside the name, hidden from assistive technology so the name is read once.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar" role="img" aria-label="GH">GH</span></div><figcaption>Initials alone as the only identification; "G H" is all a screen reader can say and sighted people cannot tell Grace Hopper from Gabriel Harris.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="cluster"><span class="avatar" style="overflow: visible;" aria-hidden="true">AL<span class="avatar__status"></span></span><span>Ada Lovelace <span class="list__meta">· In session</span></span></span></div><figcaption>Status dot plus the status in words.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar" style="overflow: visible;" aria-hidden="true">AL<span class="avatar__status"></span></span><span class="avatar" style="overflow: visible;" aria-hidden="true">GH<span class="avatar__status" style="background: var(--color-danger-solid);"></span></span></div><figcaption>Green and red dots as the only cue: invisible to many colour-blind viewers and silent to screen readers (WCAG 1.4.1).</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="avatar avatar--square avatar--lg" aria-hidden="true">01</span><span class="avatar" aria-hidden="true">AL</span></div><figcaption>Square for courses, round for people: the shape tells the kind of thing.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="avatar avatar--lg" aria-hidden="true">01</span><span class="avatar avatar--square" aria-hidden="true">AL</span></div><figcaption>Mixing the shapes makes a course look like a person and the reverse.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Initials and icon</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Status dot</td><td><code>--color-success-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-success-solid" data-swatch></i><span data-token="--color-success-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-success-solid" data-swatch></i><span data-token="--color-success-solid"></span></span></td></tr>
+          <tr><td>Ring (dot, group)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Overflow fill</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Size sm / md / lg</td><td><code>--avatar-size</code></td><td colspan="2">1.5rem / 2rem / 2.75rem (24 / 32 / 44px; lg equals <span data-token="--control-height-md"></span>)</td></tr>
+          <tr><td>Radius round / square</td><td><code>--radius-full</code> / <code>--radius-md</code></td><td colspan="2"><span data-token="--radius-full"></span> / <span data-token="--radius-md"></span></td></tr>
+          <tr><td>Initials font md / lg</td><td><code>--text-overline</code> / <code>--text-label</code></td><td colspan="2"><span data-token="--text-overline"></span> / <span data-token="--text-label"></span></td></tr>
+          <tr><td>Group overlap</td><td><code>--space-2</code> (negative)</td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;!-- Beside a name: decorative --&gt;
+&lt;span class="avatar" aria-hidden="true"&gt;AL&lt;/span&gt; Ada Lovelace
+
+&lt;!-- Alone: named --&gt;
+&lt;span class="avatar avatar--lg" role="img" aria-label="Ada Lovelace"&gt;AL&lt;/span&gt;
+
+&lt;!-- Course mark --&gt;
+&lt;span class="avatar avatar--square avatar--lg" aria-hidden="true"&gt;01&lt;/span&gt;
+
+&lt;!-- Presence --&gt;
+&lt;span class="avatar" aria-hidden="true"&gt;AL&lt;span class="avatar__status"&gt;&lt;/span&gt;&lt;/span&gt; Ada Lovelace · In session</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.avatar</code></td><td>Round 32px mark with initials, an icon or an <code>&lt;img&gt;</code>.</td></tr>
+        <tr><td><code>.avatar--sm</code> <code>.avatar--lg</code></td><td>24px or 44px.</td></tr>
+        <tr><td><code>.avatar--square</code></td><td><code>--radius-md</code> corners, for courses and other things.</td></tr>
+        <tr><td><code>.avatar__status</code></td><td>Presence dot, bottom-right, success colour.</td></tr>
+        <tr><td><code>.avatar-group</code></td><td>Overlapping row with surface rings.</td></tr>
+        <tr><td><code>--avatar-size</code></td><td>Component token for one-off sizes.</td></tr>
+        <tr><td><code>aria-hidden="true"</code> / <code>role="img"</code> + <code>aria-label</code></td><td>Decorative beside a name / named when alone.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the custom option template's initials avatar (2rem, round, <code>--page-accent-soft</code> fill, <code>aria-hidden</code>, built by <code>initials(name)</code>) and the course header's 2.75rem square course icon ("01").</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Initials 0.75rem at weight 700 and the course icon at weight 750; normalised to <code>--text-overline</code> (md) and <code>--text-label</code> (lg), both 700.</li>
+        <li>Course icon radius 0.5rem written as a raw value; now <code>--radius-md</code>.</li>
+        <li>Fill <code>#e4f2ec</code> / dark <code>#244b42</code> (<code>--page-accent-soft</code>) mapped to <code>--color-accent-subtle</code>.</li>
+        <li>Image, icon, group, overflow and status variants are derived: not present in the mocks; they follow the system rules.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

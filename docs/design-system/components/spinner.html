@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spinner — Tessera design system</title>
+<meta name="description" content="Spinners show a short wait of unknown length: three sizes, inline with text, and on media. role=status with visually hidden text; reduced motion slows it rather than stopping it.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Feedback</p>
+      <h1>Spinner</h1>
+      <p class="ds-lead">A spinner says "working on it" when the wait is short and its length is unknown: searching for learners, reconnecting to Lecture hall A. It always comes with words, visible or announced.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill"><code>role="status"</code> + visually hidden text</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a spinner for waits of roughly 1–10 seconds where the amount of work is unknown and there is no layout to preview: results loading in the combobox, a stream reconnecting, an availability check on a field. Show it only after about 300 ms, so fast responses do not flash.</p>
+      <ul>
+        <li>Use a <a href="progress-bar.html">progress bar</a> when the amount of work is known, or the wait is long.</li>
+        <li>Use a <a href="skeleton.html">skeleton</a> when a page or card is loading and its layout is predictable.</li>
+        <li>For a button's own busy state, use the <a href="button.html">button</a>'s <code>aria-busy="true"</code>, which draws the spinner for you.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <span class="loading-inline"><span class="spinner spinner--lg" aria-hidden="true"></span><span>Loading learners…</span></span>
+          <span class="ds-callout" style="left: 22%; top: 18%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 34%; top: 50%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 66%; top: 38%;" aria-hidden="true">3</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Arc</b><small>The top quarter of the ring in <code>--color-accent</code>; it is the moving part.</small></div></li>
+          <li><div><b>Track</b><small>The rest of the ring in <code>--color-border-default</code>; 2px (sm, md) or 4px (lg) wide, fully round.</small></div></li>
+          <li><div><b>Text</b><small>Visible ("Loading learners…") or visually hidden. Lives in the <code>role="status"</code> container; the ring itself is <code>aria-hidden</code>.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Standalone</h3>
+      <p>The ring with hidden text, for places where the context already says what is loading (inside a field, centred in an empty list).</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span role="status"><span class="spinner" aria-hidden="true"></span><span class="visually-hidden">Loading learners</span></span>
+        </div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span role="status"&gt;
+  &lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="visually-hidden"&gt;Loading learners&lt;/span&gt;
+&lt;/span&gt;</code></pre></details>
+      </div>
+
+      <h3>Inline with text</h3>
+      <p><code>.loading-inline</code> pairs the ring with muted text. Use it in status rows, under fields and in table footers. This is the combobox popup's status row: "Loading learners…".</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <span class="loading-inline" role="status"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Loading learners…</span></span>
+          <span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Checking COM-204…</span></span>
+        </div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;span class="loading-inline" role="status"&gt;
+  &lt;span class="spinner spinner--sm" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span&gt;Loading learners…&lt;/span&gt;
+&lt;/span&gt;</code></pre></details>
+      </div>
+
+      <h3>In a field</h3>
+      <p>The combobox shows a small spinner inside the field, before the toggle, while results load. It is decorative there (<code>aria-hidden</code>), because the combobox's own live region announces "Loading results." after 1 s and the listbox sets <code>aria-busy</code>.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="field" style="width: 100%; max-width: 24rem;">
+            <label class="field__label" for="sp-field">Learners</label>
+            <div class="input-group">
+              <input class="input" id="sp-field" type="text" value="Ada" aria-describedby="sp-field-hint">
+              <span class="input-group__addon"><span class="spinner spinner--sm" aria-hidden="true"></span></span>
+            </div>
+            <p class="message" id="sp-field-hint">Select one or more learners.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>On media</h3>
+      <p><code>.spinner--on-media</code> swaps the colours for the media tokens so the ring reads on video. The video player's reconnecting state uses the large spinner with "Reconnecting… attempt 1 of 5" under it on a dimmed frame.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <div class="media-player" style="width: 100%; max-width: 32rem;">
+            <div class="media-player__stage">
+              <div class="media-player__overlay media-player__overlay--dim">
+                <div role="status">
+                  <span class="spinner spinner--lg spinner--on-media" aria-hidden="true" style="display: block; margin: 0 auto var(--space-3);"></span>
+                  <p style="margin: 0;">Reconnecting… attempt 1 of 5</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The buffering state shows the same ring with no text; the player announces "Buffering" only if it lasts more than 1 s.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="media-player__overlay media-player__overlay--dim"&gt;
+  &lt;div&gt;
+    &lt;span class="spinner spinner--lg spinner--on-media" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;p&gt;Reconnecting… attempt 1 of 5&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- the player's polite live region says "Connection lost. Reconnecting." --&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Pick by the space the spinner stands in for, not by importance.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas">
+          <span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Small · 16px</span></span>
+          <span class="loading-inline"><span class="spinner" aria-hidden="true"></span><span>Medium · 20px</span></span>
+          <span class="loading-inline"><span class="spinner spinner--lg" aria-hidden="true"></span><span>Large · 56px</span></span>
+        </div>
+        <div class="ds-example__caption"><span>sm: inside fields, chips, status rows. md (default): inline with body text, buttons. lg: centred in a region or over media.</span></div>
+      </div>
+      <table class="ds-table"><thead><tr><th scope="col">Size</th><th scope="col">Diameter</th><th scope="col">Ring</th><th scope="col">Use</th></tr></thead><tbody>
+        <tr><td><code>.spinner--sm</code></td><td>1rem (16px)</td><td><code>--border-width-thick</code> (2px)</td><td>Combobox field, <code>.loading-inline</code> in 14px text.</td></tr>
+        <tr><td><code>.spinner</code></td><td>1.25rem (20px)</td><td>2px</td><td>Next to 16px text, empty lists.</td></tr>
+        <tr><td><code>.spinner--lg</code></td><td>3.5rem (56px)</td><td><code>--border-width-stripe</code> (4px)</td><td>Video reconnecting and buffering, full-region loading.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>A spinner is not interactive, so hover, focus, active and disabled do not apply. It has three lifecycle states: <b>delayed</b> (not shown for the first ~300 ms), <b>spinning</b>, and <b>removed</b> (replaced by the content, a result message, or an error). The matrix shows each size on each surface it supports.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Size</th><th scope="col">On surface</th><th scope="col">On canvas</th><th scope="col">With text</th><th scope="col">On media</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Small</th>
+            <td><span class="spinner spinner--sm" aria-hidden="true"></span></td>
+            <td><div class="ds-example__canvas--canvas" style="padding: var(--space-2); display: inline-flex;"><span class="spinner spinner--sm" aria-hidden="true"></span></div></td>
+            <td><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Loading…</span></span></td>
+            <td><div style="padding: var(--space-2); display: inline-flex; background: var(--color-media-scrim);"><span class="spinner spinner--sm spinner--on-media" aria-hidden="true"></span></div></td></tr>
+          <tr><th scope="row">Medium</th>
+            <td><span class="spinner" aria-hidden="true"></span></td>
+            <td><div class="ds-example__canvas--canvas" style="padding: var(--space-2); display: inline-flex;"><span class="spinner" aria-hidden="true"></span></div></td>
+            <td><span class="loading-inline"><span class="spinner" aria-hidden="true"></span><span>Loading…</span></span></td>
+            <td><div style="padding: var(--space-2); display: inline-flex; background: var(--color-media-scrim);"><span class="spinner spinner--on-media" aria-hidden="true"></span></div></td></tr>
+          <tr><th scope="row">Large</th>
+            <td><span class="spinner spinner--lg" aria-hidden="true"></span></td>
+            <td><div class="ds-example__canvas--canvas" style="padding: var(--space-2); display: inline-flex;"><span class="spinner spinner--lg" aria-hidden="true"></span></div></td>
+            <td><span class="loading-inline"><span class="spinner spinner--lg" aria-hidden="true"></span><span>Loading course…</span></span></td>
+            <td><div style="padding: var(--space-2); display: inline-flex; background: var(--color-media-scrim);"><span class="spinner spinner--lg spinner--on-media" aria-hidden="true"></span></div></td></tr>
+          <tr><th scope="row">In a busy button</th>
+            <td colspan="4"><button class="btn btn--primary" type="button" aria-busy="true"><span>Preview assignment</span></button> <button class="btn" type="button" aria-busy="true"><span>Retry</span></button></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas" style="padding: 0;"><span class="spinner spinner--sm" aria-hidden="true"></span><span class="spinner" aria-hidden="true"></span><span class="spinner spinner--lg" aria-hidden="true"></span><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Loading learners…</span></span></div></div>
+        <div data-theme="dark"><div class="ds-example__canvas" style="padding: 0;"><span class="spinner spinner--sm" aria-hidden="true"></span><span class="spinner" aria-hidden="true"></span><span class="spinner spinner--lg" aria-hidden="true"></span><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Loading learners…</span></span></div></div>
+      </div>
+      <ul>
+        <li><b>Too long</b>: after about 10 s, add text that sets expectations ("Still connecting…", as the video mock does at 5 s on a slow connection) or switch to a progress bar if the size becomes known.</li>
+        <li><b>Gave up</b>: replace the spinner with an <a href="alert.html">alert</a> and a Retry ("Connection lost").</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Sizes are in rem, so the spinner scales with the user's font size and zoom; it does not change between breakpoints.</li>
+        <li><code>.loading-inline</code> wraps its text next to the ring; at 320px the text wraps under nothing, the ring stays aligned to the first line's centre.</li>
+        <li>On media the large spinner stays 56px at every width; on very small players (under 240px tall) the text under it wraps rather than shrinking.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The spinner reads <code>--color-accent</code> (arc) and <code>--color-border-default</code> (track); on media <code>--color-media-accent</code> and <code>--color-media-track</code>. Size is the component token <code>--spinner-size</code>. In forced-colours mode the ring becomes <code>ButtonText</code> with a <code>Highlight</code> arc.</p>
+      <pre><code>/* A 24px spinner for a one-off slot */
+.course-tile .spinner { --spinner-size: 1.5rem; }</code></pre>
+      <p>In the shipped packages the combobox spinner uses <code>--t-combobox-border</code> (from <code>--t-colorNeutralStrokeAccessible</code>) as a single-colour dashed ring, and the video player uses <code>--t-video-player-accent</code>; see <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The spinner ring is <code>aria-hidden="true"</code>. What it means is said by text inside a <code>role="status"</code> container (polite live region): visible text when there is room, or a <code>.visually-hidden</code> span ("Loading learners"). Insert the status container empty and fill it, or insert it after page load, so the text is announced. Where a component already owns a live region (combobox, video player), the spinner is purely visual and the component announces. The region being loaded sets <code>aria-busy="true"</code>. See <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">Understanding 4.1.3 Status Messages</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td>(none)</td><td>Not focusable. If a wait can be cancelled, a Cancel button sits next to the spinner ("Loading course · Cancel" in the SCORM mock).</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>A spinner never takes focus. When it replaces a control the person activated, focus stays on that control (now busy); when the content arrives, focus is not moved unless the person asked for it (the combobox keeps focus in its input throughout).</p>
+      <h3>Labelling</h3>
+      <p>Text names what is loading: "Loading learners", "Reconnecting… attempt 1 of 5". Never "Loading" alone when more than one thing could be loading. Announce once at the start (after a short delay) and once at the end ("6 results available."); do not repeat while spinning.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Arc on surface</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Arc on canvas</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Media arc on scrim</span><span class="ds-pair__ratio" data-contrast="--color-media-accent|--color-media-scrim" data-min="3"></span></div>
+        <div class="ds-pair"><span>Inline text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Media text on scrim</span><span class="ds-pair__ratio" data-contrast="--color-media-fg|--color-media-scrim" data-min="4.5"></span></div>
+      </div>
+      <p>The track is decorative; only the arc must reach 3:1, and the text carries the meaning.</p>
+      <h3>Motion</h3>
+      <p>One revolution per <code>--duration-loop-spin</code> (900 ms), linear. Under <code>prefers-reduced-motion</code> the token becomes 2000 ms: the spinner slows to one revolution every 2 s rather than stopping, because a frozen ring looks like a hang and the motion carries status. It is a small, slow, non-flashing rotation (no WCAG 2.3 risk).</p>
+      <h3>Touch</h3>
+      <p>Not a target. A spinner never replaces a button's tappable area with something untappable; the busy button keeps its size.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Name the thing and use an ellipsis: "Loading learners…", "Checking COM-204…", "Connecting…".</li>
+        <li>Add position when retrying: "Reconnecting… attempt 1 of 5".</li>
+        <li>After a long wait, reassure: "Still connecting…".</li>
+        <li>Announced text drops the ellipsis: "Loading learners".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><span class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span><span>Loading learners…</span></span></div><figcaption>Say what is loading next to the ring, or in hidden status text.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><span class="spinner" role="img" aria-label="Loading"></span></div><figcaption>A labelled image that is never announced (no live region) and says only "Loading".</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div style="padding: var(--space-4); background: var(--color-media-scrim); display: inline-flex;"><span class="spinner spinner--lg spinner--on-media" aria-hidden="true"></span></div></div><figcaption>On video, use <code>.spinner--on-media</code> on the dimmed frame.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div style="padding: var(--space-4); background: var(--color-media-scrim); display: inline-flex;"><span class="spinner spinner--lg" aria-hidden="true"></span></div></div><figcaption>A page-theme spinner on video: the light track and teal arc disappear against the picture.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" aria-busy="true"><span>Preview assignment</span></button></div><figcaption>Use the button's busy state; width and name stay.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" aria-label="Preview assignment"><span class="spinner spinner--sm" aria-hidden="true"></span></button></div><figcaption>Swap the label for a hand-placed spinner: the button shrinks, sighted users lose the label, and nothing sets <code>aria-busy</code>.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Arc</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Track</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Media arc</td><td><code>--color-media-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-media-accent" data-swatch></i><span data-token="--color-media-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-media-accent" data-swatch></i><span data-token="--color-media-accent"></span></span></td></tr>
+          <tr><td>Media track</td><td><code>--color-media-track</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-media-track" data-swatch></i><span data-token="--color-media-track"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-media-track" data-swatch></i><span data-token="--color-media-track"></span></span></td></tr>
+          <tr><td>Inline text</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Ring width sm/md / lg</td><td><code>--border-width-thick</code> / <code>--border-width-stripe</code></td><td colspan="2"><span data-token="--border-width-thick"></span> / <span data-token="--border-width-stripe"></span></td></tr>
+          <tr><td>Revolution</td><td><code>--duration-loop-spin</code>, <code>--ease-linear</code></td><td colspan="2"><span data-token="--duration-loop-spin"></span> <span data-token="--ease-linear"></span></td></tr>
+          <tr><td>Inline gap</td><td><code>--space-2</code></td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+          <tr><td>Shape</td><td><code>--radius-full</code></td><td colspan="2"><span data-token="--radius-full"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;span role="status"&gt;
+  &lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="visually-hidden"&gt;Loading learners&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;span class="loading-inline" role="status"&gt;
+  &lt;span class="spinner spinner--sm" aria-hidden="true"&gt;&lt;/span&gt;&lt;span&gt;Loading learners…&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;span class="spinner spinner--lg spinner--on-media" aria-hidden="true"&gt;&lt;/span&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.spinner</code></td><td>Medium (20px) ring.</td></tr>
+        <tr><td><code>.spinner--sm</code> <code>.spinner--lg</code></td><td>16px or 56px; large uses a 4px ring.</td></tr>
+        <tr><td><code>.spinner--on-media</code></td><td>Media track and accent for use on video.</td></tr>
+        <tr><td><code>.loading-inline</code></td><td>Ring + muted 14px text in a row.</td></tr>
+        <tr><td><code>--spinner-size</code></td><td>Component token for a one-off diameter.</td></tr>
+        <tr><td><code>role="status"</code> + <code>.visually-hidden</code></td><td>Announces the wait politely.</td></tr>
+        <tr><td><code>aria-busy="true"</code> on the loading region</td><td>Tells assistive technology the region is updating.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: small dashed-circle spinner in the field while results load (<code>aria-hidden</code>, shown with <code>aria-busy</code> on the listbox), "Loading learners…" in the status row, "Loading results." announced after 1 s.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: 56px spinner on the buffering overlay and the reconnecting overlay with "Reconnecting… attempt 1 of 5"; "Still connecting…" after 5 s on a slow connection.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>The video spinner ring was 5px; snapped to <code>--border-width-stripe</code> (4px).</li>
+        <li>Video ring colour <code>rgb(255 255 255 / 0.35)</code>; now <code>--color-media-track</code>.</li>
+        <li>The combobox drew a single-colour dashed SVG circle in the border colour; unified on the two-tone ring so every spinner reads the same.</li>
+        <li>Both mocks animated the spinner only under <code>prefers-reduced-motion: no-preference</code>, so it froze for people who reduce motion; the system slows it to 2 s per revolution instead, so the status is still visible. The combobox also tied its spin to <code>--t-combobox-motion-duration</code>, which was 0 ms in light; the duration now comes from <code>--duration-loop-spin</code>.</li>
+        <li>Reconnect text margin 0.75rem kept as <code>--space-3</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

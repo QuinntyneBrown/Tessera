@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Container, grid and stack — Tessera design system</title>
+<meta name="description" content="Layout primitives: container, column grid, auto grid, stack, cluster, the wrapping sidebar layout and the page header, driven by layout tokens.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Containers</p>
+      <h1>Container, grid and stack</h1>
+      <p class="ds-lead">Seven layout primitives place every Tessera screen: a centred container, a 4/8/12-column grid, an auto-filling card grid, vertical stacks, wrapping clusters, the SCORM player's wrapping sidebar layout, and the page header. They read the layout tokens, so margins, gutters and columns change in one place.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA (1.4.10 Reflow)</span><span class="ds-pill">Status: stable</span><span class="ds-pill">CSS only</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Compose pages from these primitives instead of writing one-off flex and grid rules. They carry no colour and no semantics; put landmarks and headings on the elements inside them.</p>
+      <ul>
+        <li><b><code>.container</code></b>: caps content at <code>--layout-container-max</code> (90rem / 1440px, the SCORM and video shells) and adds <code>--layout-margin</code> on both sides.</li>
+        <li><b><code>.grid</code></b>: <code>--layout-columns</code> equal columns (4 on phones, 8 from 768px, 12 from 1024px) with <code>--layout-gutter</code> gaps. Children span with <code>grid-column</code>; <code>.span-full</code> spans all.</li>
+        <li><b><code>.grid--auto</code></b>: as many 18rem columns as fit, for card catalogues.</li>
+        <li><b><code>.stack</code></b>: vertical flow with one gap (<code>--stack-gap</code>, default 16px).</li>
+        <li><b><code>.cluster</code></b>: a wrapping row (<code>--cluster-gap</code>, default 12px) for buttons, badges, metadata.</li>
+        <li><b><code>.sidebar-layout</code></b>: side panel plus main panel that wraps without a media query. The side column stacks <em>above</em> the main one as soon as the main cannot keep 30rem, so enlarged text never squeezes the player.</li>
+        <li><b><code>.page-header</code></b>: eyebrow, title, lead and an optional action that wraps below the title.</li>
+      </ul>
+      <p>Page-level shells (top bar, side navigation) are documented on the <a href="../foundations/layout.html">layout foundation</a> and the <a href="top-bar.html">top bar</a> and <a href="sidebar-navigation.html">sidebar navigation</a> pages.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure" style="padding: var(--space-6); place-items: stretch;">
+          <div class="ds-grid-demo" aria-hidden="true">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+          </div>
+          <span class="ds-callout" style="left: 2%; top: 44%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 22%; top: 18%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 50%; top: 18%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 92%; top: 44%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Margin</b><small><code>--layout-margin</code>: viewport edge to content. 16px, 24px from 768px, 32px from 1024px.</small></div></li>
+          <li><div><b>Column</b><small><code>repeat(var(--layout-columns), minmax(0, 1fr))</code>: 4, 8 or 12 equal tracks that never overflow.</small></div></li>
+          <li><div><b>Gutter</b><small><code>--layout-gutter</code>: space between columns. 16px, then 24px from 768px.</small></div></li>
+          <li><div><b>Container edge</b><small><code>--layout-container-max</code> (90rem); beyond it the margins grow and content stays centred.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>Column grid (live)</h3>
+      <p>Resize the window: the demo uses the live tokens, so it shows 4 columns on phones, 8 on tablets and 12 on laptops, with the matching gutters and margins.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="ds-grid-demo" aria-hidden="true">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+          </div>
+          <div class="ds-grid-demo" aria-hidden="true">
+            <span style="grid-column: span 4;">span 4</span><span style="grid-column: span 4;">span 4</span><span style="grid-column: 1 / -1;">span full</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Columns: <span data-token="--layout-columns"></span> · gutter: <span data-token="--layout-gutter"></span> · margin: <span data-token="--layout-margin"></span> (current viewport)</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="container"&gt;
+  &lt;div class="grid"&gt;
+    &lt;section style="grid-column: span 4"&gt;…&lt;/section&gt;
+    &lt;section class="span-full"&gt;…&lt;/section&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Auto grid</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <ul class="grid grid--auto" role="list" style="margin: 0; padding: 0; list-style: none;">
+            <li class="card"><div class="card__body"><b>Workplace safety essentials</b><p class="card__eyebrow">35 minutes</p></div></li>
+            <li class="card"><div class="card__body"><b>Better conversations at work</b><p class="card__eyebrow">4 activities</p></div></li>
+            <li class="card"><div class="card__body"><b>Thermal transfer, week 7</b><p class="card__eyebrow">Live · Lecture hall A</p></div></li>
+          </ul>
+        </div>
+        <div class="ds-example__caption"><span><code>.grid--auto</code>: <code>repeat(auto-fill, minmax(min(100%, 18rem), 1fr))</code>.</span></div>
+      </div>
+      <h3>Stack and cluster</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start; gap: var(--space-8);">
+          <div class="stack" style="--stack-gap: var(--space-2); min-width: 12rem;">
+            <span class="badge">Stack item 1</span><span class="badge">Stack item 2</span><span class="badge">Stack item 3</span>
+          </div>
+          <div class="cluster" style="max-width: 20rem;">
+            <button class="btn" type="button">Previous</button><button class="btn btn--primary" type="button">Continue</button><span class="badge badge--success">Saved</span><span class="card__eyebrow">Last saved at 10:42</span>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>.stack</code> with <code>--stack-gap: var(--space-2)</code>; <code>.cluster</code> wrapping at a narrow width.</span></div>
+      </div>
+      <h3>Sidebar layout</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="sidebar-layout">
+            <nav class="outline-panel" aria-labelledby="lg-outline-h"><div class="outline-panel__head"><h4 id="lg-outline-h" style="font: var(--text-h4);">Course outline</h4></div><div class="card__body" style="padding-top: 0;"><p class="card__eyebrow">4 activities · 2 complete</p></div></nav>
+            <section class="content-player" aria-labelledby="lg-player-h"><div class="content-player__bar"><p>Activity 2 of 4</p><h4 id="lg-player-h" style="font: var(--text-h3);">Ask better questions</h4></div><div class="card__body"><p>Questions that begin with "what" or "how" invite more detail than a yes or no.</p></div></section>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Side: <code>flex: 1 1 15.5rem</code>; main: <code>flex: 999 1 30rem</code>. Narrow the window: the outline moves above the player, with no media query.</span></div>
+      </div>
+      <h3>Page header</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="page-header" style="margin-bottom: 0;">
+            <div><p class="page-header__eyebrow">Course</p><p class="page-header__title" role="heading" aria-level="4">Better conversations at work</p><dl class="dl dl--inline page-header__lead"><div><dt>Completion:</dt><dd>Unknown</dd></div><div><dt>Save status:</dt><dd>Last saved at 10:42</dd></div></dl></div>
+            <button class="btn" type="button">Exit course</button>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The SCORM course head: title and status on the start side, Exit course aligned to the bottom end; it wraps under the title on narrow screens.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>The primitives' "sizes" are their gaps. Choose by relationship: tight for parts of one thing, wide for separate things.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start; gap: var(--space-8);">
+          <div class="stack" style="--stack-gap: var(--space-2);"><span class="badge">8px</span><span class="badge">related parts</span></div>
+          <div class="stack" style="--stack-gap: var(--space-4);"><span class="badge">16px</span><span class="badge">default</span></div>
+          <div class="stack" style="--stack-gap: var(--space-6);"><span class="badge">24px</span><span class="badge">panels</span></div>
+          <div class="stack" style="--stack-gap: var(--space-8);"><span class="badge">32px</span><span class="badge">sections</span></div>
+        </div>
+        <div class="ds-example__caption"><span><code>--stack-gap</code> / <code>--cluster-gap</code>: <code>--space-2</code> label to field, <code>--space-4</code> default, <code>--space-6</code> between panels (the mocks' 1.5rem layout gap), <code>--space-8</code> between page sections.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states" data-na="Layout primitives are not interactive and have no states; their behaviour changes with viewport width, documented under Responsive."><h2><a href="#states">States</a></h2>
+      <p class="ds-na">Layout primitives are not interactive and have no states; their behaviour changes with viewport width, documented under Responsive.</p>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Range</th><th scope="col">Columns</th><th scope="col">Gutter</th><th scope="col">Margin</th><th scope="col">Typical</th></tr></thead>
+        <tbody>
+          <tr><td>0 – 767px</td><td>4</td><td><code>--space-4</code> (16px)</td><td><code>--space-4</code> (16px)</td><td>Phones; everything one column; sidebar layout stacked.</td></tr>
+          <tr><td>768px (<code>--layout-breakpoint-md</code>)</td><td>8</td><td><code>--space-6</code> (24px)</td><td><code>--space-6</code> (24px)</td><td>Tablets; two-up cards; outline toggle hidden.</td></tr>
+          <tr><td>1024px (<code>--layout-breakpoint-lg</code>)</td><td>12</td><td><code>--space-6</code> (24px)</td><td><code>--space-8</code> (32px)</td><td>Laptops; outline beside player.</td></tr>
+          <tr><td>1440px (<code>--layout-breakpoint-2xl</code>)</td><td>12</td><td><code>--space-6</code></td><td>auto</td><td>Content stops at <code>--layout-container-max</code>.</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Breakpoints are <code>min-width</code> queries in rem (<code>48rem</code>, <code>64rem</code>), so they follow the reader's font size. Custom properties cannot be used in <code>@media</code>; the values are repeated by convention.</li>
+        <li><code>.sidebar-layout</code> and <code>.grid--auto</code> are intrinsic: they respond to the space they have, not the viewport, so they also work inside a narrow LMS frame and at 400% zoom.</li>
+        <li>Every track is <code>minmax(0, 1fr)</code> and every flex child <code>min-width: 0</code>, so long words wrap instead of forcing horizontal scroll at 320px.</li>
+        <li><code>.page-header</code> wraps its action below the title when they do not fit; the title drops from <code>--font-size-4xl</code> to <code>--font-size-3xl</code> below 768px.</li>
+        <li>Vertical rhythm never scales with viewport width; the token changes at a breakpoint instead.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The primitives draw nothing, so they look the same in every theme. Hosts re-theme layout by overriding layout tokens on a container, not by editing the classes.</p>
+      <pre><code>/* An LMS embeds Tessera in a narrow content column */
+.host-lesson-frame { --layout-container-max: 60rem; --layout-margin: var(--space-4); }
+/* A denser catalogue */
+.host-catalogue .grid { --layout-gutter: var(--space-4); }</code></pre>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="sidebar-layout"><div class="card"><div class="card__body"><b>Outline</b></div></div><div class="card"><div class="card__body"><b>Player</b></div></div></div></div>
+        <div data-theme="dark"><div class="sidebar-layout"><div class="card"><div class="card__body"><b>Outline</b></div></div><div class="card"><div class="card__body"><b>Player</b></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No role: these are presentational containers. Use landmarks inside them (<code>&lt;main&gt;</code>, <code>&lt;nav aria-labelledby&gt;</code> for the outline, <code>&lt;section aria-labelledby&gt;</code> for the player, <code>&lt;aside&gt;</code> for notes). The primitives exist to meet <a href="https://www.w3.org/WAI/WCAG22/Understanding/reflow.html">WCAG 1.4.10 Reflow</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html">1.4.12 Text Spacing</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Follows DOM order, which is the visual order at every width. Never reorder with <code>order</code>, <code>flex-direction: row-reverse</code> or explicit grid placement that changes reading order.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Containers are not focusable. Leave room for focus rings: <code>overflow: hidden</code> on a layout wrapper clips the 5px ring of anything at its edge, so only clip media.</p>
+      <h3>Labelling</h3>
+      <p>Name the landmarks inside, not the layout. In the sidebar layout the outline comes first in the DOM, so screen reader and keyboard users meet the outline before the player, matching the stacked order on phones.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Text on page canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Panel edge on canvas (decorative)</span><span class="ds-pair__ratio" data-contrast="--color-border-default|--color-bg-canvas" data-min="1"></span></div>
+        <div class="ds-pair"><span>Page header eyebrow on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-bg-canvas" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Layout changes are never animated; panels jump to their new place on resize.</p>
+      <h3>Touch</h3>
+      <p>Gutters of at least 16px keep targets in neighbouring columns apart. Fixed bottom bars add <code>env(safe-area-inset-bottom)</code>; full-height layouts use <code>100dvh</code>.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Prose stays within <code>--layout-measure</code> (60ch) even inside wide columns; the page header lead and the video intro already do.</li>
+        <li>Put the most important panel first in the DOM when the order is a choice; it is first on phones.</li>
+        <li>Page header eyebrows are one or two words ("Course", "Component design reference"); titles are the page's subject.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="sidebar-layout"><div class="card"><div class="card__body"><b>Outline</b></div></div><div class="card"><div class="card__body"><b>Player</b></div></div></div></div><figcaption>Let the sidebar layout wrap on available space, as the SCORM mock does.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div style="display: grid; grid-template-columns: 16rem 30rem; gap: var(--space-6); overflow: auto;"><div class="card"><div class="card__body"><b>Outline</b></div></div><div class="card"><div class="card__body"><b>Player</b></div></div></div></div><figcaption>Fix two columns in rem; at 320px or 200% text the player overflows and the page scrolls sideways.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="cluster"><button class="btn" type="button">Previous</button><button class="btn btn--primary" type="button">Continue</button></div></div><figcaption>Keep DOM order equal to visual order.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="cluster" style="flex-direction: row-reverse; justify-content: flex-end;"><button class="btn btn--primary" type="button">Continue</button><button class="btn" type="button">Previous</button></div></div><figcaption>Reverse the row with CSS; Tab reaches "Continue" first although it appears second.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="ds-grid-demo" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><figcaption>Use <code>--layout-margin</code> and <code>--layout-gutter</code> for page padding.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="ds-grid-demo" aria-hidden="true" style="padding-inline: var(--space-3); gap: var(--space-3);"><span>1</span><span>2</span><span>3</span><span>4</span></div></div><figcaption>Hand-set narrow paddings (the combobox mock used 0.75rem on phones); margins drift between pages.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Columns (current viewport)</td><td><code>--layout-columns</code></td><td colspan="2"><span data-token="--layout-columns"></span></td></tr>
+          <tr><td>Gutter (current viewport)</td><td><code>--layout-gutter</code></td><td colspan="2"><span data-token="--layout-gutter"></span></td></tr>
+          <tr><td>Margin (current viewport)</td><td><code>--layout-margin</code></td><td colspan="2"><span data-token="--layout-margin"></span></td></tr>
+          <tr><td>Container max</td><td><code>--layout-container-max</code></td><td colspan="2"><span data-token="--layout-container-max"></span></td></tr>
+          <tr><td>Measure</td><td><code>--layout-measure</code></td><td colspan="2"><span data-token="--layout-measure"></span></td></tr>
+          <tr><td>Sidebar width (navigation)</td><td><code>--layout-sidebar-width</code></td><td colspan="2"><span data-token="--layout-sidebar-width"></span></td></tr>
+          <tr><td>Breakpoints sm / md / lg / xl / 2xl</td><td><code>--layout-breakpoint-*</code></td><td colspan="2"><span data-token="--layout-breakpoint-sm"></span> / <span data-token="--layout-breakpoint-md"></span> / <span data-token="--layout-breakpoint-lg"></span> / <span data-token="--layout-breakpoint-xl"></span> / <span data-token="--layout-breakpoint-2xl"></span></td></tr>
+          <tr><td>Stack gap default / cluster gap default</td><td><code>--space-4</code> / <code>--space-3</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Page header gap</td><td><code>--space-4</code> <code>--space-8</code></td><td colspan="2"><span data-token="--space-4"></span> / <span data-token="--space-8"></span></td></tr>
+          <tr><td>Page canvas behind panels</td><td><code>--color-bg-canvas</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-canvas" data-swatch></i><span data-token="--color-bg-canvas"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-canvas" data-swatch></i><span data-token="--color-bg-canvas"></span></span></td></tr>
+          <tr><td>Page header eyebrow</td><td><code>--color-fg-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-accent" data-swatch></i><span data-token="--color-fg-accent"></span></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;main id="main" class="container" style="padding-block: var(--space-8) var(--space-12)"&gt;
+  &lt;header class="page-header"&gt;
+    &lt;div&gt;
+      &lt;p class="page-header__eyebrow"&gt;Course&lt;/p&gt;
+      &lt;h1 class="page-header__title"&gt;Better conversations at work&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;button class="btn" type="button"&gt;Exit course&lt;/button&gt;
+  &lt;/header&gt;
+  &lt;div class="sidebar-layout"&gt;
+    &lt;nav class="outline-panel" aria-labelledby="outline-h"&gt;…&lt;/nav&gt;
+    &lt;section class="content-player" aria-labelledby="activity-h"&gt;…&lt;/section&gt;
+  &lt;/div&gt;
+&lt;/main&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / property</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.container</code></td><td>Max width <code>--layout-container-max</code>, centred, <code>--layout-margin</code> inline padding.</td></tr>
+        <tr><td><code>.grid</code> / <code>.span-full</code></td><td>Token-driven column grid / span every column.</td></tr>
+        <tr><td><code>.grid--auto</code></td><td>Auto-fill 18rem tracks.</td></tr>
+        <tr><td><code>.stack</code> + <code>--stack-gap</code></td><td>Vertical flex with one gap.</td></tr>
+        <tr><td><code>.cluster</code> + <code>--cluster-gap</code></td><td>Wrapping, centred row.</td></tr>
+        <tr><td><code>.sidebar-layout</code></td><td>First child 15.5rem basis, last child grows from 30rem; wraps without media queries.</td></tr>
+        <tr><td><code>.page-header</code> + <code>__eyebrow</code>, <code>__title</code>, <code>__lead</code></td><td>Wrapping title row with end-aligned action.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: the wrapping sidebar layout (<code>.sidebar</code> <code>flex: 1 1 15.5rem</code>, <code>.player</code> <code>flex: 999 1 30rem</code>, 1.5rem gap; "the outline stacks above the player whenever the player cannot keep 30rem"), the <code>.course-head</code> page header, the 1440px shell.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: the same wrapping layout for player and notes, 1440px shell, 60ch intro measure.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: 72rem shell and the <code>flex: 3 1 32rem</code> / <code>1 1 16rem</code> card and notes layout.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Shell padding was <code>2rem 1.5rem 3rem</code> (SCORM, video), <code>2rem 1.5rem 4rem</code> (combobox), and on phones <code>1.3rem 1rem 2rem</code> and <code>1.25rem 0.75rem 3rem</code>; replaced by <code>--layout-margin</code> inline and <code>--space-8</code> / <code>--space-12</code> block.</li>
+        <li>Containers were 1440px and 72rem; the system container is <code>--layout-container-max</code> (90rem); 72rem is kept only for these docs.</li>
+        <li>Breakpoints 40em and 47.5em written as <code>max-width</code>; now <code>--layout-breakpoint-sm</code> (40rem) and <code>--layout-breakpoint-md</code> (48rem), <code>min-width</code> first.</li>
+        <li>The narrow-screen layout gap was 1rem in the SCORM mock; the gutter token handles it (16px below 768px).</li>
+        <li>The sidebar basis stays 15.5rem from the mock; <code>--layout-sidebar-width</code> (16rem) is for page navigation, not this layout.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

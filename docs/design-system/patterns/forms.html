@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forms — Tessera design system</title>
+<meta name="description" content="How Tessera forms are laid out, labelled, validated and submitted: label placement, validation timing, error summary, submit states, autosave and destructive confirmation.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Forms</h1>
+      <p class="ds-lead">Forms let administrators assign learners, set due dates and leave notes. One column, labels above fields, errors only after the person has had a chance to answer, and one clear action at the end.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes: form field, combobox, text field, textarea, button, alert, dialog</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive behaviour</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>A form is a sequence of <a href="../components/form-field.html">form fields</a> that ends in one action. The rules on this page sit above the individual components: where labels go, when errors appear, how the person learns what went wrong, what the submit button does while it waits, and how destructive changes are confirmed.</p>
+      <ul>
+        <li><b>Layout</b>: one column, at most <code>40rem</code> wide (<code>.form</code>). Short related fields may share a row from 768px up (<code>.form__row--2</code>).</li>
+        <li><b>Labels</b> sit above their field, always visible. Placeholders show an example format, never the label.</li>
+        <li><b>Validation</b> runs when focus leaves a field, then again on every change once an error is showing. A required field stays quiet until the person leaves it or submits, exactly as the combobox mock does.</li>
+        <li><b>Submit</b> stays enabled. Pressing it validates everything, moves focus to the problem, and only then sends.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Use</th><th scope="col">Example</th></tr></thead>
+        <tbody>
+          <tr><td>Several values that are saved together</td><td>A form with a submit button (<code>.form</code> + <code>.form__actions</code>)</td><td>Assign learners to a course with a due date and a note.</td></tr>
+          <tr><td>Progress that should never be lost</td><td>Autosave with a visible save status, no submit button</td><td>The SCORM player saves lesson progress and shows "Last saved at 10:42".</td></tr>
+          <tr><td>A single setting that applies at once</td><td>A <a href="../components/switch.html">switch</a> or <a href="../components/select.html">select</a> with no form around it</td><td>Captions on or off.</td></tr>
+          <tr><td>Filtering a list on the same page</td><td>An inline filter row (<code>.form__inline</code>); see <a href="data-tables-and-lists.html">data tables and lists</a></td><td>Filter learners by status.</td></tr>
+          <tr><td>An action that cannot be undone</td><td>A confirmation step after the submit (<a href="../components/dialog.html">dialog</a> with a danger button)</td><td>Remove three learners from an assignment.</td></tr>
+          <tr><td>A long task with distinct stages</td><td>Several short forms with a <a href="../components/stepper.html">stepper</a>, each stage validated on Continue</td><td>Create a course: details, content package, enrolment.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>Course context, then fields in the order the person thinks about them, then actions. The combobox's reading order is label, field, list, error, hint; every other field follows the same order: label, control, error, hint.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas ds-example__canvas--stack">
+          <div class="card" style="max-width: 40rem;">
+            <div class="card__header"><div><span class="card__eyebrow">Workplace safety essentials · Required learning · 35 minutes</span><h3>Assign learners</h3></div></div>
+            <div class="card__body">
+              <form class="form" action="#" aria-label="Assign learners" novalidate>
+                <p class="field__hint">All fields are required unless marked optional.</p>
+                <div class="field combobox">
+                  <label class="field__label" for="assign-learners">Learners</label>
+                  <div class="combobox__field">
+                    <ul class="combobox__chips" aria-label="Selected learners">
+                      <li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" tabindex="-1" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li>
+                      <li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" tabindex="-1" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li>
+                    </ul>
+                    <div class="combobox__input-row">
+                      <input class="combobox__input" id="assign-learners" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-required="true" aria-describedby="assign-learners-hint" autocomplete="off" placeholder="Name or email">
+                      <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+                    </div>
+                  </div>
+                  <div class="field__below"><p class="field__hint" id="assign-learners-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+                </div>
+                <div class="form__row form__row--2">
+                  <div class="field">
+                    <label class="field__label" for="assign-due">Due date</label>
+                    <input class="input" id="assign-due" type="date" required aria-describedby="assign-due-hint" value="2026-10-30">
+                    <p class="field__hint" id="assign-due-hint">Learners see this on their dashboard.</p>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="assign-note">Note to learners <span class="field__required">(optional)</span></label>
+                  <textarea class="textarea" id="assign-note" maxlength="500" aria-describedby="assign-note-hint assign-note-count"></textarea>
+                  <div class="field__below"><p class="field__hint" id="assign-note-hint">Sent with the assignment email.</p><span class="field__counter" id="assign-note-count">0 of 500 characters</span></div>
+                </div>
+                <div class="form__actions">
+                  <button class="btn" type="button">Cancel</button>
+                  <button class="btn btn--primary" type="submit">Assign learners</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Context heading, combobox, due date, optional note, actions. Submit stays enabled; Cancel sits before the primary in DOM order so stacking on phones puts the primary on top.</span><span>.card · .form · .field · .combobox · .form__actions</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;form class="form" novalidate&gt;
+  &lt;p class="field__hint"&gt;All fields are required unless marked optional.&lt;/p&gt;
+
+  &lt;div class="field combobox"&gt;
+    &lt;label class="field__label" for="learners"&gt;Learners&lt;/label&gt;
+    &lt;div class="combobox__field"&gt;
+      &lt;ul class="combobox__chips" aria-label="Selected learners"&gt;…&lt;/ul&gt;
+      &lt;div class="combobox__input-row"&gt;
+        &lt;input class="combobox__input" id="learners" role="combobox" aria-expanded="false"
+               aria-autocomplete="list" aria-required="true" aria-describedby="learners-hint"&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- popup (inline popover), then error, then hint --&gt;
+    &lt;p class="field__error" id="learners-error" hidden&gt;…Select at least one learner.&lt;/p&gt;
+    &lt;div class="field__below"&gt;
+      &lt;p class="field__hint" id="learners-hint"&gt;Select one or more learners. Search to narrow the results.&lt;/p&gt;
+      &lt;button class="btn btn--link combobox__clear" type="button"&gt;Clear all selections&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;label class="field__label" for="due"&gt;Due date&lt;/label&gt;
+    &lt;input class="input" id="due" type="date" required aria-describedby="due-hint"&gt;
+    &lt;p class="field__hint" id="due-hint"&gt;Learners see this on their dashboard.&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;div class="field"&gt;
+    &lt;label class="field__label" for="note"&gt;Note to learners &lt;span class="field__required"&gt;(optional)&lt;/span&gt;&lt;/label&gt;
+    &lt;textarea class="textarea" id="note" maxlength="500" aria-describedby="note-hint note-count"&gt;&lt;/textarea&gt;
+    &lt;div class="field__below"&gt;&lt;p class="field__hint" id="note-hint"&gt;…&lt;/p&gt;&lt;span class="field__counter" id="note-count"&gt;0 of 500 characters&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="form__actions"&gt;
+    &lt;button class="btn" type="button"&gt;Cancel&lt;/button&gt;
+    &lt;button class="btn btn--primary" type="submit"&gt;Assign learners&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p class="visually-hidden" role="status" id="form-status"&gt;&lt;/p&gt;
+&lt;/form&gt;</code></pre></details>
+      </div>
+      <h3>Layout rules</h3>
+      <ul>
+        <li><b>Spacing</b>: <code>--space-6</code> (24px) between fields, <code>--space-2</code> (8px) from label to control and from control to hint. Groups of related fields sit in a <code>.fieldset</code> with a <code>&lt;legend&gt;</code>.</li>
+        <li><b>Label placement</b>: above the control, left-aligned, at every width. Side-by-side labels break at 200% text and in narrow columns, and they separate the label from the error.</li>
+        <li><b>Width</b>: fields fill the form column; the field width does not hint at the expected length, the hint does.</li>
+        <li><b>Required and optional</b>: when most fields are required, say so once at the top and mark the rest "(optional)". Required fields carry <code>required</code> or <code>aria-required="true"</code>. An asterisk alone is never the only signal.</li>
+        <li><b>Actions</b>: <code>.form__actions</code> ends the form, right-aligned with the primary last. One primary per form. Cancel or Reset is secondary and never the default action.</li>
+      </ul>
+      <h3>Validation timing</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Moment</th><th scope="col">What happens</th></tr></thead>
+        <tbody>
+          <tr><td>Page load, first typing</td><td>Nothing. An untouched field never shows an error, even if it is empty and required.</td></tr>
+          <tr><td>Focus leaves the field (blur)</td><td>The field is marked touched and validated. For the combobox, "leaves" means focus moves outside the whole component (input, chips, list), not between its parts.</td></tr>
+          <tr><td>Input while an error is showing</td><td>Re-validate on every change. The error disappears the moment the value is valid; a new error replaces the old text in place.</td></tr>
+          <tr><td>Submit</td><td>Every field is marked touched and validated. One error: focus moves to that field. Two or more: the <a href="#error-summary">error summary</a> appears above the form and takes focus.</td></tr>
+          <tr><td>Server rejects the request</td><td>Field-level problems are shown as field errors and listed in the summary; a whole-form failure ("Learners could not be assigned") is a danger <a href="../components/alert.html">alert</a> above the actions with Retry.</td></tr>
+        </tbody>
+      </table></div>
+      <h3 id="error-summary">Error summary</h3>
+      <p>A danger-striped box (<code>.error-summary</code>) at the top of the form, headed with the count, listing each problem as a link to its field. It is focused on submit (<code>tabindex="-1"</code>), so its heading is read first. Each link text matches the field's error text.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="error-summary" tabindex="-1" aria-labelledby="summary-demo-title" style="max-width: 40rem;">
+            <h4 id="summary-demo-title" style="margin: 0 0 var(--space-2); color: var(--color-danger-fg); font: var(--text-h4);">Fix 2 problems to assign learners</h4>
+            <ul>
+              <li><a href="#learners-err">Select at least one learner.</a></li>
+              <li><a href="#due-err">Enter a due date after today, such as 30 October 2026.</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Links move focus to the fields in the invalid example under <a href="#states">States</a>.</span><span>.error-summary</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <h3>Invalid after submit</h3>
+      <p>The same form after "Assign learners" was pressed with no learners and a past due date. Each field gets a 2px danger border, an icon and text error directly below the control, and <code>aria-invalid="true"</code> with the error first in <code>aria-describedby</code>.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="form">
+            <div class="error-summary" tabindex="-1" aria-labelledby="summary-err-title">
+              <h3 id="summary-err-title">Fix 2 problems to assign learners</h3>
+              <ul>
+                <li><a href="#learners-err">Select at least one learner.</a></li>
+                <li><a href="#due-err">Enter a due date after today, such as 30 October 2026.</a></li>
+              </ul>
+            </div>
+            <div class="field combobox combobox--invalid">
+              <label class="field__label" for="learners-err">Learners</label>
+              <div class="combobox__field">
+                <ul class="combobox__chips" aria-label="Selected learners"></ul>
+                <div class="combobox__input-row">
+                  <input class="combobox__input" id="learners-err" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-required="true" aria-invalid="true" aria-describedby="learners-err-msg learners-err-hint" autocomplete="off" placeholder="Name or email">
+                  <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+                </div>
+              </div>
+              <p class="field__error" id="learners-err-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>Select at least one learner.</span></p>
+              <p class="field__hint" id="learners-err-hint">Select one or more learners. Search to narrow the results.</p>
+            </div>
+            <div class="field">
+              <label class="field__label" for="due-err">Due date</label>
+              <input class="input" id="due-err" type="date" required aria-invalid="true" aria-describedby="due-err-msg due-err-hint" value="2026-09-01">
+              <p class="field__error" id="due-err-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>Enter a due date after today, such as 30 October 2026.</span></p>
+              <p class="field__hint" id="due-err-hint">Learners see this on their dashboard.</p>
+            </div>
+            <div class="form__actions">
+              <button class="btn" type="button">Cancel</button>
+              <button class="btn btn--primary" type="button">Assign learners</button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Error text is below the control and before the hint, the combobox mock's order. Colour is never the only signal: icon, text and border width all change.</span><span>aria-invalid · .field__error · .combobox--invalid</span></div>
+      </div>
+
+      <h3>Submit states</h3>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">State</th><th scope="col">Actions</th><th scope="col">Behaviour</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Ready</th><td><div class="cluster"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Assign learners</button></div></td><td>Enabled even when fields are empty; pressing it validates.</td></tr>
+          <tr><th scope="row">Focus</th><td><div class="cluster"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" data-state="focus">Assign learners</button></div></td><td>Amber ring; Enter in any single-line field submits.</td></tr>
+          <tr><th scope="row">Submitting</th><td><div class="cluster"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button" aria-busy="true"><span>Assign learners</span></button></div></td><td><code>aria-busy</code> keeps the width and name and ignores repeat presses. Fields stay editable but a second submit is ignored. Announce "Assigning learners…" only if the request takes longer than 1 s.</td></tr>
+          <tr><th scope="row">Succeeded</th><td><p class="message message--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><span>2 learners assigned to Workplace safety essentials.</span></p></td><td>Stay on the page: polite status message (as the mock's <code>role="status"</code> confirmation) or a <a href="../components/toast.html">toast</a> if the form closes. Focus stays on the button.</td></tr>
+          <tr><th scope="row">Failed</th><td><div class="alert alert--danger" style="max-width: 28rem;"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><div class="alert__content"><p class="alert__title">Learners could not be assigned</p><p class="alert__body">Your selections are safe. Check your connection and try again.</p></div><div class="alert__actions"><button class="btn btn--sm" type="button">Retry</button></div></div></td><td>Persistent alert above the actions, <code>role="alert"</code>; nothing the person entered is cleared.</td></tr>
+          <tr><th scope="row">Disabled form</th><td><div class="cluster"><button class="btn" type="button" disabled>Cancel</button><button class="btn btn--primary" type="button" disabled>Assign learners</button></div></td><td>Only when the whole form is unavailable (for example, the assignment is closed); say why in text above the form.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Autosave</h3>
+      <p>Where losing work is costly and there is nothing to confirm, save automatically and show the result. The SCORM player is the model: a "Save status" term in the course header reads "Last saved at 10:42", turns to "Not saved" on failure, and a danger notice offers "Retry save". Exit while unsaved reuses that notice and adds "Exit without saving" rather than opening a dialog.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <dl class="dl dl--inline"><div><dt>Completion:</dt><dd>Unknown</dd></div><div><dt>Save status:</dt><dd>Last saved at 10:42</dd></div></dl>
+          <div class="alert alert--danger">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+            <div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button><button class="btn" type="button">Exit without saving</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Status text for the steady state; a danger notice with recovery only when saving fails.</span><span>.dl--inline · .alert--danger</span></div>
+      </div>
+
+      <h3>Destructive confirmation</h3>
+      <p>Destructive submits (remove learners, delete an assignment) get a confirmation step that names the object and the consequence. The danger button repeats the verb and count; Cancel is first in DOM order and receives initial focus. Where an undo is possible, prefer acting at once with an Undo toast; see <a href="feedback-and-loading.html">feedback and loading</a>.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--canvas">
+          <div class="dialog dialog--static dialog--sm" role="group" aria-labelledby="remove-title" aria-describedby="remove-body">
+            <div class="dialog__header">
+              <span class="dialog__icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg></span>
+              <h4 id="remove-title" style="flex: 1 1 auto; margin: 0; font: var(--text-h3);">Remove 3 learners?</h4>
+            </div>
+            <div class="dialog__body"><p id="remove-body">Ada Lovelace, Grace Hopper and Alan Turing will lose access to Workplace safety essentials. Their progress so far is kept.</p></div>
+            <div class="dialog__footer"><button class="btn" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove 3 learners</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Products use <code>&lt;dialog&gt;</code> with <code>showModal()</code>; it is drawn static here. Below 640px it becomes a bottom sheet.</span><span>.dialog · .btn--danger</span></div>
+      </div>
+
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="form" style="gap: var(--space-4);">
+          <div class="field combobox combobox--invalid">
+            <label class="field__label" for="learners-light">Learners</label>
+            <div class="combobox__field"><ul class="combobox__chips" aria-label="Selected learners"></ul><div class="combobox__input-row"><input class="combobox__input" id="learners-light" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-required="true" aria-invalid="true" aria-describedby="learners-light-msg" autocomplete="off" placeholder="Name or email"></div></div>
+            <p class="field__error" id="learners-light-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>Select at least one learner.</span></p>
+          </div>
+          <div class="field"><label class="field__label" for="due-light">Due date</label><input class="input" id="due-light" type="date" value="2026-10-30"></div>
+          <div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Assign learners</button></div>
+        </div></div>
+        <div data-theme="dark"><div class="form" style="gap: var(--space-4);">
+          <div class="field combobox combobox--invalid">
+            <label class="field__label" for="learners-dark">Learners</label>
+            <div class="combobox__field"><ul class="combobox__chips" aria-label="Selected learners"></ul><div class="combobox__input-row"><input class="combobox__input" id="learners-dark" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-required="true" aria-invalid="true" aria-describedby="learners-dark-msg" autocomplete="off" placeholder="Name or email"></div></div>
+            <p class="field__error" id="learners-dark-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>Select at least one learner.</span></p>
+          </div>
+          <div class="field"><label class="field__label" for="due-dark">Due date</label><input class="input" id="due-dark" type="date" value="2026-10-30"></div>
+          <div class="form__actions"><button class="btn" type="button">Cancel</button><button class="btn btn--primary" type="button">Assign learners</button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The form is one column at every width. <code>.form__row--2</code> pairs short fields only from <code>--layout-breakpoint-md</code> (768px); below it they stack.</li>
+        <li>Below 768px <code>.form__actions</code> stacks full width in <code>column-reverse</code>, so the primary (last in DOM) sits on top and Cancel below it.</li>
+        <li>At 320px and at 400% zoom, labels, hints and errors wrap; nothing truncates except chip labels, which show the full name in a tooltip. Many chips scroll inside the field after <code>--combobox-chip-list-max-height</code> (8rem) so the input stays reachable.</li>
+        <li>The combobox list is bounded by the visual viewport; when the on-screen keyboard leaves little room it anchors to the input row and may cover chips, never the input.</li>
+        <li>With text enlarged to 200% or WCAG text-spacing applied, fields grow taller; their minimum height is 44px, never a fixed height.</li>
+        <li>Long forms on phones: keep the error summary at the top of the form, not in a fixed bar, so it scrolls with the content and does not cover fields.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;form&gt;</code>, <code>&lt;label for&gt;</code>, <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code> and native inputs. The learner picker follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">APG Combobox pattern</a>. Errors meet <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">3.3.1 Error Identification</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html">3.3.3 Error Suggestion</a>; destructive confirmation meets <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html">3.3.4 Error Prevention</a>. Do not ask for information already given (<a href="https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html">3.3.7 Redundant Entry</a>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves through fields and actions in DOM order. The combobox is one stop (its toggle and chip remove buttons are <code>tabindex="-1"</code>); Tab closes its list.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>In a single-line field, submits the form as the browser normally does. In the combobox with the list open, toggles the active learner instead.</td></tr>
+        <tr><td><kbd>Enter</kbd> on a summary link</td><td>Moves focus to the field and scrolls it into view with its label visible.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>In the combobox: closes the list, then clears the query. Never resets the form.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>Toggles checkboxes and switches; activates buttons.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>On submit with one error, focus the invalid field; with more, focus the error summary. After a successful submit that keeps the form, focus stays on the submit button. In the confirmation dialog, focus starts on Cancel and returns to the trigger when it closes. Focus is never moved on blur validation; the person keeps their place.</p>
+      <h3>Labelling</h3>
+      <p>Every control has a visible <code>&lt;label&gt;</code>. Hints and errors are tied with <code>aria-describedby</code>, error first. Invalid fields set <code>aria-invalid="true"</code>. Required fields set <code>required</code> or <code>aria-required="true"</code>. Success and progress text goes to one polite <code>role="status"</code> region per form; the combobox has its own live region outside its popup.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error text on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Field border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Summary link on danger background</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Errors appear without animation. Border colour changes over <code>--duration-fast</code>; the submit spinner keeps turning under reduced motion at 2 s per revolution because it reports status. Scrolling to an error uses <code>scroll-behavior: auto</code> when reduced motion is requested.</p>
+      <h3>Touch</h3>
+      <p>Fields and buttons are 44px tall. Use the right <code>type</code> and <code>autocomplete</code> so phones show the right keyboard (<code>type="date"</code>, <code>type="email"</code>). The "Clear all selections" text button meets the 24px minimum and sits apart from the field so it is not hit by accident.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Labels</b> are short nouns in sentence case: "Learners", "Due date", "Note to learners". No colons, no "Please".</li>
+        <li><b>Hints</b> say why or how, in one sentence: "Learners see this on their dashboard." Put format examples in the hint, not only in the placeholder.</li>
+        <li><b>Errors</b> say what to do, specific to the field: "Select at least one learner.", "Enter a due date after today, such as 30 October 2026." Never "Invalid input" or "This field is required".</li>
+        <li><b>Error summary heading</b> gives the count and the goal: "Fix 2 problems to assign learners".</li>
+        <li><b>Submit</b> names the outcome: "Assign learners", "Preview assignment", "Save changes". Never "Submit" or "OK".</li>
+        <li><b>Confirmation</b> asks a question with the count ("Remove 3 learners?"), states the consequence and what is kept, and repeats the verb on the danger button.</li>
+        <li><b>Failure</b> follows the error formula: what happened, what is safe, what to do: "Learners could not be assigned. Your selections are safe. Check your connection and try again." See <a href="content-and-tone.html">content and tone</a>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-due-do">Due date</label><input class="input" id="dd-due-do" type="date" aria-describedby="dd-due-do-hint"><p class="field__hint" id="dd-due-do-hint">Learners see this on their dashboard.</p></div></div><figcaption>Wait until the person leaves the field or submits before showing "required". An untouched empty field looks normal.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-due-dont">Due date</label><input class="input" id="dd-due-dont" type="date" aria-invalid="true" aria-describedby="dd-due-dont-msg"><p class="field__error" id="dd-due-dont-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>Enter a due date.</span></p></div></div><figcaption>Show errors on page load or on the first keystroke; the form scolds before anyone has answered.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-search-do">Learners</label><input class="input" id="dd-search-do" placeholder="Name or email"></div></div><figcaption>A visible label above the field; the placeholder only shows what can be typed.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><input class="input" aria-label="Learners" placeholder="Learners"></div><figcaption>Use the placeholder as the label; it vanishes on typing and fails contrast as a label.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><button class="btn btn--primary" type="button">Assign learners</button><p class="field__hint">Pressing it checks the form and moves focus to the first problem.</p></div><figcaption>Keep submit enabled and validate on press.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><button class="btn btn--primary" type="button" disabled>Assign learners</button></div><figcaption>Disable submit until the form is valid; nobody can find out what is missing.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="dialog dialog--static dialog--sm" role="group" aria-label="Remove 3 learners?"><div class="dialog__footer" style="padding: var(--space-4);"><button class="btn" type="button">Cancel</button><button class="btn btn--danger" type="button">Remove 3 learners</button></div></div></div><figcaption>The danger button repeats the verb and count from the question.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="dialog dialog--static dialog--sm" role="group" aria-label="Are you sure?"><div class="dialog__footer" style="padding: var(--space-4);"><button class="btn" type="button">No</button><button class="btn btn--primary" type="button">Yes</button></div></div></div><figcaption>"Are you sure?" with Yes and No, styled as a primary action.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Composed from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: the "Assign learners" form for Workplace safety essentials; required learners field marked touched on focus-out of the whole component and on submit; error below the field and before the hint; "Clear all selections" in the hint row; submit focuses the input when nothing is selected; "Preview assignment" primary and its <code>role="status"</code> confirmation.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: autosave status ("Last saved at", "Not saved"), "Progress not saved" notice with "Retry save", and "Exit without saving" in the same notice instead of a dialog.</li>
+      </ul>
+      <p>The due-date and note fields and the destructive dialog are derived: not present in the mocks; they follow the system rules.</p>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Combobox field min-height 40px beside 44px buttons; both are <code>--control-height-md</code> (44px).</li>
+        <li>Two disabled treatments (light border vs dashed); unified on the dashed edge with readable <code>--color-fg-disabled</code>.</li>
+        <li>Focus outline 3px with 3px offset on the page vs 2px on the field; one 3px ring with <code>--focus-ring-offset</code> 2px everywhere.</li>
+        <li>Hint and error sizes 0.8125rem and 0.85rem; snapped to <code>--font-size-sm</code>.</li>
+        <li>The mock marks the required field with an <code>aria-hidden</code> asterisk only; the pattern states the rule once at the top and marks optional fields in words, keeping <code>aria-required</code>.</li>
+        <li><code>.sr-only</code> implemented with <code>clip</code>; replaced by <code>.visually-hidden</code> with <code>clip-path: inset(50%)</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

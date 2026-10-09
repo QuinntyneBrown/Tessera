@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form field — Tessera design system</title>
+<meta name="description" content="The wrapper every input uses: label, required marker, control, error, hint and counter, with fixed spacing and reading order.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Form field</h1>
+      <p class="ds-lead">The wrapper every input sits in. It gives a control its visible label, says whether it is required, places the error directly under the control, and keeps the hint, counter and any trailing action on one row below.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Layout primitive</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>A form field is not a control; it is the column that holds one. Every single-value input uses it: <a href="text-field.html">text field</a>, <a href="textarea.html">textarea</a>, <a href="select.html">select</a>, <a href="combobox.html">combobox</a> and <a href="slider.html">slider</a>. It fixes three things so no screen has to decide them again:</p>
+      <ul>
+        <li><b>Reading order</b>: label, control, error, then the row below (hint, counter, trailing action). This is the order in the combobox mock after its Fluent 2 review: the error sits directly under the field, before the hint, with an icon.</li>
+        <li><b>Spacing</b>: 8px (<code>--space-2</code>) between every part, so label, control and messages read as one unit and separate fields (24px apart in a <a href="form-layout.html">form layout</a>) read as separate units.</li>
+        <li><b>Wiring</b>: the label is a <code>&lt;label for&gt;</code>; the error, hint and counter are referenced by <code>aria-describedby</code> in that order.</li>
+      </ul>
+      <p>Do not use the wrapper for groups of <a href="checkbox.html">checkboxes</a> or <a href="radio-group.html">radio buttons</a>: they share one question, so they use a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code> (<code>.fieldset</code>). A single <a href="switch.html">switch</a> or checkbox carries its own label and does not need it either.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: min(100%, 24rem);">
+            <label class="field__label" for="anatomy-title">Course title <span class="field__required">(required)</span></label>
+            <input class="input" id="anatomy-title" type="text" required aria-invalid="true" aria-describedby="anatomy-title-error anatomy-title-hint anatomy-title-count">
+            <p class="field__error" id="anatomy-title-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a course title.</span></p>
+            <div class="field__below">
+              <p class="field__hint" id="anatomy-title-hint">Learners see this on their dashboard.</p>
+              <p class="field__counter" id="anatomy-title-count">0 of 80 characters</p>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 22%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 46%; top: 14%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 70%; top: 36%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 54%; top: 56%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 16%; top: 80%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 84%; top: 80%;" aria-hidden="true">6</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small><code>.field__label</code>: bold 16px (<code>--text-label</code> at <code>--font-size-md</code>), <code>--color-fg-default</code>. Always visible; never replaced by placeholder text.</small></div></li>
+          <li><div><b>Required marker</b><small><code>.field__required</code>: the word "(required)" inside the label, regular weight, <code>--color-fg-muted</code>. Part of the accessible name, so it is announced.</small></div></li>
+          <li><div><b>Control</b><small>Any input: <code>.input</code>, <code>.textarea</code>, <code>.select</code>, <code>.input-group</code>, <code>.combobox</code>. Fills the column width.</small></div></li>
+          <li><div><b>Error (conditional)</b><small><code>.field__error</code>: 16px icon + 14px text in <code>--color-danger-fg</code>, 8px between them. Directly under the control, before the hint.</small></div></li>
+          <li><div><b>Hint (optional)</b><small><code>.field__hint</code>: 14px <code>--color-fg-muted</code>. Stays visible while an error shows.</small></div></li>
+          <li><div><b>Counter or trailing action (optional)</b><small><code>.field__counter</code> (tabular figures) or a <code>.btn--link</code> such as "Clear all selections", pushed to the end of <code>.field__below</code>.</small></div></li>
+        </ol>
+      </div>
+      <h3>Spacing between parts</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Between</th><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Label and control</td><td><code>--space-2</code></td><td><span data-token="--space-2"></span></td></tr>
+          <tr><td>Control and error</td><td><code>--space-2</code></td><td><span data-token="--space-2"></span></td></tr>
+          <tr><td>Error and the row below (or control and the row below)</td><td><code>--space-2</code></td><td><span data-token="--space-2"></span></td></tr>
+          <tr><td>Error icon and error text</td><td><code>--space-2</code></td><td><span data-token="--space-2"></span></td></tr>
+          <tr><td>Hint and counter / action (column gap)</td><td><code>--space-4</code></td><td><span data-token="--space-4"></span></td></tr>
+          <tr><td>Hint and counter when wrapped (row gap)</td><td><code>--space-1</code></td><td><span data-token="--space-1"></span></td></tr>
+          <tr><td>One field and the next, in a form</td><td><code>--space-6</code> (<code>.form</code>)</td><td><span data-token="--space-6"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>The wrapper has one look. What varies is which optional parts are present. Add a part only when it carries information the label cannot.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="var-name">Display name</label>
+            <input class="input" id="var-name" type="text" autocomplete="name" value="Ada Lovelace">
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="var-email">Email <span class="field__required">(required)</span></label>
+            <input class="input" id="var-email" type="email" autocomplete="email" required aria-describedby="var-email-hint">
+            <div class="field__below"><p class="field__hint" id="var-email-hint">Completion certificates are sent here.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Label only; label, required marker and hint.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="email"&gt;Email &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/label&gt;
+  &lt;input class="input" id="email" type="email" autocomplete="email" required aria-describedby="email-hint"&gt;
+  &lt;div class="field__below"&gt;&lt;p class="field__hint" id="email-hint"&gt;Completion certificates are sent here.&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>With error</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="var-learners">Learners <span class="field__required">(required)</span></label>
+            <input class="input" id="var-learners" type="text" placeholder="Name or email" required aria-invalid="true" aria-describedby="var-learners-error var-learners-hint">
+            <p class="field__error" id="var-learners-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Select at least one learner.</span></p>
+            <div class="field__below">
+              <p class="field__hint" id="var-learners-hint">Select one or more learners. Search to narrow the results.</p>
+              <button class="btn btn--link" type="button" disabled>Clear all selections</button>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The combobox mock's required state: error under the field with an icon, hint and "Clear all selections" below it.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="learners"&gt;Learners &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/label&gt;
+  &lt;input class="input" id="learners" required aria-invalid="true"
+         aria-describedby="learners-error learners-hint"&gt;
+  &lt;p class="field__error" id="learners-error"&gt;
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+    &lt;span&gt;Select at least one learner.&lt;/span&gt;
+  &lt;/p&gt;
+  &lt;div class="field__below"&gt;
+    &lt;p class="field__hint" id="learners-hint"&gt;Select one or more learners. Search to narrow the results.&lt;/p&gt;
+    &lt;button class="btn btn--link" type="button"&gt;Clear all selections&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>With counter</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="var-summary">Lesson summary</label>
+            <textarea class="textarea" id="var-summary" aria-describedby="var-summary-hint var-summary-count">Introduces active listening and the three-step feedback model.</textarea>
+            <div class="field__below">
+              <p class="field__hint" id="var-summary-hint">Shown under the lesson title in the outline.</p>
+              <p class="field__counter" id="var-summary-count">63 of 200 characters</p>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The counter sits at the end of the row; it wraps under the hint on narrow columns.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field__below"&gt;
+  &lt;p class="field__hint" id="summary-hint"&gt;Shown under the lesson title in the outline.&lt;/p&gt;
+  &lt;p class="field__counter" id="summary-count"&gt;63 of 200 characters&lt;/p&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="The wrapper has one size. The control inside it carries the size (text field and select offer sm, md and lg); label, error and hint stay the same."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">The wrapper has one size. The control inside it carries the size (text field and select offer sm, md and lg); label, error and hint stay the same.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The wrapper itself does not change on hover or focus; the control does. Invalid adds the error line; disabled and read-only change only the control, while the label stays at full contrast so the field is still readable. Hover, focus and active are forced with <code>data-state</code> for review.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Control</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Invalid</th><th scope="col">Read-only</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Text field</th>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-default">Course code</label><input class="input" id="m-t-default" type="text" value="SAFE-101"></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-hover">Course code</label><input class="input" id="m-t-hover" type="text" value="SAFE-101" data-state="hover"></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-focus">Course code</label><input class="input" id="m-t-focus" type="text" value="SAFE-101" data-state="focus"></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-active">Course code</label><input class="input" id="m-t-active" type="text" value="SAFE-10" data-state="focus"></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-disabled">Course code</label><input class="input" id="m-t-disabled" type="text" value="SAFE-101" disabled></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-invalid">Course code</label><input class="input" id="m-t-invalid" type="text" value="SAFE 101" aria-invalid="true" aria-describedby="m-t-invalid-error"><p class="field__error" id="m-t-invalid-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Use letters, a hyphen and digits.</span></p></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-t-readonly">Course code</label><input class="input" id="m-t-readonly" type="text" value="SAFE-101" readonly></div></td>
+          </tr>
+          <tr><th scope="row">Select</th>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-default">Theme</label><select class="select" id="m-s-default"><option>Light</option><option>Dark</option><option>System</option></select></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-hover">Theme</label><select class="select" id="m-s-hover" data-state="hover"><option>Light</option><option>Dark</option><option>System</option></select></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-focus">Theme</label><select class="select" id="m-s-focus" data-state="focus"><option>Light</option><option>Dark</option><option>System</option></select></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-active">Theme</label><select class="select" id="m-s-active" data-state="focus"><option>Dark</option><option>Light</option><option>System</option></select></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-disabled">Theme</label><select class="select" id="m-s-disabled" disabled><option>Light</option><option>Dark</option><option>System</option></select></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-s-invalid">Theme</label><select class="select" id="m-s-invalid" aria-invalid="true" aria-describedby="m-s-invalid-error"><option value="">Choose a theme</option><option>Light</option><option>Dark</option></select><p class="field__error" id="m-s-invalid-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Choose a theme.</span></p></div></td>
+            <td><p class="field__hint">Native selects have no read-only state; show the value as text.</p></td>
+          </tr>
+          <tr><th scope="row">Textarea</th>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-default">Note</label><textarea class="textarea" id="m-a-default">Bring safety boots.</textarea></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-hover">Note</label><textarea class="textarea" id="m-a-hover" data-state="hover">Bring safety boots.</textarea></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-focus">Note</label><textarea class="textarea" id="m-a-focus" data-state="focus">Bring safety boots.</textarea></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-active">Note</label><textarea class="textarea" id="m-a-active" data-state="focus">Bring safety boo</textarea></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-disabled">Note</label><textarea class="textarea" id="m-a-disabled" disabled>Bring safety boots.</textarea></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-invalid">Note</label><textarea class="textarea" id="m-a-invalid" aria-invalid="true" aria-describedby="m-a-invalid-error"></textarea><p class="field__error" id="m-a-invalid-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a note for learners.</span></p></div></td>
+            <td><div class="field" style="min-width: 11rem;"><label class="field__label" for="m-a-readonly">Note</label><textarea class="textarea" id="m-a-readonly" readonly>Bring safety boots.</textarea></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>Active, for a field, means typing: it looks like focus with the value changing. There is no separate pressed style.</p>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-learners-light">Learners <span class="field__required">(required)</span></label><input class="input" id="th-learners-light" type="text" placeholder="Name or email" aria-invalid="true" aria-describedby="th-learners-light-error th-learners-light-hint"><p class="field__error" id="th-learners-light-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Select at least one learner.</span></p><div class="field__below"><p class="field__hint" id="th-learners-light-hint">Search to narrow the results.</p><button class="btn btn--link" type="button">Clear all selections</button></div></div>
+          <div class="field"><label class="field__label" for="th-code-light">Course code</label><input class="input" id="th-code-light" type="text" value="SAFE-101" disabled></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-learners-dark">Learners <span class="field__required">(required)</span></label><input class="input" id="th-learners-dark" type="text" placeholder="Name or email" aria-invalid="true" aria-describedby="th-learners-dark-error th-learners-dark-hint"><p class="field__error" id="th-learners-dark-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Select at least one learner.</span></p><div class="field__below"><p class="field__hint" id="th-learners-dark-hint">Search to narrow the results.</p><button class="btn btn--link" type="button">Clear all selections</button></div></div>
+          <div class="field"><label class="field__label" for="th-code-dark">Course code</label><input class="input" id="th-code-dark" type="text" value="SAFE-101" disabled></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Invalid</b> is shown three ways at once: the thicker danger border on the control, the icon, and the text. Never colour alone.</li>
+        <li><b>When to validate</b>: on submit, then on change for a field that has already shown an error. Not on every keystroke of a first attempt, and not on blur of an empty field the learner simply passed through (the combobox mock validates only after the field was touched).</li>
+        <li><b>Disabled and read-only</b> keep the label and hint at full contrast. A read-only value is still copyable and still announced; prefer it to disabled for information the person cannot change.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The field fills its column (<code>min-width: 0</code>, control at 100%). Column count is the <a href="form-layout.html">form layout</a>'s job: two columns from <code>--layout-breakpoint-md</code>, one below.</li>
+        <li><code>.field__below</code> wraps: at 320px or 200% text the counter or "Clear all selections" drops under the hint and stays aligned to the end edge, with 4px between the rows.</li>
+        <li>Labels and errors wrap; they never truncate. The error icon stays aligned with the first line of text.</li>
+        <li>With WCAG text-spacing overrides (1.5 line height, 0.12em letter spacing) nothing overlaps, because every part is in normal flow with gaps, not fixed heights.</li>
+        <li>In right-to-left layouts the counter moves to the left edge (<code>margin-inline-start: auto</code>) and the error icon leads on the right.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The wrapper has no component tokens; it reads three semantic colours (<code>--color-fg-default</code> for the label, <code>--color-fg-muted</code> for marker, hint and counter, <code>--color-danger-fg</code> for the error) and the spacing scale. Re-theme it by scoping those semantic tokens, never by restyling <code>.field__*</code>.</p>
+      <pre><code>/* A host LMS panel with a tinted surface keeps hint contrast by raising muted text */
+.assignment-panel { --color-fg-muted: var(--color-fg-default); }</code></pre>
+      <p>In the dark theme the error text lightens to <code>--palette-red-200</code> and the hint to <code>--palette-sage-200</code>, both above 7:1 on the dark surface. In the shipped packages the same decisions are <code>--t-colorNeutralForeground1</code> (label), <code>--t-colorNeutralForeground2</code> (hint) and <code>--t-colorPaletteRedForeground1</code> (error); the combobox exposes them as <code>--t-combobox-text</code>, <code>--t-combobox-placeholder</code> and <code>--t-combobox-error</code>. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>No ARIA role: a native <code>&lt;label for&gt;</code> names the control and <code>aria-describedby</code> attaches the error, hint and counter. This follows the WAI-ARIA APG guidance on <a href="https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/">names and descriptions</a> and the WCAG technique for <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">labels or instructions</a>. The control inside follows its own pattern (for example the APG Combobox).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves to the control, then to any trailing action in the row below ("Clear all selections"). Label, error, hint and counter are not focusable.</td></tr>
+        <tr><td>Click or tap on the label</td><td>Focuses (or toggles) the control, because the label is associated with <code>for</code>; the label is part of the target.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Submits the form from a single-line input; the wrapper adds nothing.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The ring is drawn by the control (3px <code>--color-focus-ring</code>, 2px offset); the wrapper never draws one. On a failed submit, focus moves to the error summary at the top of the form, whose links move focus to each invalid control (see <a href="../patterns/forms.html">forms</a>). Errors never steal focus while the person is typing.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>The visible label text is the accessible name; "(required)" is inside the label, so it is announced with the name, and the control also carries <code>required</code> (or <code>aria-required="true"</code> on a combobox).</li>
+        <li><code>aria-describedby</code> lists the error first, then the hint, then the counter: "Select at least one learner. Select one or more learners…" The error id is added only while the error is visible.</li>
+        <li><code>aria-invalid="true"</code> is set with the error and removed with it.</li>
+        <li>The error icon is <code>aria-hidden="true"</code>; the text says what is wrong.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Label on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint, marker and counter on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Hint on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Error text on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Invalid border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Trailing action (link) on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-link|--color-bg-surface" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>The error appears and disappears without animation, so nothing moves under the pointer and the layout shift is immediate. Only the control's border colour transitions (<code>--duration-fast</code>, zeroed under reduced motion).</p>
+      <h3>Touch</h3>
+      <p>The label enlarges the control's target: tapping it focuses the input. Trailing actions in the row below are at least 24px tall (<code>.btn--link</code> uses <code>--target-min</code>) and sit 16px from the hint.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Label</b>: a noun phrase in sentence case, no colon: "Learners", "Course title", "Passing score". Never a question unless the whole form is a questionnaire.</li>
+        <li><b>Required</b>: mark required fields with "(required)". If almost every field is required, say so once at the top and mark the few optional ones "(optional)" instead.</li>
+        <li><b>Hint</b>: one sentence that helps the person succeed: format, where the value appears, limits. "Select one or more learners. Search to narrow the results." Not a repeat of the label.</li>
+        <li><b>Error</b>: what to do, not what went wrong: "Select at least one learner.", "Enter a course title.", "Enter a score from 0 to 100." No "Invalid input", no "Error:", no blame.</li>
+        <li><b>Counter</b>: "63 of 200 characters"; over the limit, "12 characters too many". The counter states the limit before it is reached.</li>
+        <li><b>Placeholder</b>: an example value at most ("Name or email"), never the label or the hint, because it disappears on input.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-err-do">Learners</label><input class="input" id="dd-err-do" type="text" aria-invalid="true" aria-describedby="dd-err-do-error dd-err-do-hint"><p class="field__error" id="dd-err-do-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Select at least one learner.</span></p><div class="field__below"><p class="field__hint" id="dd-err-do-hint">Search to narrow the results.</p></div></div></div><figcaption>Put the error directly under the control, with an icon, before the hint.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-err-dont">Learners</label><input class="input" id="dd-err-dont" type="text" aria-invalid="true" aria-describedby="dd-err-dont-hint dd-err-dont-error"><p class="field__hint" id="dd-err-dont-hint">Search to narrow the results.</p><p class="field__hint" id="dd-err-dont-error" style="color: var(--color-danger-fg);">Select at least one learner.</p></div></div><figcaption>Put red text under the hint with no icon; the early combobox mock did this, and the error read as part of the hint.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-req-do">Learners <span class="field__required">(required)</span></label><input class="input" id="dd-req-do" type="text" required></div></div><figcaption>Write "(required)" inside the label so it is seen and announced.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-req-dont">Learners <span class="field__required" aria-hidden="true">*</span></label><input class="input" id="dd-req-dont" type="text" aria-required="true"></div></div><figcaption>Rely on a hidden asterisk; sighted people must know the convention and voice-control users cannot say it.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-ph-do">Learner email</label><input class="input" id="dd-ph-do" type="email" placeholder="grace.hopper@example.edu"></div></div><figcaption>A visible label, with the placeholder as an example value.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><input class="input" type="email" aria-label="Learner email" placeholder="Learner email"></div><figcaption>Placeholder as the label: it vanishes on the first keystroke and fails as a visible label.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Label text</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Required marker, hint, counter</td><td><code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Error text and icon</td><td><code>--color-danger-fg</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-fg" data-swatch></i><span data-token="--color-danger-fg"></span></span></td></tr>
+          <tr><td>Invalid control border</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Label font</td><td><code>--text-label</code> at <code>--font-size-md</code></td><td colspan="2"><span data-token="--text-label"></span>; size <span data-token="--font-size-md"></span></td></tr>
+          <tr><td>Hint, error, counter font</td><td><code>--text-body-sm</code></td><td colspan="2"><span data-token="--text-body-sm"></span></td></tr>
+          <tr><td>Gap between parts</td><td><code>--space-2</code></td><td colspan="2"><span data-token="--space-2"></span></td></tr>
+          <tr><td>Below-row gaps (row / column)</td><td><code>--space-1</code> / <code>--space-4</code></td><td colspan="2"><span data-token="--space-1"></span> / <span data-token="--space-4"></span></td></tr>
+          <tr><td>Error icon offset</td><td><code>--space-0-5</code></td><td colspan="2"><span data-token="--space-0-5"></span></td></tr>
+          <tr><td>Invalid border width</td><td><code>--border-width-thick</code></td><td colspan="2"><span data-token="--border-width-thick"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="course-title"&gt;
+    Course title &lt;span class="field__required"&gt;(required)&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;input class="input" id="course-title" required maxlength="120"
+         aria-invalid="true"
+         aria-describedby="course-title-error course-title-hint course-title-count"&gt;
+  &lt;p class="field__error" id="course-title-error"&gt;
+    &lt;svg class="icon" aria-hidden="true" viewBox="0 0 24 24"&gt;…&lt;/svg&gt;
+    &lt;span&gt;Enter a course title.&lt;/span&gt;
+  &lt;/p&gt;
+  &lt;div class="field__below"&gt;
+    &lt;p class="field__hint" id="course-title-hint"&gt;Learners see this on their dashboard.&lt;/p&gt;
+    &lt;p class="field__counter" id="course-title-count"&gt;0 of 80 characters&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.field</code></td><td>Column wrapper; 8px between parts; shrinks to its column.</td></tr>
+        <tr><td><code>.field__label</code></td><td>Bold 16px label; use on a <code>&lt;label for&gt;</code> (or on the element named by <code>aria-labelledby</code> for a custom control).</td></tr>
+        <tr><td><code>.field__required</code></td><td>Muted, regular-weight "(required)" or "(optional)" inside the label.</td></tr>
+        <tr><td><code>.field__error</code></td><td>Icon and message row; render only while invalid; place before <code>.field__below</code>.</td></tr>
+        <tr><td><code>.field__below</code></td><td>Wrapping row for hint, counter and a trailing <code>.btn--link</code>; space-between.</td></tr>
+        <tr><td><code>.field__hint</code></td><td>Muted 14px help text.</td></tr>
+        <tr><td><code>.field__counter</code></td><td>Tabular-figure counter pushed to the end edge.</td></tr>
+        <tr><td><code>aria-describedby</code></td><td>Error id (only while shown), hint id, counter id, in that order.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>On the control while the error shows; drives the danger border.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: label "Learners", field, error "Select at least one learner." with icon, hint "Select one or more learners. Search to narrow the results.", "Clear all selections" at the end of the hint row; the order label, field, list, error, hint (README and Fluent 2 comparison I-12).</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a> and <a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Mock states" panels with labelled selects (label beside control at 8px).</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Error icon gap 0.375rem (6px) snapped to <code>--space-2</code> (8px); error and hint row top margins of 0.5rem became the wrapper's single <code>--space-2</code> gap.</li>
+        <li>Hint and error text 0.875rem kept as <code>--font-size-sm</code>; "Mock states" labels at 0.85rem snapped to <code>--font-size-sm</code>.</li>
+        <li>The required marker was an <code>aria-hidden</code> asterisk with <code>aria-required</code>; replaced by a visible "(required)" inside the label so every user gets it.</li>
+        <li><code>.sr-only</code> summary text used <code>clip</code>; the system uses <code>.visually-hidden</code> with <code>clip-path: inset(50%)</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

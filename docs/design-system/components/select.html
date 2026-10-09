@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Select — Tessera design system</title>
+<meta name="description" content="Native select for choosing one value from a short known list. Placeholder option, three sizes, every state, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Select</h1>
+      <p class="ds-lead">A native drop-down for choosing one value from a known list: a theme, a preview scenario, a session room. The browser draws the list, so it works with every screen reader, keyboard and touch device without extra code.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;select&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a select when people choose exactly one value from a list you know in advance, with roughly 5 to 15 options. The mocks use it for the "Preview" and "Scenario" pickers (12 options) and the "Theme" picker (Light, Dark, System).</p>
+      <ul>
+        <li>Two to four options that people should compare at a glance: use a <a href="radio-group.html">radio group</a>. On or off: use a <a href="switch.html">switch</a> or <a href="checkbox.html">checkbox</a>.</li>
+        <li>Many options, options from a server, search, or more than one choice (assigning learners to a course): use the <a href="combobox.html">combobox</a>.</li>
+        <li>A list of actions rather than values: use a <a href="menu.html">menu</a>.</li>
+      </ul>
+      <p>Tessera always uses the native <code>&lt;select&gt;</code>. A custom listbox is only justified when the native control cannot do the job (rich option content, multi-select); that is the combobox.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: min(100%, 20rem);">
+            <label class="field__label" for="anatomy-theme">Theme</label>
+            <select class="select" id="anatomy-theme"><option>Light</option><option>Dark</option><option selected>System</option></select>
+          </div>
+          <span class="ds-callout" style="left: 16%; top: 20%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 34%; top: 58%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 80%; top: 58%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 92%; top: 82%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>From the <a href="form-field.html">form field</a>, above the control; beside it only in toolbars.</small></div></li>
+          <li><div><b>Selected value</b><small>16px <code>--text-body</code>, <code>--color-fg-default</code>. Never truncated by design: size the select to its longest option where space allows.</small></div></li>
+          <li><div><b>Chevron</b><small>Drawn in <code>currentColor</code> 16px from the end edge; the end padding is <code>--space-10</code> so long values never run under it.</small></div></li>
+          <li><div><b>Container</b><small>44px (<code>--control-height-md</code>), 1px <code>--color-border-strong</code>, <code>--radius-md</code>, <code>--color-bg-surface</code>. Same box as the text field.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <h3>With a value</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 20rem;">
+            <label class="field__label" for="v-scenario">Scenario</label>
+            <select class="select" id="v-scenario">
+              <option value="live">Live</option>
+              <option value="slow-connect">Connecting (slow)</option>
+              <option value="buffering">Buffering</option>
+              <option value="paused">Paused, then resume</option>
+              <option value="reconnect-ok">Reconnecting (recovers)</option>
+              <option value="reconnect-fail">Reconnecting (gives up)</option>
+              <option value="ended">Stream ended</option>
+            </select>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The video player mock's scenario picker. A sensible default is selected because every option is valid.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="scenario"&gt;Scenario&lt;/label&gt;
+  &lt;select class="select" id="scenario"&gt;
+    &lt;option value="live"&gt;Live&lt;/option&gt;
+    &lt;option value="buffering"&gt;Buffering&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>With a placeholder option</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 20rem;">
+            <label class="field__label" for="v-room">Room <span class="field__required">(required)</span></label>
+            <select class="select" id="v-room" required aria-describedby="v-room-hint">
+              <option value="" selected>Choose a room</option>
+              <option>Lecture hall A</option>
+              <option>Lecture hall B</option>
+              <option>Seminar room 2</option>
+              <option>Online only</option>
+            </select>
+            <div class="field__below"><p class="field__hint" id="v-room-hint">Learners see the room in their calendar invite.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Use an empty first option when there is no safe default, so nobody submits a value they never chose.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;select class="select" id="room" required aria-describedby="room-hint"&gt;
+  &lt;option value="" selected&gt;Choose a room&lt;/option&gt;
+  &lt;option&gt;Lecture hall A&lt;/option&gt;
+  …
+&lt;/select&gt;</code></pre></details>
+      </div>
+
+      <h3>Grouped options and inline label</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 20rem;">
+            <label class="field__label" for="v-preview">Preview</label>
+            <select class="select" id="v-preview">
+              <optgroup label="Search">
+                <option>Results</option>
+                <option>Slow loading</option>
+                <option>No results</option>
+                <option>Search error</option>
+              </optgroup>
+              <optgroup label="Selection">
+                <option>Required / invalid</option>
+                <option>Selection limit (3)</option>
+                <option>200 selections</option>
+              </optgroup>
+            </select>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3);">
+            <label class="field__label" for="v-inline-theme" style="font-size: var(--font-size-sm);">Theme</label>
+            <select class="select" id="v-inline-theme" style="width: auto;"><option>Light</option><option>Dark</option><option>System</option></select>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>&lt;optgroup&gt;</code> labels are announced with each option. Inline labels, as in the mocks' state panels, are for toolbars only; the select then sizes to its content.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>Match the size of the text fields and buttons beside it. Medium is the default for forms; small for dense filter bars above a table (still above the 24px minimum); large next to a large search.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 20rem;"><label class="field__label" for="s-sm">Sort learners · small 32px</label><select class="select select--sm" id="s-sm"><option>Name A to Z</option><option>Last active</option><option>Progress</option></select></div>
+          <div class="field" style="max-width: 20rem;"><label class="field__label" for="s-md">Sort learners · medium 44px</label><select class="select" id="s-md"><option>Name A to Z</option><option>Last active</option><option>Progress</option></select></div>
+          <div class="field" style="max-width: 20rem;"><label class="field__label" for="s-lg">Sort learners · large 48px</label><select class="select select--lg" id="s-lg"><option>Name A to Z</option><option>Last active</option><option>Progress</option></select></div>
+        </div>
+        <div class="ds-example__caption"><span>Heights <code>--control-height-sm/md/lg</code>; text <code>--text-body-sm</code> / <code>--text-body</code> / <code>--text-body-lg</code>.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;select class="select select--sm"&gt;…&lt;/select&gt;
+&lt;select class="select"&gt;…&lt;/select&gt;
+&lt;select class="select select--lg"&gt;…&lt;/select&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Pointer and focus states are forced with <code>data-state</code>; "Active" is the open list, drawn by the browser and operating system, so it is shown here as focus. Matrix selects use <code>aria-label</code> to keep the table compact.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active (open)</th><th scope="col">Disabled</th><th scope="col">Invalid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">With value</th>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, default"><option>System</option><option>Light</option><option>Dark</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, hover" data-state="hover"><option>System</option><option>Light</option><option>Dark</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, focus" data-state="focus"><option>System</option><option>Light</option><option>Dark</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, open" data-state="focus"><option>Dark</option><option>Light</option><option>System</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, disabled" disabled><option>System</option><option>Light</option><option>Dark</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Theme, invalid" aria-invalid="true"><option>System</option><option>Light</option><option>Dark</option></select></td>
+          </tr>
+          <tr><th scope="row">Placeholder</th>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, default"><option value="">Choose a room</option><option>Lecture hall A</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, hover" data-state="hover"><option value="">Choose a room</option><option>Lecture hall A</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, focus" data-state="focus"><option value="">Choose a room</option><option>Lecture hall A</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, open" data-state="focus"><option>Lecture hall A</option><option value="">Choose a room</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, disabled" disabled><option value="">Choose a room</option><option>Lecture hall A</option></select></td>
+            <td><select class="select" style="min-width: 9rem;" aria-label="Room, invalid" aria-invalid="true"><option value="">Choose a room</option><option>Lecture hall A</option></select></td>
+          </tr>
+          <tr><th scope="row">Small</th>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, default"><option>Name A to Z</option></select></td>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, hover" data-state="hover"><option>Name A to Z</option></select></td>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, focus" data-state="focus"><option>Name A to Z</option></select></td>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, open" data-state="focus"><option>Progress</option></select></td>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, disabled" disabled><option>Name A to Z</option></select></td>
+            <td><select class="select select--sm" style="min-width: 9rem;" aria-label="Sort, invalid" aria-invalid="true"><option>Name A to Z</option></select></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-theme-light">Theme</label><select class="select" id="th-theme-light"><option>Light</option><option>Dark</option><option>System</option></select></div>
+          <div class="field"><label class="field__label" for="th-room-light">Room <span class="field__required">(required)</span></label><select class="select" id="th-room-light" required aria-invalid="true" aria-describedby="th-room-light-error"><option value="">Choose a room</option><option>Lecture hall A</option></select><p class="field__error" id="th-room-light-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Choose a room for the session.</span></p></div>
+          <div class="field"><label class="field__label" for="th-dis-light">Scenario</label><select class="select" id="th-dis-light" disabled><option>Live</option></select></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-theme-dark">Theme</label><select class="select" id="th-theme-dark"><option>Light</option><option selected>Dark</option><option>System</option></select></div>
+          <div class="field"><label class="field__label" for="th-room-dark">Room <span class="field__required">(required)</span></label><select class="select" id="th-room-dark" required aria-invalid="true" aria-describedby="th-room-dark-error"><option value="">Choose a room</option><option>Lecture hall A</option></select><p class="field__error" id="th-room-dark-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Choose a room for the session.</span></p></div>
+          <div class="field"><label class="field__label" for="th-dis-dark">Scenario</label><select class="select" id="th-dis-dark" disabled><option>Live</option></select></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Invalid</b> only appears with a placeholder option, when nothing was chosen; the form field adds the icon and message ("Choose a room for the session.").</li>
+        <li><b>Disabled</b> dashes the edge and keeps the value readable. There is no read-only select in HTML; show an unchangeable value as text or a read-only <a href="text-field.html">text field</a>.</li>
+        <li><b>The open list</b> is native: its colours follow <code>color-scheme</code> (set by the theme), so it is dark in the dark theme without extra CSS.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Full width of its field by default, so a long value never overflows at 320px; in toolbars it may size to content (<code>width: auto</code>) but keeps <code>max-width: 100%</code> and wraps to its own line with its label, as the mocks' state panels do.</li>
+        <li>On phones the operating system shows its own picker (a wheel or sheet), which is large, scrollable and accessible; nothing in Tessera needs to change for touch.</li>
+        <li>At 200% text the select grows taller; long values are clipped by the browser inside the box, so keep option text short.</li>
+        <li>In right-to-left layouts the chevron should sit on the left; the current chevron is positioned from the right edge, so RTL forms need the logical-position fix noted in the sources.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The select shares <code>--field-bg</code>, <code>--field-fg</code>, <code>--field-border</code> and <code>--field-height</code> with the text field. The chevron is two gradients in <code>currentColor</code>, so it follows <code>--field-fg</code> and turns <code>--color-fg-disabled</code> when disabled. The native list follows <code>color-scheme</code>, which each theme sets.</p>
+      <pre><code>/* A compact filter bar sets the size once for all its selects */
+.learner-filters .select { --field-height: var(--control-height-sm); }</code></pre>
+      <p>Shipped equivalents: <code>--t-colorNeutralBackground1</code>, <code>--t-colorNeutralForeground1</code>, <code>--t-colorNeutralStrokeAccessible</code>. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;select&gt;</code>, exposed as a combobox (collapsed) with a listbox of options. The browser implements the interaction that the APG <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/">select-only combobox</a> example rebuilds in script; Tessera does not rebuild it. Changing the value never submits or navigates by itself (<a href="https://www.w3.org/WAI/WCAG22/Understanding/on-input.html">on input</a>).</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves to and from the select. Disabled selects are skipped.</td></tr>
+        <tr><td><kbd>Space</kbd>, <kbd>Enter</kbd>, <kbd>Alt</kbd>+<kbd>↓</kbd></td><td>Opens the list (exact keys vary by platform).</td></tr>
+        <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Moves through options; on Windows this changes the value without opening the list.</td></tr>
+        <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>First or last option.</td></tr>
+        <tr><td>Typing letters</td><td>Type-ahead: jumps to the next option starting with the typed text ("Le" to "Lecture hall A").</td></tr>
+        <tr><td><kbd>Enter</kbd> (open)</td><td>Chooses the highlighted option and closes the list.</td></tr>
+        <tr><td><kbd>Esc</kbd> (open)</td><td>Closes the list without changing the value.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (3px <code>--color-focus-ring</code>, 2px offset) on <code>:focus-visible</code>. Focus stays on the select while the list is open and returns to it on close.</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>A visible <code>&lt;label for&gt;</code>. The placeholder option ("Choose a room") is not a label; it is announced as the value.</li>
+        <li><code>required</code> on the select; "(required)" in the label; <code>aria-invalid</code> and <code>aria-describedby</code> for errors.</li>
+        <li><code>&lt;optgroup label&gt;</code> names groups; screen readers announce the group with the option.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Value on select</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Chevron on select</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Border on canvas</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-canvas" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Disabled value on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <p>In forced-colours mode browsers drop gradient backgrounds, so the drawn chevron disappears; the select is still identified by its system border and role.</p>
+      <h3>Motion</h3>
+      <p>Only the border colour transitions (<code>--duration-fast</code>, zeroed under reduced motion). The native list opens without Tessera animation.</p>
+      <h3>Touch</h3>
+      <p>Medium (44px) and large (48px) meet the comfortable target; small (32px) exceeds the 24px minimum and is only for pointer-first filter bars. Touch devices use the native picker, which has its own large targets.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Label names the setting: "Theme", "Room", "Sort learners". Not "Select a theme".</li>
+        <li>Placeholder option starts with a verb: "Choose a room". Only use one when there is no safe default.</li>
+        <li>Options are short, parallel and in sentence case: "Light", "Dark", "System". Order them logically (by frequency, sequence or alphabet), and say which in a hint if it is not obvious.</li>
+        <li>Put qualifiers in brackets after the main word so type-ahead still works: "Connecting (slow)", "Reconnecting (gives up)".</li>
+        <li>Errors say what to choose: "Choose a room for the session."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><select class="select" style="width: auto;" aria-label="Preview scenario"><option>Results</option><option>Slow loading</option></select><button class="btn" type="button">Reset</button></div><figcaption>A 44px select beside a 44px button; the row reads as one toolbar (video mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><select class="select" style="width: auto; min-height: 0; padding-block: var(--space-2);" aria-label="Preview scenario, short"><option>Results</option><option>Slow loading</option></select><button class="btn" type="button">Reset</button></div><figcaption>A select sized by 0.5rem padding (about 38px) beside a 44px button, as in the combobox mock's state panel.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-ph-do">Room <span class="field__required">(required)</span></label><select class="select" id="dd-ph-do" required><option value="">Choose a room</option><option>Lecture hall A</option><option>Lecture hall B</option></select></div></div><figcaption>No safe default: start empty and require a choice.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-ph-dont">Room</label><select class="select" id="dd-ph-dont"><option>Lecture hall A</option><option>Lecture hall B</option></select></div></div><figcaption>Pre-select the first room; people who skip the field book the wrong hall.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><fieldset class="fieldset fieldset--bare"><legend>Captions</legend><div class="check-group check-group--horizontal"><label class="check"><input type="radio" name="dd-cap" checked> On</label><label class="check"><input type="radio" name="dd-cap"> Off</label></div></fieldset></div><figcaption>Two options: show both as radios so they can be compared without opening anything.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-two-dont">Captions</label><select class="select" id="dd-two-dont"><option>On</option><option>Off</option></select></div></div><figcaption>A select for two options hides the alternative behind a click.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Background (<code>--field-bg</code>)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Value and chevron (<code>--field-fg</code>)</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Border (<code>--field-border</code>)</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Border, hover</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Border, invalid</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Disabled value</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Height sm / md / lg</td><td><code>--control-height-sm/md/lg</code></td><td colspan="2"><span data-token="--control-height-sm"></span> / <span data-token="--control-height-md"></span> / <span data-token="--control-height-lg"></span></td></tr>
+          <tr><td>Padding (start / end)</td><td><code>--space-3</code> / <code>--space-10</code></td><td colspan="2"><span data-token="--space-3"></span> / <span data-token="--space-10"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Value font sm / md / lg</td><td><code>--text-body-sm</code> / <code>--text-body</code> / <code>--text-body-lg</code></td><td colspan="2"><span data-token="--text-body"></span></td></tr>
+          <tr><td>Transition</td><td><code>--duration-fast</code>, <code>--ease-standard</code></td><td colspan="2"><span data-token="--duration-fast"></span> <span data-token="--ease-standard"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="room"&gt;Room &lt;span class="field__required"&gt;(required)&lt;/span&gt;&lt;/label&gt;
+  &lt;select class="select" id="room" name="room" required
+          aria-invalid="true" aria-describedby="room-error"&gt;
+    &lt;option value=""&gt;Choose a room&lt;/option&gt;
+    &lt;option&gt;Lecture hall A&lt;/option&gt;
+    &lt;option&gt;Lecture hall B&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;p class="field__error" id="room-error"&gt;&lt;svg class="icon" aria-hidden="true" …&gt;&lt;/svg&gt;&lt;span&gt;Choose a room for the session.&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.select</code></td><td>Native select with field box and drawn chevron; full width.</td></tr>
+        <tr><td><code>.select--sm</code> <code>.select--lg</code></td><td>Size; omit for medium.</td></tr>
+        <tr><td><code>&lt;option value=""&gt;</code></td><td>Placeholder option; pair with <code>required</code>.</td></tr>
+        <tr><td><code>&lt;optgroup label&gt;</code></td><td>Named group of options.</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>2px danger border.</td></tr>
+        <tr><td><code>disabled</code></td><td>Dashed edge, readable value, skipped by Tab.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: "Preview" (12 scenarios) and "Theme" (Light, Dark, System) selects in the "Mock states" panel, with labels beside them and a Reset button.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: "Scenario" (12 options) and "Theme" selects, 44px minimum height to match the Reset button.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: its "Mock states" panel uses buttons only ("Show loading", "Fail next save"); it contributes the panel layout and the 44px row height, not a select.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Radius 0.375rem (6px, combobox) and 7px (video) snapped to <code>--radius-md</code> (8px).</li>
+        <li>Combobox select height came from 0.5rem padding (about 38px) beside 44px buttons; unified on <code>--control-height-md</code>.</li>
+        <li>Video padding 0.45rem / 0.7rem was off-grid; snapped to <code>--space-2</code> / <code>--space-3</code>.</li>
+        <li>Panel text 0.85rem snapped to <code>--font-size-sm</code> for inline labels; form selects use 16px values.</li>
+        <li>The native arrow differed by browser; replaced by one drawn chevron in <code>currentColor</code>. Open issue: it is positioned from the right edge and vanishes in forced colours; a logical-position, forced-colours-safe chevron is needed in <code>components.css</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

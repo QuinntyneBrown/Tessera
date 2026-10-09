@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combobox — Tessera design system</title>
+<meta name="description" content="The asynchronous multi-select combobox (@tessera/combobox): chips, async search, paging, every state, keyboard map, live announcements, RTL and theming.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Combobox</h1>
+      <p class="ds-lead">The combobox finds people or things in a large, server-searched set and keeps every choice visible as a removable chip. In an LMS it is how an administrator assigns learners to a course.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Ships as <code>@tessera/combobox</code></span><span class="ds-pill">APG editable combobox, list autocomplete</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use the combobox when the set is too large to show at once, lives on a server, and a person may pick several items: learners for an assignment, instructors for a session, courses for a learning path. Typing searches; arrows browse; every selection becomes a chip in the field, and the popup stays open so several people can be added in a row.</p>
+      <ul>
+        <li><b>Use a <a href="select.html">select</a></b> for a short, fixed list of fewer than about ten options (lesson status, time zone).</li>
+        <li><b>Use a <a href="radio-group.html">radio group</a> or <a href="checkbox.html">checkboxes</a></b> when every option should be visible at once (two to seven choices).</li>
+        <li><b>Use a <a href="text-field.html">text field</a></b> for free text. Tessera's combobox accepts only listed items; there is no free-form entry in v1.</li>
+        <li><b>Do not</b> put a combobox in a toolbar or table cell; it needs its label, hint row and popup space.</li>
+      </ul>
+      <p><code>@tessera/combobox</code> is multi-select. The single-select layout below is documented so products stay consistent, but it is not part of the v1 package; build it from a <a href="select.html">select</a> until it ships.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field combobox" style="width: 100%; max-width: 26rem;">
+            <label class="field__label" for="an-learners">Learners <span class="field__required">(required)</span></label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="an-learners" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="an-list" aria-activedescendant="an-opt-3" aria-describedby="an-hint" autocomplete="off" placeholder="Name or email" value="Al">
+                <span class="spinner spinner--sm" aria-hidden="true"></span>
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="an-list" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option" id="an-opt-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li>
+                <li class="combobox__option combobox__option--active" id="an-opt-3" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>2 of 14 learners</p><button class="btn btn--sm" type="button" tabindex="-1">Load more results</button></div>
+            </div>
+            <p class="field__error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Select at least one learner.</span></p>
+            <div class="field__below"><p class="field__hint" id="an-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+          <span class="ds-callout" style="left: 6%; top: 8%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 14%; top: 13%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 50%; top: 30%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 86%; top: 30%;" aria-hidden="true">4</span>
+          <span class="ds-callout" style="left: 4%; top: 50%;" aria-hidden="true">5</span>
+          <span class="ds-callout" style="left: 4%; top: 67%;" aria-hidden="true">6</span>
+          <span class="ds-callout" style="left: 4%; top: 77%;" aria-hidden="true">7</span>
+          <span class="ds-callout" style="left: 92%; top: 88%;" aria-hidden="true">8</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small><code>.field__label</code>, bold 16px, 8px above the field. Required fields add "(required)" in text, not only an asterisk.</small></div></li>
+          <li><div><b>Chips</b><small><code>.combobox__chips</code> list (<code>aria-label="Selected values"</code>) of <code>.chip.chip--removable</code>: 32px tall, <code>--radius-sm</code>, teal-subtle fill, 28px remove button named "Remove {name}". Scrolls vertically after 8rem.</small></div></li>
+          <li><div><b>Input</b><small><code>.combobox__input</code>, the <code>role="combobox"</code> element. Shares the field's wrapping rows with the chips and drops to its own row when they fill one. Placeholder is a hint ("Name or email").</small></div></li>
+          <li><div><b>Spinner and toggle</b><small><code>.spinner--sm</code> while a request is in flight; <code>.combobox__icon-btn</code> chevron, 32px, <code>tabindex="-1"</code>, named "Show options" / "Hide options".</small></div></li>
+          <li><div><b>Popup with listbox</b><small><code>.combobox__popup</code>: raised surface, <code>--shadow-3</code>, <code>--radius-md</code>; the <code>.combobox__listbox</code> scrolls. Each option has a filled checkbox, a name and an optional detail line.</small></div></li>
+          <li><div><b>Status row</b><small><code>.combobox__status</code>: one line under the list with the count or message and a small Retry / Load more button. Outside the list and the Tab sequence.</small></div></li>
+          <li><div><b>Error</b><small><code>.field__error</code> with an icon, directly below the field and before the hint. First in <code>aria-describedby</code>.</small></div></li>
+          <li><div><b>Hint row with Clear all</b><small><code>.field__below</code>: hint text, then a link-style "Clear all selections" button (<code>.combobox__clear</code>) at the row's end, so it is never mistaken for "clear the search text".</small></div></li>
+        </ol>
+      </div>
+      <p>DOM and reading order is label, field (chips, input, spinner, toggle), popup, error, hint row. The popup follows the field in the DOM so VoiceOver on iOS can swipe from the input into the options; in the product it renders inline in the browser top layer.</p>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>One component, four configurations. Choose by how many items a person may pick and how the data arrives.</p>
+      <h3>Multi-select with chips (default)</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="v-multi">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Katherine Johnson</span><button class="chip__remove" type="button" aria-label="Remove Katherine Johnson"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="v-multi" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-describedby="v-multi-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="v-multi-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Chips and input share wrapping rows; the field grows to fit them, then the chip list scrolls.</span><span><code>@tessera/combobox</code></span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field combobox"&gt;
+  &lt;label class="field__label" for="learners"&gt;Learners&lt;/label&gt;
+  &lt;div class="combobox__field"&gt;
+    &lt;ul class="combobox__chips" aria-label="Selected values"&gt;
+      &lt;li class="chip chip--removable"&gt;&lt;span class="chip__label"&gt;Ada Lovelace&lt;/span&gt;
+        &lt;button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"&gt;…&lt;/button&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="combobox__input-row"&gt;
+      &lt;input class="combobox__input" id="learners" role="combobox" aria-autocomplete="list"
+             aria-expanded="false" aria-describedby="learners-hint" autocomplete="off" placeholder="Name or email"&gt;
+      &lt;button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"&gt;…&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="field__below"&gt;
+    &lt;p class="field__hint" id="learners-hint"&gt;Select one or more learners. Search to narrow the results.&lt;/p&gt;
+    &lt;button class="btn btn--link combobox__clear" type="button"&gt;Clear all selections&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Single-select</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="v-single">Lead instructor</label>
+            <div class="combobox__field">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="v-single" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="v-single-list" aria-activedescendant="v-single-2" autocomplete="off" value="Grace Hopper">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="v-single-list" role="listbox" aria-label="Lead instructor">
+                <li class="combobox__option" id="v-single-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">Computer science faculty</span></span></li>
+                <li class="combobox__option combobox__option--active" id="v-single-2" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Grace Hopper</span><span class="combobox__option-detail">Software engineering faculty</span></span></li>
+                <li class="combobox__option" id="v-single-3" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Katherine Johnson</span><span class="combobox__option-detail">Mathematics faculty</span></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>No chips: the choice is the input's value; choosing closes the popup. Not in <code>@tessera/combobox</code> v1.</span><span>Listbox without <code>aria-multiselectable</code></span></div>
+      </div>
+
+      <h3>Asynchronous: loading, no results, error, next-page error</h3>
+      <p>Every Tessera combobox is asynchronous: a <code>searchFn</code> returns pages from the server after a 300 ms debounce. The popup's status row carries the request state; the list above it keeps whatever was already loaded.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start;">
+          <div style="flex: 1 1 14rem; min-width: 0;">
+            <p class="field__hint">Loading</p>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners, loading" aria-multiselectable="true" aria-busy="true"></ul>
+              <div class="combobox__status"><p class="loading-inline"><span class="spinner spinner--sm" aria-hidden="true"></span>Loading learners…</p></div>
+            </div>
+          </div>
+          <div style="flex: 1 1 14rem; min-width: 0;">
+            <p class="field__hint">No results</p>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners, no results" aria-multiselectable="true"></ul>
+              <div class="combobox__status"><p>No results</p></div>
+            </div>
+          </div>
+          <div style="flex: 1 1 14rem; min-width: 0;">
+            <p class="field__hint">Search error</p>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners, error" aria-multiselectable="true"></ul>
+              <div class="combobox__status"><p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Learners could not be loaded. Your selections are safe.</span></p><button class="btn btn--sm" type="button" tabindex="-1">Retry</button></div>
+            </div>
+          </div>
+          <div style="flex: 1 1 14rem; min-width: 0;">
+            <p class="field__hint">Next-page error</p>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners, next page failed" aria-multiselectable="true">
+                <li class="combobox__option" id="v-np-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Dorothy Vaughan</span><span class="combobox__option-detail">dorothy.vaughan@example.edu</span></span></li>
+                <li class="combobox__option" id="v-np-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Mary Jackson</span><span class="combobox__option-detail">mary.jackson@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Learners could not be loaded. Your selections are safe.</span></p><button class="btn btn--sm" type="button" tabindex="-1">Retry</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Retry repeats the failed query and page; after a next-page error the first page stays and the retried page is appended.</span><span><code>aria-busy</code> on the listbox while loading</span></div>
+      </div>
+
+      <h3>Custom option template with avatar</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="v-custom">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Barbara Liskov</span><button class="chip__remove" type="button" aria-label="Remove Barbara Liskov"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="v-custom" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="v-custom-list" aria-activedescendant="v-custom-2" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="v-custom-list" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option" id="v-custom-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="avatar" aria-hidden="true">BL</span><span><span>Barbara Liskov</span><span class="combobox__option-detail">Learner · Platform team</span></span></li>
+                <li class="combobox__option combobox__option--active" id="v-custom-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="avatar" aria-hidden="true">MH</span><span><span>Margaret Hamilton</span><span class="combobox__option-detail">Learner · Flight software</span></span></li>
+                <li class="combobox__option" id="v-custom-3" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="avatar" aria-hidden="true">ED</span><span><span>Edsger Dijkstra</span><span class="combobox__option-detail">Instructor · Algorithms</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>3 learners available</p></div>
+            </div>
+          </div>
+          <div class="combobox__popup combobox__popup--static" style="max-width: 28rem;">
+            <ul class="combobox__listbox" role="listbox" aria-label="Learners, custom empty message" aria-multiselectable="true"></ul>
+            <div class="combobox__status"><p>No learners match “Zed”. Check the spelling or search by email.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span><code>tComboboxOption</code> adds an initials avatar (<code>.avatar</code>, <code>aria-hidden</code>) between the checkbox and the text; <code>tComboboxEmpty</code> replaces "No results" with guidance.</span><span>Templates hold text only, no controls</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes" data-na="One size. The combobox ships a single 44px field (32px inner targets, 44px on coarse pointers); compact or large fields would add variants no consumer has asked for."><h2><a href="#sizes">Sizes</a></h2>
+      <p class="ds-na">One size. The combobox ships a single 44px field (32px inner targets, 44px on coarse pointers); compact or large fields would add variants no consumer has asked for.</p>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>Each part has its own pointer and focus states, forced here with <code>data-state</code>. In the product they come from <code>:hover</code> (only where the pointer can hover), <code>:focus-visible</code> on the input (drawn on the whole field), <code>aria-activedescendant</code> (the option outline), <code>aria-selected</code>, <code>aria-disabled</code> and <code>disabled</code>.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Part</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Selected / invalid</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Field</th>
+            <td><div class="combobox" style="width: 13rem;"><div class="combobox__field"><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, default" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></td>
+            <td><div class="combobox" style="width: 13rem;"><div class="combobox__field"><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, hover" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></td>
+            <td><div class="combobox" style="width: 13rem;"><div class="combobox__field" data-state="focus"><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, focus" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></td>
+            <td><div class="combobox" style="width: 13rem;"><div class="combobox__field" data-state="focus"><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="true" aria-label="Learners, open" value="Gra"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></div></div></div></td>
+            <td><div class="combobox combobox--disabled" style="width: 13rem;"><div class="combobox__field"><ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, disabled" placeholder="Name or email" disabled><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></td>
+            <td><div class="combobox combobox--invalid" style="width: 13rem;"><div class="combobox__field"><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, invalid" aria-invalid="true" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></td></tr>
+          <tr><th scope="row">Option</th>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, default" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option" id="m-o-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></td>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, hover" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option" id="m-o-2" role="option" aria-selected="false" data-state="hover"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></td>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, active descendant" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option combobox__option--active" id="m-o-3" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></td>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, active and selected" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option combobox__option--active" id="m-o-4" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></td>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, disabled" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option" id="m-o-5" role="option" aria-selected="false" aria-disabled="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Hedy Lamarr</span><span class="combobox__option-detail">hedy.lamarr@example.edu · Account inactive</span></span></li></ul></td>
+            <td><ul class="combobox__listbox" role="listbox" aria-label="Option, selected" aria-multiselectable="true" style="width: 12rem;"><li class="combobox__option" id="m-o-6" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></td></tr>
+          <tr><th scope="row">Chip</th>
+            <td><ul class="chip-list" aria-label="Chip, default"><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul></td>
+            <td><ul class="chip-list" aria-label="Chip, hover"><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul></td>
+            <td><ul class="chip-list" aria-label="Chip, focus"><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul></td>
+            <td><ul class="chip-list" aria-label="Chip, active"><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper" data-state="active"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul></td>
+            <td><div class="combobox--disabled"><ul class="chip-list" aria-label="Chip, disabled"><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul></div></td>
+            <td><small>Removal is immediate; focus moves to the next chip, the previous one, or the input.</small></td></tr>
+          <tr><th scope="row">Toggle</th>
+            <td><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></td>
+            <td><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options" data-state="hover"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></td>
+            <td><small>Not focusable (<code>tabindex="-1"</code>); focus stays in the input.</small></td>
+            <td><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></td>
+            <td><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></td>
+            <td><small>Name reflects the popup: "Show options" or "Hide options".</small></td></tr>
+          <tr><th scope="row">Clear all</th>
+            <td><button class="btn btn--link" type="button">Clear all selections</button></td>
+            <td><button class="btn btn--link" type="button" data-state="hover">Clear all selections</button></td>
+            <td><button class="btn btn--link" type="button" data-state="focus">Clear all selections</button></td>
+            <td><button class="btn btn--link" type="button" data-state="active">Clear all selections</button></td>
+            <td><button class="btn btn--link" type="button" disabled>Clear all selections</button></td>
+            <td><small>Hidden when nothing is selected.</small></td></tr>
+        </tbody>
+      </table></div>
+      <p>The field's border does not change on hover; the 3px amber ring around the whole field is the only focus cue, and the input's own outline is suppressed. A focused chip remove button shows only its own ring.</p>
+
+      <h3>Open</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="s-open">Learners</label>
+            <div class="combobox__field" data-state="focus">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-open" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-open-list" aria-activedescendant="s-open-3" aria-describedby="s-open-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-open-list" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option" id="s-open-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li>
+                <li class="combobox__option" id="s-open-2" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Grace Hopper</span><span class="combobox__option-detail">grace.hopper@example.edu</span></span></li>
+                <li class="combobox__option combobox__option--active" id="s-open-3" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li>
+                <li class="combobox__option" id="s-open-4" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Katherine Johnson</span><span class="combobox__option-detail">katherine.johnson@example.edu</span></span></li>
+                <li class="combobox__option" id="s-open-5" role="option" aria-selected="false" aria-disabled="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Hedy Lamarr</span><span class="combobox__option-detail">hedy.lamarr@example.edu · Account inactive</span></span></li>
+                <li class="combobox__option" id="s-open-6" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Dorothy Vaughan</span><span class="combobox__option-detail">dorothy.vaughan@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>6 of 24 learners</p><button class="btn btn--sm" type="button" tabindex="-1">Load more results</button></div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="s-open-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Selected options stay in the list with a filled checkbox; the active option has a 2px teal outline. No row tint for selection.</span><span>Six results per page</span></div>
+      </div>
+
+      <h3>Loading</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="s-load">Learners</label>
+            <div class="combobox__field" data-state="focus">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-load" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-load-list" autocomplete="off" value="Kath">
+                <span class="spinner spinner--sm" aria-hidden="true"></span>
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-load-list" role="listbox" aria-label="Learners" aria-multiselectable="true" aria-busy="true">
+                <li class="combobox__option" id="s-load-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Katherine Johnson</span><span class="combobox__option-detail">katherine.johnson@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>Loading learners…</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Previous results stay visible while the replacement loads. "Loading results." is announced only if the request takes more than one second.</span></div>
+      </div>
+
+      <h3>No results and minimum length</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas" style="align-items: flex-start;">
+          <div class="field combobox" style="flex: 1 1 16rem; min-width: 0;">
+            <label class="field__label" for="s-none">Learners</label>
+            <div class="combobox__field" data-state="focus">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-none" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-none-list" autocomplete="off" value="Zed">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-none-list" role="listbox" aria-label="Learners" aria-multiselectable="true"></ul>
+              <div class="combobox__status"><p>No results</p></div>
+            </div>
+          </div>
+          <div class="field combobox" style="flex: 1 1 16rem; min-width: 0;">
+            <label class="field__label" for="s-min">Learners</label>
+            <div class="combobox__field" data-state="focus">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-min" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-min-list" aria-describedby="s-min-hint" autocomplete="off" value="A">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-min-list" role="listbox" aria-label="Learners" aria-multiselectable="true"></ul>
+              <div class="combobox__status"><p>Type at least 2 characters to search.</p></div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="s-min-hint">Type at least 2 characters to search.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>An empty page never starts an automatic request loop. <code>minSearchLength</code> defaults to 1 in the package.</span></div>
+      </div>
+
+      <h3>Selection limit</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="s-limit">Session presenters</label>
+            <div class="combobox__field" data-state="focus">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Alan Turing</span><button class="chip__remove" type="button" aria-label="Remove Alan Turing"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-limit" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-limit-list" aria-activedescendant="s-limit-2" aria-describedby="s-limit-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-limit-list" role="listbox" aria-label="Session presenters" aria-multiselectable="true">
+                <li class="combobox__option" id="s-limit-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li>
+                <li class="combobox__option combobox__option--active" id="s-limit-2" role="option" aria-selected="false" aria-disabled="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Katherine Johnson</span><span class="combobox__option-detail">katherine.johnson@example.edu · Selection limit reached</span></span></li>
+                <li class="combobox__option" id="s-limit-3" role="option" aria-selected="false" aria-disabled="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Mary Jackson</span><span class="combobox__option-detail">mary.jackson@example.edu · Selection limit reached</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>3 learners available</p></div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="s-limit-hint">Choose up to 3 learners. Remove a selection to choose someone else.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>At the limit, unselected options become <code>aria-disabled</code> with the reason in their detail line; selected ones can still be deselected. "Maximum of 3 selections reached." is announced once.</span><span><code>maxSelections</code></span></div>
+      </div>
+
+      <h3>200 selections</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 28rem;">
+            <label class="field__label" for="s-many">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Learner 1</span><button class="chip__remove" type="button" aria-label="Remove Learner 1"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 2</span><button class="chip__remove" type="button" aria-label="Remove Learner 2"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 3</span><button class="chip__remove" type="button" aria-label="Remove Learner 3"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 4</span><button class="chip__remove" type="button" aria-label="Remove Learner 4"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 5</span><button class="chip__remove" type="button" aria-label="Remove Learner 5"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 6</span><button class="chip__remove" type="button" aria-label="Remove Learner 6"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 7</span><button class="chip__remove" type="button" aria-label="Remove Learner 7"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 8</span><button class="chip__remove" type="button" aria-label="Remove Learner 8"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 9</span><button class="chip__remove" type="button" aria-label="Remove Learner 9"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 10</span><button class="chip__remove" type="button" aria-label="Remove Learner 10"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 11</span><button class="chip__remove" type="button" aria-label="Remove Learner 11"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 12</span><button class="chip__remove" type="button" aria-label="Remove Learner 12"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 13</span><button class="chip__remove" type="button" aria-label="Remove Learner 13"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 14</span><button class="chip__remove" type="button" aria-label="Remove Learner 14"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 15</span><button class="chip__remove" type="button" aria-label="Remove Learner 15"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 16</span><button class="chip__remove" type="button" aria-label="Remove Learner 16"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 17</span><button class="chip__remove" type="button" aria-label="Remove Learner 17"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 18</span><button class="chip__remove" type="button" aria-label="Remove Learner 18"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 19</span><button class="chip__remove" type="button" aria-label="Remove Learner 19"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 20</span><button class="chip__remove" type="button" aria-label="Remove Learner 20"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 21</span><button class="chip__remove" type="button" aria-label="Remove Learner 21"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 22</span><button class="chip__remove" type="button" aria-label="Remove Learner 22"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 23</span><button class="chip__remove" type="button" aria-label="Remove Learner 23"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 24</span><button class="chip__remove" type="button" aria-label="Remove Learner 24"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 25</span><button class="chip__remove" type="button" aria-label="Remove Learner 25"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 26</span><button class="chip__remove" type="button" aria-label="Remove Learner 26"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 27</span><button class="chip__remove" type="button" aria-label="Remove Learner 27"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 28</span><button class="chip__remove" type="button" aria-label="Remove Learner 28"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 29</span><button class="chip__remove" type="button" aria-label="Remove Learner 29"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 30</span><button class="chip__remove" type="button" aria-label="Remove Learner 30"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 31</span><button class="chip__remove" type="button" aria-label="Remove Learner 31"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 32</span><button class="chip__remove" type="button" aria-label="Remove Learner 32"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 33</span><button class="chip__remove" type="button" aria-label="Remove Learner 33"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 34</span><button class="chip__remove" type="button" aria-label="Remove Learner 34"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 35</span><button class="chip__remove" type="button" aria-label="Remove Learner 35"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 36</span><button class="chip__remove" type="button" aria-label="Remove Learner 36"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 37</span><button class="chip__remove" type="button" aria-label="Remove Learner 37"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 38</span><button class="chip__remove" type="button" aria-label="Remove Learner 38"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 39</span><button class="chip__remove" type="button" aria-label="Remove Learner 39"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 40</span><button class="chip__remove" type="button" aria-label="Remove Learner 40"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 41</span><button class="chip__remove" type="button" aria-label="Remove Learner 41"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 42</span><button class="chip__remove" type="button" aria-label="Remove Learner 42"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 43</span><button class="chip__remove" type="button" aria-label="Remove Learner 43"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 44</span><button class="chip__remove" type="button" aria-label="Remove Learner 44"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 45</span><button class="chip__remove" type="button" aria-label="Remove Learner 45"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 46</span><button class="chip__remove" type="button" aria-label="Remove Learner 46"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 47</span><button class="chip__remove" type="button" aria-label="Remove Learner 47"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 48</span><button class="chip__remove" type="button" aria-label="Remove Learner 48"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 49</span><button class="chip__remove" type="button" aria-label="Remove Learner 49"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 50</span><button class="chip__remove" type="button" aria-label="Remove Learner 50"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 51</span><button class="chip__remove" type="button" aria-label="Remove Learner 51"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 52</span><button class="chip__remove" type="button" aria-label="Remove Learner 52"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 53</span><button class="chip__remove" type="button" aria-label="Remove Learner 53"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 54</span><button class="chip__remove" type="button" aria-label="Remove Learner 54"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 55</span><button class="chip__remove" type="button" aria-label="Remove Learner 55"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 56</span><button class="chip__remove" type="button" aria-label="Remove Learner 56"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 57</span><button class="chip__remove" type="button" aria-label="Remove Learner 57"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 58</span><button class="chip__remove" type="button" aria-label="Remove Learner 58"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 59</span><button class="chip__remove" type="button" aria-label="Remove Learner 59"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 60</span><button class="chip__remove" type="button" aria-label="Remove Learner 60"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 61</span><button class="chip__remove" type="button" aria-label="Remove Learner 61"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 62</span><button class="chip__remove" type="button" aria-label="Remove Learner 62"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 63</span><button class="chip__remove" type="button" aria-label="Remove Learner 63"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 64</span><button class="chip__remove" type="button" aria-label="Remove Learner 64"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 65</span><button class="chip__remove" type="button" aria-label="Remove Learner 65"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 66</span><button class="chip__remove" type="button" aria-label="Remove Learner 66"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 67</span><button class="chip__remove" type="button" aria-label="Remove Learner 67"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 68</span><button class="chip__remove" type="button" aria-label="Remove Learner 68"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 69</span><button class="chip__remove" type="button" aria-label="Remove Learner 69"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 70</span><button class="chip__remove" type="button" aria-label="Remove Learner 70"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 71</span><button class="chip__remove" type="button" aria-label="Remove Learner 71"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 72</span><button class="chip__remove" type="button" aria-label="Remove Learner 72"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 73</span><button class="chip__remove" type="button" aria-label="Remove Learner 73"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 74</span><button class="chip__remove" type="button" aria-label="Remove Learner 74"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 75</span><button class="chip__remove" type="button" aria-label="Remove Learner 75"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 76</span><button class="chip__remove" type="button" aria-label="Remove Learner 76"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 77</span><button class="chip__remove" type="button" aria-label="Remove Learner 77"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 78</span><button class="chip__remove" type="button" aria-label="Remove Learner 78"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 79</span><button class="chip__remove" type="button" aria-label="Remove Learner 79"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 80</span><button class="chip__remove" type="button" aria-label="Remove Learner 80"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 81</span><button class="chip__remove" type="button" aria-label="Remove Learner 81"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 82</span><button class="chip__remove" type="button" aria-label="Remove Learner 82"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 83</span><button class="chip__remove" type="button" aria-label="Remove Learner 83"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 84</span><button class="chip__remove" type="button" aria-label="Remove Learner 84"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 85</span><button class="chip__remove" type="button" aria-label="Remove Learner 85"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 86</span><button class="chip__remove" type="button" aria-label="Remove Learner 86"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 87</span><button class="chip__remove" type="button" aria-label="Remove Learner 87"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 88</span><button class="chip__remove" type="button" aria-label="Remove Learner 88"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 89</span><button class="chip__remove" type="button" aria-label="Remove Learner 89"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 90</span><button class="chip__remove" type="button" aria-label="Remove Learner 90"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 91</span><button class="chip__remove" type="button" aria-label="Remove Learner 91"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 92</span><button class="chip__remove" type="button" aria-label="Remove Learner 92"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 93</span><button class="chip__remove" type="button" aria-label="Remove Learner 93"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 94</span><button class="chip__remove" type="button" aria-label="Remove Learner 94"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 95</span><button class="chip__remove" type="button" aria-label="Remove Learner 95"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 96</span><button class="chip__remove" type="button" aria-label="Remove Learner 96"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 97</span><button class="chip__remove" type="button" aria-label="Remove Learner 97"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 98</span><button class="chip__remove" type="button" aria-label="Remove Learner 98"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 99</span><button class="chip__remove" type="button" aria-label="Remove Learner 99"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 100</span><button class="chip__remove" type="button" aria-label="Remove Learner 100"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 101</span><button class="chip__remove" type="button" aria-label="Remove Learner 101"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 102</span><button class="chip__remove" type="button" aria-label="Remove Learner 102"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 103</span><button class="chip__remove" type="button" aria-label="Remove Learner 103"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 104</span><button class="chip__remove" type="button" aria-label="Remove Learner 104"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 105</span><button class="chip__remove" type="button" aria-label="Remove Learner 105"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 106</span><button class="chip__remove" type="button" aria-label="Remove Learner 106"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 107</span><button class="chip__remove" type="button" aria-label="Remove Learner 107"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 108</span><button class="chip__remove" type="button" aria-label="Remove Learner 108"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 109</span><button class="chip__remove" type="button" aria-label="Remove Learner 109"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 110</span><button class="chip__remove" type="button" aria-label="Remove Learner 110"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 111</span><button class="chip__remove" type="button" aria-label="Remove Learner 111"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 112</span><button class="chip__remove" type="button" aria-label="Remove Learner 112"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 113</span><button class="chip__remove" type="button" aria-label="Remove Learner 113"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 114</span><button class="chip__remove" type="button" aria-label="Remove Learner 114"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 115</span><button class="chip__remove" type="button" aria-label="Remove Learner 115"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 116</span><button class="chip__remove" type="button" aria-label="Remove Learner 116"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 117</span><button class="chip__remove" type="button" aria-label="Remove Learner 117"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 118</span><button class="chip__remove" type="button" aria-label="Remove Learner 118"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 119</span><button class="chip__remove" type="button" aria-label="Remove Learner 119"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 120</span><button class="chip__remove" type="button" aria-label="Remove Learner 120"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 121</span><button class="chip__remove" type="button" aria-label="Remove Learner 121"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 122</span><button class="chip__remove" type="button" aria-label="Remove Learner 122"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 123</span><button class="chip__remove" type="button" aria-label="Remove Learner 123"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 124</span><button class="chip__remove" type="button" aria-label="Remove Learner 124"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 125</span><button class="chip__remove" type="button" aria-label="Remove Learner 125"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 126</span><button class="chip__remove" type="button" aria-label="Remove Learner 126"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 127</span><button class="chip__remove" type="button" aria-label="Remove Learner 127"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 128</span><button class="chip__remove" type="button" aria-label="Remove Learner 128"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 129</span><button class="chip__remove" type="button" aria-label="Remove Learner 129"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 130</span><button class="chip__remove" type="button" aria-label="Remove Learner 130"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 131</span><button class="chip__remove" type="button" aria-label="Remove Learner 131"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 132</span><button class="chip__remove" type="button" aria-label="Remove Learner 132"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 133</span><button class="chip__remove" type="button" aria-label="Remove Learner 133"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 134</span><button class="chip__remove" type="button" aria-label="Remove Learner 134"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 135</span><button class="chip__remove" type="button" aria-label="Remove Learner 135"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 136</span><button class="chip__remove" type="button" aria-label="Remove Learner 136"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 137</span><button class="chip__remove" type="button" aria-label="Remove Learner 137"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 138</span><button class="chip__remove" type="button" aria-label="Remove Learner 138"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 139</span><button class="chip__remove" type="button" aria-label="Remove Learner 139"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 140</span><button class="chip__remove" type="button" aria-label="Remove Learner 140"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 141</span><button class="chip__remove" type="button" aria-label="Remove Learner 141"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 142</span><button class="chip__remove" type="button" aria-label="Remove Learner 142"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 143</span><button class="chip__remove" type="button" aria-label="Remove Learner 143"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 144</span><button class="chip__remove" type="button" aria-label="Remove Learner 144"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 145</span><button class="chip__remove" type="button" aria-label="Remove Learner 145"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 146</span><button class="chip__remove" type="button" aria-label="Remove Learner 146"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 147</span><button class="chip__remove" type="button" aria-label="Remove Learner 147"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 148</span><button class="chip__remove" type="button" aria-label="Remove Learner 148"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 149</span><button class="chip__remove" type="button" aria-label="Remove Learner 149"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 150</span><button class="chip__remove" type="button" aria-label="Remove Learner 150"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 151</span><button class="chip__remove" type="button" aria-label="Remove Learner 151"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 152</span><button class="chip__remove" type="button" aria-label="Remove Learner 152"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 153</span><button class="chip__remove" type="button" aria-label="Remove Learner 153"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 154</span><button class="chip__remove" type="button" aria-label="Remove Learner 154"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 155</span><button class="chip__remove" type="button" aria-label="Remove Learner 155"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 156</span><button class="chip__remove" type="button" aria-label="Remove Learner 156"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 157</span><button class="chip__remove" type="button" aria-label="Remove Learner 157"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 158</span><button class="chip__remove" type="button" aria-label="Remove Learner 158"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 159</span><button class="chip__remove" type="button" aria-label="Remove Learner 159"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 160</span><button class="chip__remove" type="button" aria-label="Remove Learner 160"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 161</span><button class="chip__remove" type="button" aria-label="Remove Learner 161"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 162</span><button class="chip__remove" type="button" aria-label="Remove Learner 162"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 163</span><button class="chip__remove" type="button" aria-label="Remove Learner 163"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 164</span><button class="chip__remove" type="button" aria-label="Remove Learner 164"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 165</span><button class="chip__remove" type="button" aria-label="Remove Learner 165"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 166</span><button class="chip__remove" type="button" aria-label="Remove Learner 166"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 167</span><button class="chip__remove" type="button" aria-label="Remove Learner 167"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 168</span><button class="chip__remove" type="button" aria-label="Remove Learner 168"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 169</span><button class="chip__remove" type="button" aria-label="Remove Learner 169"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 170</span><button class="chip__remove" type="button" aria-label="Remove Learner 170"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 171</span><button class="chip__remove" type="button" aria-label="Remove Learner 171"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 172</span><button class="chip__remove" type="button" aria-label="Remove Learner 172"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 173</span><button class="chip__remove" type="button" aria-label="Remove Learner 173"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 174</span><button class="chip__remove" type="button" aria-label="Remove Learner 174"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 175</span><button class="chip__remove" type="button" aria-label="Remove Learner 175"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 176</span><button class="chip__remove" type="button" aria-label="Remove Learner 176"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 177</span><button class="chip__remove" type="button" aria-label="Remove Learner 177"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 178</span><button class="chip__remove" type="button" aria-label="Remove Learner 178"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 179</span><button class="chip__remove" type="button" aria-label="Remove Learner 179"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 180</span><button class="chip__remove" type="button" aria-label="Remove Learner 180"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 181</span><button class="chip__remove" type="button" aria-label="Remove Learner 181"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 182</span><button class="chip__remove" type="button" aria-label="Remove Learner 182"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 183</span><button class="chip__remove" type="button" aria-label="Remove Learner 183"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 184</span><button class="chip__remove" type="button" aria-label="Remove Learner 184"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 185</span><button class="chip__remove" type="button" aria-label="Remove Learner 185"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 186</span><button class="chip__remove" type="button" aria-label="Remove Learner 186"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 187</span><button class="chip__remove" type="button" aria-label="Remove Learner 187"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 188</span><button class="chip__remove" type="button" aria-label="Remove Learner 188"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 189</span><button class="chip__remove" type="button" aria-label="Remove Learner 189"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 190</span><button class="chip__remove" type="button" aria-label="Remove Learner 190"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 191</span><button class="chip__remove" type="button" aria-label="Remove Learner 191"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 192</span><button class="chip__remove" type="button" aria-label="Remove Learner 192"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 193</span><button class="chip__remove" type="button" aria-label="Remove Learner 193"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 194</span><button class="chip__remove" type="button" aria-label="Remove Learner 194"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 195</span><button class="chip__remove" type="button" aria-label="Remove Learner 195"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 196</span><button class="chip__remove" type="button" aria-label="Remove Learner 196"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 197</span><button class="chip__remove" type="button" aria-label="Remove Learner 197"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 198</span><button class="chip__remove" type="button" aria-label="Remove Learner 198"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 199</span><button class="chip__remove" type="button" aria-label="Remove Learner 199"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Learner 200</span><button class="chip__remove" type="button" aria-label="Remove Learner 200"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-many" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-describedby="s-many-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="s-many-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The chip list stops at <code>--combobox-chip-list-max-height</code> (8rem) and scrolls; the input stays visible below it. The selected summary ("200 selected: …") is a description of the input.</span></div>
+      </div>
+
+      <h3>Long label with tooltip</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" style="max-width: 20rem;">
+            <label class="field__label" for="s-long">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values">
+                <li class="chip chip--removable"><span class="chip__label">Alexandra Montgomery-Williams · International workplace safety and compliance team</span><button class="chip__remove" type="button" aria-label="Remove Alexandra Montgomery-Williams · International workplace safety and compliance team" aria-describedby="s-long-tip" data-state="focus"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li>
+              </ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-long" role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+            </div>
+            <div class="tooltip tooltip--static" id="s-long-tip" role="tooltip">Alexandra Montgomery-Williams · International workplace safety and compliance team</div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The chip label ellipsizes; its full text shows in a tooltip on hover or remove-button focus, stays while hovered, and Escape dismisses it first. Option labels wrap instead of truncating.</span></div>
+      </div>
+
+      <h3>Required and invalid</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox combobox--invalid" style="max-width: 28rem;">
+            <label class="field__label" for="s-invalid">Learners <span class="field__required">(required)</span></label>
+            <div class="combobox__field">
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-invalid" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-required="true" aria-invalid="true" aria-describedby="s-invalid-err s-invalid-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+            </div>
+            <p class="field__error" id="s-invalid-err"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Select at least one learner.</span></p>
+            <div class="field__below"><p class="field__hint" id="s-invalid-hint">Select one or more learners. Search to narrow the results.</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Shown once the field is touched or the form is submitted: 2px danger border, icon and message directly below the field, error first in <code>aria-describedby</code>. Submitting an empty required field moves focus to the input.</span></div>
+      </div>
+
+      <h3>Disabled</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox combobox--disabled" style="max-width: 28rem;">
+            <label class="field__label" for="s-disabled">Learners</label>
+            <div class="combobox__field">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-disabled" role="combobox" aria-autocomplete="list" aria-expanded="false" autocomplete="off" placeholder="Name or email" disabled>
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options" disabled><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+              </div>
+            </div>
+            <div class="field__below"><p class="field__hint">Assignments are locked while the course is published.</p><button class="btn btn--link combobox__clear" type="button" disabled>Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Dashed field, chip and button edges; text stays readable in <code>--color-fg-disabled</code>. Disabling cancels in-flight requests. Say why next to it.</span></div>
+      </div>
+
+      <h3>Right-to-left</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field combobox" dir="rtl" style="max-width: 28rem;">
+            <label class="field__label" for="s-rtl">Learners</label>
+            <div class="combobox__field" data-state="focus">
+              <ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li><li class="chip chip--removable"><span class="chip__label">Grace Hopper</span><button class="chip__remove" type="button" aria-label="Remove Grace Hopper"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul>
+              <div class="combobox__input-row">
+                <input class="combobox__input" id="s-rtl" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="s-rtl-list" aria-activedescendant="s-rtl-1" aria-describedby="s-rtl-hint" autocomplete="off" placeholder="Name or email">
+                <button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" id="s-rtl-list" role="listbox" aria-label="Learners" aria-multiselectable="true">
+                <li class="combobox__option combobox__option--active" id="s-rtl-1" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li>
+                <li class="combobox__option" id="s-rtl-2" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p>2 of 24 learners</p><button class="btn btn--sm" type="button" tabindex="-1">Load more results</button></div>
+            </div>
+            <div class="field__below"><p class="field__hint" id="s-rtl-hint">Select one or more learners. Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Under <code>dir="rtl"</code> chips start at the right, the toggle sits at the left end, Clear all moves to the row's left end, and chip arrow keys mirror: <kbd>→</kbd> at the input start reaches the last chip.</span></div>
+      </div>
+
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light">
+          <div class="field combobox">
+            <label class="field__label" for="t-light">Learners</label>
+            <div class="combobox__field" data-state="focus"><ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul><div class="combobox__input-row"><input class="combobox__input" id="t-light" role="combobox" aria-expanded="true" aria-controls="t-light-list" aria-activedescendant="t-light-2" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></div></div>
+            <div class="combobox__popup combobox__popup--static"><ul class="combobox__listbox" id="t-light-list" role="listbox" aria-label="Learners" aria-multiselectable="true"><li class="combobox__option" id="t-light-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li><li class="combobox__option combobox__option--active" id="t-light-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul><div class="combobox__status"><p>2 of 24 learners</p><button class="btn btn--sm" type="button" tabindex="-1">Load more results</button></div></div>
+          </div>
+        </div>
+        <div data-theme="dark">
+          <div class="field combobox">
+            <label class="field__label" for="t-dark">Learners</label>
+            <div class="combobox__field" data-state="focus"><ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul><div class="combobox__input-row"><input class="combobox__input" id="t-dark" role="combobox" aria-expanded="true" aria-controls="t-dark-list" aria-activedescendant="t-dark-2" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></div></div>
+            <div class="combobox__popup combobox__popup--static"><ul class="combobox__listbox" id="t-dark-list" role="listbox" aria-label="Learners" aria-multiselectable="true"><li class="combobox__option" id="t-dark-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li><li class="combobox__option combobox__option--active" id="t-dark-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul><div class="combobox__status"><p>2 of 24 learners</p><button class="btn btn--sm" type="button" tabindex="-1">Load more results</button></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li><b>Width.</b> The combobox fills its form column (<code>.form</code> caps it at 40rem). At 320px the input keeps at least 8rem beside the toggle; the short placeholder "Name or email" fits without clipping.</li>
+        <li><b>Chips.</b> Chips and the input share the field's wrapping rows. When the chips fill a row the input drops to its own row; after 8rem of chips the list scrolls vertically, never horizontally. Long chip labels ellipsize inside the field width and keep their full text in the tooltip and the remove button's name.</li>
+        <li><b>Popup height.</b> The preferred height is 24rem, so it scales with root text size, and it is bounded by the visual viewport (<code>max-height: min(24rem, 60dvh)</code> here; <code>--t-combobox-panel-max-height</code> in the package). At 24rem at least five two-line options and the status row are visible.</li>
+        <li><b>Short viewports.</b> When the status row and a usable part of the list do not fit around the whole field (a phone in landscape, an on-screen keyboard, 400% zoom), the popup anchors vertically to the input row instead, keeping the field's full width. It may cover chips, but never the input; opening and reflow keep the focused input in view.</li>
+        <li><b>Status row.</b> The count and the Retry / Load more button sit on one line and wrap at narrow widths.</li>
+        <li><b>Coarse pointers.</b> Under <code>(pointer: coarse)</code> the input row, toggle, chip remove buttons, status-row buttons and Clear all grow to 44px (2.75rem). With a fine pointer they are 32px (28px for chip remove), above the 24px minimum.</li>
+        <li><b>Zoom, text size and spacing.</b> Every length is in rem, so 200% text and WCAG text-spacing overrides grow rows rather than clip them. Option text wraps; nothing in the popup truncates.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The combobox reads semantic tokens through seven component tokens declared on <code>.combobox</code>. A theme changes semantic tokens; a host re-skin overrides component tokens. In the shipped Angular package the same decisions are the <code>--t-combobox-*</code> custom properties, which override the shared <code>@tessera/theme</code> values on a container or the component host.</p>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Design-system token</th><th scope="col">Default (semantic)</th><th scope="col">Shipped property</th><th scope="col">Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>--combobox-surface</code></td><td><code>--color-bg-surface</code></td><td><code>--t-combobox-surface</code></td><td>Field background (and popup in the package)</td></tr>
+          <tr><td><code>--combobox-border</code></td><td><code>--color-border-strong</code></td><td><code>--t-combobox-border</code></td><td>Field, popup, chip and checkbox edges; status-row divider</td></tr>
+          <tr><td><code>--combobox-chip-bg</code></td><td><code>--color-accent-subtle</code></td><td><code>--t-combobox-chip-bg</code></td><td>Chip fill</td></tr>
+          <tr><td><code>--combobox-hover-bg</code></td><td><code>--color-bg-subtle</code></td><td><code>--t-combobox-hover-bg</code></td><td>Option and icon-button hover</td></tr>
+          <tr><td><code>--combobox-active-outline</code></td><td><code>--color-accent</code></td><td><code>--t-combobox-active-outline</code></td><td>Active option outline</td></tr>
+          <tr><td><code>--combobox-selected-mark</code></td><td><code>--color-accent</code></td><td><code>--t-combobox-selected-mark</code></td><td>Filled checkbox</td></tr>
+          <tr><td><code>--combobox-chip-list-max-height</code></td><td>8rem</td><td><code>--t-combobox-chip-list-max-height</code></td><td>Chip list scroll limit</td></tr>
+          <tr><td>(semantic) <code>--color-fg-default</code></td><td>—</td><td><code>--t-combobox-text</code></td><td>Input, option and chip text</td></tr>
+          <tr><td>(semantic) <code>--color-fg-subtle</code></td><td>—</td><td><code>--t-combobox-placeholder</code></td><td>Placeholder and hint</td></tr>
+          <tr><td>(semantic) <code>--color-focus-ring</code></td><td>—</td><td><code>--t-combobox-focus-ring</code></td><td>Field ring, chip remove ring</td></tr>
+          <tr><td>(semantic) <code>--color-fg-disabled</code></td><td>—</td><td><code>--t-combobox-disabled-text</code></td><td>Disabled text and icons</td></tr>
+          <tr><td>(semantic) <code>--color-danger-fg</code> / <code>--color-danger-solid</code></td><td>—</td><td><code>--t-combobox-error</code></td><td>Error text and invalid border</td></tr>
+          <tr><td>(layout) <code>min(24rem, 60dvh)</code></td><td>—</td><td><code>--t-combobox-panel-max-height</code></td><td>Popup preferred height</td></tr>
+        </tbody>
+      </table></div>
+      <pre><code>/* An LMS host gives the combobox a neutral chip fill in one area */
+.admin-console .combobox { --combobox-chip-bg: var(--color-bg-subtle); }
+
+/* The same re-skin on the Angular package */
+.admin-console t-combobox { --t-combobox-chip-bg: var(--t-colorNeutralBackground2); }</code></pre>
+      <p>In the dark theme the surface becomes sage-900, the popup sage-850 (<code>--color-bg-surface-raised</code>), the border lightens to sage-300 and the accent to teal-300, so the filled checkbox's sage-900 tick stays above 8:1. In forced-colours mode every token hands over to system colours (<code>Canvas</code>, <code>ButtonText</code>, <code>Highlight</code>, <code>GrayText</code>) and the selected checkbox opts out of adjustment so it stays filled with <code>Highlight</code>. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The input is an editable combobox with list autocomplete (<code>role="combobox"</code>, <code>aria-autocomplete="list"</code>, <code>aria-expanded</code>, <code>aria-controls</code> while open, <code>aria-activedescendant</code>), following the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/combobox/">WAI-ARIA APG Combobox pattern</a>. The popup holds a <code>role="listbox"</code> with <code>aria-multiselectable="true"</code> and <code>role="option"</code> children with <code>aria-selected</code>; there is no <code>role="region"</code> wrapper. Chips are a plain list of native buttons. The multi-select extension of the pattern needs manual screen reader verification with JAWS, NVDA, VoiceOver (macOS and iOS), TalkBack and Narrator before release.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>↓</kbd></td><td>Closed: opens at the first enabled result. Open: moves to the next option without wrapping; at the last option it requests the next page.</td></tr>
+        <tr><td><kbd>↑</kbd></td><td>Closed: opens at the last loaded result. Open: moves to the previous option without wrapping.</td></tr>
+        <tr><td><kbd>Alt</kbd>+<kbd>↓</kbd> / <kbd>Alt</kbd>+<kbd>↑</kbd></td><td>Opens with no active option / closes.</td></tr>
+        <tr><td><kbd>Page Down</kbd> / <kbd>Page Up</kbd></td><td>Moves by the number of fully visible options; Page Down on the last option requests another page.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Open: toggles the active enabled option, retries after an error, or loads more when no option is active. Closed: submits the form natively.</td></tr>
+        <tr><td><kbd>Space</kbd></td><td>After arrow or Page navigation, toggles the active option. After typing or moving the text cursor, types a space.</td></tr>
+        <tr><td><kbd>Home</kbd> / <kbd>End</kbd></td><td>Move the text cursor (native), not the active option.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Dismisses a full-label tooltip first, then closes the popup, then clears a non-empty query. Propagates only when closed and empty, so a surrounding dialog can close.</td></tr>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Closes the popup and follows the form's focus order. The toggle and status-row buttons are not Tab stops.</td></tr>
+        <tr><td><kbd>Backspace</kbd> (empty input)</td><td>Removes the last chip.</td></tr>
+        <tr><td><kbd>←</kbd> at the input start (<kbd>→</kbd> in RTL)</td><td>Moves focus to the last chip's remove button.</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd> on a chip</td><td>Move among chips and back to the input; mirrored in RTL.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd>, <kbd>Delete</kbd>, <kbd>Backspace</kbd> on a chip</td><td>Removes it and focuses the next surviving chip, else the previous chip, else the input.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Focus stays in the input during option navigation and selection; the active option is conveyed by <code>aria-activedescendant</code> and a 2px <code>--combobox-active-outline</code>. The amber 3px ring (2px offset) is drawn on the whole field while the input has <code>:focus-visible</code>, so there is one cue, not nested rectangles. Chip remove buttons and Clear all have their own ring. Clicking an option uses <code>mousedown</code> prevention so the input never loses focus. Active and selected are separate cues: outline versus filled checkbox.</p>
+      <h3>Labelling</h3>
+      <p>A visible <code>&lt;label for&gt;</code> names the input (the package's <code>inputId</code>), or <code>ariaLabel</code> when no visible label exists; an unnamed field reports a development-time error. The listbox carries the same name. <code>aria-describedby</code> lists, in order: the error (when shown), the hint, and a visually hidden selected summary ("2 selected: Ada Lovelace, Grace Hopper"). Remove buttons are named "Remove {full label}". The toggle is "Show options" / "Hide options". Required fields set <code>aria-required="true"</code> and say "(required)" in the label.</p>
+      <h3>Live announcements</h3>
+      <p>The component owns one live region outside the popup (polite; assertive only for a failure). Search messages coalesce for 150 ms; queued selection messages keep their order. Results that arrive after the popup closes update silently.</p>
+      <table class="ds-table"><thead><tr><th scope="col">Event</th><th scope="col">Announcement</th></tr></thead><tbody>
+        <tr><td>Option selected</td><td>"Alan Turing selected. 3 selected in total."</td></tr>
+        <tr><td>Option deselected, chip removed, Backspace</td><td>"Alan Turing removed."</td></tr>
+        <tr><td>Limit reached</td><td>"Maximum of 3 selections reached."</td></tr>
+        <tr><td>Clear all</td><td>"All selections cleared."</td></tr>
+        <tr><td>Slow request (after 1 s)</td><td>"Loading results."</td></tr>
+        <tr><td>First page loaded</td><td>"6 results available." / "No results found."</td></tr>
+        <tr><td>Next page loaded</td><td>"6 more results loaded."</td></tr>
+        <tr><td>Request failed (assertive)</td><td>"Results could not be loaded."</td></tr>
+      </tbody></table>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Input text on field</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder and hint on field</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Field border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Chip text on chip fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-accent-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Chip border on chip fill</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-accent-subtle" data-min="3"></span></div>
+        <div class="ds-pair"><span>Option detail on hover row</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-subtle" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Active outline on popup</span><span class="ds-pair__ratio" data-contrast="--color-accent|--color-bg-surface-raised" data-min="3"></span></div>
+        <div class="ds-pair"><span>Tick on selected checkbox</span><span class="ds-pair__ratio" data-contrast="--color-fg-on-accent|--color-accent" data-min="3"></span></div>
+        <div class="ds-pair"><span>Error text on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Disabled text on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Focus ring on surface</span><span class="ds-pair__ratio" data-contrast="--color-focus-ring|--color-bg-surface" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Only the spinner moves, at <code>--duration-loop-spin</code>; under reduced motion it slows to 2 s per turn rather than stopping, because it reports status. The popup opens and closes without animation, and hover colours change instantly.</p>
+      <h3>Touch</h3>
+      <p>Fine pointers get 32px toggle and status buttons and 28px chip remove buttons (above the 24px minimum, with 4px gaps). Coarse pointers get 44px for every inner target. Hover styles apply only under <code>(hover: hover)</code>. On touch keyboards the popup anchors to the input row so the visual viewport keeps the input visible.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li><b>Label</b> names the set in plural, sentence case: "Learners", "Session presenters". Add "(required)" when required.</li>
+        <li><b>Placeholder</b> is a short hint about what to type, never the label: "Name or email". Keep it under about 15 characters so it fits at 320px.</li>
+        <li><b>Hint</b> says what to do and any limit: "Select one or more learners. Search to narrow the results." / "Choose up to 3 learners. Remove a selection to choose someone else."</li>
+        <li><b>Option detail</b> disambiguates people with the same name (email, team, role) and states why an option is unavailable after a middle dot: "· Account inactive", "· Selection limit reached".</li>
+        <li><b>Status row</b>: "6 of 24 learners", "24 learners available", "Loading learners…", "No results", "Learners could not be loaded. Your selections are safe." Buttons: "Retry", "Load more results".</li>
+        <li><b>Empty template</b> guides the next step: "No learners match “Zed”. Check the spelling or search by email."</li>
+        <li><b>Error</b> says what to do: "Select at least one learner." Not "Invalid" or "Required field".</li>
+        <li><b>Clear all</b> is always "Clear all selections", never a bare "×".</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field combobox"><div class="combobox__field"><ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, do example one" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div><div class="field__below"><p class="field__hint">Search to narrow the results.</p><button class="btn btn--link combobox__clear" type="button">Clear all selections</button></div></div></div><figcaption>Put "Clear all selections" as visible text at the end of the hint row.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field combobox"><div class="combobox__field"><ul class="combobox__chips" aria-label="Selected values"><li class="chip chip--removable"><span class="chip__label">Ada Lovelace</span><button class="chip__remove" type="button" aria-label="Remove Ada Lovelace"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></li></ul><div class="combobox__input-row"><input class="combobox__input" role="combobox" aria-expanded="false" aria-label="Learners, don't example one" placeholder="Name or email"><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Clear all"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Show options"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div></div></div></div><figcaption>Put a bare × beside the chevron. The earlier mock did; people read it as "clear the search text" and lost 200 selections in one click.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><ul class="combobox__listbox" role="listbox" aria-label="Do example: selected options" aria-multiselectable="true"><li class="combobox__option" id="dd-1" role="option" aria-selected="true"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li><li class="combobox__option combobox__option--active" id="dd-2" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></div><figcaption>Show selection with the filled checkbox and the active option with an outline: two distinct cues.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><ul class="combobox__listbox" role="listbox" aria-label="Don't example: tinted rows" aria-multiselectable="true"><li class="combobox__option" id="dd-3" role="option" aria-selected="true" style="background: var(--color-accent-subtle)"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Ada Lovelace</span><span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li><li class="combobox__option combobox__option--active" id="dd-4" role="option" aria-selected="false"><span class="combobox__check" aria-hidden="true"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span><span>Alan Turing</span><span class="combobox__option-detail">alan.turing@example.edu</span></span></li></ul></div><figcaption>Tint selected rows as well. The mock's green tint read as a second "current" row and hid the hover state.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field combobox combobox--invalid"><label class="field__label" for="dd-err">Learners <span class="field__required">(required)</span></label><div class="combobox__field"><div class="combobox__input-row"><input class="combobox__input" id="dd-err" role="combobox" aria-expanded="false" aria-invalid="true" aria-describedby="dd-err-msg" placeholder="Name or email"></div></div><p class="field__error" id="dd-err-msg"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.01"/></svg><span>Select at least one learner.</span></p><p class="field__hint">Search to narrow the results.</p></div></div><figcaption>Put the error directly under the field with an icon, before the hint.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field combobox"><label class="field__label" for="dd-err2">Learners</label><div class="combobox__field" style="--combobox-border: var(--color-danger-solid);"><div class="combobox__input-row"><input class="combobox__input" id="dd-err2" role="combobox" aria-expanded="false" placeholder="Learners"></div></div><p class="field__hint">Search to narrow the results.</p><p class="message message--error">Required</p></div></div><figcaption>Use the placeholder as the label, signal the error only with a thin red border, or put a vague message after the hint.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Field background</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Popup background</td><td><code>--color-bg-surface-raised</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-raised" data-swatch></i><span data-token="--color-bg-surface-raised"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-raised" data-swatch></i><span data-token="--color-bg-surface-raised"></span></span></td></tr>
+          <tr><td>Field, popup, chip, checkbox border</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Text</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Placeholder, hint, option detail</td><td><code>--color-fg-subtle</code>, <code>--color-fg-muted</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-muted" data-swatch></i><span data-token="--color-fg-muted"></span></span></td></tr>
+          <tr><td>Chip fill</td><td><code>--color-accent-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent-subtle" data-swatch></i><span data-token="--color-accent-subtle"></span></span></td></tr>
+          <tr><td>Hover row, icon-button hover</td><td><code>--color-bg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-subtle" data-swatch></i><span data-token="--color-bg-subtle"></span></span></td></tr>
+          <tr><td>Active outline, selected checkbox</td><td><code>--color-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-accent" data-swatch></i><span data-token="--color-accent"></span></span></td></tr>
+          <tr><td>Checkbox tick</td><td><code>--color-fg-on-accent</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-on-accent" data-swatch></i><span data-token="--color-fg-on-accent"></span></span></td></tr>
+          <tr><td>Error text, invalid border</td><td><code>--color-danger-fg</code>, <code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Disabled text</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code>, <code>--focus-ring-width</code>, <code>--focus-ring-offset</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Field height / inner targets</td><td><code>--control-height-md</code> / <code>--control-height-sm</code></td><td colspan="2"><span data-token="--control-height-md"></span> / <span data-token="--control-height-sm"></span></td></tr>
+          <tr><td>Coarse-pointer target</td><td><code>--target-comfortable</code></td><td colspan="2"><span data-token="--target-comfortable"></span></td></tr>
+          <tr><td>Field and popup radius / chip and option radius</td><td><code>--radius-md</code> / <code>--radius-sm</code></td><td colspan="2"><span data-token="--radius-md"></span> / <span data-token="--radius-sm"></span></td></tr>
+          <tr><td>Popup shadow</td><td><code>--shadow-3</code></td><td colspan="2"><span data-token="--shadow-3"></span></td></tr>
+          <tr><td>Popup layer</td><td><code>--z-dropdown</code></td><td colspan="2"><span data-token="--z-dropdown"></span></td></tr>
+          <tr><td>Chip gap / option padding</td><td><code>--space-1</code> / <code>--space-2</code> <code>--space-3</code></td><td colspan="2"><span data-token="--space-1"></span> / <span data-token="--space-2"></span> <span data-token="--space-3"></span></td></tr>
+          <tr><td>Spinner revolution</td><td><code>--duration-loop-spin</code></td><td colspan="2"><span data-token="--duration-loop-spin"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <p>Angular (<code>@tessera/combobox</code>):</p>
+      <pre><code>&lt;label for="learners"&gt;Learners (required)&lt;/label&gt;
+&lt;t-combobox
+  inputId="learners"
+  [searchFn]="searchLearners"
+  [displayWith]="learnerName"
+  [compareWith]="sameLearner"
+  [formControl]="learners"
+  placeholder="Name or email"
+  hint="Select one or more learners. Search to narrow the results."
+  [maxSelections]="null"
+  [minSearchLength]="1"
+/&gt;
+
+&lt;!-- Custom option and empty content: text only, no controls --&gt;
+&lt;t-combobox inputId="presenters" [searchFn]="search" [displayWith]="learnerName"&gt;
+  &lt;ng-template tComboboxOption let-item&gt;{{ item.name }} · {{ item.team }}&lt;/ng-template&gt;
+  &lt;ng-template tComboboxEmpty let-query="query"&gt;No learners match “{{ query }}”. Check the spelling or search by email.&lt;/ng-template&gt;
+&lt;/t-combobox&gt;</code></pre>
+      <p>Static HTML (what the component renders, and what this page uses):</p>
+      <pre><code>&lt;div class="field combobox"&gt;
+  &lt;label class="field__label" for="learners"&gt;Learners&lt;/label&gt;
+  &lt;div class="combobox__field"&gt;
+    &lt;ul class="combobox__chips" aria-label="Selected values"&gt;…chips…&lt;/ul&gt;
+    &lt;div class="combobox__input-row"&gt;
+      &lt;input class="combobox__input" id="learners" role="combobox" aria-autocomplete="list"
+             aria-expanded="true" aria-controls="learners-list" aria-activedescendant="learners-opt-3"
+             aria-describedby="learners-hint learners-summary" autocomplete="off" placeholder="Name or email"&gt;
+      &lt;span class="spinner spinner--sm" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;button class="combobox__icon-btn" type="button" tabindex="-1" aria-label="Hide options"&gt;…&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="combobox__popup"&gt;
+    &lt;ul class="combobox__listbox" id="learners-list" role="listbox" aria-label="Learners" aria-multiselectable="true"&gt;
+      &lt;li class="combobox__option combobox__option--active" id="learners-opt-3" role="option" aria-selected="false"&gt;
+        &lt;span class="combobox__check" aria-hidden="true"&gt;&lt;svg class="icon"&gt;…&lt;/svg&gt;&lt;/span&gt;
+        &lt;span&gt;&lt;span&gt;Alan Turing&lt;/span&gt;&lt;span class="combobox__option-detail"&gt;alan.turing@example.edu&lt;/span&gt;&lt;/span&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="combobox__status"&gt;&lt;p&gt;6 of 24 learners&lt;/p&gt;&lt;button class="btn btn--sm" type="button" tabindex="-1"&gt;Load more results&lt;/button&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="field__below"&gt;
+    &lt;p class="field__hint" id="learners-hint"&gt;…&lt;/p&gt;
+    &lt;button class="btn btn--link combobox__clear" type="button"&gt;Clear all selections&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;span class="visually-hidden" id="learners-summary"&gt;2 selected: Ada Lovelace, Grace Hopper&lt;/span&gt;
+  &lt;div class="visually-hidden" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.combobox</code></td><td>Root; declares the <code>--combobox-*</code> tokens and anchors the popup. Combine with <code>.field</code> for label/hint spacing.</td></tr>
+        <tr><td><code>.combobox--invalid</code> / <code>[aria-invalid="true"]</code> on <code>.combobox__field</code></td><td>2px danger border.</td></tr>
+        <tr><td><code>.combobox--disabled</code></td><td>Dashed field and chip edges, disabled text colour.</td></tr>
+        <tr><td><code>.combobox__field</code></td><td>Bordered, wrapping row of chips and input; draws the focus ring when the input is <code>:focus-visible</code>.</td></tr>
+        <tr><td><code>.combobox__chips</code></td><td>Chip list; hidden when empty; scrolls after <code>--combobox-chip-list-max-height</code>.</td></tr>
+        <tr><td><code>.combobox__input-row</code>, <code>.combobox__input</code></td><td>Input with spinner and toggle; input outline suppressed (the field draws it).</td></tr>
+        <tr><td><code>.combobox__icon-btn</code></td><td>32px borderless icon button (toggle).</td></tr>
+        <tr><td><code>.combobox__popup</code></td><td>Absolutely positioned popup, <code>max-height: min(24rem, 60dvh)</code>.</td></tr>
+        <tr><td><code>.combobox__popup--static</code></td><td>Documentation only: shows the popup in flow.</td></tr>
+        <tr><td><code>.combobox__listbox</code></td><td>Scrolling list; <code>overscroll-behavior: contain</code>.</td></tr>
+        <tr><td><code>.combobox__option</code>, <code>.combobox__option--active</code></td><td>Option row; active adds the 2px outline (set with <code>aria-activedescendant</code>).</td></tr>
+        <tr><td><code>[aria-selected="true"]</code>, <code>[aria-disabled="true"]</code></td><td>Filled checkbox; italic text and dashed checkbox.</td></tr>
+        <tr><td><code>.combobox__check</code>, <code>.combobox__option-detail</code></td><td>Decorative checkbox; muted second line.</td></tr>
+        <tr><td><code>.combobox__status</code></td><td>One-line status row below the list.</td></tr>
+        <tr><td><code>.combobox__clear</code></td><td>Pushes Clear all to the end of the hint row.</td></tr>
+        <tr><td><code>.chip</code>, <code>.chip--removable</code>, <code>.chip__label</code>, <code>.chip__remove</code></td><td>Selected value with an ellipsizing label and a named remove button.</td></tr>
+        <tr><td><code>.spinner</code> (<code>.spinner--sm</code>)</td><td>In-flight indicator, <code>aria-hidden</code>.</td></tr>
+        <tr><td><code>data-state="hover|focus|active"</code></td><td>Documentation only: forces a pointer or focus state.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: every Preview state (results, slow loading, no results, search error, next-page error, minimum 2 characters, disabled, required/invalid, selection limit 3, 200 selections, long label, custom templates), theme and RTL toggles, the keyboard model and live messages in its README, and the Fluent 2 comparison resolutions (I-1 to I-19).</li>
+        <li>The shipped <code>@tessera/combobox</code> README for API names (<code>searchFn</code>, <code>maxSelections</code>, <code>minSearchLength</code>, <code>tComboboxOption</code>, <code>tComboboxEmpty</code>) and the <code>--t-combobox-*</code> properties.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Field min-height was 40px (2.5rem) beside 44px buttons; the field is now <code>--control-height-md</code> (44px) like every other control.</li>
+        <li>Option detail text was 0.8125rem; snapped to <code>--font-size-sm</code>. Weight 750 on host-page eyebrows normalised to 700.</li>
+        <li>Spacing .1875, .375 and .625rem in the field, chips and status buttons snapped to the 4px scale.</li>
+        <li>Focus ring offset was 3px on the page and 2px on the field; one ring everywhere: 3px, <code>--focus-ring-offset</code> 2px.</li>
+        <li><code>--t-combobox-motion-duration: 0ms</code> left the spinner static by default; the spinner now uses <code>--duration-loop-spin</code> and slows (not stops) under reduced motion.</li>
+        <li>Two disabled treatments (light background vs dashed edge); unified on the dashed edge with readable <code>--color-fg-disabled</code> text.</li>
+        <li><code>.sr-only</code> implemented with <code>clip-path</code> here and <code>clip</code> elsewhere; replaced by <code>.visually-hidden</code>.</li>
+        <li>Letter-spacing 0.08em and -0.035em on host-page headings replaced by <code>--letter-spacing-wide</code> and <code>--letter-spacing-tight</code>.</li>
+        <li>Host page used 72rem as its container; kept only for these docs, products use <code>--layout-container-max</code>.</li>
+        <li>The popup used <code>--t-combobox-surface</code>; the design system raises it to <code>--color-bg-surface-raised</code> so it separates from the field in the dark theme.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

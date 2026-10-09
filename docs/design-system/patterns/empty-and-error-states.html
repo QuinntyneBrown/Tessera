@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empty and error states — Tessera design system</title>
+<meta name="description" content="How Tessera says there is nothing here, or that something failed: copy formulas, which container to use, Retry rules and focus.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Empty and error states</h1>
+      <p class="ds-lead">When a list has nothing to show, a stream cannot play or progress fails to save, the learner needs three things: what happened, what is safe, and what to do next. These states say it in the place the content would have been.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes: empty state, alert, inline message, button, combobox, video player, SCORM player</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Empty and error states replace content, so they sit where the content would be and are sized to that space: a status row inside the combobox popup, a panel over the video picture, a notice above the SCORM player, or a whole page. They never appear as a toast, because a toast disappears and the problem does not.</p>
+      <ul>
+        <li><b>Empty</b> means the request worked and returned nothing: "No results". No danger colour, no Retry.</li>
+        <li><b>Recoverable error</b> means trying again can work: "Learners could not be loaded. Your selections are safe." with Retry.</li>
+        <li><b>Unrecoverable error</b> means trying again cannot work in this browser or session: "This browser can’t play this stream". No Retry; say what would help instead.</li>
+        <li><b>Blocked</b> means the content exists but a rule hides it: "Locked until “Ask better questions” is complete." This is a reason, not an error.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Situation</th><th scope="col">Container</th><th scope="col">Retry?</th><th scope="col">Example from the mocks</th></tr></thead>
+        <tbody>
+          <tr><td>Search or filter returned nothing</td><td>Status row in the popup or <a href="../components/empty-state.html">compact empty state</a> in the list</td><td>No</td><td>"No results"</td></tr>
+          <tr><td>A query is too short to search</td><td>Status row</td><td>No</td><td>"Type at least 2 characters to search."</td></tr>
+          <tr><td>First page of a list failed</td><td>Status row with a small Retry button</td><td>Yes</td><td>"Learners could not be loaded. Your selections are safe."</td></tr>
+          <tr><td>A later page failed</td><td>Status row below the results already loaded</td><td>Yes, appends the failed page</td><td>The first six learners stay; Retry fetches page two.</td></tr>
+          <tr><td>Media cannot play in this browser</td><td>Error panel over the picture (<a href="../components/alert.html">danger alert</a>)</td><td>No</td><td>"This browser can’t play this stream"</td></tr>
+          <tr><td>Access or connection failed</td><td>Error panel over the picture</td><td>Yes</td><td>"No access to this stream", "Connection lost"</td></tr>
+          <tr><td>Saving failed but work is kept</td><td>Danger notice above the player</td><td>Yes, "Retry save"</td><td>"Progress not saved"</td></tr>
+          <tr><td>Nothing has been supplied yet</td><td>Neutral notice or full <a href="../components/empty-state.html">empty state</a></td><td>No</td><td>"No course loaded"</td></tr>
+          <tr><td>The whole page cannot render</td><td><a href="../components/error-page.html">Error page</a> inside the shell</td><td>Usually</td><td>Not in the mocks; follows the system rules.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Use the smallest container that covers what failed. A failed next page is a status row, not a page-level banner; a failed save affects the whole course, so it is a notice above the player.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>Every empty or error state has the same three parts in the same order: a heading or lead sentence (what happened), a body sentence (what is safe or why), and at most one action. Icons are decorative and repeat the meaning of the text.</p>
+      <h3>Combobox: empty results and first-page error</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="ees-search">Learners</label>
+            <div class="combobox">
+              <div class="combobox__field">
+                <div class="combobox__input-row"><input class="combobox__input" id="ees-search" role="combobox" aria-expanded="true" aria-controls="ees-results" aria-autocomplete="list" value="Zed" autocomplete="off"></div>
+              </div>
+              <div class="combobox__popup combobox__popup--static">
+                <ul class="combobox__listbox" id="ees-results" role="listbox" aria-label="Learners" aria-multiselectable="true"></ul>
+                <div class="combobox__status"><p style="margin: 0;">No results</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="field" style="max-width: 28rem;">
+            <label class="field__label" for="ees-search-2">Learners</label>
+            <div class="combobox">
+              <div class="combobox__field">
+                <div class="combobox__input-row"><input class="combobox__input" id="ees-search-2" role="combobox" aria-expanded="true" aria-controls="ees-results-2" aria-autocomplete="list" autocomplete="off"></div>
+              </div>
+              <div class="combobox__popup combobox__popup--static">
+                <ul class="combobox__listbox" id="ees-results-2" role="listbox" aria-label="Learners" aria-multiselectable="true"></ul>
+                <div class="combobox__status"><p style="margin: 0;">Learners could not be loaded. Your selections are safe.</p><button class="btn btn--sm" type="button">Retry</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>The status row sits below the listbox, outside the Tab sequence; Enter retries while the input keeps focus.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="combobox__popup"&gt;
+  &lt;ul class="combobox__listbox" id="results" role="listbox" aria-label="Learners"&gt;&lt;/ul&gt;
+  &lt;div class="combobox__status"&gt;
+    &lt;p&gt;Learners could not be loaded. Your selections are safe.&lt;/p&gt;
+    &lt;button class="btn btn--sm" type="button" tabindex="-1"&gt;Retry&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- On the combobox host, outside the popup --&gt;
+&lt;div class="visually-hidden" aria-live="polite" aria-atomic="true"&gt;Results could not be loaded.&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>Video player: unsupported versus unauthorized</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="media-player" role="region" aria-label="Video player: Lecture hall A">
+            <div class="media-player__stage">
+              <div class="media-player__error">
+                <div class="alert alert--danger">
+                  <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+                  <div class="alert__content"><h3 class="alert__title">This browser can’t play this stream</h3><p class="alert__body">This browser can’t play this stream (video/mp4; codecs="avc1.4d401f,mp4a.40.2").</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="media-player" role="region" aria-label="Video player: Lecture hall A, second example">
+            <div class="media-player__stage">
+              <div class="media-player__error">
+                <div class="alert alert--danger">
+                  <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+                  <div class="alert__content"><h3 class="alert__title">No access to this stream</h3><p class="alert__body">You don’t have access to this stream. Sign in again or ask the organiser.</p></div>
+                  <div class="alert__actions"><button class="btn btn--primary" type="button">Retry</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Unsupported has no Retry: the same browser will fail the same way. Unauthorized and connection errors keep Retry.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="media-player__error" role="alert"&gt;
+  &lt;div class="alert alert--danger"&gt;
+    &lt;svg class="icon" aria-hidden="true"&gt;…&lt;/svg&gt;
+    &lt;div class="alert__content"&gt;
+      &lt;h3 class="alert__title" tabindex="-1"&gt;No access to this stream&lt;/h3&gt;
+      &lt;p class="alert__body"&gt;You don’t have access to this stream. Sign in again or ask the organiser.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="alert__actions"&gt;&lt;button class="btn btn--primary" type="button"&gt;Retry&lt;/button&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+
+      <h3>SCORM player: save error notice and no course</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas">
+          <section class="alert alert--danger" aria-labelledby="ees-save-heading">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+            <div class="alert__content"><h3 class="alert__title" id="ees-save-heading">Progress not saved</h3><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+            <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button><button class="btn" type="button">Exit without saving</button></div>
+          </section>
+          <div class="card">
+            <div class="empty-state">
+              <span class="empty-state__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 9h16"/></svg></span>
+              <h3 class="empty-state__title">No course loaded</h3>
+              <p class="empty-state__body">Loading was cancelled. Waiting for the LMS to supply a course.</p>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>"Exit without saving" appears only when the learner tries to exit while unsaved; the same notice is reused so only one Retry is ever shown.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;section class="alert alert--danger" aria-labelledby="save-error-heading"&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;h3 class="alert__title" id="save-error-heading" tabindex="-1"&gt;Progress not saved&lt;/h3&gt;
+    &lt;p class="alert__body"&gt;Your latest progress is kept on this page. Try saving again.&lt;/p&gt;
+    &lt;p class="visually-hidden" role="alert"&gt;&lt;!-- filled only on a new failure --&gt;&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="alert__actions"&gt;
+    &lt;button class="btn btn--primary" type="button"&gt;Retry save&lt;/button&gt;
+    &lt;button class="btn" type="button" hidden&gt;Exit without saving&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <h3>Next-page error keeps what loaded</h3>
+      <p>When a later page fails, the six learners already loaded stay in the list, and their selections stay. Retry requests the failed page and appends it; it never refetches or clears the first page.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="combobox" style="max-width: 28rem;">
+            <div class="combobox__popup combobox__popup--static">
+              <ul class="combobox__listbox" role="listbox" aria-label="Learners, next-page error" aria-multiselectable="true">
+                <li class="combobox__option" role="option" id="ees-o1" aria-selected="true"><span class="combobox__check"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Ada Lovelace<span class="combobox__option-detail">ada.lovelace@example.edu</span></span></li>
+                <li class="combobox__option" role="option" id="ees-o2" aria-selected="false"><span class="combobox__check"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Alan Turing<span class="combobox__option-detail">alan.turing@example.edu</span></span></li>
+                <li class="combobox__option" role="option" id="ees-o3" aria-selected="true"><span class="combobox__check"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></span><span>Grace Hopper<span class="combobox__option-detail">grace.hopper@example.edu</span></span></li>
+              </ul>
+              <div class="combobox__status"><p style="margin: 0;">Learners could not be loaded. Your selections are safe.</p><button class="btn btn--sm" type="button">Retry</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Three of the six loaded results shown. Announced once: "Results could not be loaded."</span></div>
+      </div>
+      <h3>State table</h3>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">State</th><th scope="col">Visible copy</th><th scope="col">Announced</th><th scope="col">Action</th><th scope="col">Focus</th></tr></thead>
+        <tbody>
+          <tr><td>Combobox: too short</td><td>Type at least 2 characters to search.</td><td>Nothing (it is the hint)</td><td>None</td><td>Stays in input</td></tr>
+          <tr><td>Combobox: empty</td><td>No results</td><td>No results found.</td><td>None</td><td>Stays in input</td></tr>
+          <tr><td>Combobox: empty, custom template</td><td>No learners match “Zed”. Check the spelling or search by email.</td><td>No results found.</td><td>None</td><td>Stays in input</td></tr>
+          <tr><td>Combobox: first-page error</td><td>Learners could not be loaded. Your selections are safe.</td><td>Results could not be loaded.</td><td>Retry (Enter)</td><td>Stays in input</td></tr>
+          <tr><td>Combobox: next-page error</td><td>Same, below loaded results</td><td>Results could not be loaded.</td><td>Retry appends the page</td><td>Stays in input</td></tr>
+          <tr><td>Video: unsupported</td><td>This browser can’t play this stream</td><td>Alert</td><td>None</td><td>Heading, if focus was in the player</td></tr>
+          <tr><td>Video: unauthorized</td><td>No access to this stream</td><td>Alert</td><td>Retry</td><td>Heading; after Retry, Play</td></tr>
+          <tr><td>Video: connection</td><td>Connection lost</td><td>Alert</td><td>Retry</td><td>Heading; after Retry, Play</td></tr>
+          <tr><td>SCORM: save failed</td><td>Progress not saved</td><td>Progress not saved. Try saving again.</td><td>Retry save</td><td>Unchanged; heading on exit attempt</td></tr>
+          <tr><td>SCORM: no course</td><td>No course loaded</td><td>Heading receives focus</td><td>None (the LMS supplies it)</td><td>Heading</td></tr>
+          <tr><td>SCORM: locked lesson</td><td>Locked until “Ask better questions” is complete.</td><td>Read as the item's description</td><td>None</td><td>Item stays focusable (<code>aria-disabled</code>)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack">
+          <div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div></div>
+          <div class="card"><div class="empty-state empty-state--compact"><span class="empty-state__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span><div><p class="empty-state__title">No results</p><p class="empty-state__body">Check the spelling or search by email.</p></div></div></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack">
+          <div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div></div>
+          <div class="card"><div class="empty-state empty-state--compact"><span class="empty-state__icon"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span><div><p class="empty-state__title">No results</p><p class="empty-state__body">Check the spelling or search by email.</p></div></div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Status rows wrap: the message takes the first line and Retry drops below it at 320px. The message is never truncated.</li>
+        <li>The video error panel covers the stage; when the stage is too short for the alert at 400% zoom, the alert scrolls inside the panel rather than clipping. Below <code>--layout-breakpoint-md</code> the control bar sits below the picture, so the panel never competes with it.</li>
+        <li>Notice actions (<code>.alert__actions</code>) wrap under the text; with two actions the primary comes first in reading order.</li>
+        <li>Full empty states centre in their container up to 28rem wide; use the compact variant inside lists, cards and panels narrower than <code>--layout-breakpoint-sm</code>.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Errors that interrupt (the video panel, a new save failure) use <code>role="alert"</code>. Empty results and list errors inside a combobox are announced by the combobox's own polite live region, which lives outside the popup so closing the popup never cuts an announcement short. See <a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">Understanding 4.1.3 Status Messages</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-identification.html">Understanding 3.3.1 Error Identification</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Enter</kbd></td><td>In the combobox with no active result, retries an error or loads more; the input keeps focus.</td></tr>
+        <tr><td><kbd>Tab</kbd></td><td>Reaches Retry in a video error panel or a SCORM notice; the combobox status row stays out of the Tab sequence.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Activates Retry, Retry save or Exit without saving.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the combobox popup with its status row; errors in panels and notices are not dismissed by Esc.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Move focus only when the content under focus disappears. The video error heading (<code>tabindex="-1"</code>) takes focus when focus was inside the player; after Retry, focus moves to Play. The SCORM save notice takes focus only when the learner tries to exit while unsaved. Closing a notice never strands focus on <code>&lt;body&gt;</code>: it returns to the visible activity heading.</p>
+      <h3>Labelling</h3>
+      <p>Each notice is a <code>&lt;section&gt;</code> named by its heading through <code>aria-labelledby</code>. Icons are <code>aria-hidden</code>. Locked items keep their reason in <code>aria-describedby</code>.</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Error title on danger background</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Body text on danger background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Notice stripe on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Empty-state body on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Empty-state icon on its disc</span><span class="ds-pair__ratio" data-contrast="--color-fg-accent|--color-accent-subtle" data-min="3"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Empty and error states appear without animation. They replace a spinner or skeleton in place, so nothing slides or shakes; a shaking field is never used to signal an error.</p>
+      <h3>Touch</h3>
+      <p>Retry in a status row is small (32px) because the row is the target area around it; Retry and Retry save in panels and notices are 44px.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <h3>Error formula</h3>
+      <p><b>What happened</b> + <b>what is safe, or why</b> + <b>what to do</b>. "Learners could not be loaded. Your selections are safe." + Retry. "Progress not saved. Your latest progress is kept on this page. Try saving again."</p>
+      <h3>Empty formula</h3>
+      <p><b>What is empty</b> + <b>how to get something</b>, only when there is a way. "No learners match “Zed”. Check the spelling or search by email." "No course loaded. Waiting for the LMS to supply a course."</p>
+      <ul>
+        <li>Headings are short statements in sentence case: "Connection lost", "No access to this stream". No "Oops", no "Error:" prefix, no exclamation marks.</li>
+        <li>Say what is safe whenever something is: learners worry most about losing selections or progress.</li>
+        <li>Name the next step the learner can take ("Sign in again or ask the organiser"), not the internal cause. Technical detail (the codec string) goes in the body, after the plain sentence.</li>
+        <li>Offer Retry only when retrying can work. Never offer Retry for an unsupported browser.</li>
+        <li>Use a curly apostrophe and quotes in copy (can’t, “Zed”). See <a href="content-and-tone.html">content and tone</a> for the full library.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">This browser can’t play this stream</p><p class="alert__body">Open the session in a current version of Chrome, Edge, Firefox or Safari.</p></div></div></div><figcaption>An unrecoverable error says what would help, with no Retry.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">This browser can’t play this stream</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry</button></div></div></div><figcaption>A Retry that can only fail again; the learner is stuck in a loop.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="combobox__status" style="border: 0; width: 100%;"><p style="margin: 0;">Learners could not be loaded. Your selections are safe.</p><button class="btn btn--sm" type="button">Retry</button></div></div><figcaption>Keep the loaded page and the selections; Retry appends only the failed page.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="combobox__status" style="border: 0; width: 100%;"><p style="margin: 0;">Error 503. Something went wrong.</p><button class="btn btn--sm" type="button">Reload</button></div></div><figcaption>A status code with no reassurance, and a Reload that throws away six loaded results.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="empty-state empty-state--compact"><div><p class="empty-state__title">No results</p></div></div></div><figcaption>Empty is neutral: muted text, no danger colour.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><p class="message message--error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>No results</p></div><figcaption>Styling an empty result as an error tells the learner they did something wrong.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: "No results", custom empty template, "Type at least 2 characters to search.", search error and next-page error with Retry that preserves the first page, live region outside the popup.</li>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: unsupported (no Retry), unauthorized and connection-lost panels with <code>role="alert"</code>, heading focus, focus to Play after Retry.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Progress not saved" notice with Retry save and Exit without saving, "No course loaded", locked lesson reasons.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Video error stripe 5px and SCORM notice stripe 4px; unified on <code>--border-width-stripe</code> (4px).</li>
+        <li>Panel titles at 1.1rem and 1.15rem; set by <code>--text-h4</code> in alerts and <code>--text-h3</code> in empty states.</li>
+        <li><code>.sr-only</code> written two ways (<code>clip</code> and <code>clip-path</code>); replaced with <code>.visually-hidden</code>.</li>
+        <li>Off-grid notice padding (0.9rem, 1.3rem); snapped to <code>--space-4</code> and <code>--space-5</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

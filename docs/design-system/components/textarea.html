@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Textarea — Tessera design system</title>
+<meta name="description" content="Multi-line text input that grows with its content, with an optional character counter. Every state, in both themes.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Component · Inputs</p>
+      <h1>Textarea</h1>
+      <p class="ds-lead">A multi-line input for answers that run longer than a line: assignment instructions, feedback to a learner, a lesson summary. It starts at two lines and grows with what people type.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Native <code>&lt;textarea&gt;</code></span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#anatomy">Anatomy</a></li><li><a href="#variants">Variants</a></li><li><a href="#sizes">Sizes</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#theming">Theming</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#tokens">Tokens</a></li><li><a href="#code">Code</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Use a textarea when the answer may need more than one line or a line break: instructions for an assignment, written feedback, a note attached to a session in "Lecture hall A". The box size tells people how much you expect, so it starts at two lines and grows as they type instead of hiding text behind a scrollbar.</p>
+      <p>Use a <a href="text-field.html">text field</a> for anything that fits on one line (a title, an email). A textarea is plain text only; rich text (headings, links, lists) needs an editor component, which Tessera does not provide. It always sits in a <a href="form-field.html">form field</a> with a visible label.</p>
+    </section>
+
+    <section class="ds-section" id="anatomy"><h2><a href="#anatomy">Anatomy</a></h2>
+      <div class="ds-anatomy">
+        <figure class="ds-anatomy__figure">
+          <div class="field" style="width: min(100%, 24rem);">
+            <label class="field__label" for="anatomy-feedback">Feedback for Grace Hopper</label>
+            <textarea class="textarea" id="anatomy-feedback" aria-describedby="anatomy-feedback-hint anatomy-feedback-count">Clear structure and a strong conclusion. Next time, cite the incident report.</textarea>
+            <div class="field__below">
+              <p class="field__hint" id="anatomy-feedback-hint">Only Grace and course instructors see this.</p>
+              <p class="field__counter" id="anatomy-feedback-count">76 of 500 characters</p>
+            </div>
+          </div>
+          <span class="ds-callout" style="left: 18%; top: 14%;" aria-hidden="true">1</span>
+          <span class="ds-callout" style="left: 40%; top: 40%;" aria-hidden="true">2</span>
+          <span class="ds-callout" style="left: 86%; top: 60%;" aria-hidden="true">3</span>
+          <span class="ds-callout" style="left: 84%; top: 82%;" aria-hidden="true">4</span>
+        </figure>
+        <ol class="ds-anatomy__list">
+          <li><div><b>Label</b><small>From the <a href="form-field.html">form field</a>: <code>&lt;label for&gt;</code>, always visible.</small></div></li>
+          <li><div><b>Text area</b><small>16px <code>--text-body</code> at 1.5 line height, 8px × 12px padding. Starts at 88px (two field heights), then grows with content.</small></div></li>
+          <li><div><b>Container and resize handle</b><small>1px <code>--color-border-strong</code>, <code>--radius-md</code>. Vertical resize only, for browsers without auto-grow.</small></div></li>
+          <li><div><b>Counter (optional)</b><small><code>.field__counter</code> at the end of the row below, tabular figures.</small></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="ds-section" id="variants"><h2><a href="#variants">Variants</a></h2>
+      <p>There is one textarea. It auto-grows by default (<code>field-sizing: content</code>); add a counter only when there is a real limit.</p>
+      <h3>Auto-grow</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 32rem;">
+            <label class="field__label" for="v-instructions">Assignment instructions</label>
+            <textarea class="textarea" id="v-instructions">Watch the recorded session from Lecture hall A, then complete the checklist.
+Submit your reflection by Friday.
+Ask Alan Turing if you cannot open the video.</textarea>
+          </div>
+          <div class="field" style="max-width: 32rem;">
+            <label class="field__label" for="v-empty">Note for the session</label>
+            <textarea class="textarea" id="v-empty"></textarea>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Three lines of content: the box is three lines tall. Empty: two lines. Type into either to see it grow.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="instructions"&gt;Assignment instructions&lt;/label&gt;
+  &lt;textarea class="textarea" id="instructions"&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre></details>
+      </div>
+      <p>Where <code>field-sizing</code> is not supported, the textarea keeps its two-line minimum and the vertical resize handle; content scrolls inside it. Cap very long answers with a <code>max-block-size</code> on the instance (for example 20 lines) so the submit button stays reachable; past the cap the box scrolls.</p>
+      <h3>With counter</h3>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 32rem;">
+            <label class="field__label" for="v-summary">Lesson summary <span class="field__required">(required)</span></label>
+            <textarea class="textarea" id="v-summary" required aria-describedby="v-summary-hint v-summary-count">Introduces active listening and the three-step feedback model used throughout the course.</textarea>
+            <div class="field__below">
+              <p class="field__hint" id="v-summary-hint">Shown under the lesson title in the outline.</p>
+              <p class="field__counter" id="v-summary-count">89 of 200 characters</p>
+            </div>
+          </div>
+          <div class="field" style="max-width: 32rem;">
+            <label class="field__label" for="v-summary-over">Lesson summary <span class="field__required">(required)</span></label>
+            <textarea class="textarea" id="v-summary-over" required aria-invalid="true" aria-describedby="v-summary-over-error v-summary-over-count">Introduces active listening and the three-step feedback model used throughout the course, with worked examples from Katherine Johnson's team, a short quiz, a practice conversation, and a downloadable checklist for managers.</textarea>
+            <p class="field__error" id="v-summary-over-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Lesson summary must be 200 characters or fewer.</span></p>
+            <div class="field__below"><p class="field__counter" id="v-summary-over-count">17 characters too many</p></div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Within and over the limit. People can type and paste past the limit; the counter and error say by how much.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;textarea class="textarea" id="summary" required aria-describedby="summary-hint summary-count"&gt;&lt;/textarea&gt;
+&lt;div class="field__below"&gt;
+  &lt;p class="field__hint" id="summary-hint"&gt;Shown under the lesson title in the outline.&lt;/p&gt;
+  &lt;p class="field__counter" id="summary-count"&gt;0 of 200 characters&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="visually-hidden" aria-live="polite" id="summary-live"&gt;&lt;/div&gt;</code></pre></details>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sizes"><h2><a href="#sizes">Sizes</a></h2>
+      <p>One size. Height is set by content, not by a size class: the minimum is two field heights (<code>calc(2 * var(--control-height-md))</code>, 88px, about two lines plus padding), and text is always 16px so mobile browsers do not zoom. Use the <code>rows</code> attribute (minimum 2) only to raise the starting height when long answers are expected.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack">
+          <div class="field" style="max-width: 32rem;"><label class="field__label" for="s-min">Note · minimum (2 lines)</label><textarea class="textarea" id="s-min"></textarea></div>
+          <div class="field" style="max-width: 32rem;"><label class="field__label" for="s-rows">Reflection · <code>rows="6"</code></label><textarea class="textarea" id="s-rows" rows="6"></textarea></div>
+        </div>
+        <div class="ds-example__caption"><span>Larger starting height signals that a longer answer is welcome.</span></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <p>The textarea shares the text field's states. Pointer and focus states are forced with <code>data-state</code>; matrix textareas are labelled with <code>aria-label</code> to keep the table compact.</p>
+      <div class="ds-matrix"><table>
+        <thead><tr><th scope="col">Variant</th><th scope="col">Default</th><th scope="col">Hover</th><th scope="col">Focus</th><th scope="col">Active</th><th scope="col">Disabled</th><th scope="col">Invalid</th><th scope="col">Read-only</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Auto-grow</th>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, default" placeholder="Write feedback"></textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, hover" placeholder="Write feedback" data-state="hover"></textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, focus" data-state="focus">Clear structure.</textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, typing" data-state="focus">Clear structure. Next time, cite the</textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, disabled" disabled>Clear structure.</textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, invalid" aria-invalid="true"></textarea></td>
+            <td><textarea class="textarea" style="min-width: 10rem;" aria-label="Feedback, read-only" readonly>Clear structure.</textarea></td>
+          </tr>
+          <tr><th scope="row">With counter</th>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, default" aria-describedby="m-c-default">Active listening.</textarea><div class="field__below"><p class="field__counter" id="m-c-default">17 of 200</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, hover" aria-describedby="m-c-hover" data-state="hover">Active listening.</textarea><div class="field__below"><p class="field__counter" id="m-c-hover">17 of 200</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, focus" aria-describedby="m-c-focus" data-state="focus">Active listening.</textarea><div class="field__below"><p class="field__counter" id="m-c-focus">17 of 200</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, typing" aria-describedby="m-c-active" data-state="focus">Active listening and</textarea><div class="field__below"><p class="field__counter" id="m-c-active">20 of 200</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, disabled" aria-describedby="m-c-disabled" disabled>Active listening.</textarea><div class="field__below"><p class="field__counter" id="m-c-disabled">17 of 200</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, invalid" aria-describedby="m-c-invalid" aria-invalid="true">Active listening and the three-step model, with examples, a quiz, a practice conversation and a checklist for managers, a glossary and a printable poster for the staff room, plus links to two further courses and a short survey.</textarea><div class="field__below"><p class="field__counter" id="m-c-invalid">32 too many</p></div></div></td>
+            <td><div class="field" style="min-width: 10rem;"><textarea class="textarea" aria-label="Summary, read-only" aria-describedby="m-c-readonly" readonly>Active listening.</textarea><div class="field__below"><p class="field__counter" id="m-c-readonly">17 of 200</p></div></div></td>
+          </tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-fb-light">Feedback for Ada Lovelace</label><textarea class="textarea" id="th-fb-light" placeholder="What went well, and what to try next"></textarea></div>
+          <div class="field"><label class="field__label" for="th-sum-light">Lesson summary</label><textarea class="textarea" id="th-sum-light" aria-invalid="true" aria-describedby="th-sum-light-error"></textarea><p class="field__error" id="th-sum-light-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a lesson summary.</span></p></div>
+          <div class="field"><label class="field__label" for="th-ro-light">Instructions (set by the course owner)</label><textarea class="textarea" id="th-ro-light" readonly>Complete all four lessons before the live session.</textarea></div>
+          <div class="field"><label class="field__label" for="th-dis-light">Note</label><textarea class="textarea" id="th-dis-light" disabled>Session cancelled.</textarea></div>
+        </div></div>
+        <div data-theme="dark"><div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0;">
+          <div class="field"><label class="field__label" for="th-fb-dark">Feedback for Ada Lovelace</label><textarea class="textarea" id="th-fb-dark" placeholder="What went well, and what to try next"></textarea></div>
+          <div class="field"><label class="field__label" for="th-sum-dark">Lesson summary</label><textarea class="textarea" id="th-sum-dark" aria-invalid="true" aria-describedby="th-sum-dark-error"></textarea><p class="field__error" id="th-sum-dark-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Enter a lesson summary.</span></p></div>
+          <div class="field"><label class="field__label" for="th-ro-dark">Instructions (set by the course owner)</label><textarea class="textarea" id="th-ro-dark" readonly>Complete all four lessons before the live session.</textarea></div>
+          <div class="field"><label class="field__label" for="th-dis-dark">Note</label><textarea class="textarea" id="th-dis-dark" disabled>Session cancelled.</textarea></div>
+        </div></div>
+      </div>
+      <ul>
+        <li><b>Invalid</b>: 2px <code>--color-danger-solid</code> border plus the form field's icon and message.</li>
+        <li><b>Read-only</b>: sunken fill, quiet border; still focusable, so a screen reader can read every line and people can copy it. Use it for instructions people must see but cannot change.</li>
+        <li><b>Disabled</b>: dashed edge, readable text, skipped by Tab, not submitted.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>Full width of its field at every breakpoint; <code>min-width: 0</code> lets it shrink to a 320px column.</li>
+        <li>Long words and URLs wrap inside the box; text never scrolls horizontally.</li>
+        <li>Auto-grow means 200% text and WCAG text spacing increase the height, never clip lines.</li>
+        <li>Resize is vertical only, so dragging the handle can never push the layout sideways. On touch, where the handle is hard to grab, auto-grow does the work.</li>
+        <li>On phones the on-screen keyboard can cover the bottom of a tall textarea; cap long instances with <code>max-block-size</code> so the box and the submit button stay reachable.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="theming"><h2><a href="#theming">Theming</a></h2>
+      <p>The textarea uses the same component tokens as the text field: <code>--field-bg</code>, <code>--field-fg</code>, <code>--field-border</code> and <code>--field-height</code> (which also sets the two-line minimum). Override them on a scope to re-skin; never restyle <code>.textarea</code> itself.</p>
+      <pre><code>/* Taller default for reflection answers in one course */
+.reflection-form .textarea { --field-height: var(--control-height-lg); }</code></pre>
+      <p>In dark the surface becomes sage-900 and the border sage-300; the read-only fill drops to <code>--palette-sage-975</code>. Shipped equivalents: <code>--t-colorNeutralBackground1</code>, <code>--t-colorNeutralForeground1</code>, <code>--t-colorNeutralStrokeAccessible</code>. See <a href="../foundations/theming.html">theming</a>.</p>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>Native <code>&lt;textarea&gt;</code>, which exposes a multi-line textbox (<code>aria-multiline</code> is implied). No ARIA role is added. Labelling and errors follow <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">labels or instructions</a> and <a href="https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html">error suggestion</a>.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Moves into and out of the textarea. Tab never inserts a tab character, so keyboard users are never trapped.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Inserts a new line. It never submits the form.</td></tr>
+        <tr><td>Arrows, <kbd>Home</kbd> / <kbd>End</kbd>, <kbd>Ctrl</kbd>+<kbd>Home</kbd> / <kbd>End</kbd></td><td>Native caret movement by character, line and document.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>No effect. In a dialog, Esc closes the dialog; ask before discarding typed text.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>The shared ring (3px <code>--color-focus-ring</code>, 2px offset) on <code>:focus-visible</code>. Because the box grows, the caret line stays in view; browsers scroll the page to keep it visible, and no sticky footer may cover it (WCAG 2.4.11).</p>
+      <h3>Labelling</h3>
+      <ul>
+        <li>A visible <code>&lt;label for&gt;</code>; the placeholder is a prompt at most.</li>
+        <li><code>aria-describedby</code> lists error, hint and counter, in that order.</li>
+        <li>The counter text is static in <code>aria-describedby</code>; a separate visually hidden <code>aria-live="polite"</code> region announces "10 characters left" and "5 characters too many" when those thresholds are crossed, debounced by about a second, never on every keystroke.</li>
+      </ul>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Text on textarea</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Placeholder on textarea</span><span class="ds-pair__ratio" data-contrast="--color-fg-subtle|--color-bg-surface" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Border on surface</span><span class="ds-pair__ratio" data-contrast="--color-border-strong|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Invalid border on surface</span><span class="ds-pair__ratio" data-contrast="--color-danger-solid|--color-bg-surface" data-min="3"></span></div>
+        <div class="ds-pair"><span>Read-only text on sunken fill</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-bg-surface-sunken" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Disabled text on canvas</span><span class="ds-pair__ratio" data-contrast="--color-fg-disabled|--color-bg-canvas" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Counter on surface</span><span class="ds-pair__ratio" data-contrast="--color-fg-muted|--color-bg-surface" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Growth is immediate; it is never animated, so the text under the caret does not slide. The border colour transitions over <code>--duration-fast</code>, zeroed under reduced motion.</p>
+      <h3>Touch</h3>
+      <p>The minimum 88px height is a large target. The label also focuses the textarea. The resize handle is a convenience, not the only way to see more text, because the box grows on its own (no drag required, WCAG 2.5.7).</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Label says what to write and for whom: "Feedback for Grace Hopper", "Assignment instructions".</li>
+        <li>The hint says who will see it or what makes a good answer: "Only Grace and course instructors see this."</li>
+        <li>State limits up front in the counter ("0 of 500 characters"), and in characters, not words, so the count is unambiguous.</li>
+        <li>Over the limit, say by how much and what to do: "Lesson summary must be 200 characters or fewer." with "17 characters too many" in the counter.</li>
+        <li>Placeholders such as "What went well, and what to try next" are optional prompts; never put instructions people need there.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-grow-do">Feedback</label><textarea class="textarea" id="dd-grow-do">Clear structure and a strong conclusion.
+Next time, cite the incident report.
+Well done on the checklist.</textarea></div></div><figcaption>Let the box grow so every line is visible while writing and reviewing.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-grow-dont">Feedback</label><textarea class="textarea" id="dd-grow-dont" rows="1" style="field-sizing: fixed; min-height: var(--control-height-md); height: var(--control-height-md);">Clear structure and a strong conclusion.
+Next time, cite the incident report.
+Well done on the checklist.</textarea></div></div><figcaption>A one-line box with a scrollbar; people cannot review what they wrote, and at 200% text it shows half a line.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-limit-do">Lesson summary</label><textarea class="textarea" id="dd-limit-do" aria-invalid="true" aria-describedby="dd-limit-do-error dd-limit-do-count">Introduces active listening and the three-step feedback model used throughout the course, with worked examples, a short quiz, a practice conversation, and a downloadable checklist for managers and team leads.</textarea><p class="field__error" id="dd-limit-do-error"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16.5v.01"/></svg><span>Lesson summary must be 200 characters or fewer.</span></p><div class="field__below"><p class="field__counter" id="dd-limit-do-count">8 characters too many</p></div></div></div><figcaption>Accept the paste, then say how much to cut.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-limit-dont">Lesson summary</label><textarea class="textarea" id="dd-limit-dont" maxlength="120" aria-describedby="dd-limit-dont-count">Introduces active listening and the three-step feedback model used throughout the course, with worked examples, a sh</textarea><div class="field__below"><p class="field__counter" id="dd-limit-dont-count">120 of 120 characters</p></div></div></div><figcaption>A hard <code>maxlength</code> silently cuts pasted text mid-word, and nobody is told.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-resize-do">Note</label><textarea class="textarea" id="dd-resize-do"></textarea></div></div><figcaption>Vertical resize only; the box keeps its column width.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="field"><label class="field__label" for="dd-resize-dont">Note</label><textarea class="textarea" id="dd-resize-dont" style="resize: both; width: auto;"></textarea></div></div><figcaption><code>resize: both</code> lets one drag push the form wider than a 320px screen.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="tokens"><h2><a href="#tokens">Tokens</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Part</th><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+        <tbody>
+          <tr><td>Background (<code>--field-bg</code>)</td><td><code>--color-bg-surface</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface" data-swatch></i><span data-token="--color-bg-surface"></span></span></td></tr>
+          <tr><td>Text (<code>--field-fg</code>)</td><td><code>--color-fg-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-default" data-swatch></i><span data-token="--color-fg-default"></span></span></td></tr>
+          <tr><td>Placeholder</td><td><code>--color-fg-subtle</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-subtle" data-swatch></i><span data-token="--color-fg-subtle"></span></span></td></tr>
+          <tr><td>Border (<code>--field-border</code>)</td><td><code>--color-border-strong</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-strong" data-swatch></i><span data-token="--color-border-strong"></span></span></td></tr>
+          <tr><td>Border, invalid</td><td><code>--color-danger-solid</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-danger-solid" data-swatch></i><span data-token="--color-danger-solid"></span></span></td></tr>
+          <tr><td>Read-only fill</td><td><code>--color-bg-surface-sunken</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-bg-surface-sunken" data-swatch></i><span data-token="--color-bg-surface-sunken"></span></span></td></tr>
+          <tr><td>Read-only border</td><td><code>--color-border-default</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-border-default" data-swatch></i><span data-token="--color-border-default"></span></span></td></tr>
+          <tr><td>Disabled text</td><td><code>--color-fg-disabled</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-fg-disabled" data-swatch></i><span data-token="--color-fg-disabled"></span></span></td></tr>
+          <tr><td>Focus ring</td><td><code>--color-focus-ring</code></td><td><span class="ds-swatch-cell" data-theme="light"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td><td><span class="ds-swatch-cell" data-theme="dark"><i data-token="--color-focus-ring" data-swatch></i><span data-token="--color-focus-ring"></span></span></td></tr>
+          <tr><td>Minimum height</td><td><code>2 × --control-height-md</code></td><td colspan="2">2 × <span data-token="--control-height-md"></span></td></tr>
+          <tr><td>Padding (block / inline)</td><td><code>--space-2</code> / <code>--space-3</code></td><td colspan="2"><span data-token="--space-2"></span> / <span data-token="--space-3"></span></td></tr>
+          <tr><td>Radius</td><td><code>--radius-md</code></td><td colspan="2"><span data-token="--radius-md"></span></td></tr>
+          <tr><td>Text</td><td><code>--text-body</code></td><td colspan="2"><span data-token="--text-body"></span></td></tr>
+          <tr><td>Border width / invalid</td><td><code>--border-width-hairline</code> / <code>--border-width-thick</code></td><td colspan="2"><span data-token="--border-width-hairline"></span> / <span data-token="--border-width-thick"></span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="ds-section" id="code"><h2><a href="#code">Code</a></h2>
+      <pre><code>&lt;div class="field"&gt;
+  &lt;label class="field__label" for="feedback"&gt;Feedback for Grace Hopper&lt;/label&gt;
+  &lt;textarea class="textarea" id="feedback" name="feedback"
+            aria-describedby="feedback-hint feedback-count"&gt;&lt;/textarea&gt;
+  &lt;div class="field__below"&gt;
+    &lt;p class="field__hint" id="feedback-hint"&gt;Only Grace and course instructors see this.&lt;/p&gt;
+    &lt;p class="field__counter" id="feedback-count"&gt;0 of 500 characters&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="visually-hidden" aria-live="polite"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      <table class="ds-table"><thead><tr><th scope="col">Class / attribute</th><th scope="col">Effect</th></tr></thead><tbody>
+        <tr><td><code>.textarea</code></td><td>Two-line minimum, auto-grow (<code>field-sizing: content</code>), vertical resize.</td></tr>
+        <tr><td><code>rows</code></td><td>Raises the starting height (minimum 2).</td></tr>
+        <tr><td><code>aria-invalid="true"</code></td><td>2px danger border.</td></tr>
+        <tr><td><code>readonly</code></td><td>Sunken fill, quiet border, focusable.</td></tr>
+        <tr><td><code>disabled</code></td><td>Dashed edge, readable text, skipped by Tab.</td></tr>
+        <tr><td><code>maxlength</code></td><td>Avoid; validate length and report it with the counter instead.</td></tr>
+        <tr><td><code>data-state="hover|focus"</code></td><td>Documentation only.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Derived: not present in the mocks; follows the system rules. Border, radius, fill, placeholder colour, invalid and disabled treatments are shared with the <a href="text-field.html">text field</a>, itself derived from the field in the <a href="../../mocks/combobox/index.html">combobox</a> mock.</p>
+      <p>Drift that applies through the shared field styles:</p>
+      <ul>
+        <li>Control radii of 6px (combobox mock selects) and 7px (video mock selects) snapped to <code>--radius-md</code> (8px), the combobox field's radius.</li>
+        <li>Off-grid field padding snapped to <code>--space-2</code> / <code>--space-3</code>.</li>
+        <li>Two disabled treatments unified on the dashed edge with readable <code>--color-fg-disabled</code> text.</li>
+        <li>Focus outline 2px on fields vs 3px on the page; unified on the 3px ring with a 2px offset.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>

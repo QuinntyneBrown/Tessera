@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications — Tessera design system</title>
+<meta name="description" content="Toast, banner, inline alert or live region only: how Tessera chooses, prioritises, coalesces and dismisses notifications.">
+<link rel="stylesheet" href="../tokens/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<link rel="stylesheet" href="../assets/ds.css">
+</head>
+<body id="top">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="ds-shell">
+<!--#NAV-->
+  <nav class="ds-nav" aria-label="Design system">
+    <div class="ds-nav__brand"><a href="../index.html">Tessera DS</a><button class="ds-theme-toggle" type="button" aria-pressed="false">☾ Dark</button></div>
+    <details open><summary>Foundations</summary><ul>
+      <li><a href="../foundations/color.html">Color</a></li>
+      <li><a href="../foundations/typography.html">Typography</a></li>
+      <li><a href="../foundations/spacing.html">Spacing</a></li>
+      <li><a href="../foundations/layout.html">Layout</a></li>
+      <li><a href="../foundations/elevation.html">Elevation</a></li>
+      <li><a href="../foundations/shape.html">Shape</a></li>
+      <li><a href="../foundations/motion.html">Motion</a></li>
+      <li><a href="../foundations/iconography.html">Iconography</a></li>
+      <li><a href="../foundations/theming.html">Theming</a></li>
+      <li><a href="../foundations/responsive.html">Responsive</a></li>
+      <li><a href="../foundations/accessibility.html">Accessibility</a></li>
+      <li><a href="../foundations/content.html">Content</a></li>
+    </ul></details>
+    <details open><summary>Actions</summary><ul>
+      <li><a href="../components/button.html">Button</a></li>
+      <li><a href="../components/button-group.html">Button group</a></li>
+      <li><a href="../components/link.html">Link</a></li>
+      <li><a href="../components/menu.html">Menu</a></li>
+    </ul></details>
+    <details open><summary>Inputs</summary><ul>
+      <li><a href="../components/form-field.html">Form field</a></li>
+      <li><a href="../components/text-field.html">Text field</a></li>
+      <li><a href="../components/textarea.html">Textarea</a></li>
+      <li><a href="../components/select.html">Select</a></li>
+      <li><a href="../components/combobox.html">Combobox</a></li>
+      <li><a href="../components/checkbox.html">Checkbox</a></li>
+      <li><a href="../components/radio-group.html">Radio group</a></li>
+      <li><a href="../components/switch.html">Switch</a></li>
+      <li><a href="../components/slider.html">Slider</a></li>
+      <li><a href="../components/form-layout.html">Form layout</a></li>
+    </ul></details>
+    <details open><summary>Navigation</summary><ul>
+      <li><a href="../components/top-bar.html">Top bar</a></li>
+      <li><a href="../components/sidebar-navigation.html">Sidebar navigation</a></li>
+      <li><a href="../components/tabs.html">Tabs</a></li>
+      <li><a href="../components/breadcrumb.html">Breadcrumb</a></li>
+      <li><a href="../components/pagination.html">Pagination</a></li>
+      <li><a href="../components/stepper.html">Stepper</a></li>
+      <li><a href="../components/skip-link.html">Skip link</a></li>
+    </ul></details>
+    <details open><summary>Containers</summary><ul>
+      <li><a href="../components/card.html">Card</a></li>
+      <li><a href="../components/dialog.html">Dialog</a></li>
+      <li><a href="../components/tooltip.html">Tooltip</a></li>
+      <li><a href="../components/divider.html">Divider</a></li>
+      <li><a href="../components/layout-grid.html">Container, grid and stack</a></li>
+    </ul></details>
+    <details open><summary>Data display</summary><ul>
+      <li><a href="../components/table.html">Table</a></li>
+      <li><a href="../components/list.html">List</a></li>
+      <li><a href="../components/description-list.html">Description list</a></li>
+      <li><a href="../components/avatar.html">Avatar</a></li>
+      <li><a href="../components/badge.html">Badge</a></li>
+      <li><a href="../components/chip.html">Chip</a></li>
+    </ul></details>
+    <details open><summary>Feedback</summary><ul>
+      <li><a href="../components/alert.html">Alert</a></li>
+      <li><a href="../components/inline-message.html">Inline message</a></li>
+      <li><a href="../components/toast.html">Toast</a></li>
+      <li><a href="../components/progress-bar.html">Progress bar</a></li>
+      <li><a href="../components/spinner.html">Spinner</a></li>
+      <li><a href="../components/skeleton.html">Skeleton</a></li>
+      <li><a href="../components/empty-state.html">Empty state</a></li>
+      <li><a href="../components/error-page.html">Error page</a></li>
+    </ul></details>
+    <details open><summary>Media</summary><ul>
+      <li><a href="../components/video-player.html">Video player</a></li>
+      <li><a href="../components/scorm-player.html">SCORM player</a></li>
+    </ul></details>
+    <details open><summary>Patterns</summary><ul>
+      <li><a href="../patterns/forms.html">Forms</a></li>
+      <li><a href="../patterns/feedback-and-loading.html">Feedback and loading</a></li>
+      <li><a href="../patterns/empty-and-error-states.html">Empty and error states</a></li>
+      <li><a href="../patterns/navigation.html">Navigation and page structure</a></li>
+      <li><a href="../patterns/dialogs-and-overlays.html">Dialogs and overlays</a></li>
+      <li><a href="../patterns/data-tables-and-lists.html">Data tables and lists</a></li>
+      <li><a href="../patterns/notifications.html">Notifications</a></li>
+      <li><a href="../patterns/content-and-tone.html">Content and tone</a></li>
+    </ul></details>
+  </nav>
+<!--/NAV-->
+
+  <main id="main" class="ds-main">
+    <header class="ds-header">
+      <p class="ds-kicker">Pattern</p>
+      <h1>Notifications</h1>
+      <p class="ds-lead">A notification tells learners and administrators about something they did not just look at: a save that failed, an assignment that went out, a stream that came back. Choose the quietest form that still reaches everyone, and never let a message disappear before it can be read.</p>
+      <div class="ds-meta"><span class="ds-pill ds-pill--ok">WCAG 2.2 AA</span><span class="ds-pill">Status: stable</span><span class="ds-pill">Composes: toast, alert, inline message, live region</span></div>
+      <ul class="ds-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#when">When to use</a></li><li><a href="#structure">Structure</a></li><li><a href="#states">States</a></li><li><a href="#responsive">Responsive</a></li><li><a href="#accessibility">Accessibility</a></li><li><a href="#content">Content</a></li><li><a href="#do-dont">Do and don't</a></li><li><a href="#sources">Sources</a></li>
+      </ul>
+    </header>
+
+    <section class="ds-section" id="overview"><h2><a href="#overview">Overview</a></h2>
+      <p>Tessera has four notification surfaces, from loudest to quietest:</p>
+      <ul>
+        <li><b>Banner</b> (<code>.alert--banner</code>): a page-wide condition that persists until it is resolved, at the top of the page or region.</li>
+        <li><b>Inline alert</b> (<code>.alert</code>): a condition scoped to one region, placed at the top of that region, with its recovery action. SCORM "Progress not saved" is one.</li>
+        <li><b>Toast</b> (<code>.toast</code>): a short-lived confirmation of a finished task, in a fixed region at the edge of the viewport, optionally with one action such as Undo.</li>
+        <li><b>Live region only</b>: words for assistive technology when the change is already visible where the learner is looking: "Captions on.", "Back live.", "6 results available."</li>
+      </ul>
+      <p>Tessera has no notification centre: the components live inside a host LMS, which owns its inbox. Which feedback answers which action is covered in <a href="feedback-and-loading.html">feedback and loading</a>; the component details are in <a href="../components/toast.html">toast</a>, <a href="../components/alert.html">alert</a> and <a href="../components/inline-message.html">inline message</a>.</p>
+    </section>
+
+    <section class="ds-section" id="when"><h2><a href="#when">When to use</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">Surface</th><th scope="col">Use for</th><th scope="col">Dismissal</th><th scope="col">Announced as</th></tr></thead>
+        <tbody>
+          <tr><td>Banner</td><td>Page-wide, persistent: "Course content is read-only while the LMS is offline."</td><td>Only when resolved, or by an explicit Dismiss for info</td><td><code>role="status"</code>; <code>role="alert"</code> if it blocks work</td></tr>
+          <tr><td>Inline alert</td><td>A region-scoped failure or warning that needs an action: "Progress not saved" with Retry save</td><td>Never automatic; closes when resolved</td><td><code>role="alert"</code> for new failures</td></tr>
+          <tr><td>Toast</td><td>Finished background work the learner can ignore: "3 learners assigned to Workplace safety essentials."</td><td>Auto after at least 8 s; paused on hover and focus; error toasts never auto-dismiss</td><td>Polite toast region</td></tr>
+          <tr><td>Live region only</td><td>A change already visible at the point of attention: toggles, stream state, result counts</td><td>Not applicable</td><td>The component's own polite region</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Priority</h3>
+      <ol>
+        <li><b>Blocking error</b>: the learner's work is at risk ("Progress not saved"). Inline alert, <code>role="alert"</code>, persists, moves focus only if the failing surface had focus.</li>
+        <li><b>Warning</b>: something will go wrong if ignored ("Exit without saving?"). Inline alert, persists.</li>
+        <li><b>Success or info</b>: confirmation of finished work. Toast or live region.</li>
+        <li><b>Ambient status</b>: state changes the learner caused or can see. Live region only.</li>
+      </ol>
+      <p>A higher priority never waits behind a lower one. A new failure replaces any pending polite status in the same component; it is not queued after it.</p>
+    </section>
+
+    <section class="ds-section" id="structure"><h2><a href="#structure">Structure</a></h2>
+      <p>The course page shows all four levels at once: an info banner across the top, the SCORM save failure as an inline alert above the player, a success toast for an assignment sent from another tab, and the video player's "Back live" pill whose words are carried by the player's live region.</p>
+      <div class="ds-example">
+        <div class="ds-example__canvas ds-example__canvas--stack ds-example__canvas--canvas" style="padding: 0;">
+          <div class="alert alert--info alert--banner">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>
+            <div class="alert__content"><p class="alert__title">Scheduled maintenance tonight</p><p class="alert__body">Courses are unavailable from 22:00 to 23:00. Progress saved before then is kept.</p></div>
+            <button class="btn btn--ghost btn--icon alert__dismiss" type="button" aria-label="Dismiss maintenance notice"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          </div>
+          <div class="stack" style="padding: var(--space-6);">
+            <div class="alert alert--danger">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+              <div class="alert__content"><h3 class="alert__title">Progress not saved</h3><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div>
+              <div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div>
+            </div>
+            <div class="grid grid--auto">
+              <div class="media-player" role="region" aria-label="Video player: Lecture hall A">
+                <div class="media-player__stage">
+                  <div class="media-player__overlay"><span></span></div>
+                  <span class="toast toast--pill media-player__toast" aria-hidden="true">Back live</span>
+                </div>
+              </div>
+              <div class="toast-region toast-region--static">
+                <div class="toast toast--success">
+                  <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>
+                  <div class="toast__body"><span class="toast__title">Assignment sent</span>3 learners assigned to Workplace safety essentials.</div>
+                  <button class="btn btn--icon btn--sm" type="button" aria-label="Dismiss notification"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                </div>
+                <div class="toast toast--danger">
+                  <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+                  <div class="toast__body"><span class="toast__title">Assignment not sent</span>Grace Hopper could not be assigned. The others were.</div>
+                  <button class="btn btn--sm" type="button">Retry</button>
+                  <button class="btn btn--icon btn--sm" type="button" aria-label="Dismiss error notification"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ds-example__caption"><span>Banner, inline alert, toasts (success auto-dismisses, error persists) and a decorative "Back live" pill.</span><span>Live regions omitted from the static demo.</span></div>
+        <details class="ds-example__code"><summary>HTML</summary><pre><code>&lt;!-- Present and empty from first render; content is inserted later --&gt;
+&lt;div class="toast-region" role="status" aria-live="polite" aria-relevant="additions"&gt;&lt;/div&gt;
+
+&lt;!-- SCORM: the visible alert has a focusable heading; a separate alert node carries new failures only --&gt;
+&lt;section class="alert alert--danger" aria-labelledby="save-error-heading"&gt;
+  &lt;div class="alert__content"&gt;
+    &lt;h3 class="alert__title" id="save-error-heading" tabindex="-1"&gt;Progress not saved&lt;/h3&gt;
+    &lt;p class="alert__body"&gt;Your latest progress is kept on this page. Try saving again.&lt;/p&gt;
+    &lt;p class="visually-hidden" role="alert"&gt;&lt;/p&gt; &lt;!-- "Progress not saved. Try saving again." --&gt;
+  &lt;/div&gt;
+  &lt;div class="alert__actions"&gt;&lt;button class="btn btn--primary" type="button"&gt;Retry save&lt;/button&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Video: the pill is decorative; the player's polite region says "Back live." --&gt;
+&lt;span class="toast toast--pill media-player__toast" aria-hidden="true"&gt;Back live&lt;/span&gt;
+&lt;div class="visually-hidden" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt;</code></pre></details>
+      </div>
+      <h3>Grouping and coalescing</h3>
+      <ul>
+        <li><b>Video player</b>: messages arriving within 150 ms are coalesced into one update of the polite region. Toggle announcements ("Muted.", "Captions on.") queue and are all spoken; status announcements ("Buffering.", "Live.") replace any earlier pending status. A toggle is never dropped.</li>
+        <li><b>SCORM player</b>: messages from one task are joined, so a later one never overwrites an earlier one unread: "Put it into practice complete. Course complete. Progress saved."</li>
+        <li><b>Combobox</b>: a failure discards any pending status ("Results could not be loaded." is not queued behind "Loading results.").</li>
+        <li><b>Toasts</b>: at most three visible; repeats of the same message update the existing toast with a count ("3 learners assigned") instead of stacking. The oldest non-error toast leaves first.</li>
+        <li>An unchanged status is never re-announced (SCORM does not repeat a completion), and a closed alert is emptied so it does not replay old text when reopened.</li>
+      </ul>
+      <pre><code>// Video mock: 150 ms coalescing, toggles never dropped
+function announce(text, { toggle = false } = {}) {
+  if (toggle) togglePending.push(text); else statusPending = text;
+  if (!flushTimer) flushTimer = setTimeout(flush, 150);
+}</code></pre>
+    </section>
+
+    <section class="ds-section" id="states"><h2><a href="#states">States</a></h2>
+      <div class="ds-table-wrap"><table class="ds-table">
+        <thead><tr><th scope="col">State</th><th scope="col">Behaviour</th></tr></thead>
+        <tbody>
+          <tr><td>Entering</td><td>Toasts fade in over <code>--duration-base</code>; inline alerts appear in place without animation.</td></tr>
+          <tr><td>Visible, counting down</td><td>Success and info toasts: at least 8 s, longer for longer text (add 1 s per 120 characters).</td></tr>
+          <tr><td>Paused</td><td>Hover or focus anywhere in the toast region stops every timer; leaving restarts the full duration.</td></tr>
+          <tr><td>Persistent</td><td>Error and warning toasts, inline alerts and failure banners never auto-dismiss.</td></tr>
+          <tr><td>Leaving</td><td><code>data-leaving="true"</code> fades over <code>--duration-base</code>; if focus was inside, it moves to the toast's trigger or the next toast, never to <code>&lt;body&gt;</code>.</td></tr>
+          <tr><td>Decorative pill</td><td>The video "Back live" pill shows for 1.5 s. It is <code>aria-hidden</code> status decoration, not a toast; the live region carries the message, so the short duration does not fail 2.2.1.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Both themes</h3>
+      <div class="ds-themes">
+        <div data-theme="light"><div class="stack">
+          <div class="alert alert--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9 17H3z"/><path d="M12 10v4M12 17v.5"/></svg><div class="alert__content"><p class="alert__title">Unsaved progress</p><p class="alert__body">Exit now and your latest progress is lost.</p></div></div>
+          <div class="toast toast--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><div class="toast__body">Progress saved.</div></div>
+          <div class="toast toast--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><div class="toast__body">Grace Hopper could not be assigned.</div><button class="btn btn--sm" type="button">Retry</button></div>
+        </div></div>
+        <div data-theme="dark"><div class="stack">
+          <div class="alert alert--warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l9 17H3z"/><path d="M12 10v4M12 17v.5"/></svg><div class="alert__content"><p class="alert__title">Unsaved progress</p><p class="alert__body">Exit now and your latest progress is lost.</p></div></div>
+          <div class="toast toast--success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><div class="toast__body">Progress saved.</div></div>
+          <div class="toast toast--danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><div class="toast__body">Grace Hopper could not be assigned.</div><button class="btn btn--sm" type="button">Retry</button></div>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="ds-section" id="responsive"><h2><a href="#responsive">Responsive behaviour</a></h2>
+      <ul>
+        <li>The toast region spans the viewport minus 16px margins below <code>--layout-breakpoint-sm</code>, above the safe-area inset; above it, it sits bottom-right at 24rem wide.</li>
+        <li>Toasts never cover the SCORM Previous / Next row or the video controls on phones: the host offsets the region above sticky footers.</li>
+        <li>Banners use <code>--layout-margin</code> inline padding so they align with page content; actions wrap below the text at narrow widths.</li>
+        <li>Below 768px the video control bar moves under the picture, and the "Back live" pill moves to the bottom of the stage.</li>
+        <li>At 200% text, toasts grow taller rather than truncating; long text is a sign the message belongs in an inline alert.</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="accessibility"><h2><a href="#accessibility">Accessibility</a></h2>
+      <h3>Role and pattern</h3>
+      <p>The <a href="https://www.w3.org/WAI/ARIA/apg/patterns/alert/">WAI-ARIA APG Alert pattern</a> for failures, and polite live regions for everything else (<a href="https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html">WCAG 4.1.3 Status Messages</a>). Live regions exist and are empty on first render, and are filled later; a region inserted with its text already in it is often not read. Auto-dismiss honours <a href="https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html">2.2.1 Timing Adjustable</a> by pausing on hover and focus and by never timing out errors.</p>
+      <h3>Keyboard</h3>
+      <table class="ds-table ds-keys"><thead><tr><th scope="col">Key</th><th scope="col">Action</th></tr></thead><tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Reaches toast actions and Dismiss in DOM order; the toast region sits at the end of the host page. Focus pauses every toast timer.</td></tr>
+        <tr><td><kbd>Enter</kbd>, <kbd>Space</kbd></td><td>Activates Undo, Retry or Dismiss.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>With focus in a toast, dismisses that toast and returns focus to where it came from.</td></tr>
+      </tbody></table>
+      <h3>Focus</h3>
+      <p>Notifications do not take focus, with one exception from the SCORM mock: when an exit attempt reveals unsaved progress, focus moves to the "Progress not saved" heading because the learner must decide. A closing alert or toast that held focus returns it to a sensible element (the activity heading in SCORM), never to <code>&lt;body&gt;</code>.</p>
+      <h3>Labelling</h3>
+      <p>Dismiss buttons name what they dismiss when more than one is on screen ("Dismiss maintenance notice"). Icons are <code>aria-hidden</code>; the title carries the severity in words ("Progress not saved", not a red icon alone).</p>
+      <h3>Contrast</h3>
+      <div class="ds-example__canvas ds-example__canvas--stack" style="padding: 0; gap: var(--space-2);">
+        <div class="ds-pair"><span>Toast text</span><span class="ds-pair__ratio" data-contrast="--color-fg-inverse|--color-bg-inverse" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Alert text on danger background</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Danger title</span><span class="ds-pair__ratio" data-contrast="--color-danger-fg|--color-danger-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Info banner text</span><span class="ds-pair__ratio" data-contrast="--color-fg-default|--color-info-bg" data-min="4.5"></span></div>
+        <div class="ds-pair"><span>Warning icon</span><span class="ds-pair__ratio" data-contrast="--color-warning-icon|--color-warning-bg" data-min="3"></span></div>
+        <div class="ds-pair"><span>"Back live" pill text on scrim</span><span class="ds-pair__ratio" data-contrast="--color-media-fg|--color-media-scrim" data-min="4.5"></span></div>
+      </div>
+      <h3>Motion</h3>
+      <p>Toasts fade over <code>--duration-base</code> with <code>--ease-exit</code> on leave; no sliding. Under <code>prefers-reduced-motion</code> they appear and disappear instantly. Alerts never animate.</p>
+      <h3>Touch</h3>
+      <p>Toast buttons are 32px high with 8px spacing on a toast that is itself well over 44px; banner and alert actions are 44px. Toasts do not capture swipes; Dismiss is always a visible button.</p>
+    </section>
+
+    <section class="ds-section" id="content"><h2><a href="#content">Content</a></h2>
+      <ul>
+        <li>Titles state the outcome in sentence case: "Progress not saved", "Assignment sent", "No access to this stream".</li>
+        <li>Bodies follow the error formula: what happened, what is safe, what to do. "Your latest progress is kept on this page. Try saving again."</li>
+        <li>One message, one action. The action is a verb: "Retry save", "Undo", "Sign in again".</li>
+        <li>Spoken status is short and ends with a full stop: "Back live.", "Captions on.", "Course exited."</li>
+        <li>Name people and courses, not ids: "Grace Hopper could not be assigned."</li>
+      </ul>
+    </section>
+
+    <section class="ds-section" id="do-dont"><h2><a href="#do-dont">Do and don't</a></h2>
+      <div class="ds-dodont">
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="alert alert--danger"><div class="alert__content"><p class="alert__title">Progress not saved</p><p class="alert__body">Your latest progress is kept on this page. Try saving again.</p></div><div class="alert__actions"><button class="btn btn--primary" type="button">Retry save</button></div></div></div><figcaption>Keep a failure that puts work at risk on screen, in place, with its recovery action (SCORM mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="toast toast--danger"><div class="toast__body">Save failed.</div></div></div><figcaption>Report a failed save in a toast that disappears after a few seconds with no way to retry.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas ds-example__canvas--inverse"><span class="toast toast--pill" aria-hidden="true">Back live</span></div><figcaption>Treat the 1.5 s "Back live" pill as decoration and let the live region say "Back live." (video mock).</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas"><div class="toast"><div class="toast__body">Back live</div></div></div><figcaption>Make a 1.5 s pill the only carrier of a message; it cannot be read in time.</figcaption></figure>
+        <figure class="ds-do"><div class="ds-example__canvas"><div class="toast toast--success"><div class="toast__body">3 learners assigned to Workplace safety essentials.</div></div></div><figcaption>Coalesce repeats into one message with a count.</figcaption></figure>
+        <figure class="ds-dont"><div class="ds-example__canvas ds-example__canvas--stack"><div class="toast toast--success"><div class="toast__body">Learner assigned.</div></div><div class="toast toast--success"><div class="toast__body">Learner assigned.</div></div><div class="toast toast--success"><div class="toast__body">Learner assigned.</div></div></div><figcaption>Stack identical toasts, each announced again.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="ds-section" id="sources"><h2><a href="#sources">Sources</a></h2>
+      <p>Extracted from these mocks:</p>
+      <ul>
+        <li><a href="../../mocks/video-player/index.html">video-player</a>: 150 ms coalescing with toggles never dropped, "Back live" pill for 1.5 s with "Back live." in the live region, <code>role="alert"</code> error panel.</li>
+        <li><a href="../../mocks/scorm-player/index.html">scorm-player</a>: "Progress not saved" with Retry save and a separate alert node for new failures only, joined announcements per task, closed regions emptied, focus never stranded.</li>
+        <li><a href="../../mocks/combobox/index.html">combobox</a>: failure discards pending status; "Preview only: 2 learners would be assigned…" confirmation as <code>role="status"</code>.</li>
+        <li>Banners and the toast stack are derived: not present in the mocks; follows the system rules.</li>
+      </ul>
+      <p>Drift fixed during extraction:</p>
+      <ul>
+        <li>Video pills used <code>999px</code>; now <code>--radius-full</code>.</li>
+        <li>Video error stripe 5px vs SCORM notice stripe 4px; unified on <code>--border-width-stripe</code>.</li>
+        <li><code>.sr-only</code> implemented two ways; unified on <code>.visually-hidden</code> with <code>clip-path: inset(50%)</code>.</li>
+        <li>Panel titles at 1.1 and 1.15rem; alert titles now use <code>--text-h4</code>.</li>
+      </ul>
+    </section>
+
+    <footer class="ds-footer"><span>Tessera design system · extracted from <a href="../index.html#provenance">docs/mocks</a></span><a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<script src="../assets/ds.js"></script>
+</body>
+</html>
