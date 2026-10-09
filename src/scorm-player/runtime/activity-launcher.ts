@@ -1,6 +1,7 @@
 import { Activity, ScormEdition, DeliveryDescriptor } from '../types';
 import { HostMessage, parseWrapperMessage, RuntimeOperation } from './bridge-protocol';
-import { RuntimeSession } from './runtime-session';
+import { createSession, ScormSession } from './sessions';
+import { NavigationValidity } from './sequencing-engine';
 
 const FLUSH_TIMEOUT_MS = 5000;
 
@@ -11,6 +12,7 @@ export class ActivityLauncher {
     if (event.origin !== this.wrapperOrigin || event.source !== this.frame?.contentWindow) return;
     const message = parseWrapperMessage(event.data);
     if (message?.kind === 'ready') {
+      this.ready = true;
       this.post({ v: 1, kind: 'start', url: this.activity!.resource.url });
     } else if (message?.kind === 'launch-failed') {
       this.events.onLaunchFailed(this.activity!);
@@ -23,8 +25,10 @@ export class ActivityLauncher {
 
   private activity: Activity | null = null;
   private failureReported = false;
+  /** Whether the wrapper has started; before that no SCO can have run, so there is nothing to flush. */
+  private ready = false;
   private flushed: (() => void) | null = null;
-  private session = new RuntimeSession();
+  private session: ScormSession = createSession('1.2');
   private delivery: DeliveryDescriptor | null = null;
 
   constructor(
@@ -34,7 +38,7 @@ export class ActivityLauncher {
       /** The SCO did something its own session accepted but the host's validation rejects. */
       onRuntimeFailure: (activity: Activity) => void;
       /** The SCO committed or terminated; `values` is the host-validated state. */
-      onFlush: (activity: Activity, values: Record<string, string>) => void;
+      onFlush: (activity: Activity, values: Record<string, string>, terminated: boolean) => void;
     },
   ) {
     window.addEventListener('message', this.onMessage);
@@ -45,10 +49,12 @@ export class ActivityLauncher {
     edition: ScormEdition,
     delivery: DeliveryDescriptor,
     state: Record<string, string> | null,
+    navigation: NavigationValidity | null = null,
   ): void {
     this.activity = activity;
-    this.session = new RuntimeSession();
+    this.session = createSession(edition);
     this.failureReported = false;
+    this.ready = false;
     if (state) this.session.restore(state);
     this.delivery = delivery;
     const frame = document.createElement('iframe');
@@ -57,7 +63,14 @@ export class ActivityLauncher {
     frame.style.cssText = 'display:block;inline-size:100%;block-size:28.75rem;border:0';
     frame.src = delivery.wrapperUrl;
     frame.addEventListener('load', () =>
-      this.post({ v: 1, kind: 'prepare', edition, sco: activity.resource.kind === 'sco', state }),
+      this.post({
+        v: 1,
+        kind: 'prepare',
+        edition,
+        sco: activity.resource.kind === 'sco',
+        state,
+        navigation,
+      }),
     );
     this.container.replaceChildren(frame);
     this.frame = frame;
@@ -68,7 +81,7 @@ export class ActivityLauncher {
    * host-validated state. Rejects when the wrapper does not answer, so the activity is not abandoned.
    */
   async retire(): Promise<void> {
-    if (!this.frame) return;
+    if (!this.frame || !this.ready) return;
     const delivered = new Promise<void>((resolve, reject) => {
       this.flushed = resolve;
       setTimeout(() => reject(new Error('flush timed out')), FLUSH_TIMEOUT_MS);
@@ -78,8 +91,14 @@ export class ActivityLauncher {
     this.flushed = null;
     if (this.session.state === 'initialized') {
       this.session.terminate('');
-      this.events.onFlush(this.activity!, this.session.values());
+      this.events.onFlush(this.activity!, this.session.values(), false);
     }
+  }
+
+  /** Removes the current activity's frame, as when the course ends. */
+  clear(): void {
+    this.frame?.remove();
+    this.frame = null;
   }
 
   dispose(): void {
@@ -102,7 +121,7 @@ export class ActivityLauncher {
       if (!this.failureReported) this.events.onRuntimeFailure(this.activity!);
       this.failureReported = true;
     } else if (operation.kind === 'commit' || operation.kind === 'terminate') {
-      this.events.onFlush(this.activity!, session.values());
+      this.events.onFlush(this.activity!, session.values(), operation.kind === 'terminate');
     }
   }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="seq-limit-2004" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 3rd Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Single-attempt quiz</title>
+      <item identifier="quiz" identifierref="res1">
+        <title>Final quiz</title>
+        <imsss:sequencing>
+          <imsss:limitConditions attemptLimit="1" />
+        </imsss:sequencing>
+      </item>
+      <item identifier="summary" identifierref="res2"><title>Summary</title></item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true" />
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html"><file href="sco.html" /></resource>
+    <resource identifier="res2" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=2"><file href="sco.html" /></resource>
+  </resources>
+</manifest>

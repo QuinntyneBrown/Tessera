@@ -7,9 +7,6 @@ export const EDITION_LABELS: Record<ScormEdition, string> = {
   '2004-4th': 'SCORM 2004 4th Edition',
 };
 
-/** Editions whose runtime and sequencing rules the player implements. */
-export const LAUNCHABLE_EDITIONS: readonly ScormEdition[] = ['1.2'];
-
 const SCHEMA_VERSIONS: Record<string, ScormEdition> = {
   '1.2': '1.2',
   'CAM 1.3': '2004-2nd',

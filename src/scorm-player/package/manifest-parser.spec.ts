@@ -54,16 +54,164 @@ describe('parseManifest', () => {
   });
 
   it.each([
-    ['CAM 1.3', 'SCORM 2004 2nd Edition'],
-    ['2004 3rd Edition', 'SCORM 2004 3rd Edition'],
-    ['2004 4th Edition', 'SCORM 2004 4th Edition'],
-  ])('identifies %s but refuses to launch it', (schemaVersion, label) => {
-    const xml = manifest12.replace('<schemaversion>1.2<', `<schemaversion>${schemaVersion}<`);
-    expect(() => parseManifest(xml, ROOT)).toThrowError(new RegExp(`${label}.*cannot be launched`));
+    ['CAM 1.3', '2004-2nd'],
+    ['2004 3rd Edition', '2004-3rd'],
+    ['2004 4th Edition', '2004-4th'],
+  ])('identifies %s and its SCOs', (schemaVersion, edition) => {
+    const xml = manifest12
+      .replace('<schemaversion>1.2<', `<schemaversion>${schemaVersion}<`)
+      .replace('adlcp:scormtype="sco"', 'adlcp:scormType="sco"');
+    const course = parseManifest(xml, ROOT);
+    expect(course.edition).toBe(edition);
+    expect(course.activities[0].resource.kind).toBe('sco');
   });
 
   it('refuses a course whose version cannot be identified', () => {
     const xml = manifest12.replace('<schemaversion>1.2<', '<schemaversion>9.9<');
     expect(() => parseManifest(xml, ROOT)).toThrowError(/could not be identified/);
+  });
+});
+
+describe('parseManifest for a SCORM 2004 organization', () => {
+  const manifest2004 = `<?xml version="1.0"?>
+<manifest identifier="m" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3" xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata><schema>ADL SCORM</schema><schemaversion>2004 4th Edition</schemaversion></metadata>
+  <organizations default="org">
+    <organization identifier="org">
+      <title>Course</title>
+      <item identifier="module"><title>Module</title>
+        <item identifier="a" identifierref="r"><title>A</title></item>
+        <imsss:sequencing><imsss:controlMode choice="false" flow="true"/></imsss:sequencing>
+      </item>
+      <item identifier="b" identifierref="r"><title>B</title>
+        <imsss:sequencing><imsss:limitConditions attemptLimit="2"/></imsss:sequencing>
+      </item>
+    </organization>
+  </organizations>
+  <resources><resource identifier="r" type="webcontent" adlcp:scormType="sco" href="a.html"/></resources>
+</manifest>`;
+
+  it('keeps modules as tree nodes and lists the launchable items in course order', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.activities.map((activity) => activity.id)).toEqual(['a', 'b']);
+    expect(course.tree.children.map((node) => [node.id, node.children.length])).toEqual([
+      ['module', 1],
+      ['b', 0],
+    ]);
+  });
+
+  it('reads control modes and applies the SCORM 2004 defaults to the rest', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.tree.children[0].sequencing.controlMode).toEqual({
+      choice: false,
+      choiceExit: true,
+      flow: true,
+      forwardOnly: false,
+    });
+    expect(course.tree.sequencing.controlMode).toEqual({
+      choice: true,
+      choiceExit: true,
+      flow: false,
+      forwardOnly: false,
+    });
+  });
+
+  it('reads an attempt limit, and treats its absence as unlimited', () => {
+    const course = parseManifest(manifest2004, ROOT);
+
+    expect(course.tree.children[1].sequencing.attemptLimit).toBe(2);
+    expect(course.tree.children[0].sequencing.attemptLimit).toBeUndefined();
+  });
+
+  it('reads precondition rules and objectives with their global maps', () => {
+    const xml = manifest2004.replace(
+      '<imsss:limitConditions attemptLimit="2"/>',
+      `<imsss:sequencingRules>
+        <imsss:preConditionRule>
+          <imsss:ruleConditions conditionCombination="any">
+            <imsss:ruleCondition referencedObjective="pre" operator="not" condition="satisfied"/>
+            <imsss:ruleCondition condition="objectiveMeasureGreaterThan" measureThreshold="0.5"/>
+          </imsss:ruleConditions>
+          <imsss:ruleAction action="disabled"/>
+        </imsss:preConditionRule>
+      </imsss:sequencingRules>
+      <imsss:objectives>
+        <imsss:primaryObjective objectiveID="main" satisfiedByMeasure="true">
+          <imsss:minNormalizedMeasure>0.75</imsss:minNormalizedMeasure>
+        </imsss:primaryObjective>
+        <imsss:objective objectiveID="pre">
+          <imsss:mapInfo targetObjectiveID="g" writeSatisfiedStatus="true"/>
+        </imsss:objective>
+      </imsss:objectives>`,
+    );
+
+    const { sequencing } = parseManifest(xml, ROOT).tree.children[1];
+
+    expect(sequencing.preconditions).toEqual([
+      {
+        combination: 'any',
+        conditions: [
+          { condition: 'satisfied', negate: true, objective: 'pre' },
+          { condition: 'objectiveMeasureGreaterThan', negate: false, measureThreshold: 0.5 },
+        ],
+        action: 'disabled',
+      },
+    ]);
+    expect(sequencing.objectives).toEqual([
+      { id: 'main', primary: true, satisfiedByMeasure: true, minNormalizedMeasure: 0.75, maps: [] },
+      {
+        id: 'pre',
+        primary: false,
+        satisfiedByMeasure: false,
+        minNormalizedMeasure: 1,
+        maps: [
+          {
+            target: 'g',
+            readSatisfied: true,
+            readMeasure: true,
+            writeSatisfied: true,
+            writeMeasure: false,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('reads rollup rules, defaulting rollup conditions to "any"', () => {
+    const xml = manifest2004.replace(
+      '<imsss:controlMode choice="false" flow="true"/>',
+      `<imsss:controlMode choice="false" flow="true"/>
+      <imsss:rollupRules rollupObjectiveSatisfied="false" objectiveMeasureWeight="0.5">
+        <imsss:rollupRule childActivitySet="atLeastPercent" minimumPercent="0.5">
+          <imsss:rollupConditions>
+            <imsss:rollupCondition condition="satisfied"/>
+            <imsss:rollupCondition operator="not" condition="attempted"/>
+          </imsss:rollupConditions>
+          <imsss:rollupAction action="notSatisfied"/>
+        </imsss:rollupRule>
+      </imsss:rollupRules>`,
+    );
+
+    expect(parseManifest(xml, ROOT).tree.children[0].sequencing.rollup).toEqual({
+      objectiveSatisfied: false,
+      progressCompletion: true,
+      objectiveMeasureWeight: 0.5,
+      rules: [
+        {
+          childActivitySet: 'atLeastPercent',
+          minimumCount: 0,
+          minimumPercent: 0.5,
+          combination: 'any',
+          conditions: [
+            { condition: 'satisfied', negate: false },
+            { condition: 'attempted', negate: true },
+          ],
+          action: 'notSatisfied',
+        },
+      ],
+    });
   });
 });

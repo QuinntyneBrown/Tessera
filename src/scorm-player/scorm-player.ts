@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   Injector,
   afterNextRender,
@@ -13,7 +14,9 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { ActivityLauncher } from './runtime/activity-launcher';
+import { NavigationDecision, NO_TRACKING, SequencingEngine } from './runtime/sequencing-engine';
 import { correlationTokenFor } from './runtime/correlation';
 import { deriveOutcome } from './runtime/outcome-calculator';
 import { PersistenceCoordinator } from './runtime/persistence-coordinator';
@@ -39,10 +42,12 @@ import {
   ScormEdition,
   ScoSnapshot,
   CourseOutcome,
+  SequencingTracking,
 } from './types';
 
 @Component({
   selector: 'tsr-scorm-player',
+  imports: [NgTemplateOutlet],
   templateUrl: './scorm-player.html',
   styleUrl: './scorm-player.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +69,13 @@ export class ScormPlayer {
     persistence: 'Progress not saved',
   };
   protected readonly activity = signal<Activity | null>(null);
+  private readonly tracking = signal<SequencingTracking>(NO_TRACKING);
+  private readonly engine = computed(() => {
+    const course = this.course();
+    return course && new SequencingEngine(course.tree, this.tracking());
+  });
+  protected readonly previousDecision = computed(() => this.flowDecision(-1));
+  protected readonly nextDecision = computed(() => this.flowDecision(1));
   private readonly frameHost = viewChild<ElementRef<HTMLElement>>('frameHost');
   private readonly launchRequest = signal<{
     activity: Activity;
@@ -77,6 +89,8 @@ export class ScormPlayer {
   private persistence: PersistenceCoordinator | null = null;
   private scoStates: Record<string, ScoSnapshot> = {};
   protected readonly saveStatus = signal('');
+  /** Course-driven navigation outcomes, announced politely. */
+  protected readonly navigationStatus = signal('');
   protected readonly exitWarning = signal(false);
   protected readonly outlineExpanded = signal(false);
   private readonly outlineToggle = viewChild<ElementRef<HTMLElement>>('outlineToggle');
@@ -105,7 +119,10 @@ export class ScormPlayer {
               retryable: true,
               correlationToken: this.token(),
             }),
-          onFlush: (activity, values) => this.save(activity, values),
+          onFlush: (activity, values, terminated) => {
+            this.save(activity, values);
+            if (terminated) this.follow(activity, values['adl.nav.request']);
+          },
           onRuntimeFailure: () =>
             this.fail({
               category: 'runtime',
@@ -115,7 +132,13 @@ export class ScormPlayer {
               correlationToken: this.token(),
             }),
         });
-        this.launcher.launch(request.activity, request.edition, request.delivery, request.state);
+        this.launcher.launch(
+          request.activity,
+          request.edition,
+          request.delivery,
+          request.state,
+          request.edition === '1.2' ? null : this.engine()!.validity(request.activity.id),
+        );
       });
     });
     effect((onCleanup) => {
@@ -166,18 +189,21 @@ export class ScormPlayer {
             const mismatch = snapshot && checkSnapshot(snapshot, this.attempt()!, course);
             if (mismatch) return this.fail(mismatch);
             this.scoStates = { ...snapshot?.scoStates };
-            this.outcome.set(snapshot ? deriveOutcome(snapshot) : null);
+            this.outcome.set(snapshot ? deriveOutcome(snapshot, course.tree) : null);
+            const start = this.engine()!.start();
             const first =
               course.activities.find((a) => a.id === snapshot?.sequencing.currentActivityId) ??
-              course.activities[0];
-            this.activity.set(first);
+              course.activities.find((a) => start.kind === 'launch' && a.id === start.id);
+            this.loading.set(false);
+            if (!first) return;
+            this.tracking.set(snapshot?.sequencing.tracking ?? NO_TRACKING);
+            this.deliver(first);
             this.launchRequest.set({
               activity: this.launchable(first),
               edition: course.edition,
               delivery,
               state: this.scoStates[first.id]?.values ?? null,
             });
-            this.loading.set(false);
           },
           (cause) => {
             if (!controller.signal.aborted) this.fail(this.loadingError(cause));
@@ -189,12 +215,15 @@ export class ScormPlayer {
 
   private save(activity: Activity, values: Record<string, string>): void {
     this.scoStates[activity.id] = { values };
+    if (this.course()!.edition !== '1.2') {
+      this.tracking.set(this.engine()!.reported(activity.id, values));
+    }
     this.persistence ??= new PersistenceCoordinator(this.host()!, this.attempt()!, {
       onAcknowledged: ({ snapshot, revision }, upToDate) => {
         this.saveStatus.set(upToDate ? 'Progress saved' : 'Saving progress');
         if (this.error()?.category === 'persistence') this.error.set(null);
         this.event.emit({ kind: 'save', status: 'saved', revision });
-        this.event.emit({ kind: 'outcome', outcome: deriveOutcome(snapshot) });
+        this.event.emit({ kind: 'outcome', outcome: deriveOutcome(snapshot, this.course()!.tree) });
       },
       onFailed: () => {
         this.saveStatus.set('Progress not saved');
@@ -213,14 +242,61 @@ export class ScormPlayer {
       context: this.attempt()!,
       edition: this.course()!.edition,
       scoStates: { ...this.scoStates },
-      sequencing: { currentActivityId: activity.id },
+      sequencing: {
+        currentActivityId: activity.id,
+        ...(this.course()!.edition !== '1.2' && { tracking: this.tracking() }),
+      },
     };
-    this.outcome.set(deriveOutcome(snapshot));
+    this.outcome.set(deriveOutcome(snapshot, this.course()!.tree));
     this.persistence.submit(snapshot);
   }
 
-  /** Opens another activity once the current one has delivered its final state. */
-  protected async open(activity: Activity): Promise<void> {
+  /**
+   * Makes the activity current. In SCORM 2004 this begins a new attempt with fresh run-time data, unless
+   * the SCO suspended its last one, which then resumes; SCORM 1.2 SCOs keep their data.
+   */
+  private deliver(activity: Activity): void {
+    const suspended = this.scoStates[activity.id]?.values['cmi.exit'] === 'suspend';
+    if (this.course()!.edition === '1.2' || !suspended) {
+      this.tracking.set(this.engine()!.delivered(this.activity()?.id ?? null, activity.id));
+      if (this.course()!.edition !== '1.2') delete this.scoStates[activity.id];
+    }
+    this.activity.set(activity);
+  }
+
+  /** Acts on the navigation request a SCORM 2004 SCO left when its session ended. */
+  private follow(activity: Activity, request: string | undefined): void {
+    const decision = request && this.engine()!.request(activity.id, request);
+    if (!decision) return;
+    if (decision.kind === 'launch') {
+      void this.open(
+        this.course()!.activities.find((a) => a.id === decision.id)!,
+        'course',
+      );
+    } else if (decision.kind === 'denied') {
+      this.navigationStatus.set(decision.reason);
+    } else if (decision.kind === 'exit') {
+      this.navigationStatus.set(
+        `${activity.title} has ended. Use Next or choose another activity.`,
+      );
+    } else {
+      this.launcher!.clear();
+      this.activity.set(null);
+      this.navigationStatus.set(
+        decision.suspended
+          ? 'The course is paused. You can resume it later.'
+          : 'The course has ended.',
+      );
+    }
+  }
+
+  /**
+   * Opens another activity once the current one has delivered its final state. A learner's choice takes
+   * them to the new activity's heading; a course-driven change is announced instead, unless focus was in
+   * the activity being replaced, in which case focus moves to the heading, which names the change.
+   */
+  protected async open(activity: Activity, by: 'learner' | 'course' = 'learner'): Promise<void> {
+    const focusWasInActivity = !!this.frameHost()?.nativeElement.contains(document.activeElement);
     try {
       await this.launcher!.retire();
     } catch {
@@ -232,12 +308,15 @@ export class ScormPlayer {
         correlationToken: this.token(),
       });
     }
-    this.activity.set(activity);
+    this.deliver(activity);
     this.outlineExpanded.set(false);
-    // The learner chose this activity, so take them to it rather than announcing the change.
-    afterNextRender(() => this.activityHeading()?.nativeElement.focus(), {
-      injector: this.injector,
-    });
+    const moveFocus = by === 'learner' || focusWasInActivity;
+    this.navigationStatus.set(moveFocus ? '' : `Now showing ${activity.title}.`);
+    if (moveFocus) {
+      afterNextRender(() => this.activityHeading()?.nativeElement.focus(), {
+        injector: this.injector,
+      });
+    }
     this.launchRequest.set({
       activity: this.launchable(activity),
       edition: this.course()!.edition,
@@ -246,16 +325,29 @@ export class ScormPlayer {
     });
   }
 
-  /** The activity `offset` places from the current one, or undefined past either end of the course. */
-  protected neighbour(offset: -1 | 1): Activity | undefined {
-    const activities = this.course()?.activities ?? [];
-    const index = activities.findIndex((a) => a.id === this.activity()?.id);
-    return activities[index + offset];
+  /** Opens the chosen activity when the course rules allow it; otherwise nothing happens. */
+  protected choose(activity: Activity): void {
+    if (!this.unavailableReason(activity)) void this.open(activity);
   }
 
-  protected move(offset: -1 | 1): void {
-    const target = this.neighbour(offset);
-    if (target) void this.open(target);
+  protected hidden(activity: Activity): boolean {
+    return this.engine()!.hidden(activity.id);
+  }
+
+  protected unavailableReason(activity: Activity): string | null {
+    return this.engine()!.unavailableReason(this.activity()?.id ?? null, activity.id);
+  }
+
+  private flowDecision(direction: -1 | 1): NavigationDecision | null {
+    const engine = this.engine();
+    const current = this.activity();
+    if (!engine || !current) return null;
+    return direction > 0 ? engine.next(current.id) : engine.previous(current.id);
+  }
+
+  protected move(decision: NavigationDecision | null): void {
+    if (decision?.kind !== 'launch') return;
+    void this.open(this.course()!.activities.find((a) => a.id === decision.id)!);
   }
 
   /** For a ZIP package, points the activity at the host's delivery of the package's files. */
@@ -273,10 +365,13 @@ export class ScormPlayer {
     return !outcome || outcome.status === 'unknown' ? 'Not yet known' : outcome.status;
   }
 
+  protected knownText(value: string | undefined): string {
+    return !value || value === 'unknown' ? 'Not yet known' : value;
+  }
+
   protected scoreText(outcome: CourseOutcome | null): string {
-    return !outcome || outcome.score === 'unknown' || outcome.score.raw === undefined
-      ? 'Not yet known'
-      : String(outcome.score.raw);
+    const score = outcome?.score === 'unknown' ? undefined : outcome?.score;
+    return String(score?.raw ?? score?.scaled ?? 'Not yet known');
   }
 
   protected toggleOutline(): void {

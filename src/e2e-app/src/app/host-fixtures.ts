@@ -7,6 +7,7 @@ import {
   CourseSource,
   HostIntegration,
   SaveSubmission,
+  ScormEdition,
 } from '@tessera/scorm-player';
 
 /** Holds each save until the test acknowledges or fails it, so tests control save timing. */
@@ -57,21 +58,49 @@ const COURSE_ORIGIN =
   new URLSearchParams(location.search).get('courseOrigin') ?? 'http://127.0.0.1:4300';
 
 /** The state the host has stored for an attempt: a distinct location per attempt key. */
-function savedSnapshot(context: AttemptContext, foreign: boolean): AttemptSnapshot {
+function savedSnapshot(
+  context: AttemptContext,
+  foreign: boolean,
+  edition: ScormEdition,
+): AttemptSnapshot {
+  const location = `page 8 of ${context.attemptKey}`;
   return {
     schemaVersion: 1,
     context: foreign ? { ...context, attemptKey: 'someone-elses-attempt' } : context,
-    edition: '1.2',
+    edition,
     scoStates: {
       item1: {
-        values: {
-          'cmi.core.lesson_location': `page 8 of ${context.attemptKey}`,
-          'cmi.suspend_data': 'chapter=3;answers=ab',
-          'cmi.core.exit': 'suspend',
-        },
+        values:
+          edition === '1.2'
+            ? {
+                'cmi.core.lesson_location': location,
+                'cmi.suspend_data': 'chapter=3;answers=ab',
+                'cmi.core.exit': 'suspend',
+              }
+            : {
+                'cmi.location': location,
+                'cmi.suspend_data': 'chapter=3;answers=ab',
+                'cmi.exit': 'suspend',
+              },
       },
     },
     sequencing: { currentActivityId: 'item1' },
+  };
+}
+
+/** For the single-attempt quiz course: the quiz has been taken and the learner moved on to the summary. */
+function quizTakenSnapshot(context: AttemptContext): AttemptSnapshot {
+  return {
+    schemaVersion: 1,
+    context,
+    edition: '2004-3rd',
+    scoStates: {},
+    sequencing: {
+      currentActivityId: 'summary',
+      tracking: {
+        activities: { org1: { attempts: 1 }, quiz: { attempts: 1 }, summary: { attempts: 1 } },
+      },
+    },
   };
 }
 
@@ -130,7 +159,11 @@ export function hostFixtureFor(
               if (snapshot === 'unreadable' || (snapshot === 'flaky' && readsFailed++ === 0)) {
                 throw new Error('storage unavailable');
               }
-              return snapshot ? savedSnapshot(context, snapshot === 'foreign') : null;
+              const edition = /2004-(2nd|3rd|4th)/.exec(courseName)?.[0] as ScormEdition;
+              if (snapshot === 'quiz-taken') return quizTakenSnapshot(context);
+              return snapshot
+                ? savedSnapshot(context, snapshot === 'foreign', edition ?? '1.2')
+                : null;
             },
             saveState: async (context, submission) => {
               onSave(context, submission);

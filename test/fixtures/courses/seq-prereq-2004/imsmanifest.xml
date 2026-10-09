@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="seq-prereq-2004" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Lesson then quiz</title>
+      <item identifier="lesson" identifierref="res1">
+        <title>Lesson</title>
+        <imsss:sequencing>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="lesson-passed">
+              <imsss:mapInfo targetObjectiveID="g-lesson" writeSatisfiedStatus="true" />
+            </imsss:primaryObjective>
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="quiz" identifierref="res2">
+        <title>Quiz</title>
+        <imsss:sequencing>
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="prerequisite" operator="not" condition="satisfied" />
+                <imsss:ruleCondition referencedObjective="prerequisite" operator="not" condition="objectiveStatusKnown" />
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled" />
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="quiz-passed" />
+            <imsss:objective objectiveID="prerequisite">
+              <imsss:mapInfo targetObjectiveID="g-lesson" readSatisfiedStatus="true" />
+            </imsss:objective>
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true" />
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html"><file href="sco.html" /></resource>
+    <resource identifier="res2" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=2"><file href="sco.html" /></resource>
+  </resources>
+</manifest>

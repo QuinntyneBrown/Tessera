@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Probe</title>
+  </head>
+  <body>
+    <h1>Probe</h1>
+    <label for="calls">API calls (JSON)</label>
+    <textarea id="calls" rows="4" cols="60"></textarea>
+    <button id="run" type="button">Run calls</button>
+    <ol id="results" aria-label="API results"></ol>
+    <script>
+      // Runs each [method, ...arguments] against the SCORM 2004 API and lists every result as JSON text.
+      document.getElementById('run').addEventListener('click', function () {
+        var api = window.parent.API_1484_11;
+        var results = document.getElementById('results');
+        results.replaceChildren();
+        JSON.parse(document.getElementById('calls').value).forEach(function (call) {
+          var item = document.createElement('li');
+          item.textContent = JSON.stringify(api[call[0]].apply(api, call.slice(1)));
+          results.append(item);
+        });
+      });
+    </script>
+  </body>
+</html>

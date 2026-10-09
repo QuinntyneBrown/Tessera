@@ -75,22 +75,32 @@ for (const [course, reference] of [
   });
 }
 
-// L2-001 AC3
+// L2-001 AC1, AC2
 for (const [course, edition] of [
   ['single-sco-2004-2nd', 'SCORM 2004 2nd Edition'],
   ['single-sco-2004-3rd', 'SCORM 2004 3rd Edition'],
   ['single-sco-2004-4th', 'SCORM 2004 4th Edition'],
 ] as const) {
-  test(`identifies ${edition} and refuses to launch it until its rules are supported`, async ({
-    page,
-  }) => {
+  test(`identifies an extracted ${edition} course and launches its SCO`, async ({ page }) => {
     const player = new PlayerPage(page);
 
     await player.open({ course });
 
-    await player.expectErrorMessage(new RegExp(`${edition}.*cannot be launched`, 'i'));
-    await player.expectHostReceivedErrorCategory('loading');
-    player.expectNoLaunchResourceRequested();
+    await player.expectCourseTitle('Better conversations at work');
+    await player.expectEdition(edition);
+    await player.expectActivities(['Start with listening']);
+    await player.expectActivityDiscoveredApi();
+  });
+
+  test(`identifies a ${edition} ZIP package as the same course`, async ({ page }) => {
+    const player = new PlayerPage(page);
+
+    await player.openWithPackage(course);
+
+    await player.expectCourseTitle('Better conversations at work');
+    await player.expectEdition(edition);
+    await player.expectActivities(['Start with listening']);
+    await player.expectActivityDiscoveredApi();
   });
 }
 

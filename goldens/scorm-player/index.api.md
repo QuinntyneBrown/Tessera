@@ -4,9 +4,11 @@
 
 ```ts
 
+import { ComponentHarness } from '@angular/cdk/testing';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
+import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
@@ -25,6 +27,15 @@ export interface ActivityResource {
     readonly kind: 'sco' | 'asset';
     // (undocumented)
     readonly url: string;
+}
+
+// @public
+export interface ActivityTracking {
+    // (undocumented)
+    readonly attempts: number;
+    // (undocumented)
+    readonly completion?: 'completed' | 'incomplete';
+    readonly objectives?: Readonly<Record<string, ObjectiveTracking>>;
 }
 
 // @public
@@ -49,6 +60,31 @@ export interface AttemptSnapshot {
     readonly scoStates: Readonly<Record<string, ScoSnapshot>>;
     // (undocumented)
     readonly sequencing: SequencingState;
+}
+
+// @public
+export interface ControlMode {
+    // (undocumented)
+    readonly choice: boolean;
+    // (undocumented)
+    readonly choiceExit: boolean;
+    // (undocumented)
+    readonly flow: boolean;
+    // (undocumented)
+    readonly forwardOnly: boolean;
+}
+
+// @public
+export interface CourseNode {
+    readonly activity?: Activity;
+    // (undocumented)
+    readonly children: readonly CourseNode[];
+    // (undocumented)
+    readonly id: string;
+    // (undocumented)
+    readonly sequencing: SequencingDefinition;
+    // (undocumented)
+    readonly title: string;
 }
 
 // @public
@@ -95,6 +131,42 @@ export interface HostIntegration {
 }
 
 // @public (undocumented)
+export interface ObjectiveDefinition {
+    // (undocumented)
+    readonly id: string;
+    // (undocumented)
+    readonly maps: readonly ObjectiveMap[];
+    // (undocumented)
+    readonly minNormalizedMeasure: number;
+    // (undocumented)
+    readonly primary: boolean;
+    // (undocumented)
+    readonly satisfiedByMeasure: boolean;
+}
+
+// @public
+export interface ObjectiveMap {
+    // (undocumented)
+    readonly readMeasure: boolean;
+    // (undocumented)
+    readonly readSatisfied: boolean;
+    // (undocumented)
+    readonly target: string;
+    // (undocumented)
+    readonly writeMeasure: boolean;
+    // (undocumented)
+    readonly writeSatisfied: boolean;
+}
+
+// @public
+export interface ObjectiveTracking {
+    // (undocumented)
+    readonly measure?: number;
+    // (undocumented)
+    readonly satisfied?: boolean;
+}
+
+// @public (undocumented)
 export interface PackageLimits {
     // (undocumented)
     readonly archiveBytes: number;
@@ -137,6 +209,57 @@ export type PlayerEvent = {
     readonly saved: boolean;
 };
 
+// @public
+export interface PreconditionRule {
+    // (undocumented)
+    readonly action: 'skip' | 'disabled' | 'hiddenFromChoice' | 'stopForwardTraversal';
+    // (undocumented)
+    readonly combination: 'all' | 'any';
+    // (undocumented)
+    readonly conditions: readonly RuleCondition[];
+}
+
+// @public
+export interface RollupDefinition {
+    // (undocumented)
+    readonly objectiveMeasureWeight: number;
+    readonly objectiveSatisfied: boolean;
+    readonly progressCompletion: boolean;
+    // (undocumented)
+    readonly rules: readonly RollupRule[];
+}
+
+// @public
+export interface RollupRule {
+    // (undocumented)
+    readonly action: 'satisfied' | 'notSatisfied' | 'completed' | 'incomplete';
+    // (undocumented)
+    readonly childActivitySet: 'all' | 'any' | 'none' | 'atLeastCount' | 'atLeastPercent';
+    // (undocumented)
+    readonly combination: 'all' | 'any';
+    // (undocumented)
+    readonly conditions: readonly RuleCondition[];
+    // (undocumented)
+    readonly minimumCount: number;
+    readonly minimumPercent: number;
+}
+
+// @public
+export interface RollupStatus extends ObjectiveTracking {
+    // (undocumented)
+    readonly completion?: 'completed' | 'incomplete';
+}
+
+// @public
+export interface RuleCondition {
+    // (undocumented)
+    readonly condition: string;
+    // (undocumented)
+    readonly measureThreshold?: number;
+    readonly negate: boolean;
+    readonly objective?: string;
+}
+
 // @public (undocumented)
 export interface SaveAck {
     // (undocumented)
@@ -159,6 +282,7 @@ export interface Score {
     readonly min?: number;
     // (undocumented)
     readonly raw?: number;
+    readonly scaled?: number;
 }
 
 // @public (undocumented)
@@ -175,6 +299,7 @@ export class ScormPlayer {
     protected readonly cancelled: WritableSignal<boolean>;
     // (undocumented)
     protected cancelLoad(): void;
+    protected choose(activity: Activity): void;
     protected collapseOutline(): void;
     // (undocumented)
     protected readonly course: WritableSignal<ValidatedCourse | null>;
@@ -196,19 +321,29 @@ export class ScormPlayer {
         persistence: string;
     };
     // (undocumented)
+    protected hidden(activity: Activity): boolean;
+    // (undocumented)
     readonly host: InputSignal<HostIntegration | undefined>;
+    // (undocumented)
+    protected knownText(value: string | undefined): string;
     // (undocumented)
     readonly limits: InputSignal<PackageLimits | undefined>;
     // (undocumented)
     protected readonly loading: WritableSignal<boolean>;
     // (undocumented)
-    protected move(offset: -1 | 1): void;
-    protected neighbour(offset: -1 | 1): Activity | undefined;
-    protected open(activity: Activity): Promise<void>;
+    protected move(decision: NavigationDecision | null): void;
+    protected readonly navigationStatus: WritableSignal<string>;
+    // (undocumented)
+    protected readonly nextDecision: Signal<NavigationDecision | null>;
+    protected open(activity: Activity, by?: 'learner' | 'course'): Promise<void>;
     // (undocumented)
     protected readonly outcome: WritableSignal<CourseOutcome | null>;
     // (undocumented)
     protected readonly outlineExpanded: WritableSignal<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "NavigationDecision" needs to be exported by the entry point tessera-scorm-player.d.ts
+    //
+    // (undocumented)
+    protected readonly previousDecision: Signal<NavigationDecision | null>;
     // (undocumented)
     protected requestExit(): Promise<void>;
     // (undocumented)
@@ -225,6 +360,8 @@ export class ScormPlayer {
     protected statusText(outcome: CourseOutcome | null): string;
     // (undocumented)
     protected toggleOutline(): void;
+    // (undocumented)
+    protected unavailableReason(activity: Activity): string | null;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<ScormPlayer, "tsr-scorm-player", never, {
         "source": {
@@ -254,16 +391,76 @@ export class ScormPlayer {
     static ɵfac: i0.ɵɵFactoryDeclaration<ScormPlayer, never>;
 }
 
+// @public
+export interface ScormPlayerActivityState {
+    available: boolean;
+    current: boolean;
+    reason: string | null;
+    // (undocumented)
+    title: string;
+}
+
+// @public
+export interface ScormPlayerErrorState {
+    // (undocumented)
+    heading: string;
+    // (undocumented)
+    text: string;
+}
+
+// @public
+export class ScormPlayerHarness extends ComponentHarness {
+    chooseActivity(title: string): Promise<void>;
+    // (undocumented)
+    exit(): Promise<void>;
+    // (undocumented)
+    getActivities(): Promise<ScormPlayerActivityState[]>;
+    getCourseTitle(): Promise<string | null>;
+    getCurrentActivity(): Promise<string | null>;
+    getError(): Promise<ScormPlayerErrorState | null>;
+    getNavigationReason(control: 'Next' | 'Previous'): Promise<string | null>;
+    getOutcome(): Promise<Record<string, string>>;
+    getSaveStatus(): Promise<string>;
+    // (undocumented)
+    static hostSelector: string;
+    // (undocumented)
+    next(): Promise<void>;
+    // (undocumented)
+    previous(): Promise<void>;
+    // (undocumented)
+    retry(): Promise<void>;
+}
+
 // @public (undocumented)
 export interface ScoSnapshot {
     // (undocumented)
     readonly values: Readonly<Record<string, string>>;
 }
 
+// @public
+export interface SequencingDefinition {
+    readonly attemptLimit?: number;
+    // (undocumented)
+    readonly controlMode: ControlMode;
+    readonly objectives: readonly ObjectiveDefinition[];
+    // (undocumented)
+    readonly preconditions: readonly PreconditionRule[];
+    // (undocumented)
+    readonly rollup: RollupDefinition;
+}
+
 // @public (undocumented)
 export interface SequencingState {
     // (undocumented)
     readonly currentActivityId: string;
+    readonly tracking?: SequencingTracking;
+}
+
+// @public
+export interface SequencingTracking {
+    // (undocumented)
+    readonly activities: Readonly<Record<string, ActivityTracking>>;
+    readonly globals?: Readonly<Record<string, ObjectiveTracking>>;
 }
 
 // @public
@@ -271,7 +468,6 @@ export type Unknown = 'unknown';
 
 // @public (undocumented)
 export interface ValidatedCourse {
-    // (undocumented)
     readonly activities: readonly Activity[];
     // (undocumented)
     readonly edition: ScormEdition;
@@ -279,6 +475,7 @@ export interface ValidatedCourse {
     readonly root: string;
     // (undocumented)
     readonly title: string;
+    readonly tree: CourseNode;
 }
 
 // (No @packageDocumentation comment for this package)

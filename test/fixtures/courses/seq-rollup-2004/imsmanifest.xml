@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="seq-rollup-2004" version="1"
+  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+  xmlns:imsss="http://www.imsglobal.org/xsd/imsss">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>CAM 1.3</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>Two assessed lessons</title>
+      <item identifier="lesson1" identifierref="res1"><title>Lesson one</title></item>
+      <item identifier="lesson2" identifierref="res2"><title>Lesson two</title></item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true" />
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" adlcp:scormType="sco" href="sco.html"><file href="sco.html" /></resource>
+    <resource identifier="res2" type="webcontent" adlcp:scormType="sco" href="sco.html?lesson=2"><file href="sco.html" /></resource>
+  </resources>
+</manifest>

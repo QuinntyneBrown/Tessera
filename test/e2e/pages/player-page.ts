@@ -10,7 +10,7 @@ export interface HostScenario {
   /** The attempt key the host issues; each attempt has its own saved state. */
   attempt?: string;
   /** What the host's stored state for the attempt looks like; none means a new attempt. */
-  snapshot?: 'saved' | 'foreign' | 'unreadable' | 'flaky';
+  snapshot?: 'saved' | 'foreign' | 'unreadable' | 'flaky' | 'quiz-taken';
   /** The host holds every save until the test acknowledges or fails it. */
   save?: 'manual';
   course?: string;
@@ -21,6 +21,8 @@ export interface HostScenario {
   /** Makes the first request for the activity's launch page return HTTP 503. */
   failFirstActivityRequest?: boolean;
 }
+
+export type OutlineItem = string | [string, OutlineItem[]];
 
 /** The player screen: owns every selector and interaction. */
 export class PlayerPage {
@@ -68,6 +70,66 @@ export class PlayerPage {
   async openWithPackage(name: string, scenario: HostScenario = {}): Promise<void> {
     await this.open({ ...scenario, source: 'zip' });
     await this.page.getByLabel('Course package').setInputFiles(`dist/packages/${name}.zip`);
+  }
+
+  /** Opens the host page that runs the consumer harness contract in a real TestBed. */
+  async openHarnessContract(): Promise<void> {
+    await this.page.goto('/?screen=player-harness');
+    await this.page.getByRole('button', { name: 'Run player harness contract' }).click();
+  }
+
+  async expectHarnessContractResult(result: object): Promise<void> {
+    await expect(
+      this.page.getByRole('status', { name: 'Player harness contract', exact: true }),
+    ).toHaveText(JSON.stringify(result), { timeout: 20_000 });
+  }
+
+  /**
+   * Loads the player `runs` times with a warm bundle under CPU slowdown and returns, per run, the
+   * milliseconds from navigation start to the first frame showing the shell with its loading status
+   * (or, if loading finished first, the loaded course).
+   */
+  async measureShellRender({ runs, cpuSlowdown }: { runs: number; cpuSlowdown: number }) {
+    await this.page.addInitScript(() => {
+      const observer = new MutationObserver(() => {
+        const shown = document.querySelector(
+          'tsr-scorm-player [aria-labelledby="loading-heading"], tsr-scorm-player h1',
+        );
+        if (!shown) return;
+        observer.disconnect();
+        requestAnimationFrame(() => {
+          (window as unknown as { shellShownAt: number }).shellShownAt = performance.now();
+        });
+      });
+      observer.observe(document, { childList: true, subtree: true });
+    });
+    const url = `/?${new URLSearchParams({ course: 'single-sco-12' })}`;
+    await this.page.goto(url);
+    await expect(this.page.getByRole('heading', { level: 1 })).toBeVisible();
+    const cdp = await this.page.context().newCDPSession(this.page);
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: cpuSlowdown });
+    const durations: number[] = [];
+    for (let run = 0; run < runs; run++) {
+      await this.page.goto(url);
+      const handle = await this.page.waitForFunction(
+        () => (window as unknown as { shellShownAt?: number }).shellShownAt,
+        undefined,
+        { timeout: 30_000 },
+      );
+      durations.push(Math.round((await handle.jsonValue()) as number));
+    }
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    return durations;
+  }
+
+  expectShellTimings(
+    durations: number[],
+    { limitMs, required }: { limitMs: number; required: number },
+  ): void {
+    const within = durations.filter((duration) => duration <= limitMs).length;
+    expect(within, `runs within ${limitMs} ms (of ${durations.length})`).toBeGreaterThanOrEqual(
+      required,
+    );
   }
 
   async expectLoadingShown(): Promise<void> {
@@ -269,6 +331,20 @@ export class PlayerPage {
     await expect(outline.getByRole('listitem')).toHaveText(titles);
   }
 
+  /** The outline as nested lists: a title is a launchable activity, `[title, children]` a module. */
+  async expectOutline(items: OutlineItem[]): Promise<void> {
+    const yaml = (entries: OutlineItem[], indent: string): string =>
+      `${indent}- list:\n` +
+      entries
+        .map((entry) =>
+          typeof entry === 'string'
+            ? `${indent}  - listitem:\n${indent}    - button "${entry}"\n`
+            : `${indent}  - listitem:\n${indent}    - text: ${entry[0]}\n${yaml(entry[1], `${indent}    `)}`,
+        )
+        .join('');
+    await expect(this.outline.getByRole('list').first()).toMatchAriaSnapshot(yaml(items, ''));
+  }
+
   private get activityFrame() {
     return this.page.frameLocator('iframe[title^="Course content"]').frameLocator('iframe');
   }
@@ -304,6 +380,13 @@ export class PlayerPage {
     const results = sco.getByRole('list', { name: 'API results' }).getByRole('listitem');
     await expect(results).toHaveCount(calls.length);
     return (await results.allTextContents()).map((text) => JSON.parse(text));
+  }
+
+  /** Has the probe SCO run calls that end its session and navigate away, so no results remain to read. */
+  async runScoCallsThatLeave(calls: string[][]): Promise<void> {
+    const sco = this.activityFrame;
+    await sco.getByLabel('API calls (JSON)').fill(JSON.stringify(calls));
+    await sco.getByRole('button', { name: 'Run calls' }).click();
   }
 
   private get hostSaves(): Locator {
@@ -411,10 +494,13 @@ export class PlayerPage {
     expect(events.filter((event) => event.kind === 'exit')).toEqual([]);
   }
 
-  async expectOutcomeShown(outcome: { status: string; score: string }): Promise<void> {
+  /** Each outcome field is shown as text, e.g. `{ status: 'completed' }` as "Status: completed". */
+  async expectOutcomeShown(outcome: Record<string, string>): Promise<void> {
     const region = this.page.getByRole('region', { name: 'Course outcome' });
-    await expect(region).toContainText(`Status: ${outcome.status}`);
-    await expect(region).toContainText(`Score: ${outcome.score}`);
+    for (const [field, value] of Object.entries(outcome)) {
+      const label = field[0].toUpperCase() + field.slice(1);
+      await expect(region).toContainText(`${label}: ${value}`);
+    }
   }
 
   async expectNoProgressPercentage(): Promise<void> {
@@ -432,12 +518,45 @@ export class PlayerPage {
     }).toPass();
   }
 
+  async expectLastHostOutcome(outcome: object): Promise<void> {
+    await expect(async () => {
+      const events = (await this.hostEvents.allTextContents()).map((text) => JSON.parse(text));
+      expect(events.filter((event) => event.kind === 'outcome').at(-1)?.outcome).toEqual(outcome);
+    }).toPass();
+  }
+
   private get outline(): Locator {
     return this.page.getByRole('navigation', { name: 'Course outline' });
   }
 
+  /** An unavailable outline activity stays focusable, says so to assistive technology and shows why. */
+  async expectActivityUnavailable(title: string, reason: string): Promise<void> {
+    const button = this.outline.getByRole('button', { name: title });
+    await expect(button).toHaveAttribute('aria-disabled', 'true');
+    await expect(button).toHaveAccessibleDescription(reason);
+    const describedBy = await button.getAttribute('aria-describedby');
+    await expect(this.page.locator(`[id="${describedBy}"]`)).toBeVisible();
+  }
+
+  async expectActivityAvailable(title: string): Promise<void> {
+    await expect(this.outline.getByRole('button', { name: title })).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+  }
+
+  /** Course-driven navigation is announced politely, without moving focus. */
+  async expectNavigationAnnounced(text: string): Promise<void> {
+    await expect(this.page.locator('tsr-scorm-player [aria-live="polite"]')).toHaveText(text);
+  }
+
+  async expectNoActivityContent(): Promise<void> {
+    await expect(this.page.locator('iframe[title^="Course content"]')).toHaveCount(0);
+  }
+
   async chooseActivity(title: string): Promise<void> {
-    await this.outline.getByRole('button', { name: title }).click();
+    // An unavailable activity is aria-disabled but still activatable, so skip Playwright's enabled check.
+    await this.outline.getByRole('button', { name: title }).click({ force: true });
   }
 
   async expectCurrentActivity(title: string): Promise<void> {
@@ -447,6 +566,11 @@ export class PlayerPage {
     );
     await expect(this.outline.locator('[aria-current="step"]')).toHaveCount(1);
     await expect(this.page.getByRole('heading', { level: 2, name: title })).toBeVisible();
+    // The activity's own frame has replaced the previous one.
+    await expect(this.page.locator('iframe[title^="Course content"]')).toHaveAttribute(
+      'title',
+      `Course content: ${title}`,
+    );
   }
 
   /** Waits for a save whose snapshot holds these values for the given activity. */
@@ -481,7 +605,8 @@ export class PlayerPage {
     await button.focus();
     await expect(button).toBeFocused();
     await expect(button).toHaveAccessibleDescription(reason);
-    await expect(this.page.getByText(reason, { exact: true })).toBeVisible();
+    const describedBy = await button.getAttribute('aria-describedby');
+    await expect(this.page.locator(`[id="${describedBy}"]`)).toBeVisible();
   }
 
   async expectPreviousBlocked(reason: string): Promise<void> {
