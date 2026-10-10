@@ -16,8 +16,11 @@
     'colorScheme',
     'colorStrokeFocus2',
     'fontFamilyBase',
+    'fontSizeBase200',
     'fontSizeBase300',
     'lineHeightBase300',
+    'shadow4',
+    'shadow8',
     'spacingHorizontalM',
     'spacingHorizontalS',
     'spacingHorizontalXS',
@@ -25,6 +28,7 @@
     'spacingVerticalXS',
     'spacingVerticalXXS',
     'strokeWidthThick',
+    'strokeWidthThicker',
     'strokeWidthThin'
   )
 );
@@ -48,17 +52,19 @@
   flex-wrap: wrap;
   align-items: center;
   gap: theme.token('spacingHorizontalXS');
+  min-height: 2.75rem;
   padding: theme.token('spacingVerticalXS');
   border: theme.token('strokeWidthThin') solid
     var(--t-combobox-border, theme.token('colorNeutralStrokeAccessible'));
   border-radius: theme.token('borderRadiusMedium');
   &:has(.t-combobox-input:focus-visible) {
-    outline: theme.token('strokeWidthThick') solid
+    outline: theme.token('strokeWidthThicker') solid
       var(--t-combobox-focus-ring, theme.token('colorStrokeFocus2'));
     outline-offset: 2px;
   }
 }
 .t-combobox-invalid {
+  border-width: theme.token('strokeWidthThick');
   border-color: var(--t-combobox-error, theme.token('colorPaletteRedForeground1'));
 }
 .t-combobox-disabled {
@@ -93,6 +99,7 @@
     var(--t-combobox-border, theme.token('colorNeutralStrokeAccessible'));
   border-radius: theme.token('borderRadiusSmall');
   background: var(--t-combobox-chip-bg, theme.token('colorNeutralBackground2'));
+  font-size: theme.token('fontSizeBase200');
 }
 .t-combobox-chip-label {
   min-width: 0;
@@ -105,13 +112,13 @@
   flex: 1 1 10rem;
   align-items: center;
   min-width: 0;
-  min-height: 2.5rem;
+  min-height: 2rem;
 }
 .t-combobox-input {
   flex: 1 1 auto;
   width: 100%;
   min-width: 0;
-  padding: theme.token('spacingVerticalS');
+  padding: 0 theme.token('spacingHorizontalS');
   border: 0;
   outline: 0;
   font: inherit;
@@ -134,9 +141,9 @@ button {
   background: transparent;
   cursor: pointer;
   &:focus-visible {
-    outline: theme.token('strokeWidthThick') solid
+    outline: theme.token('strokeWidthThicker') solid
       var(--t-combobox-focus-ring, theme.token('colorStrokeFocus2'));
-    outline-offset: -2px;
+    outline-offset: calc(-1 * #{theme.token('strokeWidthThicker')});
   }
   &:disabled {
     color: var(--t-combobox-disabled-text, theme.token('colorNeutralForegroundDisabled'));
@@ -189,6 +196,7 @@ svg {
   border-radius: theme.token('borderRadiusMedium');
   background: var(--t-combobox-surface, theme.token('colorNeutralBackground1'));
   color: var(--t-combobox-text, theme.token('colorNeutralForeground1'));
+  box-shadow: theme.token('shadow8');
   overflow-wrap: anywhere;
   ul {
     flex: 1 1 auto;
@@ -201,10 +209,12 @@ svg {
   li {
     display: flex;
     align-items: center;
-    gap: theme.token('spacingHorizontalS');
+    gap: theme.token('spacingHorizontalM');
     min-width: 24px;
     min-height: 24px;
+    margin-block: theme.token('spacingVerticalXXS');
     padding: theme.token('spacingVerticalS') theme.token('spacingHorizontalM');
+    border-radius: theme.token('borderRadiusSmall');
     cursor: pointer;
   }
   [aria-disabled='true'] {
@@ -221,13 +231,15 @@ svg {
 .t-combobox-option-content {
   min-width: 0;
 }
+/* Tooltips are inverse: host text colour as the fill, host surface as the text. */
 .t-combobox-tooltip {
-  padding: theme.token('spacingVerticalS');
-  border: theme.token('strokeWidthThin') solid
-    var(--t-combobox-border, theme.token('colorNeutralStrokeAccessible'));
+  padding: theme.token('spacingVerticalS') theme.token('spacingHorizontalM');
+  border: theme.token('strokeWidthThin') solid transparent;
   border-radius: theme.token('borderRadiusSmall');
-  background: var(--t-combobox-surface, theme.token('colorNeutralBackground1'));
-  color: var(--t-combobox-text, theme.token('colorNeutralForeground1'));
+  background: var(--t-combobox-text, theme.token('colorNeutralForeground1'));
+  color: var(--t-combobox-surface, theme.token('colorNeutralBackground1'));
+  font-size: theme.token('fontSizeBase200');
+  box-shadow: theme.token('shadow4');
   overflow-wrap: anywhere;
 }
 .t-combobox-checkbox {
@@ -257,7 +269,8 @@ svg {
   border: 0;
 }
 @media (hover: hover) {
-  .t-combobox-panel li:hover {
+  .t-combobox-panel li:hover,
+  button:not(.t-combobox-clear):hover:enabled {
     background: var(--t-combobox-hover-bg, theme.token('colorNeutralBackground1Hover'));
   }
 }
@@ -287,5 +300,10 @@ svg {
   .t-combobox-checked {
     forced-color-adjust: none;
     color: HighlightText;
+  }
+  .t-combobox-tooltip {
+    border-color: ButtonText;
+    background: Canvas;
+    color: CanvasText;
   }
 }

@@ -89,6 +89,8 @@ export interface Theme {
     // (undocumented)
     readonly shadow4: string;
     // (undocumented)
+    readonly shadow8: string;
+    // (undocumented)
     readonly spacingHorizontalL: string;
     // (undocumented)
     readonly spacingHorizontalM: string;
@@ -114,6 +116,8 @@ export interface Theme {
     readonly spacingVerticalXXS: string;
     // (undocumented)
     readonly strokeWidthThick: string;
+    // (undocumented)
+    readonly strokeWidthThicker: string;
     // (undocumented)
     readonly strokeWidthThin: string;
 }

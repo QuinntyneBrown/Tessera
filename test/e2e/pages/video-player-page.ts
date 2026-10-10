@@ -1287,6 +1287,18 @@ export class VideoPlayerPage {
     );
   }
 
+  async expectDesignSystemFocusRing(name: string): Promise<void> {
+    await this.focusControl(name);
+    await expect(this.control(name)).toHaveCSS('outline-style', 'solid');
+    await expect(this.control(name)).toHaveCSS('outline-width', '3px');
+    await expect(this.control(name)).toHaveCSS('outline-offset', '2px');
+  }
+
+  async expectPressedCue(name: string): Promise<void> {
+    await expect(this.control(name)).toHaveAttribute('aria-pressed', 'true');
+    await expect(this.control(name)).toHaveCSS('box-shadow', /inset/);
+  }
+
   async expectFocusRingColor(color: string): Promise<void> {
     await this.focusControl('mute');
     await expect(this.control('mute')).toHaveCSS('outline-color', color);

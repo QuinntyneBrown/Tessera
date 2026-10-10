@@ -44,9 +44,11 @@ $ids: (
   'borderRadiusMedium': 40,
   'strokeWidthThin': 41,
   'strokeWidthThick': 42,
-  'shadow4': 43,
-  'durationNormal': 44,
-  'curveEasyEase': 45,
+  'strokeWidthThicker': 43,
+  'shadow4': 44,
+  'shadow8': 45,
+  'durationNormal': 46,
+  'curveEasyEase': 47,
 );
 $light: (
   'colorScheme': 'light',
@@ -65,7 +67,7 @@ $light: (
   'colorBrandStroke1': '#126454',
   'colorStrokeFocus2': '#b35c14',
   'colorPaletteRedForeground1': '#8a1c12',
-  'fontFamilyBase': 'system-ui, sans-serif',
+  'fontFamilyBase': '"Inter", "Segoe UI", system-ui, Arial, sans-serif',
   'fontSizeBase100': '0.75rem',
   'fontSizeBase200': '0.875rem',
   'fontSizeBase300': '1rem',
@@ -92,8 +94,10 @@ $light: (
   'borderRadiusMedium': '0.5rem',
   'strokeWidthThin': '1px',
   'strokeWidthThick': '2px',
+  'strokeWidthThicker': '3px',
   'shadow4': '0 2px 4px rgb(0 0 0 / 14%)',
-  'durationNormal': '0ms',
+  'shadow8': '0 0.5rem 1rem rgb(0 0 0 / 14%)',
+  'durationNormal': '200ms',
   'curveEasyEase': 'cubic-bezier(0.33, 0, 0.67, 1)',
 );
 $dark: (
@@ -104,8 +108,8 @@ $dark: (
   'colorNeutralForegroundOnBrand': '#18312e',
   'colorNeutralBackground1': '#18312e',
   'colorNeutralBackground1Hover': '#244b42',
-  'colorNeutralBackground1Pressed': '#244b42',
-  'colorNeutralBackground2': '#244b42',
+  'colorNeutralBackground1Pressed': '#0f4a3d',
+  'colorNeutralBackground2': '#0f4a3d',
   'colorNeutralStroke1': '#8fa9a0',
   'colorNeutralStrokeAccessible': '#8fa9a0',
   'colorBrandForeground1': '#8fd5ba',
@@ -113,6 +117,8 @@ $dark: (
   'colorBrandStroke1': '#8fd5ba',
   'colorStrokeFocus2': '#ffbf69',
   'colorPaletteRedForeground1': '#ffb4a8',
+  'shadow4': '0 2px 4px rgb(0 0 0 / 45%)',
+  'shadow8': '0 0.5rem 1rem rgb(0 0 0 / 50%)',
 );
 @function token($name) {
   @if not map.has-key($ids, $name) {

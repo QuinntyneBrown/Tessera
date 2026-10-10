@@ -177,6 +177,16 @@ test('keeps the controls visible whenever the player is not live', async ({ page
   await player.resumeTime();
 });
 
+test('fades the controls over the design system base duration when motion is allowed', async ({
+  page,
+}) => {
+  const player = new VideoPlayerPage(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectControlsTransition('0.2s');
+});
+
 test('shows and hides the controls instantly under reduced motion', async ({ page }) => {
   // L2-065 AC6: Given prefers-reduced-motion: reduce, the change is instant.
   const player = new VideoPlayerPage(page);

@@ -1,30 +1,34 @@
 @use '../theme/styles/tokens' as theme;
 @include theme.defaults(
   (
-    'borderRadiusSmall',
+    'borderRadiusMedium',
+    'colorBrandForeground1',
     'colorBrandStroke1',
     'colorNeutralBackground1',
     'colorNeutralBackground1Hover',
     'colorNeutralBackground1Pressed',
+    'colorNeutralBackground2',
     'colorNeutralForeground1',
     'colorNeutralForeground2',
     'colorNeutralForegroundDisabled',
+    'colorNeutralStroke1',
     'colorNeutralStrokeAccessible',
     'colorPaletteRedForeground1',
     'colorScheme',
     'colorStrokeFocus2',
     'fontFamilyBase',
+    'fontSizeBase200',
     'fontSizeBase300',
     'fontSizeBase500',
     'fontSizeBase600',
-    'fontWeightSemibold',
+    'fontWeightBold',
     'lineHeightBase300',
     'spacingHorizontalL',
     'spacingHorizontalXL',
     'spacingVerticalL',
     'spacingVerticalM',
     'spacingVerticalS',
-    'strokeWidthThick',
+    'strokeWidthThicker',
     'strokeWidthThin'
   )
 );
@@ -50,12 +54,14 @@
 
 h1,
 h2 {
-  font-weight: theme.token('fontWeightSemibold');
+  font-weight: theme.token('fontWeightBold');
   margin-block: theme.token('spacingVerticalL');
 }
 
 h1 {
   font-size: theme.token('fontSizeBase600');
+  line-height: 1.15;
+  letter-spacing: -0.04em;
 }
 
 h2 {
@@ -70,6 +76,20 @@ p {
   color: theme.token('colorNeutralForeground2');
 }
 
+/* A notice: 4px status stripe; the title takes the danger colour, the body stays default ink. */
+section[role='alert'] {
+  padding: theme.token('spacingVerticalL') theme.token('spacingHorizontalL');
+  border: theme.token('strokeWidthThin') solid theme.token('colorNeutralStroke1');
+  border-inline-start: 4px solid theme.token('colorPaletteRedForeground1');
+  border-radius: theme.token('borderRadiusMedium');
+  h2 {
+    margin-block-start: 0;
+  }
+  p {
+    color: theme.token('colorNeutralForeground1');
+  }
+}
+
 [role='alert'] {
   color: theme.token('colorPaletteRedForeground1');
 }
@@ -80,29 +100,37 @@ button {
   max-inline-size: 100%;
   padding: theme.token('spacingVerticalS') theme.token('spacingHorizontalL');
   border: theme.token('strokeWidthThin') solid theme.token('colorNeutralStrokeAccessible');
-  border-radius: theme.token('borderRadiusSmall');
+  border-radius: theme.token('borderRadiusMedium');
   font: inherit;
+  font-size: theme.token('fontSizeBase200');
+  font-weight: theme.token('fontWeightBold');
   color: theme.token('colorNeutralForeground1');
   background: theme.token('colorNeutralBackground1');
   overflow-wrap: anywhere;
   cursor: pointer;
-  &:hover {
-    background: theme.token('colorNeutralBackground1Hover');
+  @media (hover: hover) {
+    &:hover:not([aria-disabled='true']) {
+      background: theme.token('colorNeutralBackground1Hover');
+    }
   }
-  &:active {
+  &:active:not([aria-disabled='true']) {
     background: theme.token('colorNeutralBackground1Pressed');
   }
   &:focus-visible {
-    outline: theme.token('strokeWidthThick') solid theme.token('colorStrokeFocus2');
-    outline-offset: -2px;
+    outline: theme.token('strokeWidthThicker') solid theme.token('colorStrokeFocus2');
+    outline-offset: 2px;
   }
   &[aria-current='step'] {
     border-color: theme.token('colorBrandStroke1');
-    font-weight: theme.token('fontWeightSemibold');
+    color: theme.token('colorBrandForeground1');
+    background: theme.token('colorNeutralBackground2');
+    box-shadow: inset 4px 0 0 theme.token('colorBrandStroke1');
   }
   &[aria-disabled='true'] {
+    border-style: dashed;
     color: theme.token('colorNeutralForegroundDisabled');
-    cursor: default;
+    background: transparent;
+    cursor: not-allowed;
   }
 }
 
@@ -128,6 +156,8 @@ button {
     border-color: ButtonText;
     &[aria-current='step'] {
       border-color: Highlight;
+      color: ButtonText;
+      background: Canvas;
     }
     &[aria-disabled='true'] {
       color: GrayText;
@@ -144,22 +174,24 @@ button {
 }
 
 .outline-toggle {
+  display: inline-flex;
+  align-items: center;
+}
+
+nav.collapsed {
   display: none;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 48rem) {
   .layout {
     grid-template-columns: minmax(15.5rem, 18rem) minmax(0, 1fr);
   }
-}
 
-@media (max-width: 47.9375em) {
   .outline-toggle {
-    display: inline-flex;
-    align-items: center;
+    display: none;
   }
 
   nav.collapsed {
-    display: none;
+    display: block;
   }
 }
