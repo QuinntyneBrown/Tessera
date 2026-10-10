@@ -235,7 +235,7 @@ const dark = accent.$extensions['com.agent-toolkit'].themes?.dark?.$value ?? acc
       <div class="ds-table-wrap"><table class="ds-table">
         <thead><tr><th scope="col"><code>@tessera/theme</code></th><th scope="col">Design-system token</th><th scope="col">Values</th></tr></thead>
         <tbody>
-          <tr><td><code>--t-fontFamilyBase</code></td><td><code>--font-family-sans</code></td><td><b>Differs:</b> package <code>system-ui, sans-serif</code>; system <code>"Inter", "Segoe UI", system-ui, Arial, sans-serif</code>. Both fall back to the platform UI font.</td></tr>
+          <tr><td><code>--t-fontFamilyBase</code></td><td><code>--font-family-sans</code></td><td>Same</td></tr>
           <tr><td><code>--t-fontSizeBase100</code></td><td><code>--font-size-xs</code></td><td>Same (12px)</td></tr>
           <tr><td><code>--t-fontSizeBase200</code></td><td><code>--font-size-sm</code></td><td>Same (14px)</td></tr>
           <tr><td><code>--t-fontSizeBase300</code></td><td><code>--font-size-md</code></td><td>Same (16px)</td></tr>
@@ -261,9 +261,11 @@ const dark = accent.$extensions['com.agent-toolkit'].themes?.dark?.$value ?? acc
           <tr><td><code>--t-borderRadiusSmall</code></td><td><code>--radius-sm</code></td><td>Same (4px)</td></tr>
           <tr><td><code>--t-borderRadiusMedium</code></td><td><code>--radius-md</code></td><td>Same (8px); <code>--radius-lg</code> (cards, players), <code>--radius-xl</code> and <code>--radius-full</code> have no package step</td></tr>
           <tr><td><code>--t-strokeWidthThin</code></td><td><code>--border-width-hairline</code></td><td>Same (1px)</td></tr>
-          <tr><td><code>--t-strokeWidthThick</code></td><td><code>--border-width-thick</code></td><td>Same (2px). The focus ring is 3px (<code>--focus-ring-width</code>), which the package has no token for</td></tr>
-          <tr><td><code>--t-shadow4</code></td><td><code>--shadow-2</code></td><td>Same in light. <b>Differs</b> in dark: the system deepens shadows to 45% opacity; the package keeps 14%</td></tr>
-          <tr><td><code>--t-durationNormal</code></td><td><code>--duration-base</code></td><td><b>Differs:</b> package <code>0ms</code> in both themes (motion off by default); system <code>200ms</code>, near zero only under reduced motion</td></tr>
+          <tr><td><code>--t-strokeWidthThick</code></td><td><code>--border-width-thick</code></td><td>Same (2px)</td></tr>
+          <tr><td><code>--t-strokeWidthThicker</code></td><td><code>--focus-ring-width</code></td><td>Same (3px); every package focus ring uses it</td></tr>
+          <tr><td><code>--t-shadow4</code></td><td><code>--shadow-2</code></td><td>Same</td></tr>
+          <tr><td><code>--t-shadow8</code></td><td><code>--shadow-3</code></td><td>Same (popups, such as the combobox list)</td></tr>
+          <tr><td><code>--t-durationNormal</code></td><td><code>--duration-base</code></td><td>Same (200ms); components drop it to zero under reduced motion</td></tr>
           <tr><td><code>--t-curveEasyEase</code></td><td><code>--ease-standard</code></td><td>Same</td></tr>
         </tbody>
       </table></div>

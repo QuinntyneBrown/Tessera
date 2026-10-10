@@ -617,6 +617,35 @@ export class PlayerPage {
     await this.expectBlocked(this.nextButton, reason);
   }
 
+  async expectDesignSystemType(): Promise<void> {
+    await expect(this.page.locator('tsr-scorm-player')).toHaveCSS(
+      'font-family',
+      /^Inter, "Segoe UI"/,
+    );
+    const title = this.page.getByRole('heading', { level: 1 });
+    const size = parseFloat(await title.evaluate((h) => getComputedStyle(h).fontSize));
+    await expect(title).toHaveCSS('letter-spacing', `${-0.04 * size}px`);
+  }
+
+  async expectFocusRingOnExit(): Promise<void> {
+    const exit = this.page.getByRole('button', { name: 'Exit course' });
+    await exit.focus();
+    await expect(exit).toHaveCSS('outline-style', 'solid');
+    await expect(exit).toHaveCSS('outline-width', '3px');
+    await expect(exit).toHaveCSS('outline-offset', '2px');
+  }
+
+  async expectPreviousShownUnavailable(): Promise<void> {
+    await expect(this.previousButton).toHaveCSS('border-top-style', 'dashed');
+    await expect(this.previousButton).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  }
+
+  async expectCurrentActivityHighlighted(): Promise<void> {
+    const current = this.outline.locator('[aria-current="step"]');
+    await expect(current).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    await expect(current).toHaveCSS('box-shadow', /inset/);
+  }
+
   async expectPreviousAvailable(): Promise<void> {
     await expect(this.previousButton).not.toHaveAttribute('aria-disabled', 'true');
   }
@@ -631,6 +660,14 @@ export class PlayerPage {
     await sco.getByRole('button', { name: 'Show late call' }).click();
     const item = sco.getByRole('list', { name: 'Late call' }).getByRole('listitem');
     return JSON.parse((await item.textContent()) ?? 'null');
+  }
+
+  async expectErrorShownAsNotice(): Promise<void> {
+    await expect(this.alert).toHaveCSS('border-inline-start-width', '4px');
+    const ink = await this.page
+      .locator('tsr-scorm-player')
+      .evaluate((element) => getComputedStyle(element).color);
+    await expect(this.alert.locator('p')).toHaveCSS('color', ink);
   }
 
   async expectErrorMessage(text: RegExp): Promise<void> {

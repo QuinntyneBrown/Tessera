@@ -44,7 +44,9 @@ export interface Theme {
   readonly borderRadiusMedium: string;
   readonly strokeWidthThin: string;
   readonly strokeWidthThick: string;
+  readonly strokeWidthThicker: string;
   readonly shadow4: string;
+  readonly shadow8: string;
   readonly durationNormal: string;
   readonly curveEasyEase: string;
 }

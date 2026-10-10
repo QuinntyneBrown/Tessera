@@ -506,6 +506,18 @@ export class ComboboxDemoPage {
       .hover();
   }
 
+  async expectDesignSystemFieldHeight(): Promise<void> {
+    const box = await this.page.locator('.t-combobox-field').boundingBox();
+    expect(Math.round(box!.height)).toBe(44);
+  }
+
+  async expectInverseTooltip(): Promise<void> {
+    const host = await this.page
+      .locator('t-combobox')
+      .evaluate((element) => getComputedStyle(element).color);
+    await expect(this.page.getByRole('tooltip')).toHaveCSS('background-color', host);
+  }
+
   async hoverTooltip(): Promise<void> {
     await this.page.getByRole('tooltip').hover();
   }
@@ -592,6 +604,10 @@ export class ComboboxDemoPage {
   async expectInputAndSelectionRetained(): Promise<void> {
     await this.expectInput('ad');
     await this.expectSelected('Ada', true);
+  }
+
+  async expectElevatedPopup(): Promise<void> {
+    await expect(this.page.getByRole('listbox').locator('..')).not.toHaveCSS('box-shadow', 'none');
   }
 
   async expectThemedPopup(): Promise<void> {
@@ -825,10 +841,11 @@ export class ComboboxDemoPage {
     await expect(disabled).toHaveCSS('font-style', 'italic');
     const active = this.page.getByRole('option', { name: 'Ada', exact: true });
     await expect(active).toHaveCSS('outline-style', 'solid');
+    await expect(this.page.locator('.t-combobox-field')).toHaveCSS('outline-width', '3px');
     const button = this.page.getByRole('button', { name: 'Remove Ada', exact: true });
     await button.focus();
     await expect(button).toHaveCSS('outline-style', 'solid');
-    await expect(button).toHaveCSS('outline-width', '2px');
+    await expect(button).toHaveCSS('outline-width', '3px');
     const animation = await active.evaluate((element) => ({
       animation: getComputedStyle(element).animationDuration,
       transition: getComputedStyle(element).transitionDuration,

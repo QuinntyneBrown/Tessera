@@ -60,3 +60,28 @@ test('keeps focus and option state cues visible in forced colors with reduced mo
   await box.expectVisibleStates();
   await box.expectNoAccessibilityViolations();
 });
+
+test('raises the open popup above the page with the design system popup shadow', async ({
+  page,
+}) => {
+  const box = new ComboboxDemoPage(page);
+  await box.open();
+  await box.focusInput();
+  await box.openList('ArrowDown');
+  await box.expectExpanded(true);
+  await box.expectElevatedPopup();
+});
+
+test('sizes the field and shows full-label tooltips as the design system specifies', async ({
+  page,
+}) => {
+  const label = 'A very long learner name '.repeat(8);
+  const box = new ComboboxDemoPage(page);
+  await box.open();
+  await box.expectDesignSystemFieldHeight();
+  await box.useViewport(320);
+  await box.open({ value: label, results: 'normal' });
+  await box.hoverChip(label);
+  await box.expectTooltip(label);
+  await box.expectInverseTooltip();
+});

@@ -166,3 +166,14 @@ test('maps the scrim and controls to system colours in forced colours mode', asy
   await player.expectForcedColors();
   await player.expectNoAccessibilityViolations();
 });
+
+test('applies the design system focus ring and pressed cue to the controls', async ({ page }) => {
+  // Design system: one focus ring (3px, 2px offset); a pressed toggle shows an accent underline,
+  // not only a changed icon.
+  const player = new VideoPlayerPage(page);
+  await player.open('live', { realTime: true });
+  await player.expectState('live');
+  await player.expectDesignSystemFocusRing('mute');
+  await player.clickMute();
+  await player.expectPressedCue('mute');
+});
