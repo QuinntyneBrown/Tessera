@@ -17,7 +17,7 @@ public sealed class DemoTokenAuthenticationHandler(
     UrlEncoder encoder,
     IConfiguration configuration) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
-    public const string Scheme = "DemoToken";
+    public const string SchemeName = "DemoToken";
     public const string HubPath = "/hubs/video";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -27,8 +27,8 @@ public sealed class DemoTokenAuthenticationHandler(
         var expected = Encoding.UTF8.GetBytes(configuration["Demo:AccessToken"] ?? "");
         if (expected.Length == 0 || !CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(token), expected))
             return Task.FromResult(AuthenticateResult.Fail("Invalid access token."));
-        var identity = new ClaimsIdentity([new Claim(ClaimTypes.Name, "demo")], Scheme);
-        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(identity), Scheme)));
+        var identity = new ClaimsIdentity([new Claim(ClaimTypes.Name, "demo")], SchemeName);
+        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(identity), SchemeName)));
     }
 
     /// <summary>The Authorization header, or on the hub path only the WebSocket transport's query parameter.</summary>

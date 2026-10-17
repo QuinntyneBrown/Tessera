@@ -63,8 +63,7 @@ public static class Mp4FragmentReader
             var buffer = result.Buffer;
             if (buffer.Length >= HeaderSize)
             {
-                Span<byte> header = stackalloc byte[HeaderSize];
-                buffer.Slice(0, HeaderSize).CopyTo(header);
+                var header = buffer.Slice(0, HeaderSize).ToArray();
                 var size = BinaryPrimitives.ReadUInt32BigEndian(header);
                 if (size is 0 or 1)
                     throw new InvalidDataException($"Unsupported MP4 box size {size}.");
@@ -74,7 +73,7 @@ public static class Mp4FragmentReader
                 {
                     var box = buffer.Slice(0, size).ToArray();
                     reader.AdvanceTo(buffer.GetPosition(size));
-                    return (Encoding.ASCII.GetString(header[4..]), box);
+                    return (Encoding.ASCII.GetString(header, 4, 4), box);
                 }
             }
             if (result.IsCompleted)

@@ -11,3 +11,5 @@ docs
 .agents/skills
 *.md
 !src/**/*.md
+demo/video-stream-backend/**/bin
+demo/video-stream-backend/**/obj

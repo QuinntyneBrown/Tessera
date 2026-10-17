@@ -22,9 +22,9 @@ builder.Services.AddSingleton<StreamSessionRegistry>();
 builder.Services.AddHostedService(services => services.GetRequiredService<StreamSessionRegistry>());
 
 // The one place a real host swaps in its identity provider's scheme.
-builder.Services.AddAuthentication(DemoTokenAuthenticationHandler.Scheme)
+builder.Services.AddAuthentication(DemoTokenAuthenticationHandler.SchemeName)
     .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, DemoTokenAuthenticationHandler>(
-        DemoTokenAuthenticationHandler.Scheme, null);
+        DemoTokenAuthenticationHandler.SchemeName, null);
 builder.Services.AddAuthorization();
 
 // Request logs carry no query string, because the WebSocket transport puts the token there; the
