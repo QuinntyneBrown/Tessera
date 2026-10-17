@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using Tessera.VideoStream.Demo.Authentication;
 using Tessera.VideoStream.Demo.Catalogue;
 using Tessera.VideoStream.Demo.Hubs;
+using Tessera.VideoStream.Demo.Sessions;
+using Tessera.VideoStream.Demo.Streaming;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,12 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddOptions<StreamCatalogueOptions>().Bind(builder.Configuration).ValidateOnStart();
 builder.Services.AddSingleton<IValidateOptions<StreamCatalogueOptions>, StreamCatalogueValidator>();
 builder.Services.AddSingleton<StreamCatalogue>();
+
+builder.Services.AddOptions<StreamSessionOptions>().Bind(builder.Configuration);
+builder.Services.AddSingleton<Func<StreamCatalogueEntry, IFragmentSource>>(_ =>
+    _ => throw new SourceFailedException("ffmpeg not found", retryable: false));
+builder.Services.AddSingleton<StreamSessionRegistry>();
+builder.Services.AddHostedService(services => services.GetRequiredService<StreamSessionRegistry>());
 
 // The one place a real host swaps in its identity provider's scheme.
 builder.Services.AddAuthentication(DemoTokenAuthenticationHandler.Scheme)
@@ -30,7 +38,11 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy
     .AllowAnyMethod()
     .AllowCredentials()));
 
-builder.Services.AddSignalR().AddMessagePackProtocol();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 1024 * 1024;
+    options.StreamBufferCapacity = 10;
+}).AddMessagePackProtocol();
 // MessagePack only: a JSON client is refused at the handshake.
 builder.Services.Configure<HubOptions>(options => options.SupportedProtocols = ["messagepack"]);
 
