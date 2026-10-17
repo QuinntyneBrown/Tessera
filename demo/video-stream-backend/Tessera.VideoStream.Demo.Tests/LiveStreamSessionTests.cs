@@ -1,9 +1,10 @@
-// Acceptance tests. Traces to L2-087, L2-089, L2-090 and L2-093.
+// Acceptance tests. Traces to L2-087, L2-089, L2-090, L2-091 and L2-093.
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
 using Tessera.VideoStream.Demo.Contracts;
 using Tessera.VideoStream.Demo.Sessions;
+using Tessera.VideoStream.Demo.Streaming;
 
 namespace Tessera.VideoStream.Demo.Tests;
 
@@ -144,14 +145,19 @@ public sealed class LiveStreamSessionTests : IAsyncDisposable
     public async Task One_slow_subscriber_does_not_hold_up_nineteen_others()
     {
         // L2-090 AC3: the broadcaster never waits for a subscriber, so the others get every chunk.
+        // Two bursts of 20 stay within a healthy reader's capacity but overflow the slow one's.
         var slow = Attach();
         var healthy = Enumerable.Range(0, 19).Select(_ => Attach()).ToList();
-        var reads = healthy.Select(subscriber => Read(subscriber, 41)).ToList();
+        var received = healthy.Select(_ => new System.Collections.Concurrent.ConcurrentQueue<VideoChunk>()).ToArray();
+        var reads = healthy.Select((subscriber, i) => Read(subscriber, 41, received[i])).ToList();
         source.EmitInit();
 
-        source.Emit(40);
+        source.Emit(20);
+        await Eventually.True(() => received.All(r => r.Count == 21), "the healthy subscribers drain the first burst");
+        source.Emit(20);
 
-        foreach (var chunks in await Task.WhenAll(reads))
+        await Task.WhenAll(reads);
+        foreach (var chunks in received)
             Assert.Equal(Enumerable.Range(0, 41).Select(i => (uint)i), chunks.Select(c => c.Seq));
         await Eventually.True(() => slow.Dropped == 11, "the slow subscriber drops its oldest chunks");
     }
@@ -179,6 +185,97 @@ public sealed class LiveStreamSessionTests : IAsyncDisposable
         Assert.Equal(VideoChunk.Media, (await Read(draining, 1))[0].Kind);
     }
 
+    [Fact]
+    public async Task A_failed_source_restarts_after_2_seconds_and_resends_the_new_init()
+    {
+        // L2-091 AC1 and L2-087 AC3: subscribers stay attached and get a fresh kind 0 chunk, with
+        // the next seq, before any further media.
+        var subscriber = Attach();
+        source.EmitInit();
+        source.Emit();
+        await Read(subscriber, 2);
+
+        source.Fail(new SourceFailedException("ffmpeg exited 1"));
+        await Eventually.True(() => session.State == SessionState.Restarting, "the session is restarting");
+        time.Advance(TimeSpan.FromMilliseconds(1900));
+        await Task.Delay(50, TestContext.Current.CancellationToken);
+        Assert.Equal(1, source.Starts);
+        time.Advance(TimeSpan.FromMilliseconds(100));
+        await Eventually.True(() => source.Starts == 2, "the source restarts");
+        source.EmitInit();
+        source.Emit();
+
+        var chunks = await Read(subscriber, 2);
+        Assert.Equal([VideoChunk.Init, VideoChunk.Media], chunks.Select(c => c.Kind));
+        Assert.Equal([2u, 3u], chunks.Select(c => c.Seq));
+        Assert.Equal(SessionState.Live, session.State);
+        Assert.Equal(1, session.SubscriberCount);
+    }
+
+    [Fact]
+    public async Task Failures_past_the_restart_budget_end_every_subscriber_with_source_failed()
+    {
+        // L2-091 AC1 and AC2: at most 3 restarts in any 60 s window; the fourth failure in the
+        // window ends every stream and the session.
+        // Both subscribers keep draining, so the 61 s pause does not evict them as slow consumers.
+        var reads = new[] { Attach(), Attach() }.Select(subscriber => Read(subscriber, int.MaxValue, timeoutSeconds: 30)).ToList();
+        for (var restart = 1; restart <= 3; restart++)
+            await FailAndRestart(restart + 1);
+        time.Advance(TimeSpan.FromSeconds(61));
+        await FailAndRestart(5);
+
+        await FailAndRestart(6);
+        await FailAndRestart(7);
+        source.Fail(new SourceFailedException("ffmpeg exited 1"));
+
+        foreach (var read in reads)
+        {
+            var error = await Assert.ThrowsAsync<HubException>(() => read);
+            Assert.Equal("source-failed: ffmpeg exited 1", error.Message);
+        }
+        await Eventually.True(() => ended == 1, "the session ends");
+        Assert.Equal(7, source.Starts);
+    }
+
+    [Fact]
+    public async Task Unreadable_output_is_a_failure_under_the_same_budget()
+    {
+        // L2-086 AC3 with L2-091 AC1: an InvalidDataException from the reader restarts the source.
+        Attach();
+        source.EmitInit();
+        await Eventually.True(() => session.State == SessionState.Live, "the session is live");
+
+        source.Fail(new InvalidDataException("Unsupported MP4 box size 0."));
+        await Eventually.True(() => session.State == SessionState.Restarting, "the session is restarting");
+        time.Advance(TimeSpan.FromSeconds(2));
+
+        await Eventually.True(() => source.Starts == 2, "the source restarts");
+    }
+
+    [Fact]
+    public async Task A_source_that_cannot_start_fails_at_once_without_spending_the_budget()
+    {
+        // L2-091 AC4: a missing FFmpeg is not retried; subscribers get source-failed.
+        var subscriber = Attach();
+
+        source.Fail(new SourceFailedException("ffmpeg not found", retryable: false));
+
+        var error = await Assert.ThrowsAsync<HubException>(() => Read(subscriber, int.MaxValue));
+        Assert.Equal("source-failed: ffmpeg not found", error.Message);
+        Assert.Equal(1, source.Starts);
+    }
+
+    private async Task FailAndRestart(int expectedStarts)
+    {
+        await Eventually.True(() => source.Starts == expectedStarts - 1, "the source is running");
+        source.Fail(new SourceFailedException("ffmpeg exited 1"));
+        await Eventually.True(() => session.State == SessionState.Restarting, "the session is restarting");
+        time.Advance(TimeSpan.FromSeconds(2));
+        await Eventually.True(() => source.Starts == expectedStarts, "the source restarts");
+        source.EmitInit();
+        await Eventually.True(() => session.State == SessionState.Live, "the session is live again");
+    }
+
     public async ValueTask DisposeAsync() => await session.StopAsync();
 
     private StreamSubscriber NewSubscriber() => new($"connection-{++connections}", "lecture-hall-a", time, logger);
@@ -193,14 +290,16 @@ public sealed class LiveStreamSessionTests : IAsyncDisposable
     }
 
     /// <summary>Reads up to <paramref name="count"/> chunks, or all of them until the stream completes.</summary>
-    private static async Task<List<VideoChunk>> Read(StreamSubscriber subscriber, int count)
+    private static async Task<List<VideoChunk>> Read(StreamSubscriber subscriber, int count,
+        System.Collections.Concurrent.ConcurrentQueue<VideoChunk>? progress = null, int timeoutSeconds = 5)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
-        timeout.CancelAfter(TimeSpan.FromSeconds(5));
+        timeout.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
         var chunks = new List<VideoChunk>();
         await foreach (var chunk in subscriber.ReadAllAsync(timeout.Token))
         {
             chunks.Add(chunk);
+            progress?.Enqueue(chunk);
             if (chunks.Count == count) break;
         }
         return chunks;

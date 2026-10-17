@@ -13,7 +13,8 @@ public sealed class StreamSessionOptions
 
 /// <summary>
 /// One running source shared by every subscriber of one stream: it starts on the first subscriber,
-/// caches the current init segment for late joiners, and stops after the grace period.
+/// caches the current init segment for late joiners, restarts a failed source within a budget, and
+/// stops after the grace period.
 /// </summary>
 public sealed class LiveStreamSession(
     string streamId,
@@ -25,6 +26,9 @@ public sealed class LiveStreamSession(
 {
     private static readonly TimeSpan SweepInterval = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan SlowConsumerLimit = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan RestartDelay = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan RestartWindow = TimeSpan.FromSeconds(60);
+    private const int RestartLimit = 3;
 
     private readonly Lock gate = new();
     private readonly List<StreamSubscriber> subscribers = [];
@@ -32,6 +36,7 @@ public sealed class LiveStreamSession(
     private Task? run;
     private ITimer? idleTimer;
     private ITimer? sweepTimer;
+    private readonly Queue<DateTimeOffset> restarts = new();
 
     public string StreamId => streamId;
 
@@ -77,15 +82,54 @@ public sealed class LiveStreamSession(
     private async Task RunAsync()
     {
         var ct = stopping.Token;
-        try
+        while (true)
         {
-            await foreach (var fragmentEvent in source.ReadAsync(ct).WithCancellation(ct))
-                Publish(fragmentEvent);
-            logger.LogInformation("Stream {StreamId} reached the end of its source.", streamId);
-            End(null);
+            try
+            {
+                await foreach (var fragmentEvent in source.ReadAsync(ct).WithCancellation(ct))
+                    Publish(fragmentEvent);
+                logger.LogInformation("Stream {StreamId} reached the end of its source.", streamId);
+                End(null);
+                return;
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception error)
+            {
+                var reason = error is SourceFailedException ? error.Message : "ffmpeg output was unreadable";
+                logger.LogError(error, "Stream {StreamId} source failed: {Reason}.", streamId, reason);
+                if (!TryRecordRestart(error))
+                {
+                    End(new HubException($"source-failed: {reason}"));
+                    return;
+                }
+                try
+                {
+                    await Task.Delay(RestartDelay, time, ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+            }
         }
-        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+    }
+
+    /// <summary>Allows a restart while someone is watching, at most 3 in any 60 s, unless starting cannot succeed.</summary>
+    private bool TryRecordRestart(Exception error)
+    {
+        if (error is SourceFailedException { Retryable: false }) return false;
+        lock (gate)
         {
+            if (State == SessionState.Stopped || subscribers.Count == 0) return false;
+            var now = time.GetUtcNow();
+            while (restarts.Count > 0 && now - restarts.Peek() >= RestartWindow) restarts.Dequeue();
+            if (restarts.Count >= RestartLimit) return false;
+            restarts.Enqueue(now);
+            State = SessionState.Restarting;
+            return true;
         }
     }
 
