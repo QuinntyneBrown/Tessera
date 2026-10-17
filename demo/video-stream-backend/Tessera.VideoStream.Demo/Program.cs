@@ -15,8 +15,9 @@ builder.Services.AddSingleton<IValidateOptions<StreamCatalogueOptions>, StreamCa
 builder.Services.AddSingleton<StreamCatalogue>();
 
 builder.Services.AddOptions<StreamSessionOptions>().Bind(builder.Configuration);
-builder.Services.AddSingleton<Func<StreamCatalogueEntry, IFragmentSource>>(_ =>
-    _ => throw new SourceFailedException("ffmpeg not found", retryable: false));
+builder.Services.AddSingleton<Func<StreamCatalogueEntry, IFragmentSource>>(services => entry =>
+    new FfmpegFragmentSource(entry, FfmpegHealthCheck.PathFrom(builder.Configuration),
+        services.GetRequiredService<TimeProvider>(), services.GetRequiredService<ILogger<FfmpegFragmentSource>>()));
 builder.Services.AddSingleton<StreamSessionRegistry>();
 builder.Services.AddHostedService(services => services.GetRequiredService<StreamSessionRegistry>());
 
@@ -46,7 +47,14 @@ builder.Services.AddSignalR(options =>
 // MessagePack only: a JSON client is refused at the handshake.
 builder.Services.Configure<HubOptions>(options => options.SupportedProtocols = ["messagepack"]);
 
+builder.Services.AddHealthChecks().AddCheck<FfmpegHealthCheck>("ffmpeg");
+
 var app = builder.Build();
+
+var ffmpeg = FfmpegHealthCheck.PathFrom(app.Configuration);
+if (!await FfmpegHealthCheck.ProbeAsync(ffmpeg, CancellationToken.None))
+    app.Logger.LogError("FFmpeg was not found or failed at '{Path}'. Install FFmpeg or set Ffmpeg:Path; " +
+        "Describe still works but every Subscribe fails with source-failed.", ffmpeg);
 
 app.UseHttpLogging();
 app.UseCors();
@@ -54,5 +62,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<VideoStreamHub>(DemoTokenAuthenticationHandler.HubPath);
 app.MapDemoToken();
+app.MapHealthChecks("/healthz", new() { ResponseWriter = HealthResponse.WriteAsync });
 
 app.Run();
