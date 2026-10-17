@@ -1,5 +1,6 @@
-// Acceptance tests. Traces to L2-087, L2-089 and L2-093.
-using Microsoft.Extensions.Logging.Abstractions;
+// Acceptance tests. Traces to L2-087, L2-089, L2-090 and L2-093.
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
 using Tessera.VideoStream.Demo.Contracts;
 using Tessera.VideoStream.Demo.Sessions;
@@ -10,13 +11,15 @@ public sealed class LiveStreamSessionTests : IAsyncDisposable
 {
     private readonly FakeTimeProvider time = new();
     private readonly ScriptedFragmentSource source = new();
+    private readonly CollectingLoggerProvider logs = new();
+    private readonly ILogger logger;
     private readonly LiveStreamSession session;
     private int ended;
 
     public LiveStreamSessionTests()
     {
-        session = new LiveStreamSession("lecture-hall-a", source, time, new StreamSessionOptions(),
-            NullLogger.Instance, _ => ended++);
+        logger = logs.CreateLogger("session");
+        session = new LiveStreamSession("lecture-hall-a", source, time, new StreamSessionOptions(), logger, _ => ended++);
     }
 
     [Fact]
@@ -116,9 +119,71 @@ public sealed class LiveStreamSessionTests : IAsyncDisposable
         Assert.Equal(SessionState.Stopped, session.State);
     }
 
+    [Fact]
+    public async Task A_full_channel_drops_the_oldest_fragments_and_leaves_a_seq_gap()
+    {
+        // L2-090 AC1 and AC4, L2-087 AC4: capacity 30, oldest dropped first, the drop counted and
+        // logged with the stream and the count, and the receiver sees the gap in seq.
+        var stalled = Attach();
+        source.EmitInit();
+        await Read(stalled, 1);
+
+        source.Emit(40);
+        await Eventually.True(() => stalled.Dropped == 10, "ten fragments are dropped");
+
+        var kept = await Read(stalled, 30);
+        Assert.Equal(11u, kept[0].Seq);
+        Assert.Equal(40u, kept[^1].Seq);
+        var warning = logs.Entries.Last(e => e.Level == LogLevel.Warning).Message;
+        Assert.Contains("lecture-hall-a", warning);
+        Assert.Contains("connection-1", warning);
+        Assert.Contains("10", warning);
+    }
+
+    [Fact]
+    public async Task One_slow_subscriber_does_not_hold_up_nineteen_others()
+    {
+        // L2-090 AC3: the broadcaster never waits for a subscriber, so the others get every chunk.
+        var slow = Attach();
+        var healthy = Enumerable.Range(0, 19).Select(_ => Attach()).ToList();
+        var reads = healthy.Select(subscriber => Read(subscriber, 41)).ToList();
+        source.EmitInit();
+
+        source.Emit(40);
+
+        foreach (var chunks in await Task.WhenAll(reads))
+            Assert.Equal(Enumerable.Range(0, 41).Select(i => (uint)i), chunks.Select(c => c.Seq));
+        await Eventually.True(() => slow.Dropped == 11, "the slow subscriber drops its oldest chunks");
+    }
+
+    [Fact]
+    public async Task The_sweep_evicts_a_subscriber_that_stopped_draining_for_60_seconds()
+    {
+        // L2-090 AC2: a subscriber with queued chunks unread for 60 s ends with slow-consumer at
+        // the next 10 s sweep; one that keeps draining stays, even with nothing new to read.
+        var stalled = Attach();
+        var draining = Attach();
+        source.EmitInit();
+        source.Emit();
+        await Read(stalled, 1);
+        await Read(draining, 2);
+
+        time.Advance(TimeSpan.FromSeconds(50));
+        Assert.Equal(2, session.SubscriberCount);
+        time.Advance(TimeSpan.FromSeconds(20));
+
+        Assert.Equal(1, session.SubscriberCount);
+        var error = await Assert.ThrowsAsync<HubException>(() => Read(stalled, 1));
+        Assert.Equal("slow-consumer", error.Message);
+        source.Emit();
+        Assert.Equal(VideoChunk.Media, (await Read(draining, 1))[0].Kind);
+    }
+
     public async ValueTask DisposeAsync() => await session.StopAsync();
 
-    private StreamSubscriber NewSubscriber() => new("connection", "lecture-hall-a", time, NullLogger.Instance);
+    private StreamSubscriber NewSubscriber() => new($"connection-{++connections}", "lecture-hall-a", time, logger);
+
+    private int connections;
 
     private StreamSubscriber Attach()
     {

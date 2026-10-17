@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.SignalR;
 using Tessera.VideoStream.Demo.Streaming;
 
 namespace Tessera.VideoStream.Demo.Sessions;
@@ -22,11 +23,15 @@ public sealed class LiveStreamSession(
     ILogger logger,
     Action<LiveStreamSession> ended)
 {
+    private static readonly TimeSpan SweepInterval = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan SlowConsumerLimit = TimeSpan.FromSeconds(60);
+
     private readonly Lock gate = new();
     private readonly List<StreamSubscriber> subscribers = [];
     private readonly CancellationTokenSource stopping = new();
     private Task? run;
     private ITimer? idleTimer;
+    private ITimer? sweepTimer;
 
     public string StreamId => streamId;
 
@@ -51,6 +56,7 @@ public sealed class LiveStreamSession(
             idleTimer = null;
             subscribers.Add(subscriber);
             if (CurrentInit is not null) subscriber.SendInit(CurrentInit);
+            sweepTimer ??= time.CreateTimer(_ => Sweep(), null, SweepInterval, SweepInterval);
             run ??= Task.Run(RunAsync);
             return true;
         }
@@ -58,14 +64,7 @@ public sealed class LiveStreamSession(
 
     public void Detach(StreamSubscriber subscriber)
     {
-        lock (gate)
-        {
-            if (!subscribers.Remove(subscriber)) return;
-            subscriber.Complete();
-            if (subscribers.Count == 0 && State != SessionState.Stopped)
-                idleTimer = time.CreateTimer(_ => End(null, onlyIfIdle: true), null,
-                    TimeSpan.FromSeconds(options.IdleStopSeconds), Timeout.InfiniteTimeSpan);
-        }
+        lock (gate) Remove(subscriber, null);
     }
 
     /// <summary>Stops the source and completes every subscriber, as at application shutdown.</summary>
@@ -109,6 +108,31 @@ public sealed class LiveStreamSession(
         }
     }
 
+    /// <summary>Evicts every subscriber that has stopped draining, so it cannot hold its slot forever.</summary>
+    private void Sweep()
+    {
+        lock (gate)
+        {
+            foreach (var subscriber in subscribers.Where(s => s.IsStalled(SlowConsumerLimit)).ToList())
+            {
+                logger.LogWarning("Stream {StreamId} evicted connection {ConnectionId} as a slow consumer.",
+                    streamId, subscriber.ConnectionId);
+                Remove(subscriber, new HubException("slow-consumer"));
+            }
+        }
+    }
+
+    /// <summary>Under the lock: ends one subscriber's stream and starts the grace period after the last.</summary>
+    private void Remove(StreamSubscriber subscriber, Exception? error)
+    {
+        if (!subscribers.Remove(subscriber)) return;
+        if (error is null) subscriber.Complete();
+        else subscriber.Fail(error);
+        if (subscribers.Count == 0 && State != SessionState.Stopped)
+            idleTimer = time.CreateTimer(_ => End(null, onlyIfIdle: true), null,
+                TimeSpan.FromSeconds(options.IdleStopSeconds), Timeout.InfiniteTimeSpan);
+    }
+
     /// <summary>Moves to Stopped once: completes every subscriber, cancels the source, and reports the end.</summary>
     private void End(Exception? error, bool onlyIfIdle = false)
     {
@@ -120,6 +144,7 @@ public sealed class LiveStreamSession(
             foreach (var subscriber in subscribers) subscriber.Complete(error);
             subscribers.Clear();
             idleTimer?.Dispose();
+            sweepTimer?.Dispose();
         }
         stopping.Cancel();
         ended(this);
