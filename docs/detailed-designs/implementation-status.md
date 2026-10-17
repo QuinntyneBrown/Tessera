@@ -2,8 +2,8 @@
 
 This records how far the production implementation has come against the [detailed designs](README.md),
 the decisions made where a design said `<TO SUPPLY>`, and where the implementation departs from a design.
-The [combobox designs](combobox/) describe its implemented contracts. The [video player](#video-player) section is at the end;
-the other status sections concern the SCORM player.
+The [combobox designs](combobox/) describe its implemented contracts. The [video player](#video-player) and
+[video stream backend](#video-stream-backend) sections are at the end; the other status sections concern the SCORM player.
 
 ## Covered
 
@@ -96,7 +96,7 @@ announcer and the strings. The slice-by-slice evidence is in the
 
 | Area | Requirement | State |
 |------|-------------|-------|
-| Demonstration backend | `L2-085` to `L2-094` | Not started. `video-player-backend.spec.ts` skips unless `TESSERA_VIDEO_HUB_URL` is set; the dev app falls back to the replayed fixture. |
+| Demonstration backend playback record | `L2-094` AC4 | The backend is implemented (see [below](#video-stream-backend)); the in-browser end-to-end check still has to be recorded in [video-player-demo.md](../verification/video-player-demo.md) on a browser with H.264 and AAC. |
 | Manual screen reader verification | `L2-083` | Not done; every row of the [matrix](../verification/video-player-screen-reader-matrix.md) is Not run. |
 | Actual 400% browser zoom | `L2-073` AC3 | Manual; the automated check is the 320 by 256 CSS px reflow viewport. |
 
@@ -130,3 +130,51 @@ announcer and the strings. The slice-by-slice evidence is in the
   attempts with the same delays.
 - **Keyboard focus keeps the bar visible; pointer focus does not.** A tapped or clicked control does not pin the bar,
   so `L2-074` AC2's timer restart is observable.
+
+## Video stream backend
+
+L2-085 to L2-094 are implemented in `demo/video-stream-backend/` (`Tessera.VideoStream.sln`): the ASP.NET Core project
+`Tessera.VideoStream.Demo` and the xunit v3 project `Tessera.VideoStream.Demo.Tests`, which needs no FFmpeg except for
+its one opt-in integration test. Run it with `dotnet run --project demo/video-stream-backend/Tessera.VideoStream.Demo`
+and test it with `dotnet test` from `demo/video-stream-backend/`, which the `video-stream-backend` CI job also runs
+with FFmpeg installed; see its [README](../../demo/video-stream-backend/README.md).
+The slice-by-slice evidence is in the
+[backend implementation record](../verification/video-stream-backend-implementation.md).
+
+### Not implemented
+
+| Area | Requirement | State |
+|------|-------------|-------|
+| In-browser playback record | `L2-094` AC4 | Not recorded. The backend was verified live with the player's own SignalR client and `ffprobe`, but the only browser available to the implementing environment had no H.264 or AAC decoder; see [video-player-demo.md](../verification/video-player-demo.md). |
+
+### Decisions made where the designs said `<TO SUPPLY>`
+
+| Decision | Choice |
+|----------|--------|
+| .NET version | `net10.0`; `global.json` accepts any 10.0 SDK feature band and selects the Microsoft.Testing.Platform runner for `dotnet test` |
+| `startedAt` with no session | The current time, because the stream starts when it is first subscribed |
+| `width`, `height` | 0; the catalogue has no dimensions and the player falls back to 16:9 |
+| MessagePack compression | None; fragments are already compressed media |
+| Health probe | `{Ffmpeg:Path} -version`, 5 s timeout, at startup and on each `/healthz`; the body is `{ status, description, ffmpeg, activeSessions }` and an unhealthy report answers 503 |
+| Missing FFmpeg | `HubException("source-failed: ffmpeg not found")`, not retried |
+| Hung or unreadable FFmpeg output | The process tree is killed and the failure is reported as `ffmpeg exited {code}` with the killed process's code |
+| Integration test timeout | 30 s to the first fragment |
+| Ports | HTTPS 7180 and HTTP 5180 on `localhost`; the dev app already targets `http://localhost:5180` |
+| Media root | `../../../src/e2e-app/public`, so the player's committed fixture is the demonstration's media too |
+
+### Departures from the designs
+
+- **One fixture.** The design proposed `Fixtures/lecture-10s.fmp4` encoded with the live pipeline's arguments at 30 fps.
+  The backend reuses the player's committed 25 fps, 320 by 180 fixture: the test project links it into its output and
+  `MediaRoot` points at it. It parses to one initialisation segment and 11 fragments, inside L2-086 AC5's 10 ± 1.
+- **Test sources.** `FixtureFragmentSource` only replays the file. Timing, restarts and failures are driven by
+  `ScriptedFragmentSource`, which emits the fixture's real segments one at a time, instead of delay, `Loop` and
+  `FailAfter` options.
+- **Watchdog.** `StdoutWatchdog` is a `Stream` wrapper around FFmpeg's standard output with a 1 s check timer, so the
+  15 s rule is tested with a `FakeTimeProvider` and no process.
+- **Session lock.** A `System.Threading.Lock`, because nothing is awaited while it is held.
+- **Shutdown.** The registry stops every session from `IHostedService.StopAsync` rather than an `ApplicationStopping`
+  callback; both run when the host stops.
+- **A failure with no subscribers** (during the grace period) ends the session instead of restarting FFmpeg.
+- **The init chunk can be dropped** as the oldest item by a subscriber that has read nothing while 30 newer chunks
+  arrived; the 60 s sweep evicts such a subscriber.
