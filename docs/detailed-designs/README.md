@@ -12,7 +12,7 @@ Its third package, `@tessera/video-player`, plays a live fragmented-MP4 stream d
 
 The `scorm-player` subsystem follows the capability grouping in [L1 requirements](../specs/L1.md) and [L2 requirements](../specs/L2.md). The flat specification folder contains no predefined subsystem folders.
 
-The combobox designs describe the implemented browser package. The video player and backend designs describe proposed packages that have no implementation yet. The SCORM designs include capabilities beyond the current implementation; its delivery scope is recorded in [implementation status](implementation-status.md). HTML mocks provide visual references independently of production behavior.
+The combobox designs describe the implemented browser package. The video player and its demonstration backend are implemented; their state is recorded in [implementation status](implementation-status.md). The SCORM designs include capabilities beyond the current implementation; its delivery scope is recorded in [implementation status](implementation-status.md). HTML mocks provide visual references independently of production behavior.
 
 ## Description
 

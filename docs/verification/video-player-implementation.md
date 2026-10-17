@@ -1,6 +1,6 @@
 # Video player implementation record
 
-The automated video player implementation (L2-057 to L2-084) is complete. Each production slice was built test first: its Chromium Playwright acceptance tests, written through `VideoPlayerPage` (`test/e2e/pages/video-player-page.ts`), ran and failed for the stated reason before production code was written. Where a criterion's behaviour already existed from an earlier slice, its test passed on first run and is recorded as such. No mock or architecture tests were added. The manual release gate (L2-083) and the demonstration backend (L2-085 to L2-094) remain open.
+The automated video player implementation (L2-057 to L2-084) is complete. Each production slice was built test first: its Chromium Playwright acceptance tests, written through `VideoPlayerPage` (`test/e2e/pages/video-player-page.ts`), ran and failed for the stated reason before production code was written. Where a criterion's behaviour already existed from an earlier slice, its test passed on first run and is recorded as such. No mock or architecture tests were added. The manual release gate (L2-083) remains open. The demonstration backend (L2-085 to L2-094) has its own [implementation record](video-stream-backend-implementation.md).
 
 Every slice is one commit on the `video-player` branch; its message repeats the red and green evidence.
 

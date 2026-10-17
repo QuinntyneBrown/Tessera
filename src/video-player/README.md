@@ -179,8 +179,8 @@ of the public contract and do not change with localisation.
 
 Runnable examples live in `src/components-examples/tessera/video-player/`: a hub connection, a
 custom transport that replays a file, captions, localised strings and a themed player. The dev app
-plays the demonstration backend's streams when it answers `GET /demo/token`, and the replayed
-fixture otherwise.
+plays the [demonstration backend](../../demo/video-stream-backend/README.md)'s streams when it
+answers `GET /demo/token`, and the replayed fixture otherwise.
 
 ## Definition of done
 
@@ -188,6 +188,6 @@ The player is complete when every acceptance criterion of L2-057 to L2-094 passe
 zero violations in every listed state, the
 [manual screen reader matrix](../../docs/verification/video-player-screen-reader-matrix.md) is
 signed with no open failures, `pnpm api:check` passes, and the zoneless acceptance app exercises
-play, pause, mute and reconnect. L2-085 to L2-094 (the demonstration backend) and the manual matrix
-are still open; see the
+play, pause, mute and reconnect. The demonstration backend's automated criteria (L2-085 to L2-094)
+pass; its in-browser playback record (L2-094 AC4) and the manual matrix are still open; see the
 [implementation status](../../docs/detailed-designs/implementation-status.md).

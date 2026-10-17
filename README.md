@@ -19,6 +19,9 @@ state while the host LMS controls identity, authorization, delivery, and storage
 | [`@tessera/combobox`](src/combobox/README.md) | Search and select multiple remote values with keyboard-operable chips |
 | [`@tessera/video-player`](src/video-player/README.md) | Play a live fragmented-MP4 stream from a SignalR hub with accessible controls |
 
+The video player's [demonstration backend](demo/video-stream-backend/README.md) is an ASP.NET Core app that streams
+any local MP4 file to the player over SignalR; run it with `dotnet run --project demo/video-stream-backend/Tessera.VideoStream.Demo`.
+
 ## Shared themes
 
 [`@tessera/theme`](src/theme/README.md) provides typed semantic tokens, light/dark defaults, and scoped theme helpers for both components. The dev app includes an interactive theme example. Existing combobox CSS overrides remain supported.
